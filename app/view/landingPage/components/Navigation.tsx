@@ -64,9 +64,11 @@ const Navigation = () => {
 
       {/* Get Started Button */}
       <div>
-        <button className="bg-transparent border-[1px] border-[##444445] bg-gradient-to-r from-[#5AD7FF] to-[#656BF5] bg-clip-text text-transparent pl-4 pr-4 pt-2 pb-2 rounded-3xl border-r-[#918f8f] border-l-[#6522D1] border-b-[#6522D1]">
-          Get Started
-        </button>
+      
+      <button className="relative bg-transparent border-[1px] border-[#444445] bg-gradient-to-r from-[#5AD7FF] to-[#656BF5] bg-clip-text text-transparent px-6 py-3 rounded-3xl border-r-[#918f8f] border-l-[#6522D1] border-b-[#6522D1] transition-all duration-700 ease-[cubic-bezier(0.4, 0, 0.2, 1)] hover:text-white hover:border-l-[#918f8f] hover:border-r-[#6522D1] hover:border-t-[#6522D1] hover:shadow-[0_4px_20px_rgba(101,34,209,0.5)] 
+  before:absolute before:-inset-2 before:rounded-3xl before:bg-gradient-to-r before:from-[#5AD7FF] before:to-[#656BF5] before:blur-xl before:opacity-0 before:transition-opacity before:duration-700 hover:before:opacity-100 before:-z-10">
+  Get Started
+</button>
       </div>
     </div>
 
