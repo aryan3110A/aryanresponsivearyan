@@ -12,7 +12,7 @@ export default {
       colors: {
        
       },
-      fonts:{
+      fontFamily:{
         poppins: ["Poppins", "sans-serif"],
       }
     },
