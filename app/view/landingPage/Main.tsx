@@ -1,6 +1,13 @@
 import React from 'react'
 import Navigation from './components/Navigation';
 import Slideimage from './components/Slideimage';
+import Slider from './components/Slider';
+import Footer from './components/Footer';
+import ArtGallery from './components/ArtGallery';
+import Cards from './components/Cards';
+import { PartnersSection } from './components/partners-section';
+import { Testimonials } from './components/Testimonials';
+
 
 const main = () => {
   return (
@@ -18,6 +25,15 @@ const main = () => {
 
 
         <Slideimage />
+        <Slider />
+        <div className="bg-background min-h-screen">
+      <ArtGallery />
+    </div>
+        <Cards />
+
+        <PartnersSection />
+        <Testimonials />
+        <Footer />
       
 
         
