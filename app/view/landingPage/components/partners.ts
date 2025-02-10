@@ -6,15 +6,15 @@ export interface Partner {
   export const partners: Partner[] = [
     {
       name: "Google Cloud",
-      logo: "/google_cloud.png",
+      logo: "/Landingpage/Google-Cloud-Logo.png",
     },
     {
       name: "Wildchild Studios",
-      logo: "/Wildchild.png",
+      logo: "/Landingpage/wildchildstudio.png",
     },
     {
       name: "MI AI",
-      logo: "/MistralAi.png",
+      logo: "/Landingpage/Mistral AI",
     }, 
     {
       name: "MI AI",

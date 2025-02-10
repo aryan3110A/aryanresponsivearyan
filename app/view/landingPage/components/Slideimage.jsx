@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 
 const SlideImage = () => {
   return (
-    <div className="text-white flex w-full overflow-hidden relative mt-14">
+    <div className="text-white flex w-full overflow-hidden relative mt-14 bg-black">
       {/* Left Side - Text Animation */}
       <div className="flex flex-col gap-9 mt-14 w-1/3 overflow-hidden">
         {[...Array(4)].map((_, index) => (

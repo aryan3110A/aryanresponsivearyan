@@ -1,127 +1,159 @@
-"use client";
-import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
-import { Card } from "@heroui/react";
-import Image from "next/image";
-import { Poppins } from "next/font/google";
-import { cardData } from "./cardData";
+"use client"
 
-const poppins = Poppins({
-  weight: ["100"],
-  subsets: ["latin"],
-});
+import { useRef } from "react"
+import { motion, useScroll, useTransform } from "framer-motion"
 
-export default function HomePage() {
-  const containerRef = useRef<HTMLDivElement>(null);
+interface CardProps {
+  title: string
+  description: string
+  imageSrc: string
+  scrollYProgress: any
+  index: number
+  total: number
+}
+
+function Card({ title, description, imageSrc, scrollYProgress, index, total }: CardProps) {
+  const gap = 10 * index
+  const startProgress = (index / total) - 0.04
+  const endProgress = ((index + 0.6) / total) - 0.04
+  
+  const opacity = useTransform(scrollYProgress, [startProgress, endProgress], [0, 1])
+  const y = useTransform(scrollYProgress, [startProgress, endProgress], [100 + gap, 0 + gap])
+
+  return (
+    <motion.div
+      className="absolute inset-0 rounded-3xl overflow-hidden border border-white/10"
+      style={{ 
+        opacity, 
+        y,
+        background: 'linear-gradient(to right, rgba(24, 26, 27, 0.2), rgba(18, 18, 18, 0.8))',
+        backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)', // For Safari support
+        boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)'
+      }}
+    >
+      <div 
+        className="h-full p-8 md:p-12 flex gap-6 md:gap-8"
+        style={{
+          background: 'linear-gradient(105deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02))'
+        }}
+      >
+        {/* Left Content */}
+        <div className="flex-1 flex flex-col justify-center ml-10">
+          <h2 className="text-[40px] md:text-5xl font-extralight text-white mb-4 md:mb-6 -mt-44">{title}</h2>
+          <p className="text-[16px] md:text-base text-white font-light leading-relaxed max-w-xl">
+            {description}
+          </p>
+        </div>
+
+        {/* Right Image */}
+        <div className="flex-1 flex items-center justify-center">
+          <div className="w-full aspect-square rounded-2xl overflow-hidden">
+            <img 
+              src={imageSrc} 
+              alt={title}
+              className="w-full h-full object-cover"
+            />
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  )
+}
+
+// Rest of the code remains the same...
+
+// Progress Bar Component
+function ProgressBar({ scrollYProgress }: { scrollYProgress: any }) {
+  return (
+    <motion.div 
+      className="absolute left-8 md:left-4 top-1/2 -translate-y-1/2 z-50"
+      style={{
+        opacity: useTransform(scrollYProgress, [0, 0.95, 1], [1, 1, 0])
+      }}
+    >
+      {/* Progress bar background with glow effect */}
+      <div className="relative h-[50vh] w-1.5 mt-10 ml-5">
+        <div className="absolute inset-0 bg-white/10 rounded-full overflow-hidden blur-[2px]" />
+        <div className="absolute inset-0 bg-white/20 rounded-full overflow-hidden">
+          <motion.div
+            className="absolute left-0 top-0 w-full bg-white"
+            style={{ height: useTransform(scrollYProgress, [0, 1], ["0%", "120%"]) }}
+          />
+        </div>
+      </div>
+    </motion.div>
+  )
+}
+
+// Main Component
+export default function Cards() {
+  const containerRef = useRef(null)
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end start"],
-  });
+  })
 
-  const sliderProgress = useTransform(
-    scrollYProgress,
-    [0, 0.2, 0.4, 0.6, 0.8, 1],
-    ["0%", "20%", "40%", "60%", "99%", "100%"],
-  );
-
-  const cardTransforms = cardData.slice(1).map((_, index) => {
-    const actualIndex = index + 1;
-    const cardProgress = useTransform(
-      scrollYProgress,
-      [actualIndex * 0.15, actualIndex * 0.15 + 0.05, actualIndex * 0.15 + 0.1],
-      [0, 0.5, 1],
-    );
-
-    const y = useTransform(cardProgress, [0, 1], [100, 0]);
-    const opacity = useTransform(cardProgress, [0, 0.3, 1], [0, 1, 1]);
-
-    return { y, opacity };
-  });
+  const cardData = [
+    {
+      title: "Food and Cusine",
+      description: "Immerse yourself in artistic representations of food, drinks, and culinary creations. Perfect for chefs, food enthusiasts, or anyone inspired by gastronomy, these designs are visually stunning and capture the essence of global cuisines.",
+      imageSrc: "/Landingpage/Cards/img1.png"
+    },
+    {
+      title: "Games & Entertainment",
+      description: "Transform your gaming concepts into visually engaging realities with tailored assets, characters, and immersive worlds. From vibrant characters to intricate game environments, these designs bring interactivity and storytelling to life.",
+      imageSrc: "/Landingpage/Cards/img2.png"
+    },
+    {
+      title: "Artisan Patterns",
+      description: "Elevate your designs with hand-crafted patterns, decorative motifs, and unique textures. Ideal for textiles, wallpapers, packaging, or branding projects, these artisan creations add a touch of elegance and sophistication.",
+      imageSrc: "/Landingpage/Cards/img3.png"
+    },
+    {
+      title: "Cartoon Cosmos",
+      description: "Step into a playful world filled with animated characters and lively designs. This category captures the charm of cartoons, offering vibrant, character-driven art for comics, animations, and children's stories.",
+      imageSrc: "/Landingpage/Cards/img4.png"
+    },
+    {
+      title: "Product banding",
+      description: "Build a powerful brand identity with custom visuals tailored to your product. From logos to packaging and promotional materials, this category focuses on creating eye-catching designs that resonate with your audience.",
+      imageSrc: "/Landingpage/Cards/img5.png"
+    },
+    {
+      title: "Inspired",
+      description: "Experience the charm of hand-drawn sketches and bespoke illustrations. These designs embody creativity, authenticity, and a personal touch, making them perfect for book covers, artistic projects, or any endeavor.",
+      imageSrc: "/Landingpage/Cards/img6.png"
+    }
+  ]
 
   return (
-    <div
-      ref={containerRef}
-      className="relative min-h-[600vh] bg-gradient-to-b from-[#050505] to-[#151515] flex flex-col items-center"
-    >
-      {/* First card - Sticky and centered */}
-      <div className="sticky top-0 h-screen w-full flex justify-center items-center">
-        <CardComponent {...cardData[0]} progress={sliderProgress} />
-      </div>
-
-      {/* Scrolling cards */}
-      <div className="relative mt-[100vh]">
-        {cardData.slice(1).map((card, index) => {
-          const { y, opacity } = cardTransforms[index];
-          return (
-            <motion.div
-              key={index}
-              className="fixed top-0 left-0 w-full h-screen flex justify-center items-center"
-              style={{ y, opacity, zIndex: index + 1 }}
-              transition={{ duration: 0.3, ease: "easeOut" }}
-            >
-              <CardComponent {...card} progress={sliderProgress} />
-            </motion.div>
-          );
-        })}
+    <div className="bg-black">
+      {/* Cards Section */}
+      <div ref={containerRef} className="relative h-[700vh]">
+        <motion.div
+          className="fixed inset-0 flex items-center justify-center"
+          style={{
+            opacity: useTransform(scrollYProgress, [0, 0.95, 1], [1, 1, 0])
+          }}
+        >
+          <div className="relative w-[80vw] aspect-[3/2] h-[70vh]">
+            {/* Cards */}
+            {cardData.map((card, index) => (
+              <Card
+                key={index}
+                scrollYProgress={scrollYProgress}
+                index={index}
+                total={cardData.length}
+                {...card}
+              />
+            ))}
+            
+            {/* Progress Bar */}
+            <ProgressBar scrollYProgress={scrollYProgress} />
+          </div>
+        </motion.div>
       </div>
     </div>
-  );
-}
-
-// Card component inside the same file
-function CardComponent({ title, description, image, progress }: { title: string; description: string; image: string; progress: any }) {
-  return (
-    <div className="flex justify-center items-center min-h-screen">
-      <Card
-        className="w-[1024px] h-[568px] relative overflow-hidden size-18 rounded-full bg-radial-[at_25%_25%] from-white to-zinc-900 to-50%"
-        radius="lg"
-        style={{
-          borderRadius: "39px",
-          position: "relative",
-          backgroundColor: "#151515",
-        }}
-      >
-        {/* Background Image */}
-        <div className="absolute inset-0">
-          <Image src="/Rectangle.png" alt="Background" layout="fill" objectFit="cover" className="opacity-80" />
-        </div>
-
-        {/* Custom Slider */}
-        <div className="absolute top-10 left-8 z-10 h-[491px] w-[1px] bg-zinc-800">
-          {/* Slider Track */}
-          <div className="absolute inset-0 w-full bg-white rounded-full" />
-
-          {/* Slider Thumb */}
-          <motion.div
-            className="absolute w-3 h-3 -left-[5px] bg-white rounded-full"
-            style={{ top: progress }}
-          />
-        </div>
-
-        {/* Decorative Arrow */}
-        <div className="absolute bottom-[140px] left-[370px]">
-          <Image src="/arrow.png" alt="Curved arrow" width={130} height={70} className="object-contain transform rotate-[1deg]" />
-        </div>
-
-        {/* Content Container */}
-        <div className="relative flex items-center justify-between p-12 w-full h-full">
-          <div className="flex flex-col max-w-[450px] text-white relative ml-[60px] mt-[-90px]">
-            <h2 className="text-[40px] mb-6 font-extralight">{title}</h2>
-            <p className={`${poppins.className} text-[16px] font-extralight leading-snug max-w-[400px]`}>
-              {description}
-            </p>
-          </div>
-
-          <div
-            className="absolute top-[50%] left-[530px] translate-y-[-50%] w-[1px] h-[309.5px]"
-            style={{ backgroundColor: "#545454" }}
-          />
-
-          <div className="w-[420px] h-[450px] rounded-[39px] overflow-hidden shadow-lg relative">
-            <Image src={image || "/placeholder.svg"} alt={title} fill className="object-cover" />
-          </div>
-        </div>
-      </Card>
-    </div>
-  );
+  )
 }
