@@ -12,15 +12,15 @@ import Scrollbar from './Scrollbar';
 const page = () => {
   return (
     <>
-   
+      <Main />
 
     {/* <SignIn /> */}
     {/* <Signup /> */}
     {/* <Home /> */}
 
-    <Scrollbar />
+    {/* <Scrollbar /> */}
    
-    {/* <Main /> */}
+ 
 
   
     </>

@@ -10,7 +10,7 @@ export default function DiscordLanding() {
   const [discordIcon, setDiscordIcon] = useState("/Component 1.png"); // Default icon
 
   return (
-    <div className="relative w-full h-[404px] mx-auto overflow-hidden z-50">
+    <div className="relative w-full h-[404px] mx-auto overflow-hidden">
       {/* Background Gradient */}
       <div
         className="absolute inset-0"

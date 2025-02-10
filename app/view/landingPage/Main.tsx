@@ -15,8 +15,24 @@ import Header from './components/Header';
 const main = () => {
   return (
     <div>
-      <Header />
-      <Cards />
+  <div className="relative ">
+      {/* Centered Navigation */}
+      <div className="fixed top-0 left-0 right-0 z-50 flex justify-center">
+        <Navigation  />
+      </div>
+      
+      {/* Main Content */}
+      <div className="pt-16">
+        <div className="relative z-40">
+          <Header />
+        </div>
+        <div className="relative z-30">
+          <Cards />
+        </div>
+      </div>
+    </div>
+
+
       {/* <div className="bg-background min-h-screen">
       <ArtGallery />
     </div> */}
@@ -28,7 +44,7 @@ const main = () => {
       <Testimonials />
 
       <StartUsingAi />
-      <Footer />
+      <Footer /> 
 
 
 
