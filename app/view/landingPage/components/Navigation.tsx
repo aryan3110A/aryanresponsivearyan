@@ -34,13 +34,14 @@ const Navigation = () => {
 
       {/* Features Dropdown */}
       <div className="relative">
-        <span
-          onClick={() => toggleDropdown("features")}
-          className="cursor-pointer px-3 py-1 flex items-center gap-1 hover:text-transparent hover:bg-gradient-to-l hover:from-[#5AD7FF] hover:to-[#656BF5] hover:bg-clip-text font-poppins text-sm "
-        >
-          Features 
-          <img width="7" height="7" src="https://img.icons8.com/ios-filled/50/40C057/filled-circle.png" alt="filled-circle" className="ml-1"/>
-        </span>
+      <span
+  onClick={() => toggleDropdown("features")}
+  className="cursor-pointer px-3 py-1 flex items-center gap-1 hover:text-transparent hover:bg-gradient-to-l hover:from-[#5AD7FF] hover:to-[#656BF5] hover:bg-clip-text font-poppins text-sl bg-transparent"
+>
+  Features 
+  <img width="7" height="7" src="https://img.icons8.com/ios-filled/50/40C057/filled-circle.png" alt="filled-circle" className="ml-1"/>
+</span>
+
         {activeDropdown === "features" && (
           <ul className="absolute left-0 mt-4 w-48 justify-center bg-black/80 border-[0.2px] rounded-lg shadow-lg">
             <li className="px-3 py-1.5 cursor-pointer text-sm text-white hover:text-transparent hover:bg-gradient-to-l hover:from-[#5AD7FF] hover:to-[#656BF5] hover:bg-clip-text">Text to image</li>
