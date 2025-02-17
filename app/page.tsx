@@ -5,6 +5,7 @@ import SignIn from './view/signin/Signin';
 import Signup from './view/signup/Signup';
 import Home from './view/home/Home';
 import Scrollbar from './Scrollbar';
+import ContactSection from './view/contactus/ContactSection';
 
 
 
@@ -19,6 +20,7 @@ const page = () => {
     {/* <Home /> */}
 
     {/* <Scrollbar /> */}
+    {/* <ContactSection /> */}
    
  
 

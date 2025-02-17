@@ -31,7 +31,7 @@ export default function StartUsingAi() {
         {/* Right Content - GIF */}
         <div className="hidden md:block absolute right-[0px]">
           <Image
-            src="/bubbles.gif"
+            src="Landingpage/AIView/bubbles.gif"
             alt="Creative visual effect"
             width={743}
             height={285}
