@@ -61,7 +61,7 @@ function Card({ title, description, imageSrc, scrollYProgress, index, total }: C
   )
 }
 
-// Rest of the code remains the same...
+
 
 // Progress Bar Component
 function ProgressBar({ scrollYProgress }: { scrollYProgress: any }) {
@@ -69,7 +69,7 @@ function ProgressBar({ scrollYProgress }: { scrollYProgress: any }) {
     <motion.div 
       className="absolute left-8 md:left-4 top-1/2 -translate-y-1/2 z-50"
       style={{
-        opacity: useTransform(scrollYProgress, [0, 0.95, 1], [1, 1, 0])
+        opacity: useTransform(scrollYProgress, [1, 0.95, 1], [1, 1, 0])
       }}
     >
       {/* Progress bar background with glow effect */}
@@ -78,7 +78,7 @@ function ProgressBar({ scrollYProgress }: { scrollYProgress: any }) {
         <div className="absolute inset-0 bg-white/20 rounded-full overflow-hidden">
           <motion.div
             className="absolute left-0 top-0 w-full bg-white"
-            style={{ height: useTransform(scrollYProgress, [0, 1], ["0%", "120%"]) }}
+            style={{ height: useTransform(scrollYProgress, [0, 1], ["0%", "100%"]) }}
           />
         </div>
       </div>
@@ -130,7 +130,7 @@ export default function Cards() {
   return (
     <div className="bg-black">
       {/* Cards Section */}
-      <div ref={containerRef} className="relative h-[700vh]">
+      <div ref={containerRef} className="relative h-[1000vh]">
         <motion.div
           className="fixed inset-0 flex items-center justify-center"
           style={{

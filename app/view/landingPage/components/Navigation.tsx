@@ -19,7 +19,7 @@ const Navigation = () => {
   };
 
   return (
-    <div className={`fixed top-5 left-1/2 -translate-x-1/2 z-50 flex items-center justify-between p-2 rounded-[50px] 
+    <div className={`fixed top-5 left-1/2 -translate-x-1/2 z-[1000] flex items-center justify-between p-2 rounded-[50px] 
       border-[1px] border-white/20 w-[45vw] text-white
       ${scrolled 
         ? 'backdrop-blur-xl bg-black/30 shadow-lg' 

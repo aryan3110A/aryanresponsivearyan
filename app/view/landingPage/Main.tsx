@@ -1,8 +1,6 @@
 import React from 'react'
 import Navigation from './components/Navigation';
 import Slideimage from './components/Slideimage';
-
-import Footer from './components/Footer';
 import ArtGallery from './components/ArtGallery';
 import Cards from './components/Cards';
 import { PartnersSection } from './components/partners-section';
@@ -10,6 +8,8 @@ import { Testimonials } from './components/Testimonials';
 import StartUsingAi from './components/start-using-ai';
 import DiscordLanding from './components/discord-landing';
 import Header from './components/Header';
+import Footer from '../Core/Footer';
+import Commingsoon from './components/Commingsoon';
 
 
 const main = () => {
@@ -42,9 +42,11 @@ const main = () => {
 
       <PartnersSection />
       <Testimonials />
+      <Commingsoon />
 
       <StartUsingAi />
-      <Footer /> 
+      {/* <Footer />  */}
+      <Footer />
 
 
 
