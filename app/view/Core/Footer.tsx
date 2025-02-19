@@ -97,9 +97,9 @@ const Footer = () => {
 
           {/* Navigation Links */}
           {Object.entries(navigationLinks).map(([category, links]) => (
-            <div key={category} className="mt-6 mb-4 mr-10">
+            <div key={category} className="mt-6 mb-4 mr-3">
               <h2 className="font-semibold text-white text-lg mb-4">{category}</h2>
-              <ul className="space-y-2">
+              <ul className="space-y-">
                 {Object.entries(links).map(([name, href]) => (
                   <li key={name} className="pb-2 mb-4">
                     <Link href={href} className="text-[#616161] hover:text-white transition-colors">
@@ -118,7 +118,7 @@ const Footer = () => {
             <p className="text-sm md:text-[0.875rem] text-[#616161] mb-4 md:mb-0">
               Copyright © 2025 WildMind Pvt ltd . All rights reserved.
             </p>
-            <div className="flex flex-wrap gap-4 md:gap-11   justify-center ml-[25.5rem]">
+            <div className="flex gap-4 md:gap-8  justify-center ml-[25.5rem]">
               {legalLinks.map((link) => (
                 <Link
                   key={link.name}

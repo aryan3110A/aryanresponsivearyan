@@ -52,7 +52,7 @@ export function Testimonials() {
                       alt={`${testimonial.user} profile`}
                       width={40}
                       height={40}
-                      className="rounded-full transition-all duration-100 ease-linear group-hover:scale-150 group-hover:mx-4 mt-4 mb-4  group-hover:translate-x-3"
+                      className="rounded-full transition-all duration-100 ease-linear group-hover:scale-1 group-hover:mx-4 mt-4 mb-4  group-hover:translate-x-3"
                     />
                   </div>
                   <span className="text-sm">

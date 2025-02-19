@@ -1,170 +1,224 @@
+'use client';
+import React from 'react';
+import { motion } from 'framer-motion';
+import { Poppins } from 'next/font/google';
 
- <button className="relative bg-transparent border-[1px] border-[#444445] bg-gradient-to-r from-[#5AD7FF] to-[#656BF5] bg-clip-text text-transparent px-6 py-3 rounded-3xl border-r-[#918f8f] border-l-[#6522D1] border-b-[#6522D1] transition-all duration-700 ease-[cubic-bezier(0.4, 0, 0.2, 1)] hover:text-white hover:border-l-[#918f8f] hover:border-r-[#6522D1] hover:border-t-[#6522D1] hover:shadow-[0_4px_20px_rgba(255,34,209,0.7)] 
-          before:absolute before:-inset-2 before:rounded-3xl before:bg-gradient-to-r before:from-[#5AD7FF] before:to-[#656BF5] before:blur-3xl before:opacity-50 before:transition-opacity before:duration-700 before:-z-10 hover:before:opacity-100 hover:before:scale-105">
-          Get Started
-        </button>
+const poppins = Poppins({ 
+  subsets: ['latin'], 
+  weight: ['400', '700'] 
+});
 
+const ArtGallery = ({ curveHeight = 120, backgroundColor = '#1E293B', curveLineColor = 'white' }) => {
+  const galleryImages = [
+    { id: 1, src: 'Landingpage/ArtGallery/img1.png' },
+    { id: 2, src: 'Landingpage/ArtGallery/img2.png' },
+    { id: 3, src: 'Landingpage/ArtGallery/img3.png' },
+    { id: 4, src: 'Landingpage/ArtGallery/img4.png' },
+    { id: 5, src: 'Landingpage/ArtGallery/img5.png' },
+    { id: 6, src: 'Landingpage/ArtGallery/img6.png' },
+    { id: 7, src: 'Landingpage/ArtGallery/img7.png' },
+    { id: 8, src: 'Landingpage/ArtGallery/img8.png' },
+    { id: 9, src: 'Landingpage/ArtGallery/img9.png' },
+  ];
 
+  const curveImageSrc = 'Landingpage/ArtGallery/curveImage.png'; // Single image for curve  
 
+  const CARD_WIDTH = 300;
+  const CARD_HEIGHT = 550;
+  const GAP = 32;
+  const SINGLE_SET_WIDTH = galleryImages.length * (CARD_WIDTH + GAP);
 
-
-
-
-
-
-
-
-import React from 'react'
-
-const Slideimage = () => {
   return (
-    <>
+    <div className="min-h-screen relative flex flex-col items-center overflow-hidden" style={{ backgroundColor }}>
+      {/* Title */}
+      <h1 className={`text-5xl font-medium text-center text-white tracking-wide py-8 z-20 ${poppins.className}`}>
+        Art Gallery
+      </h1>
 
-        <div className='text-white flex w-100 overflow-hidden'>
-
-             
-        <div className='flex flex-col gap-9 mt-14'>
-  <div>
-    <ul className='flex text-4xl'>
-      <li>name</li>
-      <li>name</li>
-      <li>name</li>
-      <li>name</li>
-      <li>name</li>
-      <li>name</li>
-    </ul>
-  </div>
-  <div>
-    <ul className='flex text-4xl'>
-      <li>name</li>
-      <li>name</li>
-      <li>name</li>
-      <li>name</li>
-      <li>name</li>
-      <li>name</li>
-    </ul>
-  </div>
-  <div>
-    <ul className='flex text-4xl'>
-      <li>name</li>
-      <li>name</li>
-      <li>name</li>
-      <li>name</li>
-      <li>name</li>
-      <li>name</li>
-    </ul>
-  </div>
-  <div>
-    <ul className='flex text-4xl'>
-      <li>name</li>
-      <li>name</li>
-      <li>name</li>
-      <li>name</li>
-      <li>name</li>
-      <li>name</li>
-    </ul>
-  </div>
-</div>
-              
-    
-
-          
-          {/* center   */}
-          <div className=''>
-              <img src="/new.png" alt="" />
-          </div>
-
-          {/* right  */}
-
-
-          <div>
-          <div className='flex'>
-              <img src="./openart-image_A9Njd4Bt_1737188519746_raw.png" className='w-20 h-20' alt="" />
-              <img src="./openart-image_ctb43kyb_1737188542752_raw.png" className='w-20 h-20' alt="" />
-              <img src="./openart-image_j_iFjyqH_1737188463867_raw.png" className='w-20 h-20' alt="" />
-              <img src="./openart-image_m2vneN_0_1737194333552_raw.png" className='w-20 h-20' alt="" />
-              <img src="./openart-image_nmpCT914_1737194232040_raw.png" className='w-20 h-20' alt="" />
-              <img src="./openart-image_P2KmCKjj_1737194201847_raw.png" className='w-20 h-20' alt="" />
-              <img src="./openart-image_Qc-w8Asb_1737194201667_raw.png" className='w-20 h-20' alt="" />
-              <img src="./openart-image_VzSwOh_L_1737194306069_raw.png" className='w-20 h-20' alt="" />
-              <img src="./pexels-minan1398-906150.png" alt="" />
-              <img src="./pexels-philippedonn-1133957.png" alt="" />
-              <img src="./pexels-pixabay-45853.png" alt="" />
-              <img src="./pexels-pixabay-268533.png" alt="" />
-              <img src="./pexels-pixabay-326055.png" alt="" />
-              <img src="./pexels-souvenirpixels-414612.png" alt="" />
-          </div>
-
-
-
-
-          <div className='flex'>
-              <img src="./openart-image_A9Njd4Bt_1737188519746_raw.png" className='w-20 h-20' alt="" />
-              <img src="./openart-image_ctb43kyb_1737188542752_raw.png" className='w-20 h-20' alt="" />
-              <img src="./openart-image_j_iFjyqH_1737188463867_raw.png" className='w-20 h-20' alt="" />
-              <img src="./openart-image_m2vneN_0_1737194333552_raw.png" className='w-20 h-20' alt="" />
-              <img src="./openart-image_nmpCT914_1737194232040_raw.png" className='w-20 h-20' alt="" />
-              <img src="./openart-image_P2KmCKjj_1737194201847_raw.png" className='w-20 h-20' alt="" />
-              <img src="./openart-image_Qc-w8Asb_1737194201667_raw.png" className='w-20 h-20' alt="" />
-              <img src="./openart-image_VzSwOh_L_1737194306069_raw.png" className='w-20 h-20' alt="" />
-              <img src="./pexels-minan1398-906150.png" alt="" />
-              <img src="./pexels-philippedonn-1133957.png" alt="" />
-              <img src="./pexels-pixabay-45853.png" alt="" />
-              <img src="./pexels-pixabay-268533.png" alt="" />
-              <img src="./pexels-pixabay-326055.png" alt="" />
-              <img src="./pexels-souvenirpixels-414612.png" alt="" />
-          </div>
-
-
-          <div className='flex'>
-              <img src="./openart-image_A9Njd4Bt_1737188519746_raw.png" className='w-20 h-20' alt="" />
-              <img src="./openart-image_ctb43kyb_1737188542752_raw.png" className='w-20 h-20' alt="" />
-              <img src="./openart-image_j_iFjyqH_1737188463867_raw.png" className='w-20 h-20' alt="" />
-              <img src="./openart-image_m2vneN_0_1737194333552_raw.png" className='w-20 h-20' alt="" />
-              <img src="./openart-image_nmpCT914_1737194232040_raw.png" className='w-20 h-20' alt="" />
-              <img src="./openart-image_P2KmCKjj_1737194201847_raw.png" className='w-20 h-20' alt="" />
-              <img src="./openart-image_Qc-w8Asb_1737194201667_raw.png" className='w-20 h-20' alt="" />
-              <img src="./openart-image_VzSwOh_L_1737194306069_raw.png" className='w-20 h-20' alt="" />
-              <img src="./pexels-minan1398-906150.png" alt="" />
-              <img src="./pexels-philippedonn-1133957.png" alt="" />
-              <img src="./pexels-pixabay-45853.png" alt="" />
-              <img src="./pexels-pixabay-268533.png" alt="" />
-              <img src="./pexels-pixabay-326055.png" alt="" />
-              <img src="./pexels-souvenirpixels-414612.png" alt="" />
-          </div>
-
-
-
-          <div className='flex'>
-              <img src="./openart-image_A9Njd4Bt_1737188519746_raw.png" className='w-20 h-20' alt="" />
-              <img src="./openart-image_ctb43kyb_1737188542752_raw.png" className='w-20 h-20' alt="" />
-              <img src="./openart-image_j_iFjyqH_1737188463867_raw.png" className='w-20 h-20' alt="" />
-              <img src="./openart-image_m2vneN_0_1737194333552_raw.png" className='w-20 h-20' alt="" />
-              <img src="./openart-image_nmpCT914_1737194232040_raw.png" className='w-20 h-20' alt="" />
-              <img src="./openart-image_P2KmCKjj_1737194201847_raw.png" className='w-20 h-20' alt="" />
-              <img src="./openart-image_Qc-w8Asb_1737194201667_raw.png" className='w-20 h-20' alt="" />
-              <img src="./openart-image_VzSwOh_L_1737194306069_raw.png" className='w-20 h-20' alt="" />
-              <img src="./pexels-minan1398-906150.png" alt="" />
-              <img src="./pexels-philippedonn-1133957.png" alt="" />
-              <img src="./pexels-pixabay-45853.png" alt="" />
-              <img src="./pexels-pixabay-268533.png" alt="" />
-              <img src="./pexels-pixabay-326055.png" alt="" />
-              <img src="./pexels-souvenirpixels-414612.png" alt="" />
-          </div>
-
-
-
-
-          </div>
-          
-
+      {/* Curved Section */}
+      <div className="relative w-full h-[850px] flex items-center justify-center">
+        
+        {/* Top Curve */}
+        <div className="absolute top-0 left-0 w-full overflow-hidden mt-[150px] z-50">
+          <svg className="w-full" height={curveHeight} viewBox={`0 0 1440 ${curveHeight}`} xmlns="http://www.w3.org/2000/svg">
+            <path fill={backgroundColor} d={`M0,0 C360,${curveHeight} 1080,${curveHeight} 1440,0`} />
+            <path d={`M0,2 C360,${curveHeight} 1080,${curveHeight} 1440,2`} stroke={curveLineColor} strokeWidth="4" fill="none" />
+          </svg>
         </div>
 
+        {/* Single Image on Top Curve */}
+        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
+          {/* <img 
+            src={curveImageSrc} 
+            alt="Curve Image"
+            className="w-[500px] h-[250px] object-contain"
+          /> */}
+        </div>
+
+        {/* Infinite Scrolling Gallery */}
+        <div className="w-full overflow-hidden relative z-10 my-8">
+          <motion.div
+            className="flex gap-4 relative z-20"
+            animate={{ x: [-SINGLE_SET_WIDTH / 2, -SINGLE_SET_WIDTH - SINGLE_SET_WIDTH / 2] }}
+            transition={{ duration: 15, repeat: Infinity, ease: 'linear', repeatType: 'loop' }}
+            style={{ width: 'max-content', display: 'flex' }}
+          >
+            {[...galleryImages, ...galleryImages, ...galleryImages].map((image, index) => (
+              <div
+                key={`image-${index}`}
+                className="flex-shrink-0 relative z-10"
+                style={{ width: `${CARD_WIDTH}px` }}
+              >
+                <div className="relative" style={{ height: `${CARD_HEIGHT}px` }}>
+                  <img
+                    src={image.src}
+                    alt={`Artwork ${image.id}`}
+                    className="w-full h-full object-cover shadow-2xl rounded-lg"
+                  />
+                </div>
+              </div>
+            ))}
+          </motion.div>
+        </div>
+
+        {/* Bottom Curve */}
+        <div className="absolute bottom-0 left-0 w-full overflow-hidden mb-[150px] z-50">
+          <svg className="w-full" height={curveHeight} viewBox={`0 0 1440 ${curveHeight}`} xmlns="http://www.w3.org/2000/svg">
+            <path fill={backgroundColor} d={`M0,${curveHeight} C360,0 1080,0 1440,${curveHeight}`} />
+            <path d={`M0,${curveHeight - 2} C360,2 1080,2 1440,${curveHeight - 2}`} stroke={curveLineColor} strokeWidth="4" fill="none" />
+          </svg>
+        </div>
+
+        {/* Single Image on Bottom Curve */}
+        <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 z-50 ">
+          {/* <img 
+            src={curveImageSrc} 
+            alt="Curve Image"
+            className="w-[500px] h-[250px] object-contain"
+          /> */}
+        </div>
+
+      </div>
+    </div>
+  );
+};
+
+export default ArtGallery;
 
 
-      
-    </>
-  )
-}
 
-export default Slideimage
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+'use client';
+import React from 'react';
+import { motion } from 'framer-motion';
+import { Poppins } from 'next/font/google';
+
+const poppins = Poppins({ 
+  subsets: ['latin'], 
+  weight: ['400', '700'] 
+});
+
+const ArtGallery = ({ curveHeight = 120, backgroundColor = '#1E293B', curveLineColor = 'white' }) => {
+  const galleryImages = [
+    { id: 1, src: 'Landingpage/ArtGallery/img1.png' },
+    { id: 2, src: 'Landingpage/ArtGallery/img2.png' },
+    { id: 3, src: 'Landingpage/ArtGallery/img3.png' },
+    { id: 4, src: 'Landingpage/ArtGallery/img4.png' },
+    { id: 5, src: 'Landingpage/ArtGallery/img5.png' },
+    { id: 6, src: 'Landingpage/ArtGallery/img6.png' },
+    { id: 7, src: 'Landingpage/ArtGallery/img7.png' },
+    { id: 8, src: 'Landingpage/ArtGallery/img8.png' },
+    { id: 9, src: 'Landingpage/ArtGallery/img9.png' },
+  ];
+
+  const CARD_WIDTH = 300;
+  const CARD_HEIGHT = 550;
+  const GAP = 32;
+  const SINGLE_SET_WIDTH = galleryImages.length * (CARD_WIDTH + GAP);
+
+  return (
+    <div className="min-h-screen relative flex flex-col items-center overflow-hidden" style={{ backgroundColor }}>
+      {/* Title */}
+      <h1 className={`text-5xl font-medium text-center text-white tracking-wide py-8 z-20 ${poppins.className}`}>
+        Art Gallery
+      </h1>
+
+      {/* Curved Section */}
+      <div className="relative w-full h-[850px] flex items-center justify-center">
+        
+        {/* Top Curve */}
+        <div className="absolute top-0 left-0 w-full overflow-hidden mt-[150px] z-50">
+          <svg className="w-full" height={curveHeight} viewBox={`0 0 1440 ${curveHeight}`} preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <path fill={backgroundColor} d={`M0,0 C480,${curveHeight} 960,${curveHeight} 1440,0`} />
+            <path d={`M0,2 C480,${curveHeight} 960,${curveHeight} 1440,2`} stroke={curveLineColor} strokeWidth="4" fill="none" />
+          </svg>
+        </div>
+
+        {/* Infinite Scrolling Gallery */}
+        <div className="w-full overflow-hidden relative z-10 my-8">
+          <motion.div
+            className="flex gap-4 relative z-20"
+            animate={{ x: [-SINGLE_SET_WIDTH / 2, -SINGLE_SET_WIDTH - SINGLE_SET_WIDTH / 2] }}
+            transition={{ duration: 15, repeat: Infinity, ease: 'linear', repeatType: 'loop' }}
+            style={{ width: 'max-content', display: 'flex' }}
+          >
+            {[...galleryImages, ...galleryImages, ...galleryImages].map((image, index) => (
+              <div
+                key={`image-${index}`}
+                className="flex-shrink-0 relative z-10"
+                style={{ width: `${CARD_WIDTH}px` }}
+              >
+                <div className="relative" style={{ height: `${CARD_HEIGHT}px` }}>
+                  <img
+                    src={image.src}
+                    alt={`Artwork ${image.id}`}
+                    className="w-full h-full object-cover shadow-2xl rounded-lg"
+                  />
+                </div>
+              </div>
+            ))}
+          </motion.div>
+        </div>
+
+        {/* Bottom Curve */}
+        <div className="absolute bottom-0 left-0 w-full overflow-hidden mb-[150px] z-50">
+          <svg className="w-full" height={curveHeight} viewBox={`0 0 1440 ${curveHeight}`} preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <path fill={backgroundColor} d={`M0,${curveHeight} C480,0 960,0 1440,${curveHeight}`} />
+            <path d={`M0,${curveHeight - 2} C480,2 960,2 1440,${curveHeight - 2}`} stroke={curveLineColor} strokeWidth="4" fill="none" />
+          </svg>
+        </div>
+
+      </div>
+    </div>
+  );
+};
+
+export default ArtGallery;
+
