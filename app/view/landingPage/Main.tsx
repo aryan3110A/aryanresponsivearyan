@@ -10,6 +10,7 @@ import Header from "./components/Header";
 import Footer from "../Core/Footer";
 import Commingsoon from "./components/Commingsoon";
 
+
 const Main = () => {
   return (
     <div className="bg-black relative">
@@ -56,6 +57,8 @@ const Main = () => {
       <div className="relative z-[90]">
         <Footer />
       </div>
+
+      
     </div>
   );
 };

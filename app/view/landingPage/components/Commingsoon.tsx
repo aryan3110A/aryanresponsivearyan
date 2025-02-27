@@ -60,7 +60,7 @@ const Commingsoon = () => {
   return (
     <div className="h-screen flex flex-col items-center justify-center space-y-300 bg-black text-white text-[130px] font-semibold">
       <HoverEffectText text1="Real" text2="Gen" imageSrc="/Landingpage/commingsoon/hover-1.png" />
-      <HoverEffectText text1="Text to" text2="Video" imageSrc="/Landingpage/commingsoon/hover-2.png" />
+      <HoverEffectText text1="Text to" text2="Video" imageSrc="/Landingpage/commingsoon/hover-1.png" />
       <HoverEffectText text1="3D" text2="Creations" imageSrc="/Landingpage/commingsoon/hover-3.png" />
       <HoverEffectText text1="Sketch to" text2="Image" imageSrc="/Landingpage/commingsoon/hover-4.png" />
     </div>
