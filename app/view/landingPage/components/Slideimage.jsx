@@ -32,14 +32,14 @@ const SlideImage = () => {
       </div>
 
       {/* Center Image */}
-      <div className="relative w-1/3 flex justify-center">
-        <img src="/new.png" alt="new" className="relative z-10" />
+      <div className="relative w-1/3 flex justify-center ">
+        <img src="/Core/logomain.png" alt="new" className="relative z-10 w-auto" />
       </div>
 
       {/* Right Side - Image Animation */}
       <div className="w-1/3 flex flex-col gap-4 overflow-hidden">
         {[...Array(4)].map((_, row) => (
-          <motion.div
+          <motion.div 
             key={row}
             className="flex"
             initial={{ x: "-100%" }} // Start off-screen left

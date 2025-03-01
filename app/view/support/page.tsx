@@ -44,7 +44,7 @@ export default function SupportPage() {
 
   return (
 
-
+<>
     <div className="min-h-screen bg-black text-white px-4 md:px-6 lg:px-8  md:py-12 lg:py-12">
       {/* Grid Container */}
       <div className="max-w-[90vw] mx-auto">
@@ -198,7 +198,9 @@ export default function SupportPage() {
 
     </div>
 
-    <Footer />
     </div>
+    <Footer />
+
+    </>
   )
 }

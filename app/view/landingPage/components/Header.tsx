@@ -1,7 +1,5 @@
 import React from 'react'
 import Button from './Button';
-
-
 import SlideImage from './Slideimage';
 
 const Header = () => {

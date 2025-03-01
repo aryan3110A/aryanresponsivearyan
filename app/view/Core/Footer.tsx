@@ -22,8 +22,8 @@ const Footer = () => {
     },
     Company: {
       Blog: "/blog",
-      FAQ: "/faq",
-      Support: "/support",
+      "Contact Us": "/view/contactus",
+      Support: "/view/support",
       "About us": "/about",
     },
   };

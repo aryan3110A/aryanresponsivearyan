@@ -1,25 +1,29 @@
 import React from "react";
-import Main from "./view/landingPage/Main";
+
 import "./globals.css";
-import SignIn from "./view/signin/Signin";
-import Signup from "./view/signup/Signup";
-import Home from "./view/home/Home";
+import SignIn from "./view/signin/page";
+import Signup from "./view/signup/page";
+import Home from "./view/home/page";
 import Scrollbar from "./Scrollbar";
-import ContactSection from "./view/contactus/ContactSection";
-import ImageGenMain from "./view/ImageGeneate/ImageGenMain";
-import SupportPage from "./view/landingPage/Supportus";
+import ContactSection from "./view/contactus/page";
+import ImageGenMain from "./view/ImageGeneate/page";
+
+import Main from "./view/landingPage/page";
+import SupportPage from "./view/support/page";
+import SubscriptionToggle from "./view/pricing/page";
 
 const page = () => {
   return (
     <>
-      {/* <Main /> */}
+      <Main />
       {/* <SignIn /> */}
       {/* <Signup /> */}
       {/* <Home /> */}
       {/* <Scrollbar /> */}
-      <ContactSection />
+      {/* <ContactSection /> */}
       {/* <ImageGenMain /> */}
       {/* <SupportPage /> */}
+      {/* <SubscriptionToggle /> */}
     </>
   );
 };
