@@ -17,6 +17,10 @@ const config: Config = {
       fontFamily: {
         poppins: ["Poppins", "sans-serif"],
       },
+      screens: {
+        "md-laptop": "1366px", // For 15.6-inch & 16-inch laptops
+        "lg": "1600px", // Large PCs
+      },
     },
   },
   plugins: [],

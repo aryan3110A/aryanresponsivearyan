@@ -2,13 +2,14 @@ import React from "react";
 import Navigation from "./components/Navigation";
 import ArtGallery from "./components/ArtGallery";
 import Cards from "./components/Cards";
-import PartnersSection from "./components/partners-section";
+
 import { Testimonials } from "./components/Testimonials";
 import StartUsingAi from "./components/start-using-ai";
 import DiscordLanding from "./components/discord-landing";
 import Header from "./components/Header";
 import Footer from "../Core/Footer";
 import Commingsoon from "./components/Commingsoon";
+import { PartnersSection } from "./components/partners-section";
 
 
 const Main = () => {
@@ -47,7 +48,7 @@ const Main = () => {
       </div>
 
       <div className="relative z-[70]">
-        <PartnersSection />
+    <PartnersSection />
       </div>
 
       <div className="relative z-[80]">

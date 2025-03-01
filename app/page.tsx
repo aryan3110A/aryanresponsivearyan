@@ -7,6 +7,7 @@ import Home from "./view/home/Home";
 import Scrollbar from "./Scrollbar";
 import ContactSection from "./view/contactus/ContactSection";
 import ImageGenMain from "./view/ImageGeneate/ImageGenMain";
+import SupportPage from "./view/landingPage/Supportus";
 
 const page = () => {
   return (
@@ -16,8 +17,9 @@ const page = () => {
       {/* <Signup /> */}
       {/* <Home /> */}
       {/* <Scrollbar /> */}
-      {/* <ContactSection /> */}
-      <ImageGenMain />
+      <ContactSection />
+      {/* <ImageGenMain /> */}
+      {/* <SupportPage /> */}
     </>
   );
 };
