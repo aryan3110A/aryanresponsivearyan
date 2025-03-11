@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { MessageCircle, Instagram, Youtube, Newspaper } from "lucide-react";
 import {
   IconBrandBlogger,
@@ -15,7 +18,7 @@ const Footer = () => {
       "Plans & Pricing": "/pricing",
     },
     Features: {
-      "Text to Image": "/text-to-image",
+      "Text to Image": "/view/home",
       "Text to Video (soon)": "#",
       "Sketch to Image (soon)": "#",
       "Real Time Generation (soon)": "#",

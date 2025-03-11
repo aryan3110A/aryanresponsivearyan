@@ -1,8 +1,11 @@
 "use client"
-
+import { useRouter } from "next/navigation";
 import Image from "next/image"
 
 export default function FeaturesSection() {
+   const route = useRouter();
+
+
   return (
     <section className="mb-24">
       <div className="flex items-center gap-4 mb-8">
@@ -18,7 +21,7 @@ export default function FeaturesSection() {
 
       <div className="flex justify-center items-center gap-6 flex-wrap">
 
-        <div className="bg-[#F3F3F3] rounded-[45px] overflow-hidden w-full h-[251px] max-w-[395px] mx-auto relative transition-all duration-100 hover:border-b-8 hover:border-gray-300/100 border-2 border-black">
+        <div className="bg-[#F3F3F3] rounded-[45px] overflow-hidden w-full h-[251px] max-w-[395px] mx-auto relative transition-all duration-100 hover:border-b-8 hover:border-gray-300/100 border-2 border-black" onClick={() => route.push("/view/ImageGeneate")}>
 
           <div className="p-8 h-full flex flex-col justify-between">
             <div className="bg-blue-500 text-white px-4 py-2 rounded-[7px] text-lg inline-block w-fit font-bold">

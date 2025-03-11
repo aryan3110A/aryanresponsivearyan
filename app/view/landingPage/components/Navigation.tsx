@@ -28,8 +28,7 @@ const Navigation = () => {
         scrolled
           ? "backdrop-blur-xl bg-black/30 shadow-lg"
           : "backdrop-blur-xl bg-black/10 shadow-lg"
-      } transition-all duration-300`}
-    >
+      } transition-all duration-300`}>
       {/* Logo */}
       <div>
         <span className="">
@@ -63,13 +62,13 @@ const Navigation = () => {
 
         {activeDropdown === "features" && (
           <ul className="absolute left-1/2 -translate-x-1/2 mt-4 w-80 bg-black text-white rounded-lg border border-[#5f5e5e] shadow-[6px_6px_10px_rgba(0,0,0,0.6)] p-3 flex flex-col items-center overflow-hidden whitespace-nowrap">
-            <li className="w-full px-3 py-2 cursor-pointer text-sm text-center hover:text-[#dbdbdb]   hover:bg-gradient-to-l  hover:bg-clip-text">
+            <li className="w-full px-3 py-2 cursor-pointer text-sm text-center hover:text-[#dbdbdb]   hover:bg-gradient-to-l  hover:bg-clip-text" onClick={() => route.push("/view/home") }>
               Text to image
             </li>
             <li className="w-full px-3 py-2 cursor-pointer text-sm text-center hover:text-[#dbdbdb]   hover:bg-gradient-to-l  hover:bg-clip-text">
               Text to video (coming soon)
             </li>
-            <li className="w-full px-3 py-2 cursor-pointer text-sm text-centerhover:text-[#dbdbdb]   hover:bg-gradient-to-l  hover:bg-clip-text">
+            <li className="w-full px-3 py-2 cursor-pointer text-sm text-center hover:text-[#dbdbdb]   hover:bg-gradient-to-l  hover:bg-clip-text">
               Sketch to image (coming soon)
             </li>
             <li className="w-full px-3 py-2 cursor-pointer text-sm text-center hover:text-[#dbdbdb]   hover:bg-gradient-to-l  hover:bg-clip-text">
@@ -100,16 +99,10 @@ const Navigation = () => {
   {activeDropdown === "templates" && (
     <ul className="absolute left-1/2 -translate-x-1/2 mt-4 w-80 bg-black text-white  rounded-lg border border-[#5f5e5e] shadow-[6px_6px_10px_rgba(0,0,0,0.6)] p-3 flex flex-col items-center overflow-hidden whitespace-nowrap">
       <li className="w-full px-3 py-2 cursor-pointer text-sm text-center hover:text-[#dbdbdb] hover:bg-gradient-to-l hover:bg-clip-text">
-        Text to image
+        Image generation
       </li>
       <li className="w-full px-3 py-2 cursor-pointer text-sm text-center hover:text-[#dbdbdb] hover:bg-gradient-to-l hover:bg-clip-text">
-        Text to video (coming soon)
-      </li>
-      <li className="w-full px-3 py-2 cursor-pointer text-sm text-center hover:text-[#dbdbdb] hover:bg-gradient-to-l hover:bg-clip-text">
-        Sketch to image (coming soon)
-      </li>
-      <li className="w-full px-3 py-2 cursor-pointer text-sm text-center hover:text-[#dbdbdb] hover:bg-gradient-to-l hover:bg-clip-text">
-        Real-time generation (coming soon)
+        video generation (Comming soon)
       </li>
     </ul>
   )}
@@ -118,7 +111,7 @@ const Navigation = () => {
 
       {/* Other Links */}
       <div>
-        <span className="px-3 py-1 text-sm  hover:bg-gradient-to-l  hover:bg-clip-text cursor-pointer hover:text-[#dbdbdb]">
+        <span className="px-3 py-1 text-sm  hover:bg-gradient-to-l  hover:bg-clip-text cursor-pointer hover:text-[#dbdbdb]" onClick={() => route.push("/view/pricing")}>
           Pricing
         </span>
       </div>
