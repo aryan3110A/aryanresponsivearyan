@@ -10,9 +10,9 @@ export default function SignUp() {
       <div className="hidden lg:block flex-1 relative">
         <div className="absolute inset-0 border-8 border-black">
           <img
-            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Malakai030_1%201-lleCh1ZmFtilojVCQcYvrXhFc8SSjw.png"
+            src="/signup/Malakai030_11.png"
             alt="Artistic warriors"
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover "
           />
         </div>
       </div>
