@@ -420,7 +420,7 @@ const ContactSection = () => {
         <div
           className="relative mt-40 text-center text-white w-[100vw] "
           style={{
-            backgroundImage: "url('/bg_rating7.png')",
+            backgroundImage: "url('/contactus/bg_rating7.png')",
             backgroundSize: "contain", // Ensures the image maintains its original size
             backgroundRepeat: "no-repeat", // Prevents repeating of the image
             backgroundPosition: "center", // Centers the image
@@ -434,7 +434,7 @@ const ContactSection = () => {
             {/* Glowing Effect for Icon */}
             <div className="inline-block rounded-full mb-0 p-4">
               <Image
-                src="/rateicon.png"
+                src="/contactus/rateicon.png"
                 alt="Mobile App"
                 width={128}
                 height={128}

@@ -13,7 +13,7 @@ export default function HeroSection() {
   }, [])
 
   return (
-    <section className="relative w-full mt-8 mb-16">
+    <section className="relative w-full mt-16 mb-16">
       <div className="relative w-full max-w-[1286px] h-[269px] mx-auto overflow-hidden rounded-[25px]">
         <video
           ref={videoRef}
