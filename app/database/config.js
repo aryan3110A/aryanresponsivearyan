@@ -4,13 +4,12 @@ import { getAuth } from "firebase/auth";
 
 // Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyABqn65A9aMmMETPIgn_je8OHfjdeHcmw4",
-  authDomain: "wildmind-212ae.firebaseapp.com",
-  projectId: "wildmind-212ae",
-  storageBucket: "wildmind-212ae.appspot.com", // Corrected value
-  messagingSenderId: "399679382904",
-  appId: "1:399679382904:web:de8158abf4d5a698a4548d",
-  measurementId: "G-28DC9XNVEB"
+  apiKey: "AIzaSyCpBbPHdVU3F1wgKEsu0xUthu7mKK9DLzw",
+  authDomain: "authantication-3107c.firebaseapp.com",
+  projectId: "authantication-3107c",
+  storageBucket: "authantication-3107c.firebasestorage.app",
+  messagingSenderId: "779397607738",
+  appId: "1:779397607738:web:7f95e6acd30aeb75f7e003"
 };
 
 // Initialize Firebase

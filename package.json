@@ -13,6 +13,7 @@
     "@heroui/react": "^2.6.14",
     "@shadcn/ui": "^0.0.4",
     "@tabler/icons-react": "^3.30.0",
+    "axios": "^1.8.4",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",

@@ -10,7 +10,7 @@ export default function SignIn() {
       <div className="hidden lg:block flex-1 relative">
         <div className="absolute inset-0 border-8 border-black">
           <img
-            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/login.jpg-mmOgTOz7a1oc3pBIBkPjoOECHtPGl8.jpeg"
+            src="./signup/Malakai030_11.jpg"
             alt="Crystal art"
             className="w-full h-full object-cover"
           />
