@@ -44,7 +44,7 @@ const Navigation = () => {
       <div className="relative">
         <span
           onClick={() => toggleDropdown("features")}
-          className="cursor-pointer px-3 py-1 flex items-center gap-1  hover:bg-gradient-to-l  hover:bg-clip-text font-poppins text-sl bg-transparent hover:text-[#dbdbdb]"
+          className="cursor-pointer px-3 py-1 flex items-center gap-1  hover:bg-gradient-to-l  hover:bg-clip-text font-poppins  bg-transparent hover:text-[#dbdbdb]"
         >
           Features
           <img
@@ -52,8 +52,8 @@ const Navigation = () => {
       height="12"
       src={
         activeDropdown === "features"
-          ? "./Core/arrowup.svg"
-          : "./Core/arrowdown.svg"
+          ? "/Core/arrowup.svg"
+          : "/Core/arrowdown.svg"
       }
       alt="arrow-icon"
       className="ml-1"
@@ -62,16 +62,16 @@ const Navigation = () => {
 
         {activeDropdown === "features" && (
           <ul className="absolute left-1/2 -translate-x-1/2 mt-4 w-80 bg-black text-white rounded-lg border border-[#5f5e5e] shadow-[6px_6px_10px_rgba(0,0,0,0.6)] p-3 flex flex-col items-center overflow-hidden whitespace-nowrap">
-            <li className="w-full px-3 py-2 cursor-pointer text-sm text-center hover:text-[#dbdbdb]   hover:bg-gradient-to-l  hover:bg-clip-text" onClick={() => route.push("/view/home") }>
+            <li className="w-full px-3 py-2 cursor-pointer  text-center hover:text-[#dbdbdb]   hover:bg-gradient-to-l  hover:bg-clip-text" onClick={() => route.push("/view/home") }>
               Text to image
             </li>
-            <li className="w-full px-3 py-2 cursor-pointer text-sm text-center hover:text-[#dbdbdb]   hover:bg-gradient-to-l  hover:bg-clip-text">
+            <li className="w-full px-3 py-2 cursor-pointer text-center hover:text-[#dbdbdb]   hover:bg-gradient-to-l  hover:bg-clip-text">
               Text to video (coming soon)
             </li>
-            <li className="w-full px-3 py-2 cursor-pointer text-sm text-center hover:text-[#dbdbdb]   hover:bg-gradient-to-l  hover:bg-clip-text">
+            <li className="w-full px-3 py-2 cursor-pointer text-center hover:text-[#dbdbdb]   hover:bg-gradient-to-l  hover:bg-clip-text">
               Sketch to image (coming soon)
             </li>
-            <li className="w-full px-3 py-2 cursor-pointer text-sm text-center hover:text-[#dbdbdb]   hover:bg-gradient-to-l  hover:bg-clip-text">
+            <li className="w-full px-3 py-2 cursor-pointer text-center hover:text-[#dbdbdb]   hover:bg-gradient-to-l  hover:bg-clip-text">
               Real-time generation (coming soon)
             </li>
           </ul>
@@ -81,7 +81,8 @@ const Navigation = () => {
       <div className="relative">
   <span
     onClick={() => toggleDropdown("templates")}
-    className="cursor-pointer hover:text-[#dbdbdb] bg-transparent px-3 py-1 flex items-center gap-1 text-sm hover:bg-gradient-to-l hover:bg-clip-text"
+    className="cursor-pointer hover:text-[#dbdbdb] bg-transparent px-3 py-1 flex items-center gap-1 
+     hover:bg-gradient-to-l hover:bg-clip-text"
   >
     Templates
     <img
@@ -89,8 +90,8 @@ const Navigation = () => {
       height="12"
       src={
         activeDropdown === "templates"
-          ? "./Core/arrowup.svg"
-          : "./Core/arrowdown.svg"
+          ? "/Core/arrowup.svg"
+          : "/Core/arrowdown.svg"
       }
       alt="arrow-icon"
       className="ml-1"
@@ -98,10 +99,10 @@ const Navigation = () => {
   </span>
   {activeDropdown === "templates" && (
     <ul className="absolute left-1/2 -translate-x-1/2 mt-4 w-80 bg-black text-white  rounded-lg border border-[#5f5e5e] shadow-[6px_6px_10px_rgba(0,0,0,0.6)] p-3 flex flex-col items-center overflow-hidden whitespace-nowrap">
-      <li className="w-full px-3 py-2 cursor-pointer text-sm text-center hover:text-[#dbdbdb] hover:bg-gradient-to-l hover:bg-clip-text">
+      <li className="w-full px-3 py-2 cursor-pointer text-center hover:text-[#dbdbdb] hover:bg-gradient-to-l hover:bg-clip-text">
         Image generation
       </li>
-      <li className="w-full px-3 py-2 cursor-pointer text-sm text-center hover:text-[#dbdbdb] hover:bg-gradient-to-l hover:bg-clip-text">
+      <li className="w-full px-3 py-2 cursor-pointer text-center hover:text-[#dbdbdb] hover:bg-gradient-to-l hover:bg-clip-text">
         video generation (Comming soon)
       </li>
     </ul>
@@ -111,12 +112,12 @@ const Navigation = () => {
 
       {/* Other Links */}
       <div>
-        <span className="px-3 py-1 text-sm  hover:bg-gradient-to-l  hover:bg-clip-text cursor-pointer hover:text-[#dbdbdb]" onClick={() => route.push("/view/pricing")}>
+        <span className="px-3 py-1  hover:bg-gradient-to-l  hover:bg-clip-text cursor-pointer hover:text-[#dbdbdb]" onClick={() => route.push("/view/pricing")}>
           Pricing
         </span>
       </div>
       <div>
-        <span className="px-3 py-1 text-sm  hover:bg-gradient-to-l  hover:bg-clip-text cursor-pointer hover:text-[#dbdbdb]">
+        <span className="px-3 py-1 hover:bg-gradient-to-l  hover:bg-clip-text cursor-pointer hover:text-[#dbdbdb]" onClick={() => route.push("/view/artstation")}>
           Art Station
         </span>
       </div>

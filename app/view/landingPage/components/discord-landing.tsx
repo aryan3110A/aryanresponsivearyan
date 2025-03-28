@@ -31,7 +31,7 @@ export default function DiscordLanding() {
           <button
             className="flex items-center justify-center gap-2 w-[245px] h-[51px] rounded-[18px] text-white bg-[#5865F2] hover:bg-white hover:text-[#5865F2] hover:shadow-none transition duration-200 shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#5865F2]"
             onMouseEnter={() => setDiscordIcon("/Landingpage/DiscordView/discorddark.svg")} 
-            onMouseLeave={() => setDiscordIcon("./Landingpage/DiscordView/discord.svg")} 
+            onMouseLeave={() => setDiscordIcon("/Landingpage/DiscordView/discord.svg")} 
           >
             <Image src={discordIcon} alt="Discord Icon" width={24} height={24} />
             <span className="text-base font-medium">Join Discord Server</span>

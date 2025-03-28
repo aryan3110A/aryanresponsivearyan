@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Check } from "lucide-react";
+import NavigationFull from "../Core/NavigationFull";
 
 type BillingPeriod = "monthly" | "yearly";
 
@@ -104,6 +105,7 @@ export default function SubscriptionToggle() {
 
   return (
     <div className="min-h-screen relative text-white p-10 flex flex-col items-center justify-center overflow-hidden">
+      <NavigationFull />
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-black"></div>
         <img

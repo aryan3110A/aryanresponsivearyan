@@ -21,7 +21,7 @@ export const auth = getAuth(app);
 // Only initialize analytics on the client-side
 if (typeof window !== "undefined") {
   import("firebase/analytics").then(({ getAnalytics }) => {
-    getAnalytics(app);
+    getAnalytics(app); 
   });
 }
 

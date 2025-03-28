@@ -13,12 +13,12 @@ const Footer = () => {
   const navigationLinks = {
     Home: {
       Features: "/features",
-      Templets: "/templets",
-      "Art station": "/art-station",
-      "Plans & Pricing": "/pricing",
+      Templets: "/view/templates",
+      "Art station": "/view/artstation",
+      "Plans & Pricing": "/view/pricing",
     },
     Features: {
-      "Text to Image": "/view/home",
+      "Text to Image": "/view/imagegeneration",
       "Text to Video (soon)": "#",
       "Sketch to Image (soon)": "#",
       "Real Time Generation (soon)": "#",
