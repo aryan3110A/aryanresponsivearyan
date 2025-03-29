@@ -1,22 +1,23 @@
 "use client"
 
 import { useRef } from "react"
+import Image from "next/image"
 import { motion, useScroll, useTransform } from "framer-motion"
 
 interface CardProps {
   title: string
   description: string
   imageSrc: string
-  scrollYProgress: any
+  scrollYProgress: ReturnType<typeof useTransform>
   index: number
   total: number
 }
 
 function Card({ title, description, imageSrc, scrollYProgress, index, total }: CardProps) {
   const gap = 10 * index
-  const startProgress = (index / total) - 0.04
-  const endProgress = ((index + 0.6) / total) - 0.04
-  
+  const startProgress = index / total - 0.04
+  const endProgress = (index + 0.6) / total - 0.04
+
   const opacity = useTransform(scrollYProgress, [startProgress, endProgress], [0, 1])
   const y = useTransform(scrollYProgress, [startProgress, endProgress], [100 + gap, 0 + gap])
 
@@ -28,7 +29,7 @@ function Card({ title, description, imageSrc, scrollYProgress, index, total }: C
         y,
         background: 'linear-gradient(to right, rgba(24, 26, 27, 0.2), rgba(18, 18, 18, 0.8))',
         backdropFilter: 'blur(12px)',
-        WebkitBackdropFilter: 'blur(12px)', // For Safari support
+        WebkitBackdropFilter: 'blur(12px)',
         boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)'
       }}
     >
@@ -49,10 +50,13 @@ function Card({ title, description, imageSrc, scrollYProgress, index, total }: C
         {/* Right Image */}
         <div className="flex-1 flex items-center justify-center">
           <div className="w-full aspect-square rounded-2xl overflow-hidden">
-            <img 
+            <Image 
               src={imageSrc} 
               alt={title}
-              className="w-full h-full object-cover"
+              layout="responsive"
+              width={500}
+              height={500}
+              objectFit="cover"
             />
           </div>
         </div>
@@ -61,10 +65,12 @@ function Card({ title, description, imageSrc, scrollYProgress, index, total }: C
   )
 }
 
-// Rest of the code remains the same...
-
 // Progress Bar Component
-function ProgressBar({ scrollYProgress }: { scrollYProgress: any }) {
+interface ProgressBarProps {
+  scrollYProgress: ReturnType<typeof useTransform>
+}
+
+function ProgressBar({ scrollYProgress }: ProgressBarProps) {
   return (
     <motion.div 
       className="absolute left-8 md:left-4 top-1/2 -translate-y-1/2 z-50"
@@ -88,7 +94,7 @@ function ProgressBar({ scrollYProgress }: { scrollYProgress: any }) {
 
 // Main Component
 export default function ScrollbarContainer() {
-  const containerRef = useRef(null)
+  const containerRef = useRef<HTMLDivElement | null>(null)
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end start"],
@@ -96,7 +102,7 @@ export default function ScrollbarContainer() {
 
   const cardData = [
     {
-      title: "Food and Cusine",
+      title: "Food and Cuisine",
       description: "Immerse yourself in artistic representations of food, drinks, and culinary creations. Perfect for chefs, food enthusiasts, or anyone inspired by gastronomy, these designs are visually stunning and capture the essence of global cuisines.",
       imageSrc: "/Landingpage/Cards/img1.png"
     },
@@ -116,7 +122,7 @@ export default function ScrollbarContainer() {
       imageSrc: "/Landingpage/Cards/img4.png"
     },
     {
-      title: "Product banding",
+      title: "Product Branding",
       description: "Build a powerful brand identity with custom visuals tailored to your product. From logos to packaging and promotional materials, this category focuses on creating eye-catching designs that resonate with your audience.",
       imageSrc: "/Landingpage/Cards/img5.png"
     },

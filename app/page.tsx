@@ -13,16 +13,18 @@ import SupportPage from "./view/support/page";
 import SubscriptionToggle from "./view/pricing/page";
 import SelectionModel from "./view/imagegeneration/selectionmodel/app-container";
 
-const page = () => {
+// Define Page as a React functional component
+const Page: React.FC = () => {
   return (
     <>
-      {/* <Main /> */}
+
+      <Main />
       {/* <SignIn /> */}
       {/* <Signup /> */}
       {/* <Home /> */}
       {/* <Scrollbar /> */}
       {/* <ContactSection /> */}
-      <ImageGenMain />
+      {/* <ImageGenMain /> */}
       {/* <SelectionModel /> */}
       {/* <SupportPage /> */}
       {/* <SubscriptionToggle /> */}
@@ -30,4 +32,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

@@ -33,7 +33,7 @@ const Navigation = () => {
       <div>
         <span className="">
           <img
-            src="./Core/Logomain.png"
+            src="/Core/Logomain.png"
             className="w-10 flex justify-center items-center"
             alt=""
           />
@@ -62,7 +62,7 @@ const Navigation = () => {
 
         {activeDropdown === "features" && (
           <ul className="absolute left-1/2 -translate-x-1/2 mt-4 w-80 bg-black text-white rounded-lg border border-[#5f5e5e] shadow-[6px_6px_10px_rgba(0,0,0,0.6)] p-3 flex flex-col items-center overflow-hidden whitespace-nowrap">
-            <li className="w-full px-3 py-2 cursor-pointer  text-center hover:text-[#dbdbdb]   hover:bg-gradient-to-l  hover:bg-clip-text" onClick={() => route.push("/view/home") }>
+            <li className="w-full px-3 py-2 cursor-pointer  text-center hover:text-[#dbdbdb]   hover:bg-gradient-to-l  hover:bg-clip-text" onClick={() => route.push("/view/imagegeneration") }>
               Text to image
             </li>
             <li className="w-full px-3 py-2 cursor-pointer text-center hover:text-[#dbdbdb]   hover:bg-gradient-to-l  hover:bg-clip-text">

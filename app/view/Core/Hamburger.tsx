@@ -23,6 +23,7 @@ import {
 } from "@tabler/icons-react";
 
 import Link from "next/link"
+import SettingComponent from "./Settings" 
 import type React from "react" // Add this line to import React
 import SettingNavigation from "./Setting";
 
@@ -382,7 +383,7 @@ export default function Hamburger({ isOpen, onClose }: NavbarProps) {
             <div className="flex flex-col items-start">
               {/* Logo */}
               <div className="flex items-center gap-[6%] pb-4 justify-center pl-[2vw]">
-                <Image src="/navigationSetting/logo.png" alt="WildMind Logo" width={32} height={32} className="" />
+                <Image src="/logo.png" alt="WildMind Logo" width={32} height={32} className="" />
                 <span className="text-white font-bold text-3xl">WildMind</span>
               </div>
 

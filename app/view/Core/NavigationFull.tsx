@@ -5,6 +5,7 @@ import { Menu, User, ChevronDown } from "lucide-react"
 import Link from "next/link"
 import Hamburger from "./Hamburger"
 import type { JSX } from "react/jsx-runtime"
+import { useRouter } from "next/navigation"
 
 // Define types for dropdown items
 interface DropdownItem {
@@ -19,6 +20,7 @@ export default function NavigationFull(): JSX.Element {
   const [animating, setAnimating] = useState<boolean>(false)
   const headerRef = useRef<HTMLElement>(null)
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState<boolean>(false)
+  const router = useRouter();
 
   const toggleDropdown = (dropdown: string): void => {
     // If clicking the same dropdown, close it
@@ -111,7 +113,6 @@ export default function NavigationFull(): JSX.Element {
 
   return (
     <div className=" bg-[#000000] text-white">
-      {/* Top Navigation */}
       <header
         ref={headerRef}
         className="fixed top-0 left-0 right-0 z-20 bg-black/30 backdrop-blur-3xl  shadow-lg"
@@ -126,10 +127,9 @@ export default function NavigationFull(): JSX.Element {
             >
               <Menu className="w-8 h-8" />
             </button>
-            <Link href="/view/landingPage" className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-gray-200 rounded-full" />
-              <span className="text-xl font-bold">Logo</span>
-            </Link>
+            <div>
+              <img src="/Core/logomain.png" className="w-10" onClick={() => router.push("/")} alt="" />
+            </div>
           </div>
 
           {/* Desktop Navigation */}

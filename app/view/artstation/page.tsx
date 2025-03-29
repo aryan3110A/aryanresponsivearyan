@@ -5,6 +5,7 @@ import ImageOverlay from "./components/image-overlay";
 import MasonryLayout from "./components/masorny-layout";
 import Image from "next/image";
 import NavigationFull from "../Core/NavigationFull";
+import Footer from "../Core/Footer";
 
 
 // Define the image data structure
@@ -202,6 +203,8 @@ export default function ArtStation() {
           />
         )}
       </div>
+
+      <Footer />
     </>
   );
 }
