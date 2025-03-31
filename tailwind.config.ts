@@ -18,6 +18,7 @@ const config: Config = {
         poppins: ["Poppins", "sans-serif"],
       },
       screens: {
+        "sm-laptop": "1280px",
         "md-laptop": "1366px", // For 15.6-inch & 16-inch laptops
         "lg": "1600px", // Large PCs
       },
