@@ -2,7 +2,7 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import {APP_ROUTES, NAV_ROUTES, AUTH_ROUTES} from "../../../../routes/routes";
+import {APP_ROUTES} from "../../../../routes/routes";
 
 const Button = () => {
   const router = useRouter();

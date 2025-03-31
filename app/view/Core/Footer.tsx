@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { IconBrandBlogger, IconBrandGithub, IconBrandYoutube, IconBrandInstagram } from "@tabler/icons-react";
 import { Icon } from "@tabler/icons-react";
-import {APP_ROUTES, NAV_ROUTES, AUTH_ROUTES,FEATURE_ROUTES} from "../../../routes/routes";
+import { NAV_ROUTES,FEATURE_ROUTES} from "../../../routes/routes";
 
 // Define types for navigation links
 interface NavigationLinks {

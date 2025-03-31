@@ -1,6 +1,6 @@
 "use client"
 import Image from "next/image"
-import {APP_ROUTES, NAV_ROUTES, AUTH_ROUTES,FEATURE_ROUTES} from "../../../routes/routes";
+import {APP_ROUTES, NAV_ROUTES} from "../../../routes/routes";
 
 import { useState, useEffect, useRef } from "react"
 import {

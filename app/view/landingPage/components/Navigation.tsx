@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import {APP_ROUTES, NAV_ROUTES, AUTH_ROUTES,FEATURE_ROUTES} from "../../../../routes/routes";
+import {APP_ROUTES, NAV_ROUTES,FEATURE_ROUTES} from "../../../../routes/routes";
 
 const Navigation = () => {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
