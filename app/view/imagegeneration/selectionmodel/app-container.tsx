@@ -36,7 +36,9 @@ export default function SelectionModel({ onClose }: SelectionModelProps) {
         appContainerRef.current &&
         !appContainerRef.current.contains(event.target as Node)
       ) {
-        onClose && onClose();
+        if (onClose) {
+          onClose();
+        }
       }
     }
 
@@ -53,7 +55,11 @@ export default function SelectionModel({ onClose }: SelectionModelProps) {
       <div className="relative w-full h-full flex flex-col bg-[#121212] p-4">
         {/* Close button */}
         <button 
-          onClick={() => onClose && onClose()} 
+          onClick={() => {
+            if (onClose) {
+              onClose();
+            }
+          }} 
           className="self-end text-white mb-4"
         >
           Close

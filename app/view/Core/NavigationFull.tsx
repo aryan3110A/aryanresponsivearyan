@@ -6,6 +6,7 @@ import Link from "next/link"
 import Hamburger from "./Hamburger"
 import type { JSX } from "react/jsx-runtime"
 import { useRouter } from "next/navigation"
+import IMAGE from "next/image";
 
 // Define types for dropdown items
 interface DropdownItem {
@@ -128,7 +129,7 @@ export default function NavigationFull(): JSX.Element {
               <Menu className="w-8 h-8" />
             </button>
             <div>
-              <img src="/Core/logomain.png" className="w-10" onClick={() => router.push("/")} alt="" />
+              <IMAGE src="/Core/logomain.png" width={40} height={20} alt="logo" onClick={() => router.push("/")} />
             </div>
           </div>
 

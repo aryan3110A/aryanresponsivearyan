@@ -5,6 +5,8 @@ import type React from "react"
 import { useRef, useState, useEffect } from "react"
 import Image from "next/image"
 import Footer from "../Core/Footer"
+import { db } from "@/lib/firebase"
+import { collection, addDoc, serverTimestamp } from "firebase/firestore"
 
 // import { db } from "@/lib/firebaseConfig"
 // import { collection, addDoc, serverTimestamp } from "firebase/firestore"
@@ -44,7 +46,6 @@ const ContactSection = () => {
   const [error, setError] = useState<string | null>(null)
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const [hasSelectedOption, setHasSelectedOption] = useState(false)
-  const [isFirstClick, setIsFirstClick] = useState(true)
 
   const dropdownRef = useRef<HTMLDivElement>(null)
   const formRef = useRef<HTMLFormElement>(null)
@@ -85,7 +86,7 @@ const ContactSection = () => {
     try {
       await addDoc(collection(db, "contactForm"), {
         ...formData,
-        timestamp: serverTimestamp(), // Add timestamp here
+        timestamp: serverTimestamp(),
       })
 
       setSuccessMessage("Your form has been submitted successfully! Our team will reach out to you soon.")
@@ -96,8 +97,9 @@ const ContactSection = () => {
         option: "",
         message: "",
       })
-    } catch (err) {
+    } catch (error) {
       setError("Something went wrong. Please try again.")
+      console.error("Error submitting form:", error)
     } finally {
       setIsSubmitting(false)
     }
@@ -150,7 +152,7 @@ const ContactSection = () => {
   }
 
   useEffect(() => {
-    const form = document.forms["submit-to-google-sheet"] as HTMLFormElement | null
+    const form = document.querySelector('form[name="submit-to-google-sheet"]') as HTMLFormElement | null;
     // document.documentElement.style.overflow = "hidden"; // Hide scrolling
 
     if (form) {
@@ -176,9 +178,9 @@ const ContactSection = () => {
         <div className="flex justify-evenly">
           {/* Left Section (Fixed Position) */}
           <div className="text-white mt-28 self-start ">
-            <h2 className=" text-2xl mb-2">Need immediate assistance?</h2>
+            <h2 className="text-white text-2xl mb-2">Need immediate assistance?</h2>
             <p className="sm:text-lg text-white lg:text-lg mb-16">
-              Let's make things happen—your goals, our expertise!
+              Let&apos;s make things happen—your goals, our expertise!
             </p>
 
             <h1 className="text-5xl font-bold leading-tight mb-8">
@@ -196,7 +198,7 @@ const ContactSection = () => {
           >
             <h3 className="text-white text-2xl lg:text-3xl font-bold mb-1">Contact Form</h3>
             <p className="text-gray-300 text-sm lg:text-sm mb-4">
-              Fill out the form below, and our team will get back to you promptly. Let's connect and create solutions
+              Fill out the form below, and our team will get back to you promptly. Let&apos;s connect and create solutions
               together!
             </p>
 
@@ -300,7 +302,6 @@ const ContactSection = () => {
                     e.stopPropagation() // Prevent the click from immediately closing the dropdown
                     if (!isDropdownOpen && !hasSelectedOption) {
                       setIsDropdownOpen(true)
-                      setIsFirstClick(false)
                     } else {
                       setIsDropdownOpen(false)
                       setHasSelectedOption(false)
@@ -331,7 +332,6 @@ const ContactSection = () => {
                           setFormData({ ...formData, option: "" })
                           setHasSelectedOption(true)
                           setIsDropdownOpen(false)
-                          setIsFirstClick(true)
                         }}
                       >
                         Pick an option
@@ -343,7 +343,6 @@ const ContactSection = () => {
                           setFormData({ ...formData, option: "option1" })
                           setHasSelectedOption(true)
                           setIsDropdownOpen(false)
-                          setIsFirstClick(true)
                         }}
                       >
                         General Inquiry
@@ -355,7 +354,6 @@ const ContactSection = () => {
                           setFormData({ ...formData, option: "option2" })
                           setHasSelectedOption(true)
                           setIsDropdownOpen(false)
-                          setIsFirstClick(true)
                         }}
                       >
                         Support Request
@@ -367,7 +365,6 @@ const ContactSection = () => {
                           setFormData({ ...formData, option: "option3" })
                           setHasSelectedOption(true)
                           setIsDropdownOpen(false)
-                          setIsFirstClick(true)
                         }}
                       >
                         Feature Suggestion
@@ -379,7 +376,6 @@ const ContactSection = () => {
                           setFormData({ ...formData, option: "option4" })
                           setHasSelectedOption(true)
                           setIsDropdownOpen(false)
-                          setIsFirstClick(true)
                         }}
                       >
                         Business Collaboration
@@ -406,11 +402,13 @@ const ContactSection = () => {
 
               <button
                 type="submit"
-                className="ml-[22rem] w-28 h-12 bg-gradient-to-r from-[#5AD7FF] to-[#656BF5] 
-        text-white rounded-full py-2 px-6 transition-all 
-        hover:opacity-100 hover:shadow-[0_0_10px_5px_rgba(101,107,245,0.8)]"
+                disabled={isSubmitting}
+                className={`ml-[22rem] w-28 h-12 bg-gradient-to-r from-[#5AD7FF] to-[#656BF5] 
+                text-white rounded-full py-2 px-6 transition-all 
+                hover:opacity-100 hover:shadow-[0_0_10px_5px_rgba(101,107,245,0.8)]
+                ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
               >
-                Submit
+                {isSubmitting ? 'Submitting...' : 'Submit'}
               </button>
             </form>
           </div>
@@ -523,11 +521,13 @@ const ContactSection = () => {
         </div>
         <button
           type="submit"
-          className="px-6 -mr-20 w-[8rem] lg:w-[10rem] rounded-full font-medium text-white transition-colors 
+          disabled={isSubmitting}
+          className={`px-6 -mr-20 w-[8rem] lg:w-[10rem] rounded-full font-medium text-white transition-colors 
             bg-gradient-to-b from-[#5AD7FF] to-[#656BF5] 
-            hover:bg-white hover:text-black hover:from-white hover:to-white"
+            hover:bg-white hover:text-black hover:from-white hover:to-white
+            ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
         >
-          Subscribe
+          {isSubmitting ? 'Subscribing...' : 'Subscribe'}
         </button>
       </form>
             </div>

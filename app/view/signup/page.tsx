@@ -1,4 +1,5 @@
 import SignUpForm from "./sign-up-form"
+import Image from "next/image"
 
 export default function SignUp() {
   return (
@@ -9,10 +10,12 @@ export default function SignUp() {
 
       <div className="hidden lg:block flex-1 relative">
         <div className="absolute inset-0 border-8 border-black">
-          <img
+          <Image
             src="/signup/Malakai030_11.png"
             alt="Artistic warriors"
-            className="w-full h-full object-cover "
+            fill
+            className="object-cover"
+            priority
           />
         </div>
       </div>

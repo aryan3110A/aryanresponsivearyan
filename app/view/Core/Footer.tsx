@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { IconBrandBlogger, IconBrandGithub, IconBrandYoutube, IconBrandInstagram } from "@tabler/icons-react";
-import { LucideIcon } from "lucide-react";
+import { Icon } from "@tabler/icons-react";
 
 // Define types for navigation links
 interface NavigationLinks {
@@ -12,7 +12,7 @@ interface NavigationLinks {
 // Define types for social links
 interface SocialLink {
   title: string;
-  icon: LucideIcon;
+  icon: Icon;
   href: string;
   hoverColor: string;
   borderHoverColor: string;

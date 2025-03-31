@@ -91,7 +91,9 @@ export default function MasonryLayout({
     );
     setModifiedImages(updatedImages);
     
-    onLikeToggle && onLikeToggle(image);
+    if (onLikeToggle) {
+      onLikeToggle(image);
+    }
   };
 
   const handleBookmarkToggle = (image: ArtImage) => {
@@ -102,7 +104,9 @@ export default function MasonryLayout({
     );
     setModifiedImages(updatedImages);
     
-    onBookmarkToggle && onBookmarkToggle(image);
+    if (onBookmarkToggle) {
+      onBookmarkToggle(image);
+    }
   };
 
   if (!imagesLoaded) {

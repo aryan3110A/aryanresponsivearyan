@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 const Button = () => {
   const router = useRouter();
@@ -12,10 +13,12 @@ const Button = () => {
         onClick={() => router.push("/view/home")} // ✅ onClick on button
       >
         {/* Image - Moves to center on hover */}
-        <img
+        <Image
           src="/Landingpage/Header/Group.png" // ✅ Fixed image path
           alt="Group Icon"
-          className="w-6 absolute left-6 transition-all duration-500 ease-in-out group-hover:left-1/2 group-hover:-translate-x-1/2"
+          width={24}
+          height={24}
+          className="absolute left-6 transition-all duration-500 ease-in-out group-hover:left-1/2 group-hover:-translate-x-1/2"
         />
 
         {/* Text - Disappears on hover */}

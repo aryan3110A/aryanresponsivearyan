@@ -1,8 +1,10 @@
 "use client"
 
-import { useState } from "react"
+import { useState, FormEvent } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
+import { auth } from "@/lib/firebase"
+import { createUserWithEmailAndPassword } from "firebase/auth"
 
 export default function SignUpForm() {
   const [formData, setFormData] = useState({
@@ -10,8 +12,32 @@ export default function SignUpForm() {
     password: "",
     confirmPassword: "",
   })
+  const [error, setError] = useState("")
+  const [processing, setProcessing] = useState(false)
 
   const router = useRouter()
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setError("")
+    setProcessing(true)
+
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match")
+      setProcessing(false)
+      return
+    }
+
+    try {
+      await createUserWithEmailAndPassword(auth, formData.email, formData.password)
+      router.push("/view/home")
+    } catch (err) {
+      console.error("Error creating user:", err)
+      setError("Failed to create account. Please try again.")
+    } finally {
+      setProcessing(false)
+    }
+  }
 
   return (
     <div className="w-full min-h-screen bg-[#171717] relative overflow-hidden px-4 lg:px-8 py-12 flex flex-col justify-between">
@@ -25,58 +51,69 @@ export default function SignUpForm() {
 
         {/* Form */}
         <div className="w-full max-w-[320px] space-y-6 p-4">
-  <div className="space-y-6">
-    <div className="space-y-2">
-    <label className="block text-gray-300 text-base font-light mb-2 text-[16px] -mt-6">
-            Email
-          </label>
-          <input
-  type="email"
-  placeholder="name@host.com"
-  className="w-full h-10 bg-[#262626] border-none rounded-lg px-4 text-gray-300 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#444c55] text-[15px] opacity-90 transition-all duration-300"
-  value={formData.email}
-  onChange={(e) => setFormData((prev) => ({ ...prev, email: e.target.value }))}
- />
-    </div>
+          <form onSubmit={handleSubmit}>
+            <div className="space-y-6">
+              <div className="space-y-2">
+                <label className="block text-gray-300 text-base font-light mb-2 text-[16px] -mt-6">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  placeholder="name@host.com"
+                  className="w-full h-10 bg-[#262626] border-none rounded-lg px-4 text-gray-300 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#444c55] text-[15px] opacity-90 transition-all duration-300"
+                  value={formData.email}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, email: e.target.value }))}
+                  required
+                />
+              </div>
 
-    <div className="space-y-2">
-      <label
-        className="block text-gray-300 text-base font-light"
-        style={{ fontSize: "16px", lineHeight: "22.5px" }}
-      >
-        Create Password
-      </label>
-      <input
-  type="password"
-  placeholder="Password"
-  className="w-full h-10 bg-[#262626] border-none rounded-lg px-4 text-gray-300 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#444c55] text-[15px] opacity-90 transition-all duration-300"
-  value={formData.password}
-  onChange={(e) => setFormData((prev) => ({ ...prev, password: e.target.value }))}
- />
-    </div>
+              <div className="space-y-2">
+                <label
+                  className="block text-gray-300 text-base font-light"
+                  style={{ fontSize: "16px", lineHeight: "22.5px" }}
+                >
+                  Create Password
+                </label>
+                <input
+                  type="password"
+                  placeholder="Password"
+                  className="w-full h-10 bg-[#262626] border-none rounded-lg px-4 text-gray-300 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#444c55] text-[15px] opacity-90 transition-all duration-300"
+                  value={formData.password}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, password: e.target.value }))}
+                  required
+                />
+              </div>
 
-    <div className="space-y-2">
-      <label
-        className="block text-gray-300 text-base font-light"
-        style={{ fontSize: "16px", lineHeight: "22.5px" }}
-      >
-        Confirm password
-      </label>
-      <input
-  type="password"
-  placeholder="Password"
-  className="w-full h-10 bg-[#262626] border-none rounded-lg px-4 text-gray-300 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#444c55] text-[15px] opacity-90 transition-all duration-300"
-  value={formData.password}
-  onChange={(e) => setFormData((prev) => ({ ...prev, password: e.target.value }))}
- />
-    </div>
-  </div>
-  <button
-  type="submit"
-  className="w-full h-12 bg-gradient-to-r from-blue-400 to-blue-600 text-white rounded-lg transition-opacity font-light flex items-center justify-center text-[16px] hover:shadow-[0_0_10px_#5e81ff]"
->
-  Craete account
-</button>
+              <div className="space-y-2">
+                <label
+                  className="block text-gray-300 text-base font-light"
+                  style={{ fontSize: "16px", lineHeight: "22.5px" }}
+                >
+                  Confirm password
+                </label>
+                <input
+                  type="password"
+                  placeholder="Password"
+                  className="w-full h-10 bg-[#262626] border-none rounded-lg px-4 text-gray-300 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#444c55] text-[15px] opacity-90 transition-all duration-300"
+                  value={formData.confirmPassword}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, confirmPassword: e.target.value }))}
+                  required
+                />
+              </div>
+            </div>
+            {error && (
+              <p className="text-red-500 text-sm font-light text-[14px] mt-2">
+                {error}
+              </p>
+            )}
+            <button
+              type="submit"
+              disabled={processing}
+              className="w-full h-12 bg-gradient-to-r from-blue-400 to-blue-600 text-white rounded-lg transition-opacity font-light flex items-center justify-center text-[16px] hover:shadow-[0_0_10px_#5e81ff] mt-4"
+            >
+              {processing ? "Creating account..." : "Create account"}
+            </button>
+          </form>
 
           <div className="text-center">
             <Link

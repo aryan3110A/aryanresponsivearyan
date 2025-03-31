@@ -34,9 +34,11 @@ const ArtGallery = () => {
 
       {/* Top Image */}
       <div className="w-full h-full z-30 ">
-        <img
+        <Image
           src="/Landingpage/ArtGallery/topimage.png"
           alt="Top Decorative Path"
+          width={1920}
+          height={1080}
           className="w-full h-full"
         />
       </div>
@@ -74,9 +76,11 @@ const ArtGallery = () => {
 
       {/* Bottom Image */}
       <div className="w-full h-auto z-30 -mb-56">
-        <img
+        <Image
           src="/Landingpage/ArtGallery/bottomimage.png"
           alt="Bottom Decorative Path"
+          width={1920}
+          height={1080}
           className="w-full h-auto"
         />
       </div>

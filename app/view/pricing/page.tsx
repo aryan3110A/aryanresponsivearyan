@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { Check } from "lucide-react";
 import NavigationFull from "../Core/NavigationFull";
-
+import Image from "next/image";
 
 type BillingPeriod = "monthly" | "yearly";
 
@@ -109,10 +109,12 @@ export default function SubscriptionToggle() {
       <NavigationFull />
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-black"></div>
-        <img
-          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/IMAGE.png-p25HHotUZ8sVxj9ksdnA0cp4oxlEhH.jpeg"
+        <Image
+          src="/plans/IMAGE.png"
           alt="Background gradient"
           className="w-full h-full object-cover opacity-50"
+          width={1920}
+          height={1080}
         />
       </div>
       <div className="relative z-10 w-full max-w-[90%]">

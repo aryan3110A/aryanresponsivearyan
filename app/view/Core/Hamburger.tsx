@@ -23,8 +23,7 @@ import {
 } from "@tabler/icons-react";
 
 import Link from "next/link"
-import SettingComponent from "./Settings" 
-import type React from "react" // Add this line to import React
+import type { JSX } from "react"
 import SettingNavigation from "./Setting";
 
 interface NavbarProps {
@@ -124,9 +123,6 @@ const socialLinks: SocialLink[] = [
 
 export default function Hamburger({ isOpen, onClose }: NavbarProps) {
   const [isProfileOpen, setIsProfileOpen] = useState(false)
-  const [showCredits, setShowCredits] = useState(true)
-  const [activeItem, setActiveItem] = useState<string>("Apps")
-  const [hoveredItem, setHoveredItem] = useState<string | null>(null)
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const [showCloseButton, setShowCloseButton] = useState(true)
   const scrollRef = useRef<HTMLDivElement>(null)
@@ -134,11 +130,6 @@ export default function Hamburger({ isOpen, onClose }: NavbarProps) {
   // Function to handle settings click - toggle settings
   const handleSettingsClick = () => {
     setIsSettingsOpen(!isSettingsOpen)
-  }
-
-  // Function to handle settings close
-  const handleSettingsClose = () => {
-    setIsSettingsOpen(false)
   }
 
   // Close settings when hamburger closes
@@ -245,8 +236,6 @@ export default function Hamburger({ isOpen, onClose }: NavbarProps) {
                       <div
                         key={index}
                         className="flex items-center gap-3 p-2 rounded-lg hover:bg-blue-500/20 transition-colors cursor-pointer"
-                        onMouseEnter={() => setHoveredItem(profile.name)}
-                        onMouseLeave={() => setHoveredItem(null)}
                       >
                         <Image
                           src="/navigationSetting/profile.png"
@@ -269,9 +258,7 @@ export default function Hamburger({ isOpen, onClose }: NavbarProps) {
                     ))}
 
                     <button
-                      className="w-full flex items-center gap-3 p-1 rounded-lg hover:bg-blue-500/20 transition-colors mt-0 "
-                      onMouseEnter={() => setHoveredItem("add")}
-                      onMouseLeave={() => setHoveredItem(null)}
+                      className="w-full flex items-center gap-3 p-1 rounded-lg hover:bg-blue-500/20 transition-colors mt-0"
                     >
                       <Image src="/navigationSetting/plus.png" alt="User" width={40} height={40} className="" />
                       <span className="text-md -ml-2">Add profile</span>
@@ -281,8 +268,6 @@ export default function Hamburger({ isOpen, onClose }: NavbarProps) {
 
                     <button
                       className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-blue-500/20 transition-colors"
-                      onMouseEnter={() => setHoveredItem("settings")}
-                      onMouseLeave={() => setHoveredItem(null)}
                       onClick={handleSettingsClick}
                     >
                       <Settings className="w-5 h-5" />
@@ -291,8 +276,6 @@ export default function Hamburger({ isOpen, onClose }: NavbarProps) {
 
                     <button
                       className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-blue-500/20 transition-colors"
-                      onMouseEnter={() => setHoveredItem("logout")}
-                      onMouseLeave={() => setHoveredItem(null)}
                     >
                       <LogOut className="w-5 h-5" />
                       <span className="text-sm">Logout</span>
@@ -331,7 +314,6 @@ export default function Hamburger({ isOpen, onClose }: NavbarProps) {
                   href={item.href}
                   className="flex items-center gap-4 p-3 py-[2.5%] transition-colors pl-[6%] text-white hover:bg-gradient-to-b from-[#5AD7FF] to-[#656BF5]"
                   onClick={() => {
-                    setActiveItem(item.label)
                     onClose()
                     setIsSettingsOpen(false)
                   }}
@@ -352,7 +334,6 @@ export default function Hamburger({ isOpen, onClose }: NavbarProps) {
                     key={item.label}
                     className="flex items-center gap-4 p-3 py-[2.5%] transition-colors pl-[6%] text-white hover:bg-gradient-to-b from-[#5AD7FF] to-[#656BF5] text-left"
                     onClick={() => {
-                      setActiveItem(item.label)
                       handleSettingsClick()
                     }}
                   >
@@ -365,7 +346,6 @@ export default function Hamburger({ isOpen, onClose }: NavbarProps) {
                     href={item.href}
                     className="flex items-center gap-4 p-3 py-[2.5%] transition-colors pl-[6%] text-white hover:bg-gradient-to-b from-[#5AD7FF] to-[#656BF5]"
                     onClick={() => {
-                      setActiveItem(item.label)
                       onClose()
                       setIsSettingsOpen(false)
                     }}
@@ -430,7 +410,7 @@ export default function Hamburger({ isOpen, onClose }: NavbarProps) {
       {/* Settings Component - now passing hamburger state */}
       <SettingNavigation
         isOpen={isSettingsOpen}
-        onClose={handleSettingsClose}
+        onClose={() => setIsSettingsOpen(false)}
         hamburgerOpen={isOpen}
         profiles={profiles}
       />

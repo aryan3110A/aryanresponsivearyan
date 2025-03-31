@@ -1,4 +1,5 @@
 import SignInForm from "./sign-in-form";
+import Image from "next/image";
 
 export default function SignIn() {
   return (
@@ -9,10 +10,12 @@ export default function SignIn() {
 
       <div className="hidden lg:block flex-1 relative">
         <div className="absolute inset-0 border-8 border-black">
-          <img
-            src="./signup/Malakai030_11.jpg"
+          <Image
+            src="/signup/Malakai030_11.jpg"
             alt="Crystal art"
-            className="w-full h-full object-cover"
+            fill
+            className="object-cover"
+            priority
           />
         </div>
       </div>

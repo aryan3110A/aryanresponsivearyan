@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 
 const ImagePreview = ({ images = [] }: { images?: string[] }) => {
   if (!images || images.length === 0) {
@@ -8,7 +9,14 @@ const ImagePreview = ({ images = [] }: { images?: string[] }) => {
   return (
     <div className='flex justify-center gap-6 mt-9'>
       {images.map((src, index) => (
-        <img key={index} className='w-auto h-auto' src={src} alt={`Generated ${index}`} />
+        <Image 
+          key={index}
+          src={src}
+          alt={`Generated ${index}`}
+          width={512}
+          height={512}
+          className='w-auto h-auto'
+        />
       ))}
     </div>
   );

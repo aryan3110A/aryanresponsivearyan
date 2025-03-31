@@ -5,11 +5,10 @@ import Link from "next/link";
 import { FaDiscord, FaInstagram, FaYoutube, FaBlog } from "react-icons/fa";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { auth } from "../../database/config.js"; // adjust path if needed
+import { auth } from "@/lib/firebase";
 import { 
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  AuthErrorCodes,
 } from "firebase/auth";
 
 export default function SignInForm() {
@@ -26,7 +25,14 @@ export default function SignInForm() {
   const [processing, setProcessing] = useState(false);
 
   // Create refs for each OTP input to enable auto-focus
-  const inputRefs = Array.from({ length: 6 }, () => useRef<HTMLInputElement>(null));
+  const inputRefs = [
+    useRef<HTMLInputElement>(null),
+    useRef<HTMLInputElement>(null),
+    useRef<HTMLInputElement>(null),
+    useRef<HTMLInputElement>(null),
+    useRef<HTMLInputElement>(null),
+    useRef<HTMLInputElement>(null)
+  ];
 
   // Handler to send OTP
   const handleSendOtp = async (e: FormEvent<HTMLFormElement>) => {
@@ -85,11 +91,12 @@ export default function SignInForm() {
       try {
         await createUserWithEmailAndPassword(auth, formData.email, formData.password);
         console.log("User created in Firebase.");
-      } catch (firebaseError: any) {
+      } catch (firebaseError: unknown) {
         // If user already exists, sign them in instead
         if (
-          firebaseError.code === AuthErrorCodes.EMAIL_EXISTS ||
-          firebaseError.code === AuthErrorCodes.EMAIL_ALREADY_IN_USE
+          firebaseError instanceof Error &&
+          (firebaseError.message.includes('auth/email-already-in-use') ||
+           firebaseError.message.includes('auth/email-exists'))
         ) {
           console.log("User already exists. Signing in...");
           await signInWithEmailAndPassword(auth, formData.email, formData.password);

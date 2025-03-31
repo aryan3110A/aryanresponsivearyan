@@ -3,10 +3,8 @@
 import { useState } from "react";
 import ImageOverlay from "./components/image-overlay";
 import MasonryLayout from "./components/masorny-layout";
-import Image from "next/image";
 import NavigationFull from "../Core/NavigationFull";
 import Footer from "../Core/Footer";
-
 
 // Define the image data structure
 interface ArtImage {
@@ -147,8 +145,7 @@ const sampleImages: ArtImage[] = [
 ];
 
 export default function ArtStation() {
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [imageDimensions, setImageDimensions] = useState({});
+  const [selectedImage, setSelectedImage] = useState<ArtImage | null>(null);
   const [images, setImages] = useState(sampleImages);
 
   const handleLikeToggle = (image: ArtImage) => {
@@ -164,17 +161,6 @@ export default function ArtStation() {
       img.id === image.id ? { ...img, bookmarked: !img.bookmarked } : img
     );
     setImages(updatedImages);
-  };
-
-  // This function will be called when an image is loaded and its dimensions are known
-  const handleImageDimensionsLoaded = (
-    id: string,
-    dimensions: { width: number; height: number }
-  ) => {
-    setImageDimensions((prev) => ({
-      ...prev,
-      [id]: dimensions,
-    }));
   };
 
   return (

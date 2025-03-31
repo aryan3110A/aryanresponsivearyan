@@ -14,7 +14,7 @@ interface ImageModalProps {
 export default function ImageModal({ isOpen, onClose, image }: ImageModalProps) {
   if (!isOpen) return null
 
-  return (
+  return ( <>
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 sm:p-6 md:p-10"
       onClick={onClose}
@@ -65,10 +65,12 @@ export default function ImageModal({ isOpen, onClose, image }: ImageModalProps) 
             <button className="w-full sm:w-auto bg-[#357AFF] hover:bg-[#000000] text-white rounded-full py-2.5 sm:py-3 px-5 sm:px-6 font-medium transition-all duration-300 flex items-center justify-center">
                 Generate with this Model
                 {/* Use img to reference your SVG */}
-                <img
-                    src="star.svg"  // Path to your SVG file in the public folder
+                <Image
+                    src="/home/star.svg"  // Path to your SVG file in the public folder
                     alt="Arrow Icon"
-                    className="ml-1 w-4 h-4"  // You can adjust the size using Tailwind classes
+                    className="ml-1 w-4 h-4"
+                    width={4}
+                    height={4}  // You can adjust the size using Tailwind classes
                 />
             </button>
 
@@ -88,10 +90,10 @@ export default function ImageModal({ isOpen, onClose, image }: ImageModalProps) 
           <Image
             src={
               index % 3 === 0
-                ? "/car.svg?height=213&width=213"
+                ? "/home/car.svg?height=213&width=213"
                 : index % 3 === 1
-                ? "/dog.svg?height=213&width=213"
-                : "/cup.svg?height=213&width=213"
+                ? "/home/dog.svg?height=213&width=213"
+                : "/home/cup.svg?height=213&width=213"
             }
             alt="Sample image"
             fill
@@ -106,5 +108,6 @@ export default function ImageModal({ isOpen, onClose, image }: ImageModalProps) 
 
       </div>
     </div>
+    </>
   )
 }

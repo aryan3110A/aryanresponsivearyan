@@ -1,14 +1,14 @@
 "use client";
 
 import { useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, MotionValue } from "framer-motion";
 import Image from "next/image";
 
 interface CardProps {
   title: string;
   description: string;
   imageSrc: string;
-  scrollYProgress: ReturnType<typeof useTransform>;
+  scrollYProgress: MotionValue<number>;
   index: number;
   total: number;
 }
@@ -58,7 +58,7 @@ function Card({ title, description, imageSrc, scrollYProgress, index, total }: C
 
 // Progress Bar Component
 interface ProgressBarProps {
-  scrollYProgress: ReturnType<typeof useTransform>;
+  scrollYProgress: MotionValue<number>;
 }
 
 function ProgressBar({ scrollYProgress }: ProgressBarProps) {
@@ -88,7 +88,7 @@ export default function Cards() {
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end start"],
-  });
+  }) as { scrollYProgress: MotionValue<number> };
 
   const cardData = [
     {

@@ -1,9 +1,10 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 const Navigation = () => {
-  const [activeDropdown, setActiveDropdown] = useState(null);
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);
   const route = useRouter();
 
@@ -16,7 +17,7 @@ const Navigation = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const toggleDropdown = (dropdown) => {
+  const toggleDropdown = (dropdown: string) => {
     setActiveDropdown(activeDropdown === dropdown ? null : dropdown);
   };
 
@@ -32,10 +33,12 @@ const Navigation = () => {
       {/* Logo */}
       <div>
         <span className="">
-          <img
+          <Image
             src="/Core/Logomain.png"
-            className="w-10 flex justify-center items-center"
-            alt=""
+            width={40}
+            height={40}
+            className="flex justify-center items-center"
+            alt="Main Logo"
           />
         </span>
       </div>
@@ -47,17 +50,17 @@ const Navigation = () => {
           className="cursor-pointer px-3 py-1 flex items-center gap-1  hover:bg-gradient-to-l  hover:bg-clip-text font-poppins  bg-transparent hover:text-[#dbdbdb]"
         >
           Features
-          <img
-      width="12"
-      height="12"
-      src={
-        activeDropdown === "features"
-          ? "/Core/arrowup.svg"
-          : "/Core/arrowdown.svg"
-      }
-      alt="arrow-icon"
-      className="ml-1"
-    />
+          <Image
+            width={12}
+            height={12}
+            src={
+              activeDropdown === "features"
+                ? "/Core/arrowup.svg"
+                : "/Core/arrowdown.svg"
+            }
+            alt="dropdown-arrow"
+            className="ml-1"
+          />
         </span>
 
         {activeDropdown === "features" && (
@@ -79,36 +82,35 @@ const Navigation = () => {
       </div>
 
       <div className="relative">
-  <span
-    onClick={() => toggleDropdown("templates")}
-    className="cursor-pointer hover:text-[#dbdbdb] bg-transparent px-3 py-1 flex items-center gap-1 
-     hover:bg-gradient-to-l hover:bg-clip-text"
-  >
-    Templates
-    <img
-      width="12"
-      height="12"
-      src={
-        activeDropdown === "templates"
-          ? "/Core/arrowup.svg"
-          : "/Core/arrowdown.svg"
-      }
-      alt="arrow-icon"
-      className="ml-1"
-    />
-  </span>
-  {activeDropdown === "templates" && (
-    <ul className="absolute left-1/2 -translate-x-1/2 mt-4 w-80 bg-black text-white  rounded-lg border border-[#5f5e5e] shadow-[6px_6px_10px_rgba(0,0,0,0.6)] p-3 flex flex-col items-center overflow-hidden whitespace-nowrap">
-      <li className="w-full px-3 py-2 cursor-pointer text-center hover:text-[#dbdbdb] hover:bg-gradient-to-l hover:bg-clip-text">
-        Image generation
-      </li>
-      <li className="w-full px-3 py-2 cursor-pointer text-center hover:text-[#dbdbdb] hover:bg-gradient-to-l hover:bg-clip-text">
-        video generation (Comming soon)
-      </li>
-    </ul>
-  )}
-</div>
-
+        <span
+          onClick={() => toggleDropdown("templates")}
+          className="cursor-pointer hover:text-[#dbdbdb] bg-transparent px-3 py-1 flex items-center gap-1 
+           hover:bg-gradient-to-l hover:bg-clip-text"
+        >
+          Templates
+          <Image
+            width={12}
+            height={12}
+            src={
+              activeDropdown === "templates"
+                ? "/Core/arrowup.svg"
+                : "/Core/arrowdown.svg"
+            }
+            alt="dropdown-arrow"
+            className="ml-1"
+          />
+        </span>
+        {activeDropdown === "templates" && (
+          <ul className="absolute left-1/2 -translate-x-1/2 mt-4 w-80 bg-black text-white  rounded-lg border border-[#5f5e5e] shadow-[6px_6px_10px_rgba(0,0,0,0.6)] p-3 flex flex-col items-center overflow-hidden whitespace-nowrap">
+            <li className="w-full px-3 py-2 cursor-pointer text-center hover:text-[#dbdbdb] hover:bg-gradient-to-l hover:bg-clip-text">
+              Image generation
+            </li>
+            <li className="w-full px-3 py-2 cursor-pointer text-center hover:text-[#dbdbdb] hover:bg-gradient-to-l hover:bg-clip-text">
+              video generation (Comming soon)
+            </li>
+          </ul>
+        )}
+      </div>
 
       {/* Other Links */}
       <div>

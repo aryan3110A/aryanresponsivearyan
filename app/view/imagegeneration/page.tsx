@@ -13,7 +13,7 @@ const ImageGenMain = () => {
         setImages((prevImages) => [...prevImages, imageUrl]); // Store multiple images
     };
 
-    return (
+    return (<>
         <div className='bg-black min-h-screen flex relative'>
             {/* Main Content */}
             <div className="flex-1">
@@ -23,6 +23,7 @@ const ImageGenMain = () => {
                 <ImagePreview images={images} />
             </div>
         </div>
+        </>
     );
 };
 
