@@ -194,9 +194,10 @@ export default function Hamburger({ isOpen, onClose }: NavbarProps) {
         <div className="h-full flex flex-col overflow-hidden font-poppins">
           {/* Scrollable Content Area */}
           <div
-            ref={scrollRef}
-            className="flex-1 overflow-y-auto p-4 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent"
-          >
+  ref={scrollRef}
+  className="flex-1 overflow-y-auto overflow-x-hidden p-4 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent"
+>
+
             {/* Close Button - Only visible when at top */}
             <div
               className={`transition-opacity duration-0 ${showCloseButton ? "opacity-100" : "opacity-0 pointer-events-none"}`}
