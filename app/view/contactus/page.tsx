@@ -5,14 +5,9 @@ import type React from "react"
 import { useRef, useState, useEffect } from "react"
 import Image from "next/image"
 import Footer from "../Core/Footer"
-import { db } from "@/lib/firebase"
-import { collection, addDoc, serverTimestamp } from "firebase/firestore"
-
-// import { db } from "@/lib/firebaseConfig"
-// import { collection, addDoc, serverTimestamp } from "firebase/firestore"
 
 const scriptURL =
-  "https://script.google.com/macros/s/AKfycbz0dKO8m-4_vrGpnaPI4zP01OkoN5uXxo1DrJ9jY_oz5tsoNUYvtxxNKgvdYMiZUGsWBw/exec" // Replace with your actual script URL
+  "https://script.google.com/macros/s/AKfycbz0dKO8m-4_vrGpnaPI4zP01OkoN5uXxo1DrJ9jY_oz5tsoNUYvtxxNKgvdYMiZUGsWBw/exec"
 
 interface FormData {
   fullName: string
@@ -84,10 +79,21 @@ const ContactSection = () => {
     }
 
     try {
-      await addDoc(collection(db, "contactForm"), {
-        ...formData,
-        timestamp: serverTimestamp(),
+      const form = new FormData()
+      form.append('Name', formData.fullName)
+      form.append('Email', formData.email)
+      form.append('Phone', formData.phone)
+      form.append('Option', formData.option)
+      form.append('Message', formData.message)
+
+      const response = await fetch(scriptURL, {
+        method: 'POST',
+        body: form
       })
+
+      if (!response.ok) {
+        throw new Error('Failed to submit form')
+      }
 
       setSuccessMessage("Your form has been submitted successfully! Our team will reach out to you soon.")
       setFormData({
@@ -122,13 +128,6 @@ const ContactSection = () => {
     }
 
     try {
-      // Store in Firebase
-      await addDoc(collection(db, "newsletterSubscriptions"), {
-        email: newsletterEmail,
-        timestamp: serverTimestamp(),
-      })
-
-      // Store in Google Sheets
       const formData = new FormData()
       formData.append("NewsLetterEmail", newsletterEmail)
 
