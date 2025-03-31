@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, FormEvent, useRef } from "react";
+import { useState, FormEvent, useRef, useEffect } from "react";
 import Link from "next/link";
 import { FaDiscord, FaInstagram, FaYoutube, FaBlog } from "react-icons/fa";
 import axios from "axios";
@@ -23,6 +23,13 @@ export default function SignInForm() {
   const [otpSent, setOtpSent] = useState(false);
   const [error, setError] = useState("");
   const [processing, setProcessing] = useState(false);
+  const [authInitialized, setAuthInitialized] = useState(false);
+
+  useEffect(() => {
+    if (auth) {
+      setAuthInitialized(true);
+    }
+  }, []);
 
   // Create refs for each OTP input to enable auto-focus
   const inputRefs = [
@@ -78,6 +85,12 @@ export default function SignInForm() {
   const handleVerifyOtp = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
+    
+    if (!authInitialized) {
+      setError("Authentication service is not initialized. Please try again later.");
+      return;
+    }
+
     try {
       setProcessing(true);
       const combinedOtp = otpDigits.join("");
@@ -89,6 +102,7 @@ export default function SignInForm() {
 
       // Attempt to create the user in Firebase
       try {
+        if (!auth) throw new Error("Auth is not initialized");
         await createUserWithEmailAndPassword(auth, formData.email, formData.password);
         console.log("User created in Firebase.");
       } catch (firebaseError: unknown) {
@@ -99,6 +113,7 @@ export default function SignInForm() {
            firebaseError.message.includes('auth/email-exists'))
         ) {
           console.log("User already exists. Signing in...");
+          if (!auth) throw new Error("Auth is not initialized");
           await signInWithEmailAndPassword(auth, formData.email, formData.password);
         } else {
           throw firebaseError;

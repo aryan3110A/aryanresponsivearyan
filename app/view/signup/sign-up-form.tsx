@@ -43,7 +43,9 @@ export default function SignUpForm() {
       if (!auth) {
         throw new Error("Firebase Auth is not initialized")
       }
-      await createUserWithEmailAndPassword(auth, formData.email, formData.password)
+      
+      const authInstance = auth as Auth
+      await createUserWithEmailAndPassword(authInstance, formData.email, formData.password)
       router.push("/view/home")
     } catch (err) {
       console.error("Error creating user:", err)
