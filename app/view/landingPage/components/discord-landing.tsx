@@ -2,6 +2,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { Poppins } from "next/font/google";
+import { getImageUrl } from "@/routes/imageroute";
 
 // Initialize Poppins font
 const poppins = Poppins({ subsets: ["latin"], weight: ["400", "500"] });
@@ -30,8 +31,8 @@ export default function DiscordLanding() {
           </h1>
           <button
             className="flex items-center justify-center gap-2 w-[245px] h-[51px] rounded-[18px] text-white bg-[#5865F2] hover:bg-white hover:text-[#5865F2] hover:shadow-none transition duration-200 shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#5865F2]"
-            onMouseEnter={() => setDiscordIcon("/Landingpage/DiscordView/discorddark.svg")} 
-            onMouseLeave={() => setDiscordIcon("/Landingpage/DiscordView/discord.svg")} 
+            onMouseEnter={() => setDiscordIcon(getImageUrl('landingpage', 'discorddark'))} 
+            onMouseLeave={() => setDiscordIcon(getImageUrl('landingpage', 'discord'))} 
           >
             <Image src={discordIcon} alt="Discord Icon" width={24} height={24} />
             <span className="text-base font-medium">Join Discord Server</span>
@@ -41,7 +42,7 @@ export default function DiscordLanding() {
         {/* Right Content - GIF */}
         <div className="hidden md:block w-[299px] h-[291px] absolute right-[200px]">
           <Image
-            src="/landingpage/DiscordView/dc_view.gif"
+            src= {getImageUrl('landingpage', 'discordimage')}
             alt="Creative visual effect"
             width={299}
             height={291}

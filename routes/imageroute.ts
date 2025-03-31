@@ -8,10 +8,14 @@ interface FolderImageRoutes {
 
 export const imageRoutes: FolderImageRoutes = {
     core: {
-        logo: '/Core/logomain.png',
-        favicon: '/images/core/favicon.ico',
-        defaultAvatar: '/images/core/default-avatar.png',
+        logo: '/Core/logomain.png',   
     },
+    landingpage:{
+        discordimage: '/Landingpage/DiscordView/dc_view.gif',
+        discorddark : '/Landingpage/DiscordView/discorddark.svg',
+        discord : '/Landingpage/DiscordView/discord.svg',
+    },
+
     auth: {
         loginBg: '/images/auth/login-background.jpg',
         signupBg: '/images/auth/signup-background.jpg',
@@ -27,6 +31,16 @@ export const imageRoutes: FolderImageRoutes = {
     //     cover: '/images/profile/cover.jpg',
     // },
 };
+
+
+
+
+
+
+
+
+
+
 
 // Helper function to get image URL by folder and name
 export const getImageUrl = (folder: string, imageName: string): string => {
