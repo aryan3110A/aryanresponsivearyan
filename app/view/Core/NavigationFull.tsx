@@ -137,7 +137,7 @@ export default function NavigationFull(): JSX.Element {
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="ml-[25.9vw] flex items-center justify-center gap-[4vw] text-nowrap font-poppins    py-0">
+          <nav className="ml-[27vw] flex items-center justify-center gap-[4vw] text-nowrap font-poppins    py-0">
             {/* Features Button */}
             <div className="relative">
               <button
