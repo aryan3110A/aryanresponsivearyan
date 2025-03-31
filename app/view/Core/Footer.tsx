@@ -93,7 +93,7 @@ const socialLinks: SocialLink[] = [
 const Footer: React.FC = () => {
   return (
     <footer className="bg-[#050505] text-gray-300 py-8 w-full">
-      <div className="max-w-full px-4 md:px-24 lg:px-16">
+      <div className="max-w-full px-4 md:px-20 lg:px-16">
         <div className="flex sm:gap-[7.5rem] md:gap-[8rem] lg:gap-[15rem] mb-0">
           {/* Logo and Description */}
           <div className="space-y-4">
@@ -162,7 +162,7 @@ const Footer: React.FC = () => {
             <p className="text-sm md:text-[0.875rem] lg:text-[1rem] text-[#616161] mb-4 md:mb-0">
               Copyright © 2025 WildMind Pvt Ltd. All rights reserved.
             </p>
-            <div className="flex flex-wrap sm:gap-4 md:gap-[1.8rem] lg:gap-[4rem] justify-center md:ml-[32.7%] lg:ml-[37%]">
+            <div className="flex flex-wrap sm:gap-4 md:gap-[1.8rem] lg:gap-[4.2rem] justify-center md:ml-[32%] lg:ml-[36%]">
               {legalLinks.map((link) => (
                 <Link
                   key={link.name}
