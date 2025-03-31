@@ -1,10 +1,10 @@
 "use client"
 
-import { useState, FormEvent } from "react"
+import { useState, FormEvent, useEffect } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { auth } from "@/lib/firebase"
-import { createUserWithEmailAndPassword } from "firebase/auth"
+import { createUserWithEmailAndPassword, Auth } from "firebase/auth"
 
 export default function SignUpForm() {
   const [formData, setFormData] = useState({
@@ -14,13 +14,24 @@ export default function SignUpForm() {
   })
   const [error, setError] = useState("")
   const [processing, setProcessing] = useState(false)
+  const [isClient, setIsClient] = useState(false)
 
   const router = useRouter()
+
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setError("")
     setProcessing(true)
+
+    if (!isClient) {
+      setError("Please wait while we initialize...")
+      setProcessing(false)
+      return
+    }
 
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match")
@@ -29,6 +40,9 @@ export default function SignUpForm() {
     }
 
     try {
+      if (!auth) {
+        throw new Error("Firebase Auth is not initialized")
+      }
       await createUserWithEmailAndPassword(auth, formData.email, formData.password)
       router.push("/view/home")
     } catch (err) {
