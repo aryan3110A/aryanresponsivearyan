@@ -137,7 +137,7 @@ export default function NavigationFull(): JSX.Element {
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex lg:flex items-center justify-center gap-[4vw] text-nowrap font-poppins sm:pl-[30vw]  md:pl-[23.8vw] lg:pl-[27vw] py-0">
+          <nav className="ml-[26vw] flex items-center justify-center gap-[4vw] text-nowrap font-poppins]   py-0">
             {/* Features Button */}
             <div className="relative">
               <button
@@ -267,7 +267,7 @@ export default function NavigationFull(): JSX.Element {
             }}
           >
             <div className="container py-2">
-              <div className="flex flex-col sm:ml-[31.4vw] md:ml-[33vw] lg:ml-[34vw]">
+              <div className="flex flex-col sm:ml-[31.4vw] md:ml-[33vw] lg:ml-[33vw]">
                 <h3 className="text-lg font-bold mb-[2vh]">CREATE</h3>
                 <div className="flex flex-col space-y-[1.5vh]">
                   {activeDropdown === "features" &&
