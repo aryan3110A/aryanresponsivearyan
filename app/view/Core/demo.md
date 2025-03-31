@@ -5,6 +5,7 @@ import { useState, useEffect, useRef } from "react";
 import { Menu, User, ChevronDown } from "lucide-react";
 import Link from "next/link";
 import Hamburger from "./Hamburger";
+import { APP_ROUTES, NAV_ROUTES } from "@/lib/routes";
 
 
 // Define types for dropdown items
@@ -119,7 +120,7 @@ export default function NavigationFull(): JSX.Element {
             >
               <Menu className="w-8 h-8" />
             </button>
-            <Link href="/" className="flex items-center gap-2">
+            <Link href={APP_ROUTES.LANDING} className="flex items-center gap-2">
               <div className="w-8 h-8 bg-gray-200 rounded-full" />
               <span className="text-xl font-bold">Logo</span>
             </Link>
@@ -159,15 +160,13 @@ export default function NavigationFull(): JSX.Element {
               </button>
             </div>
 
-            <Link href="/pricing" className="text-white hover:text-[#dbdbdb]">
+            <Link href={NAV_ROUTES.PRICING} className="text-white hover:text-[#dbdbdb]">
               Pricing
             </Link>
-            <Link
-              href="/art-station"
-              className="text-white hover:text-[#dbdbdb]"
-            >
+            <Link href={NAV_ROUTES.ART_STATION}>
               Art station
             </Link>
+            <Link href={NAV_ROUTES.SUPPORT} className="text-white hover:text-[#dbdbdb]">
             <Link href="/support" className="text-white hover:text-[#dbdbdb]">
               Support
             </Link>

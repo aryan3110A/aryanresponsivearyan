@@ -3,8 +3,9 @@
 import { useState, FormEvent, useEffect } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { auth } from "@/lib/firebase"
+import { auth } from "@/database /firebase"
 import { createUserWithEmailAndPassword, Auth } from "firebase/auth"
+import { APP_ROUTES } from "@/routes/routes"
 
 export default function SignUpForm() {
   const [formData, setFormData] = useState({
@@ -46,7 +47,7 @@ export default function SignUpForm() {
       
       const authInstance = auth as Auth
       await createUserWithEmailAndPassword(authInstance, formData.email, formData.password)
-      router.push("/view/home")
+      router.push(APP_ROUTES.HOME)
     } catch (err) {
       console.error("Error creating user:", err)
       setError("Failed to create account. Please try again.")

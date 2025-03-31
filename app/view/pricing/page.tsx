@@ -162,7 +162,7 @@ export default function SubscriptionToggle() {
         </div>
 
         {/* Pricing Cards Container */}
-        <div className="m-4 p-4 rounded-3xl w-full bg-[linear-gradient(to_bottom,black_20%,gray_60%,white_100%)]">
+        <div className="m-4 p-4 rounded-3xl w-full bg-[linear-gradient(to_bottom,black_60%,gray_100%,white_100%)]">
           {/* Pricing Cards */}
           <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-4 gap-6 relative z-10">
             {pricingPlans.map((plan, index) => (

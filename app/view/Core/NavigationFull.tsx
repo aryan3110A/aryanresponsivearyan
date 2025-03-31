@@ -7,6 +7,9 @@ import Hamburger from "./Hamburger"
 import type { JSX } from "react/jsx-runtime"
 import { useRouter } from "next/navigation"
 import IMAGE from "next/image";
+import { APP_ROUTES, NAV_ROUTES, AUTH_ROUTES,FEATURE_ROUTES
+ } from "@/routes/routes";
+ import { getImageUrl } from '@/routes/imageroute';
 
 // Define types for dropdown items
 interface DropdownItem {
@@ -65,28 +68,28 @@ export default function NavigationFull(): JSX.Element {
   const featuresDropdownItems: DropdownItem[] = [
     {
       title: "Text to image",
-      src:'./view/imagegeneration',
+      src:FEATURE_ROUTES.IMAGE_GENERATION,
       coming: false,
       
     },
     {
       title: "Text to 3D",
-      src:'/view/home',
+      src:APP_ROUTES.HOME,
       coming: true,
     },
     {
       title: "Text to Video",
-      src:'/view/home',
+      src:APP_ROUTES.HOME,
       coming: true,
     },
     {
       title: "Sketch to Image",
-      src:'/view/home',
+      src:APP_ROUTES.HOME,
       coming: true,
     },
     {
       title: "Real Time Genration",
-      src:'/view/home',
+      src:APP_ROUTES.HOME,
       coming: true,
     },
   ]
@@ -94,12 +97,12 @@ export default function NavigationFull(): JSX.Element {
   const templatesDropdownItems: DropdownItem[] = [
     {
       title: "Image Generation",
-      src:'/view/home',
+      src:APP_ROUTES.HOME,
       coming: false,
     },
     {
       title: "Video Generation",
-      src:'/view/home',
+      src:APP_ROUTES.HOME,
       coming: true,
     },
   ]
@@ -129,12 +132,12 @@ export default function NavigationFull(): JSX.Element {
               <Menu className="w-8 h-8" />
             </button>
             <div>
-              <IMAGE src="/Core/logomain.png" width={40} height={20} alt="logo" onClick={() => router.push("/")} />
+              <IMAGE src={getImageUrl('core','logo')} width={40} height={20} alt="logo" onClick={() => router.push("/")} />
             </div>
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex lg:flex items-center justify-center gap-[4vw] text-nowrap font-poppins md:pl-[20vw] lg:pl-[25vw] py-0">
+          <nav className="hidden md:flex lg:flex items-center justify-center gap-[4vw] text-nowrap font-poppins pl-[24vw] py-0">
             {/* Features Button */}
             <div className="relative">
               <button
@@ -172,29 +175,25 @@ export default function NavigationFull(): JSX.Element {
             {/* Other Navigation Links */}
             <nav>
               <Link
-                href="/view/pricing"
+                href={NAV_ROUTES.PRICING}
                 className="text-white hover:text-[#dbdbdb]"
                 onClick={() => {
                   setActiveDropdown(null)
                   setIsUserDropdownOpen(false)
-
-                }
-
-                }
-
+                }}
               >
                 Pricing
               </Link>
             </nav>
             <Link
-              href="/view/artstation"
+              href={NAV_ROUTES.ART_STATION}
               className="text-white hover:text-[#dbdbdb]"
               onClick={() => {
                 setActiveDropdown(null)
                 setIsUserDropdownOpen(false)
               }}
             >
-              Art station
+              Art Station
             </Link>
             {/* <Link href="/view/support" className="text-white hover:text-[#dbdbdb]" onClick={() => {
               setActiveDropdown(null)
@@ -222,7 +221,7 @@ export default function NavigationFull(): JSX.Element {
               >
                 <div className="py-2 flex flex-col">
                   <Link
-                    href="/profile"
+                    href={AUTH_ROUTES.SIGN_IN}
                     className="px-4 py-2 text-white hover:text-blue-400 flex items-center"
                     onClick={() => setIsUserDropdownOpen(false)}
                   >
@@ -230,7 +229,7 @@ export default function NavigationFull(): JSX.Element {
                     Username
                   </Link>
                   <Link
-                    href="/logout"
+                    href={AUTH_ROUTES.SIGN_IN}
                     className="px-4 py-2 text-white hover:text-blue-400 flex items-center"
                     onClick={() => setIsUserDropdownOpen(false)}
                   >
@@ -268,7 +267,7 @@ export default function NavigationFull(): JSX.Element {
             }}
           >
             <div className="container py-2">
-              <div className="flex flex-col sm:ml-[31.4vw] md:ml-[31.8vw] lg:ml-[34.8vw]">
+              <div className="flex flex-col sm:ml-[31.4vw] md:ml-[33vw] lg:ml-[34.8vw]">
                 <h3 className="text-lg font-bold mb-[2vh]">CREATE</h3>
                 <div className="flex flex-col space-y-[1.5vh]">
                   {activeDropdown === "features" &&

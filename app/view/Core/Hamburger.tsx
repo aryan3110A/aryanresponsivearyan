@@ -1,5 +1,6 @@
 "use client"
 import Image from "next/image"
+import {APP_ROUTES, NAV_ROUTES, AUTH_ROUTES,FEATURE_ROUTES} from "../../../routes/routes";
 
 import { useState, useEffect, useRef } from "react"
 import {
@@ -57,12 +58,12 @@ const profiles: Profile[] = [
 ]
 
 const sidebarItems: NavItem[] = [
-  { label: "Home", href: "/view/home", icon: <Home className="w-6 h-6" /> },
+  { label: "Home", href: APP_ROUTES.HOME, icon: <Home className="w-6 h-6" /> },
   { label: "Apps", href: "/apps", icon: <Grid className="w-5 h-5" /> },
   { label: "Models", href: "/models", icon: <Boxes className="w-5 h-5" /> },
   {
     label: "Templates",
-    href: "/view/templates",
+    href:NAV_ROUTES.TEMPLATES,
     icon: <FileText className="w-6 h-6" />,
   },
   {
@@ -80,7 +81,7 @@ const sidebarItems: NavItem[] = [
 const plansetting: NavItem[] = [
   {
     label: "Plans",
-    href: "/view/pricing",
+    href: NAV_ROUTES.PRICING,
     icon: <Image src="/navigationSetting/diamond.png" alt="User" width={20} height={20} className="" />,
   },
   {
@@ -363,7 +364,7 @@ export default function Hamburger({ isOpen, onClose }: NavbarProps) {
             <div className="flex flex-col items-start">
               {/* Logo */}
               <div className="flex items-center gap-[6%] pb-4 justify-center pl-[2vw]">
-                <Image src="/logo.png" alt="WildMind Logo" width={32} height={32} className="" />
+                <Image src="/Core/Logomain.png" alt="WildMind Logo" width={32} height={32} className="" />
                 <span className="text-white font-bold text-3xl">WildMind</span>
               </div>
 

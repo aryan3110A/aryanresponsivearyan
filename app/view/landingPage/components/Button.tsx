@@ -2,6 +2,7 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import {APP_ROUTES, NAV_ROUTES, AUTH_ROUTES} from "../../../../routes/routes";
 
 const Button = () => {
   const router = useRouter();
@@ -10,7 +11,7 @@ const Button = () => {
     <div className="flex justify-center mt-10">
       <button
         className="group bg-blue-600 text-white flex w-56 h-10 justify-center items-center gap-3 rounded-full relative overflow-hidden"
-        onClick={() => router.push("/view/home")} // ✅ onClick on button
+        onClick={() => router.push(APP_ROUTES.HOME)} // ✅ onClick on button
       >
         {/* Image - Moves to center on hover */}
         <Image

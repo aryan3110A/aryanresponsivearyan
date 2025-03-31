@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import {APP_ROUTES, NAV_ROUTES, AUTH_ROUTES,FEATURE_ROUTES} from "../../../../routes/routes";
 
 const Navigation = () => {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
@@ -65,7 +66,7 @@ const Navigation = () => {
 
         {activeDropdown === "features" && (
           <ul className="absolute left-1/2 -translate-x-1/2 mt-4 w-80 bg-black text-white rounded-lg border border-[#5f5e5e] shadow-[6px_6px_10px_rgba(0,0,0,0.6)] p-3 flex flex-col items-center overflow-hidden whitespace-nowrap">
-            <li className="w-full px-3 py-2 cursor-pointer  text-center hover:text-[#dbdbdb]   hover:bg-gradient-to-l  hover:bg-clip-text" onClick={() => route.push("/view/imagegeneration") }>
+            <li className="w-full px-3 py-2 cursor-pointer  text-center hover:text-[#dbdbdb]   hover:bg-gradient-to-l  hover:bg-clip-text" onClick={() => route.push(FEATURE_ROUTES.IMAGE_GENERATION) }>
               Text to image
             </li>
             <li className="w-full px-3 py-2 cursor-pointer text-center hover:text-[#dbdbdb]   hover:bg-gradient-to-l  hover:bg-clip-text">
@@ -114,12 +115,12 @@ const Navigation = () => {
 
       {/* Other Links */}
       <div>
-        <span className="px-3 py-1  hover:bg-gradient-to-l  hover:bg-clip-text cursor-pointer hover:text-[#dbdbdb]" onClick={() => route.push("/view/pricing")}>
+        <span className="px-3 py-1  hover:bg-gradient-to-l  hover:bg-clip-text cursor-pointer hover:text-[#dbdbdb]" onClick={() => route.push(NAV_ROUTES.PRICING)}>
           Pricing
         </span>
       </div>
       <div>
-        <span className="px-3 py-1 hover:bg-gradient-to-l  hover:bg-clip-text cursor-pointer hover:text-[#dbdbdb]" onClick={() => route.push("/view/artstation")}>
+        <span className="px-3 py-1 hover:bg-gradient-to-l  hover:bg-clip-text cursor-pointer hover:text-[#dbdbdb]" onClick={() => route.push(NAV_ROUTES.ART_STATION)}>
           Art Station
         </span>
       </div>
@@ -133,7 +134,7 @@ const Navigation = () => {
                     
                     before:absolute before:inset-0 before:rounded-full before:border-[1.5px] before:border-white/20 before:transition-all before:duration-500 
                      "
-          onClick={() => route.push("/view/home")}
+          onClick={() => route.push(APP_ROUTES.HOME)}
         >
           Get Started
         </button>

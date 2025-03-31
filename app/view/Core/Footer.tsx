@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { IconBrandBlogger, IconBrandGithub, IconBrandYoutube, IconBrandInstagram } from "@tabler/icons-react";
 import { Icon } from "@tabler/icons-react";
+import {APP_ROUTES, NAV_ROUTES, AUTH_ROUTES,FEATURE_ROUTES} from "../../../routes/routes";
 
 // Define types for navigation links
 interface NavigationLinks {
@@ -28,20 +29,20 @@ interface LegalLink {
 const navigationLinks: NavigationLinks = {
   Home: {
     Features: "/features",
-    Templets: "/view/templates",
-    "Art station": "/view/artstation",
-    "Plans & Pricing": "/view/pricing",
+    Templets: NAV_ROUTES.TEMPLATES,
+    "Art station": NAV_ROUTES.ART_STATION,
+    "Plans & Pricing": NAV_ROUTES.PRICING,
   },
   Features: {
-    "Text to Image": "/view/imagegeneration",
+    "Text to Image": FEATURE_ROUTES.IMAGE_GENERATION,
     "Text to Video (soon)": "#",
     "Sketch to Image (soon)": "#",
     "Real Time Generation (soon)": "#",
   },
   Company: {
     Blog: "/blog",
-    "Contact Us": "/view/contactus",
-    Support: "/view/support",
+    "Contact Us": NAV_ROUTES.CONTACT,
+    Support: NAV_ROUTES.SUPPORT,
     "About us": "/about",
   },
 };

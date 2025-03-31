@@ -225,7 +225,7 @@ ${isValid && isAgeConfirmed ? "hover:bg-black hover:border-gray-700" : ""}`}
                 <h3 className="text-lg mb-1">Plans & Billing</h3>
                 <p className="text-[#757575] mb-4 text-md">
                   Keep track of your subscription details, update your plans &
-                  billing information, and control account &apos; s payment.
+                  billing information, and control account &apos;s payment.
                 </p>
 
                 <div className="flex items-center justify-between border border-[#2D2D2D]   bg-[#171717]  rounded-full w-[70%]">

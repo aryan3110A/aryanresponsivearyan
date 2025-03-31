@@ -13,8 +13,8 @@ export default function Home() {
         <HeroSection />
         <FeaturesSection />
         <ImageCreationSection />
-        <Footer />
-      </div>
+        
+      </div><Footer />
     </main>
     </>
   )

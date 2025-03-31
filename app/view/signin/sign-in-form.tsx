@@ -5,11 +5,12 @@ import Link from "next/link";
 import { FaDiscord, FaInstagram, FaYoutube, FaBlog } from "react-icons/fa";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { auth } from "@/lib/firebase";
+import { auth } from "@/database /firebase";
 import { 
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
+import { APP_ROUTES } from "@/routes/routes";
 
 export default function SignInForm() {
   const router = useRouter();
@@ -119,7 +120,7 @@ export default function SignInForm() {
           throw firebaseError;
         }
       }
-      router.push("/view/home");
+      router.push(APP_ROUTES.HOME);
     } catch (err) {
       console.error("OTP verification or registration failed:", err);
       setError("Invalid OTP or registration error. Please try again.");
