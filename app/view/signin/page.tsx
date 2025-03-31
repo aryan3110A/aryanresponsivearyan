@@ -1,3 +1,5 @@
+"use client";
+
 import SignInForm from "./sign-in-form";
 import Image from "next/image";
 
