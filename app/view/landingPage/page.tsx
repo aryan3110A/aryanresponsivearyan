@@ -9,7 +9,8 @@ import Header from "./components/Header";
 import Footer from "../Core/Footer";
 import Commingsoon from "./components/Commingsoon";
 import { PartnersSection } from "./components/partners-section";
-import Testimonials from "./components/Testimonials";
+import { Testimonials } from "./components/Testimonials";
+
 
 
 const Main = () => {

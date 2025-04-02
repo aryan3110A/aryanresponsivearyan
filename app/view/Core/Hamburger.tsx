@@ -1,6 +1,7 @@
 "use client"
 import Image from "next/image"
 import {APP_ROUTES, NAV_ROUTES} from "../../../routes/routes";
+import { getImageUrl } from "@/routes/imageroute";
 
 import { useState, useEffect, useRef } from "react"
 import {
@@ -82,7 +83,7 @@ const plansetting: NavItem[] = [
   {
     label: "Plans",
     href: NAV_ROUTES.PRICING,
-    icon: <Image src="/navigationSetting/diamond.png" alt="User" width={20} height={20} className="" />,
+    icon: <Image src={getImageUrl('core','coins')} alt="User" width={20} height={20} className="" />,
   },
   {
     label: "Settings",
@@ -214,7 +215,7 @@ export default function Hamburger({ isOpen, onClose }: NavbarProps) {
                 className="w-full flex items-center justify-between p-3 rounded-lg bg-[#252525] hover:bg-gray-800 transition-colors"
               >
                 <div className="flex items-center gap-3 ml-[2%]">
-                  <Image src="/navigationSetting/profile.png" alt="User" width={32} height={32} className="rounded-full object-cover" />
+                  <Image src={getImageUrl('core','profile')} alt="User" width={32} height={32} className="rounded-full object-cover" />
                   <span>Profile</span>
                 </div>
                 <ChevronDown className={`w-6 h-6 transition-transform ${isProfileOpen ? "rotate-180" : ""}`} />
@@ -226,7 +227,7 @@ export default function Hamburger({ isOpen, onClose }: NavbarProps) {
                   <div className="p-2">
                     <div className="flex items-center gap-3 ml-[4%] mb-1">
                       <Image
-                        src="/navigationSetting/profile.png"
+                        src={getImageUrl('core','profile')}
                         alt="User"
                         width={32}
                         height={32}
@@ -240,7 +241,7 @@ export default function Hamburger({ isOpen, onClose }: NavbarProps) {
                         className="flex items-center gap-3 p-2 rounded-lg hover:bg-blue-500/20 transition-colors cursor-pointer"
                       >
                         <Image
-                          src="/navigationSetting/profile.png"
+                          src={getImageUrl('core','profile')}
                           alt="User"
                           width={32}
                           height={32}
@@ -252,7 +253,7 @@ export default function Hamburger({ isOpen, onClose }: NavbarProps) {
                             {profile.isActive && <div className="w-2 h-2 rounded-full bg-blue-500" />}
                           </div>
                           <div className="flex items-center gap-1 text-sm text-gray-400">
-                            <Image src="/navigationSetting/coins.png" alt="User" width={16} height={16} className="" />
+                            <Image src={getImageUrl('core','coins')} alt="User" width={16} height={16} className="" />
                             <div className="bg-gray-800 rounded px-1 text-xs">{profile.credits}</div>
                           </div>
                         </div>
@@ -292,14 +293,14 @@ export default function Hamburger({ isOpen, onClose }: NavbarProps) {
               {/* "20" Div */}
               <div className="items gap-0">
                 <div className="flex rounded-full py-[1vh] pl-2 w-[6vw] border-2 gap-1 border-[#484848] bg-black text-white text-xs">
-                  <Image src="/navigationSetting/coins.png" alt="User" width={20} height={20} className="" />
+                  <Image src={getImageUrl('core','coins')} alt="User" width={20} height={20} className="" />
                   <div className="flex items-center gap-3"></div> 20
                 </div>
               </div>
 
               {/* Upgrade Button Overlapping */}
               <button className="flex bg-gradient-to-b from-[#5AD7FF] to-[#656BF5] text-[0.72rem] px-2 py-[1.2vh] rounded-full hover:bg-blue-600 transition-colors -ml-[24%] gap-1">
-                <Image src="/navigationSetting/diamond.png" alt="User" width={16} height={16} className="" /> Upgrade
+                <Image src={getImageUrl('core','diamond')} alt="User" width={16} height={16} className="" /> Upgrade
               </button>
             </div>
 
@@ -365,7 +366,7 @@ export default function Hamburger({ isOpen, onClose }: NavbarProps) {
             <div className="flex flex-col items-start">
               {/* Logo */}
               <div className="flex items-center gap-[6%] pb-4 justify-center pl-[2vw]">
-                <Image src="/Core/Logomain.png" alt="WildMind Logo" width={32} height={32} className="" />
+                <Image src={getImageUrl('core','logo')} alt="WildMind Logo" width={32} height={32} className="" />
                 <span className="text-white font-bold text-3xl">WildMind</span>
               </div>
 

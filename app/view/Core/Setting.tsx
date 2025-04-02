@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserCheck } from "@fortawesome/free-solid-svg-icons"; // Use the free solid version
+import { getImageUrl } from "@/routes/imageroute";
 
 interface SettingsProps {
   isOpen: boolean;
@@ -235,7 +236,7 @@ ${isValid && isAgeConfirmed ? "hover:bg-black hover:border-gray-700" : ""}`}
 
                     <div className="flex items-center px-2 py-3  rounded-lg">
                       <Image
-                        src="/navigationSetting/coins.png"
+                        src={getImageUrl('core','coins')}
                         alt="Credits"
                         width={16}
                         height={16}
@@ -246,7 +247,7 @@ ${isValid && isAgeConfirmed ? "hover:bg-black hover:border-gray-700" : ""}`}
                   </div>
                   <button className="flex items-center  gap-2 bg-gradient-to-b from-[#5AD7FF] to-[#656BF5] px-6 py-3 rounded-full text-white">
                     <Image
-                      src="/navigationSetting/diamond.png"
+                      src={getImageUrl('core','diamond')}
                       alt="Upgrade"
                       width={16}
                       height={16}

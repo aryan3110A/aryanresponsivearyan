@@ -5,6 +5,9 @@ import type React from "react"
 import { useRef, useState, useEffect } from "react"
 import Image from "next/image"
 import Footer from "../Core/Footer"
+import { getImageUrl } from "@/routes/imageroute";
+import { url } from "inspector"
+import { generateImage } from "@/app/utils/api"
 
 const scriptURL =
   "https://script.google.com/macros/s/AKfycbz0dKO8m-4_vrGpnaPI4zP01OkoN5uXxo1DrJ9jY_oz5tsoNUYvtxxNKgvdYMiZUGsWBw/exec"
@@ -417,7 +420,7 @@ const ContactSection = () => {
         <div
           className="relative mt-40 text-center text-white w-[100vw] "
           style={{
-            backgroundImage: "url('/contactus/bg_rating7.png')",
+            backgroundImage: `url(${getImageUrl('contactus', 'bg_rating')})`,
             backgroundSize: "contain", // Ensures the image maintains its original size
             backgroundRepeat: "no-repeat", // Prevents repeating of the image
             backgroundPosition: "center", // Centers the image
@@ -431,7 +434,7 @@ const ContactSection = () => {
             {/* Glowing Effect for Icon */}
             <div className="inline-block rounded-full mb-0 p-4">
               <Image
-                src="/contactus/rateicon.png"
+                src={getImageUrl('contactus', 'rateicon')}
                 alt="Mobile App"
                 width={128}
                 height={128}

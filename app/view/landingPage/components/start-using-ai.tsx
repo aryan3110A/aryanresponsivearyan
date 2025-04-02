@@ -1,6 +1,7 @@
 'use client'
 import Image from "next/image";
 import { Poppins } from "next/font/google";
+import { getImageUrl } from "@/routes/imageroute";
 
 // Initialize Poppins font
 const poppins = Poppins({ subsets: ["latin"], weight: ["400", "500"] });
@@ -8,7 +9,7 @@ const poppins = Poppins({ subsets: ["latin"], weight: ["400", "500"] });
 export default function StartUsingAi() {
   return (
     <div 
-      className="relative w-full h-[404px] overflow-hidden"
+      className="relative w-full h-[404px] overflow-hidden "
       style={{
         background: `linear-gradient(to bottom, 
           rgba(0, 0, 0, 1) 20%, 
@@ -20,7 +21,7 @@ export default function StartUsingAi() {
       <div className="relative z-10 flex items-center justify-between w-full h-full px-16">
         
         {/* Left Content */}
-        <div className="absolute-left[100px] max-w-xl">
+        <div className="max-w-xl ml-[100px]">
           <h1
             className={`text-[36px] font-medium text-white leading-[1.1] ${poppins.className}`}
           >
@@ -28,14 +29,14 @@ export default function StartUsingAi() {
           </h1>
         </div>
 
-        {/* Right Content - GIF */}
-        <div className="hidden md:block absolute right-[0px]">
+        {/* Right Content - Image */}
+        <div className="hidden md:block -mr-48">
           <Image
-            src="/Landingpage/AIView/bubbles.gif"
+            src={getImageUrl('landingpage','usingai')}
             alt="Creative visual effect"
-            width={743}
-            height={285}
-            className="rounded-l-[33px] w-[743px] h-[300px]"
+            width={750}
+            height={500}
+            className="rounded-l-[33px]"
           />
         </div>
       </div>

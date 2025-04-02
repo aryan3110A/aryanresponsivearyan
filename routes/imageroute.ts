@@ -8,14 +8,21 @@ interface FolderImageRoutes {
 
 export const imageRoutes: FolderImageRoutes = {
     core: {
-        logo: '/Core/logomain.png',   
+        logo: '/Core/logomain.png',  
+        coins : '/navigationSetting/coins.png',
+        diamond : '/navigationSetting/diamond.png',
+        profile:'/navigationSetting/profile.png'
     },
     landingpage:{
         discordimage: '/Landingpage/DiscordView/dc_view.gif',
         discorddark : '/Landingpage/DiscordView/discorddark.svg',
         discord : '/Landingpage/DiscordView/discord.svg',
+        usingai:'/Landingpage/AIView/aiview.png'
     },
-
+    contactus:{
+        bg_rating:'/contactus/bg_rating7.png',
+        rateicon : '/contactus/rateicon.png'
+    },
     auth: {
         loginBg: '/images/auth/login-background.jpg',
         signupBg: '/images/auth/signup-background.jpg',

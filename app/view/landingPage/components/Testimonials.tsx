@@ -1,53 +1,73 @@
-"use client";
-
-import { FaStar } from "react-icons/fa";
+import { User } from "lucide-react";
+import Image from "next/image";
 
 const testimonials = [
   {
-    name: "Alice Johnson",
-    role: "Frontend Developer",
-    text: "This platform transformed the way I learn new tech. The courses are concise and engaging!",
+    quote:
+      "Sarvam AI has completely transformed my creative process! The speed and precision of its textto-image generation are unmatched. I can bring my ideas to life faster than ever, and the results are simply stunning. A game-changer for designers like me!",
+    user: "Emily Johnson,",
+    role: "Digital Artist",
+    image: "/emily.png",
   },
   {
-    name: "Mark Thompson",
-    role: "Full Stack Engineer",
-    text: "I was able to land a job within 3 months. Couldn&apos;t have done it without this amazing platform.",
+    quote:
+      "I've used many AI tools, but nothing comes close to the versatility and power of Sarvam AI. From generating unique game assets to conceptualizing entire environments, this platform saves me hours of work while delivering incredible quality. Highly recommend it!",
+    user: "Mark Thompson, ",
+    role: "Game Developer",
+    image: "/mark.png",
   },
   {
-    name: "Sophie Lee",
-    role: "UI/UX Designer",
-    text: "The community support and project-based learning are game-changers for any self-learner.",
+    quote:
+      "Sarvam AI brings imagination to reality with eortless creativity. Its powerful features helped me create dynamic visuals for multiple branding projects, impressing my clients every time. The userfriendly interface and performance are top-notch!",
+    user: "Sophia Patel, ",
+    role: "Branding Consultant",
+    image: "/sophia.png",
   },
 ];
 
-export default function Testimonials() {
+export function Testimonials() {
   return (
-    <section className="bg-black text-white py-16 px-6 md:px-12">
-      <div className="max-w-5xl mx-auto text-center">
-        <h2 className="text-3xl md:text-4xl font-bold mb-8">
-          Don&apos;t take our word for it
-        </h2>
+    <section className="bg-black px-20 py-20 pt-40 pb-52">
+      <div className="container mx-auto px-4">
+        <div className="mb-12 text-center">
+          <h1 className="mb-4 text-5xl font-bold text-white">
+            See What the World Is Saying About Sarvam AI.
+          </h1>
+          <p className="mx-auto max-w-4xl text-lg text-white">
+            The success of our AI goes beyond the tech itself- it's powered by a
+            vast, interconnected network of developers, researchers, and users
+            who share a commitment to advancing the field.
+          </p>
+        </div>
 
-        <div className="grid gap-10 md:grid-cols-3">
-          {testimonials.map((testimonial, idx) => (
-            <div
-              key={idx}
-              className="bg-[#1a1a1a] p-6 rounded-xl shadow-md transition-transform duration-300 hover:scale-105"
-            >
-              <div className="flex justify-center mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <FaStar key={i} className="text-yellow-400 mr-1" />
-                ))}
+        <div className="grid px-24">
+          <div className="grid grid-cols-1 md:grid-cols-3 divide-x divide-gray-800">
+            {testimonials.map((testimonial, idx) => (
+              <div key={idx} className="group text-l p-6 text-white hover:cursor-pointer">
+                <p className="mb-4 italic">"{testimonial.quote}"</p>
+                <div className="flex items-center justify-center gap-2">
+                  <div className="overflow-hidden">
+                    <Image
+                      src={testimonial.image}
+                      alt={`${testimonial.user} profile`}
+                      width={40}
+                      height={40}
+                      className="rounded-full transition-all duration-100 ease-linear group-hover:scale-150 group-hover:mx-4 mt-4 mb-4  group-hover:translate-x-3"
+                    />
+                  </div>
+                  <span className="text-sm">
+                    <span className="text-gray-200 transition-colors duration-300 group-hover:text-blue-400">
+                      {testimonial.user}
+                    </span>
+                    <br />
+                    <span className="text-gray-200 transition-colors duration-300 group-hover:text-blue-400">
+                      {testimonial.role}
+                    </span>
+                  </span>
+                </div>
               </div>
-              <p className="text-gray-300 text-sm mb-4 italic">
-                &quot;{testimonial.text}&quot;
-              </p>
-              <p className="font-semibold text-lg text-white">
-                {testimonial.name}
-              </p>
-              <p className="text-gray-500 text-sm">{testimonial.role}</p>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </section>

@@ -4,6 +4,8 @@ import Link from "next/link";
 import { IconBrandBlogger, IconBrandGithub, IconBrandYoutube, IconBrandInstagram } from "@tabler/icons-react";
 import { Icon } from "@tabler/icons-react";
 import { NAV_ROUTES,FEATURE_ROUTES} from "../../../routes/routes";
+import Image from "next/image";
+import { getImageUrl } from "@/routes/imageroute";
 
 // Define types for navigation links
 interface NavigationLinks {
@@ -99,7 +101,9 @@ const Footer: React.FC = () => {
           <div className="space-y-4">
             <div className="flex flex-col items-start space-y-2 -mb-2">
               {/* Logo Placeholder */}
-              <div className="w-10 h-10 bg-gray-500 rounded-full"></div>
+              <div className="">
+                <Image src={getImageUrl('core', 'logo')} alt="logo" width={50} height={20}></Image>
+              </div>
 
               {/* Brand Name */}
               <h1 className="text-4xl md:text-5xl lg:text-5xl font-bold">
