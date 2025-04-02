@@ -32,6 +32,9 @@ export const imageRoutes: FolderImageRoutes = {
         welcomeBanner: '/images/dashboard/welcome-banner.jpg',
         statsIcon: '/images/dashboard/stats-icon.svg',
     },
+    sign:{
+        signup: '/signup/Malakai030_11.png'
+    }
     // Add more folders as needed
     // profile: {
     //     avatar: '/images/profile/avatar.jpg',

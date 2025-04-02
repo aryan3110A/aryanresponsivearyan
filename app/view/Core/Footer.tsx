@@ -42,7 +42,7 @@ const navigationLinks: NavigationLinks = {
     "Real Time Generation (soon)": "#",
   },
   Company: {
-    Blog: "/blog",
+    Blog: NAV_ROUTES.BLOG,
     "Contact Us": NAV_ROUTES.CONTACT,
     Support: NAV_ROUTES.SUPPORT,
     "About us": "/about",

@@ -9,6 +9,8 @@ export const AUTH_ROUTES = {
 export const APP_ROUTES = {
   HOME: '/view/home',
   LANDING: '/',
+  SIGNIN:'/view/signin',
+  SIGNUP:'/view/signup'
 } as const;
 
 // Feature Routes
@@ -24,10 +26,11 @@ export const NAV_ROUTES = {
   TEMPLATES: '/view/templates',
   ART_STATION: '/view/artstation',
   PRICING: '/view/pricing',
-  BLOG: '/blog',
+  BLOG: '/view/Blog',
   CONTACT: '/view/contactus',
   SUPPORT: '/view/support',
   ABOUT: '/about',
+
 } as const;
 
 // Legal Routes

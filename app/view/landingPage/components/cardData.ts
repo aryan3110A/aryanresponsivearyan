@@ -1,4 +1,3 @@
-// app/cardsData.ts
 
 export const cardData = [
     {

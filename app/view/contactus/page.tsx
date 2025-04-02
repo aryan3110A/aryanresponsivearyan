@@ -6,8 +6,7 @@ import { useRef, useState, useEffect } from "react"
 import Image from "next/image"
 import Footer from "../Core/Footer"
 import { getImageUrl } from "@/routes/imageroute";
-import { url } from "inspector"
-import { generateImage } from "@/app/utils/api"
+
 
 const scriptURL =
   "https://script.google.com/macros/s/AKfycbz0dKO8m-4_vrGpnaPI4zP01OkoN5uXxo1DrJ9jY_oz5tsoNUYvtxxNKgvdYMiZUGsWBw/exec"

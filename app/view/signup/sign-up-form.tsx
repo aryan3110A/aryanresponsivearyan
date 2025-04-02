@@ -57,6 +57,8 @@ export default function SignUpForm() {
   }
 
   return (
+
+    <div className="w-full flex flex-col">
     <div className="w-full min-h-screen bg-[#171717] relative overflow-hidden px-4 lg:px-8 py-12 flex flex-col justify-between">
       <div className="radial-gradient absolute w-full h-[50%] top-0 left-0 pointer-events-none"></div>
 
@@ -183,7 +185,14 @@ export default function SignUpForm() {
           </Link>
         </div>
       </div>
+
+      
     </div>
+    
+    </div>
+
+
+
   )
 }
 

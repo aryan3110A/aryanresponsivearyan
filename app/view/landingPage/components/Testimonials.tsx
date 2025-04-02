@@ -1,4 +1,3 @@
-import { User } from "lucide-react";
 import Image from "next/image";
 
 const testimonials = [
@@ -34,7 +33,7 @@ export function Testimonials() {
             See What the World Is Saying About Sarvam AI.
           </h1>
           <p className="mx-auto max-w-4xl text-lg text-white">
-            The success of our AI goes beyond the tech itself- it's powered by a
+            The success of our AI goes beyond the tech itself- it&apos;s powered by a
             vast, interconnected network of developers, researchers, and users
             who share a commitment to advancing the field.
           </p>
@@ -44,8 +43,8 @@ export function Testimonials() {
           <div className="grid grid-cols-1 md:grid-cols-3 divide-x divide-gray-800">
             {testimonials.map((testimonial, idx) => (
               <div key={idx} className="group text-l p-6 text-white hover:cursor-pointer">
-                <p className="mb-4 italic">"{testimonial.quote}"</p>
-                <div className="flex items-center justify-center gap-2">
+<p className="mb-4 italic">{`"${testimonial.quote}"`}</p>
+<div className="flex items-center justify-center gap-2">
                   <div className="overflow-hidden">
                     <Image
                       src={testimonial.image}

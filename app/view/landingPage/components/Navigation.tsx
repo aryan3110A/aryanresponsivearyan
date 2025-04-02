@@ -134,7 +134,7 @@ const Navigation = () => {
                     
                     before:absolute before:inset-0 before:rounded-full before:border-[1.5px] before:border-white/20 before:transition-all before:duration-500 
                      "
-          onClick={() => route.push(APP_ROUTES.HOME)}
+          onClick={() => route.push(APP_ROUTES.SIGNUP)}
         >
           Get Started
         </button>
