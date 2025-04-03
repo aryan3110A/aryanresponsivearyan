@@ -7,6 +7,7 @@ import Header from "./components/header";
 
 export default function Blog() {
   return (
+    <>
     <div className="flex flex-col min-h-screen w-full bg-black text-white font-poppins">
       <Header />
 
@@ -17,6 +18,7 @@ export default function Blog() {
         <FollowSection />
       </main>
     </div>
+    </>
   )
 }
 

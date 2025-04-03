@@ -190,11 +190,12 @@ export default function CategorySections() {
   };
 
   return (
-    <div className=" md:px-0 lg:px-6 py-10">
+    <>
+    <div className=" lg:px-6 py-10">
       {categorySections.map((section) => (
         <div
           key={section.id}
-          className=" macbook:max-w-[1100px] md:max-w-[1200px] md:min-w-[1000px] lg:max-w-[1600px] mb-20  md:px-6 lg:px-12"
+          className=" macbook:max-w-[1100px] md:max-w-[1200px] md:min-w-[1000px] lg:max-w-[1600px] mb-20  md:px-10 lg:px-12"
         >
           <div className="flex flex-col md:flex-row items-start gap-8 pl-10">
             <div className="flex flex-col items-start mb-4 w-full md:w-64 flex-shrink-0">
@@ -271,5 +272,6 @@ export default function CategorySections() {
         </div>
       ))}
     </div>
+    </>
   );
 }

@@ -1,6 +1,6 @@
 export default function FollowSection() {
     return (
-      <div className="max-w-5xl mx-auto py-20 px-4  rounded-lg mb-20">
+      <div className="max-w-5xl mx-auto py-20   rounded-lg mb-20">
         <h2 className="text-4xl md:text-5xl font-thin text-center text-white mb-16">
           Follow txt
         </h2>
