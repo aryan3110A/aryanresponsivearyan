@@ -11,8 +11,6 @@ import Commingsoon from "./components/Commingsoon";
 import { PartnersSection } from "./components/partners-section";
 import { Testimonials } from "./components/Testimonials";
 
-
-
 const Main = () => {
   return (
     <div className="bg-black relative">
@@ -49,7 +47,7 @@ const Main = () => {
       </div>
 
       <div className="relative z-[70]">
-    <PartnersSection />
+        <PartnersSection />
       </div>
 
       <div className="relative z-[80]">
@@ -59,8 +57,6 @@ const Main = () => {
       <div className="relative z-[90]">
         <Footer />
       </div>
-
-      
     </div>
   );
 };

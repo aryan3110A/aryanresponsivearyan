@@ -173,9 +173,7 @@ const ContactSection = () => {
 
   return (
     <>
-    
-      <div className="min-h-screen bg-gradient-to-br from-black to-black  pt-16">
-        
+      <div className="min-h-screen bg-gradient-to-br from-black to-black pt-16">
         <div className="flex justify-evenly">
           {/* Left Section (Fixed Position) */}
           <div className="text-white mt-28 self-start ">
@@ -556,5 +554,4 @@ const ContactSection = () => {
     </>
   );
 };
-
 export default ContactSection;

@@ -8,7 +8,6 @@ const Page: React.FC = () => {
   return (
     <>
       <Main />
-      {/* <Blog /> */}
     </>
   );
 };

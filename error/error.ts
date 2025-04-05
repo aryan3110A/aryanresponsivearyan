@@ -1,1 +1,1 @@
-console.log("welcome to error page")
+console.log("thus is the error message");
