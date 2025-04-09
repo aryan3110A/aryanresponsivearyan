@@ -17,7 +17,11 @@ export const imageRoutes: FolderImageRoutes = {
         discordimage: '/Landingpage/DiscordView/dc_view.gif',
         discorddark : '/Landingpage/DiscordView/discorddark.svg',
         discord : '/Landingpage/DiscordView/discord.svg',
-        usingai:'/Landingpage/AIView/aiview.png'
+        usingai:'/Landingpage/AIView/aiview.png',
+        horizonalimage:"/Landingpage/horizonalscroll/rollingimages.png",
+        saying1:'/Landingpage/Sayings/svg1.svg',
+        saying2:'/Landingpage/Sayings/svg2.svg',
+        saying3:'/Landingpage/Sayings/sophia.png',
     },
     contactus:{
         bg_rating:'/contactus/bg_rating7.png',
@@ -33,7 +37,8 @@ export const imageRoutes: FolderImageRoutes = {
         statsIcon: '/images/dashboard/stats-icon.svg',
     },
     sign:{
-        signup: '/signup/Malakai030_11.png'
+        signup: '/sign/stableturbo-1742556691988.png',
+        signin: '/sign/generated_image.png'
     }
     // Add more folders as needed
     // profile: {

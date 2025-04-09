@@ -1,198 +1,305 @@
-"use client"
+"use client";
 
-import { useState, FormEvent, useEffect } from "react"
-import Link from "next/link"
-import { useRouter } from "next/navigation"
-import { auth } from "@/database /firebase"
-import { createUserWithEmailAndPassword, Auth } from "firebase/auth"
-import { APP_ROUTES } from "@/routes/routes"
+import { useState, useEffect, FormEvent } from "react";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import {
+  signInWithPopup,
+  GoogleAuthProvider,
+  OAuthProvider,
+} from "firebase/auth";
+import { auth, db } from "../../../database/firebase";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { doc, setDoc, getDoc, updateDoc } from "firebase/firestore";
 
-export default function SignUpForm() {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-    confirmPassword: "",
-  })
-  const [error, setError] = useState("")
-  const [processing, setProcessing] = useState(false)
-  const [isClient, setIsClient] = useState(false)
+export default function SignInForm() {
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [otp, setOtp] = useState("");
+  const [otpSent, setOtpSent] = useState(false);
+  const [error, setError] = useState("");
+  const [processing, setProcessing] = useState(false);
+  const [timer, setTimer] = useState(0);
 
-  const router = useRouter()
+  const handleSendOtp = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setError("");
+    try {
+      setProcessing(true);
+      await axios.post("http://localhost:5001/send-otp", { email });
+      setOtpSent(true);
+      setTimer(60);
+    } catch (err) {
+      setError("Failed to send OTP. Please try again.");
+    } finally {
+      setProcessing(false);
+    }
+  };
+
+  const handleVerifyOtp = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setError("");
+    try {
+      setProcessing(true);
+  
+      await axios.post("http://localhost:5001/verify-otp", {
+        email,
+        otp: otp.trim(),
+      });
+  
+      localStorage.setItem("otpUser", email);
+  
+      const userRef = doc(db, "users", email);
+      const userSnap = await getDoc(userRef);
+  
+      if (userSnap.exists()) {
+        const data = userSnap.data();
+        localStorage.setItem("username", data.username || "");
+      } else {
+        await setDoc(userRef, { email }); // first-time login with OTP
+      }
+  
+      setOtp("");
+      setOtpSent(false);
+      setError("");
+      router.push("/view/home");
+    } catch (err) {
+      console.error("OTP verification error:", err);
+      setError("Invalid OTP or expired.");
+    } finally {
+      setProcessing(false);
+    }
+  };
+  
+  
+
+  const handleResendOtp = async () => {
+    try {
+      setProcessing(true);
+      setError("");
+      await axios.post("http://localhost:5001/send-otp", { email });
+      setTimer(60);
+    } catch (err) {
+      setError("Failed to resend OTP.");
+    } finally {
+      setProcessing(false);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(auth, provider);
+      const userEmail = result.user.email;
+  
+      if (!userEmail) throw new Error("No email from Google user");
+  
+      localStorage.setItem("otpUser", userEmail);
+  
+      const userRef = doc(db, "users", userEmail);
+      const userSnap = await getDoc(userRef);
+  
+      if (userSnap.exists()) {
+        const data = userSnap.data();
+        localStorage.setItem("username", data.username || "");
+        if (!data.username) {
+          // ⚠️ Prompt user for username
+          localStorage.setItem("needsUsername", "true");
+        }
+      } else {
+        // First-time Google user → create doc with empty username
+        await setDoc(userRef, { email: userEmail, username: "" });
+        localStorage.setItem("needsUsername", "true");
+      }
+  
+      router.push("/view/home");
+    } catch (err) {
+      setError("Google sign-in failed.");
+      console.error(err);
+    }
+  };
+  
+  
+  
+
+  const handleAppleLogin = async () => {
+    try {
+      const provider = new OAuthProvider("apple.com");
+      await signInWithPopup(auth, provider);
+      router.push("/view/home");
+    } catch (err) {
+      setError("Apple sign-in failed.");
+      console.error(err);
+    }
+  };
+
+  const handleMicrosoftLogin = async () => {
+    try {
+      const provider = new OAuthProvider("microsoft.com");
+      await signInWithPopup(auth, provider);
+      router.push("/view/home");
+    } catch (err) {
+      setError("Microsoft sign-in failed.");
+      console.error(err);
+    }
+  };
 
   useEffect(() => {
-    setIsClient(true)
-  }, [])
-
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    setError("")
-    setProcessing(true)
-
-    if (!isClient) {
-      setError("Please wait while we initialize...")
-      setProcessing(false)
-      return
+    if (otpSent && timer > 0) {
+      const interval = setInterval(() => {
+        setTimer((prev) => prev - 1);
+      }, 1000);
+      return () => clearInterval(interval);
     }
+  }, [otpSent, timer]);
 
-    if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match")
-      setProcessing(false)
-      return
-    }
 
+  const handleSignUp = async (email) => {
     try {
-      if (!auth) {
-        throw new Error("Firebase Auth is not initialized")
-      }
-      
-      const authInstance = auth as Auth
-      await createUserWithEmailAndPassword(authInstance, formData.email, formData.password)
-      router.push(APP_ROUTES.HOME)
-    } catch (err) {
-      console.error("Error creating user:", err)
-      setError("Failed to create account. Please try again.")
-    } finally {
-      setProcessing(false)
+      const userCredential = await createUserWithEmailAndPassword(auth, email);
+      const user = userCredential.user;
+  
+      // Create a user document in Firestore
+      await setDoc(doc(db, "users", user.uid), {
+        email: user.email,
+        // Additional fields can be added here
+      });
+  
+      // Proceed to prompt for username
+    } catch (error) {
+      console.error("Error signing up:", error);
     }
-  }
+  };
 
+
+  const handleSignIn = async (email) => {
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email);
+      const user = userCredential.user;
+  
+      const userDoc = await getDoc(doc(db, "users", user.uid));
+      if (userDoc.exists()) {
+        const userData = userDoc.data();
+        if (!userData.username) {
+          // Prompt for username
+        } else {
+          // Username exists, proceed normally
+        }
+      }
+    } catch (error) {
+      console.error("Error signing in:", error);
+    }
+  };
+
+
+  const updateUsername = async (uid, username) => {
+    try {
+      const userRef = doc(db, "users", uid);
+      await updateDoc(userRef, {
+        username: username,
+      });
+      // Proceed after successful update
+    } catch (error) {
+      console.error("Error updating username:", error);
+    }
+  };
+
+  const handleUsernameSubmit = async () => {
+    const email = localStorage.getItem("otpUser");
+    if (email && username.trim()) {
+      await setDoc(doc(db, "users", email), {
+        email,
+        username: username.trim(),
+      }, { merge: true });
+  
+      localStorage.setItem("username", username.trim());
+      setShowUsernamePrompt(false);
+    }
+  };
+  
+  
+  
   return (
+    <div className="min-h-screen bg-black text-white flex items-center justify-center">
+      <div className="w-full max-w-sm p-6 space-y-6 bg-[#1e1e1e] rounded-xl shadow-md">
+        <h2 className="text-xl text-center font-semibold">
+          {otpSent ? "Enter OTP" : "Sign in with Email or Social"}
+        </h2>
 
-    <div className="w-full flex flex-col">
-    <div className="w-full min-h-screen bg-[#171717] relative overflow-hidden px-4 lg:px-8 py-12 flex flex-col justify-between">
-      <div className="radial-gradient absolute w-full h-[50%] top-0 left-0 pointer-events-none"></div>
-
-      <div className="relative z-10 flex flex-col items-center">
-        {/* Logo */}
-        <div className="w-[149px] h-[55px] mb-12 text-center">
-          <span className="text-gray-300 text-3xl font-semibold mt-24">Logo</span>
+        <div className="space-y-2">
+          <button
+            onClick={handleGoogleLogin}
+            className="w-full bg-white text-black py-2 rounded hover:bg-gray-100"
+          >
+            Continue with Google
+          </button>
+          <button
+            onClick={handleAppleLogin}
+            className="w-full bg-[#161616] text-white py-2 rounded hover:bg-[#333]"
+          >
+            Continue with Apple
+          </button>
+          <button
+            onClick={handleMicrosoftLogin}
+            className="w-full bg-[#2F2FDC] text-white py-2 rounded hover:bg-[#4646f0]"
+          >
+            Continue with Microsoft
+          </button>
         </div>
 
-        {/* Form */}
-        <div className="w-full max-w-[320px] space-y-6 p-4">
-          <form onSubmit={handleSubmit}>
-            <div className="space-y-6">
-              <div className="space-y-2">
-                <label className="block text-gray-300 text-base font-light mb-2 text-[16px] -mt-6">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  placeholder="name@host.com"
-                  className="w-full h-10 bg-[#262626] border-none rounded-lg px-4 text-gray-300 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#444c55] text-[15px] opacity-90 transition-all duration-300"
-                  value={formData.email}
-                  onChange={(e) => setFormData((prev) => ({ ...prev, email: e.target.value }))}
-                  required
-                />
-              </div>
-
-              <div className="space-y-2">
-                <label
-                  className="block text-gray-300 text-base font-light"
-                  style={{ fontSize: "16px", lineHeight: "22.5px" }}
-                >
-                  Create Password
-                </label>
-                <input
-                  type="password"
-                  placeholder="Password"
-                  className="w-full h-10 bg-[#262626] border-none rounded-lg px-4 text-gray-300 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#444c55] text-[15px] opacity-90 transition-all duration-300"
-                  value={formData.password}
-                  onChange={(e) => setFormData((prev) => ({ ...prev, password: e.target.value }))}
-                  required
-                />
-              </div>
-
-              <div className="space-y-2">
-                <label
-                  className="block text-gray-300 text-base font-light"
-                  style={{ fontSize: "16px", lineHeight: "22.5px" }}
-                >
-                  Confirm password
-                </label>
-                <input
-                  type="password"
-                  placeholder="Password"
-                  className="w-full h-10 bg-[#262626] border-none rounded-lg px-4 text-gray-300 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#444c55] text-[15px] opacity-90 transition-all duration-300"
-                  value={formData.confirmPassword}
-                  onChange={(e) => setFormData((prev) => ({ ...prev, confirmPassword: e.target.value }))}
-                  required
-                />
-              </div>
-            </div>
-            {error && (
-              <p className="text-red-500 text-sm font-light text-[14px] mt-2">
-                {error}
-              </p>
-            )}
+        {!otpSent ? (
+          <form onSubmit={handleSendOtp} className="space-y-4 pt-4">
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value.trim())}
+              className="w-full px-4 py-2 rounded bg-[#2e2e2e] focus:outline-none"
+              required
+            />
+            {error && <p className="text-red-400 text-sm">{error}</p>}
             <button
               type="submit"
               disabled={processing}
-              className="w-full h-12 bg-gradient-to-r from-blue-400 to-blue-600 text-white rounded-lg transition-opacity font-light flex items-center justify-center text-[16px] hover:shadow-[0_0_10px_#5e81ff] mt-4"
+              className="w-full bg-blue-600 hover:bg-blue-700 py-2 rounded"
             >
-              {processing ? "Creating account..." : "Create account"}
+              {processing ? "Sending..." : "Send OTP"}
             </button>
           </form>
-
-          <div className="text-center">
-            <Link
-              href="#"
-              className="text-sm text-gray-400 hover:text-gray-300 font-light"
-              style={{ fontSize: "14px", lineHeight: "14px" }}
+        ) : (
+          <form onSubmit={handleVerifyOtp} className="space-y-4 pt-4">
+            <input
+              type="text"
+              placeholder="Enter OTP"
+              value={otp}
+              onChange={(e) => setOtp(e.target.value)}
+              className="w-full px-4 py-2 rounded bg-[#2e2e2e] focus:outline-none"
+              required
+              disabled={timer === 0}
+            />
+            <p className="text-sm text-gray-400">
+              {timer > 0 ? `OTP expires in ${timer}s` : "OTP expired."}
+            </p>
+            {error && <p className="text-red-400 text-sm">{error}</p>}
+            <button
+              type="submit"
+              disabled={processing || timer === 0}
+              className="w-full bg-green-600 hover:bg-green-700 py-2 rounded"
             >
-              Need help?
-            </Link>
-          </div>
-
-          <div className="relative my-8">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-800"></div>
-            </div>
-            <div className="relative flex justify-center">
-        <span className="px-3 bg-[#121212] text-gray-500 text-xs rounded-full h-10 flex items-center">OR</span>
-        </div>
-          </div>
-
-          <div className="text-sm text-gray-500 font-medium text-center">Or continue another way :</div>
-
-          <div className="space-y-4 -mt-10">
-        <button
-          type="button"
-          className="w-full h-12 flex items-center justify-center gap-2 bg-[#262626] hover:bg-opacity-80 text-gray-300 rounded-lg transition-colors font-thin px-4 text-[14px] hover:bg-[#444c55] -mt-5"
-        >
-          <svg fill="#FFFFFF" xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 50 50" width="24px" height="24px"><path d="M 44.527344 34.75 C 43.449219 37.144531 42.929688 38.214844 41.542969 40.328125 C 39.601563 43.28125 36.863281 46.96875 33.480469 46.992188 C 30.46875 47.019531 29.691406 45.027344 25.601563 45.0625 C 21.515625 45.082031 20.664063 47.03125 17.648438 47 C 14.261719 46.96875 11.671875 43.648438 9.730469 40.699219 C 4.300781 32.429688 3.726563 22.734375 7.082031 17.578125 C 9.457031 13.921875 13.210938 11.773438 16.738281 11.773438 C 20.332031 11.773438 22.589844 13.746094 25.558594 13.746094 C 28.441406 13.746094 30.195313 11.769531 34.351563 11.769531 C 37.492188 11.769531 40.8125 13.480469 43.1875 16.433594 C 35.421875 20.691406 36.683594 31.78125 44.527344 34.75 Z M 31.195313 8.46875 C 32.707031 6.527344 33.855469 3.789063 33.4375 1 C 30.972656 1.167969 28.089844 2.742188 26.40625 4.78125 C 24.878906 6.640625 23.613281 9.398438 24.105469 12.066406 C 26.796875 12.152344 29.582031 10.546875 31.195313 8.46875 Z"/></svg>
-          Apple
-        </button>
-        <button
-          type="button"
-          className="w-full h-12 flex items-center justify-center gap-2 bg-[#262626] hover:bg-opacity-80 text-gray-300 rounded-lg transition-colors font-thin px-4 text-[14px] hover:bg-[#444c55]"
-        >
-          <svg width="24px" height="24px" viewBox="-3 0 262 262" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid"><path d="M255.878 133.451c0-10.734-.871-18.567-2.756-26.69H130.55v48.448h71.947c-1.45 12.04-9.283 30.172-26.69 42.356l-.244 1.622 38.755 30.023 2.685.268c24.659-22.774 38.875-56.282 38.875-96.027" fill="#4285F4"/><path d="M130.55 261.1c35.248 0 64.839-11.605 86.453-31.622l-41.196-31.913c-11.024 7.688-25.82 13.055-45.257 13.055-34.523 0-63.824-22.773-74.269-54.25l-1.531.13-40.298 31.187-.527 1.465C35.393 231.798 79.49 261.1 130.55 261.1" fill="#34A853"/><path d="M56.281 156.37c-2.756-8.123-4.351-16.827-4.351-25.82 0-8.994 1.595-17.697 4.206-25.82l-.073-1.73L15.26 71.312l-1.335.635C5.077 89.644 0 109.517 0 130.55s5.077 40.905 13.925 58.602l42.356-32.782" fill="#FBBC05"/><path d="M130.55 50.479c24.514 0 41.05 10.589 50.479 19.438l36.844-35.974C195.245 12.91 165.798 0 130.55 0 79.49 0 35.393 29.301 13.925 71.947l42.211 32.783c10.59-31.477 39.891-54.251 74.414-54.251" fill="#EB4335"/></svg>
-          Google
-        </button>
+              {processing ? "Verifying..." : "Verify OTP"}
+            </button>
+            {timer === 0 && (
+              <button
+                type="button"
+                onClick={handleResendOtp}
+                className="w-full mt-2 text-sm text-blue-400 hover:underline"
+              >
+                Resend OTP
+              </button>
+            )}
+          </form>
+        )}
       </div>
-        </div>
-      </div>
-
-      {/* Footer */}
-      <div className="relative z-10 mt-8">
-        <div className="flex justify-center space-x-4 text-sm text-gray-500">
-          <Link href="#" className="hover:text-gray-400 hover:underline">
-            Privacy Policy
-          </Link>
-          <Link href="#" className="hover:text-gray-400 hover:underline">
-            Terms of Service
-          </Link>
-        </div>
-      </div>
-
-      
     </div>
-    
-    </div>
-
-
-
-  )
+  );
 }
-

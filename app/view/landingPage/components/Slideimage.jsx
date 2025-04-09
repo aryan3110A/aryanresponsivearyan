@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { motion } from "framer-motion";
+import { getImageUrl } from "@/routes/imageroute";
 
 const SlideImage = () => {
   // Define your text rows: each sub-array is a row, each string is a word
@@ -19,9 +20,9 @@ const SlideImage = () => {
           <motion.div
             key={index}
             className="flex whitespace-nowrap"
-            initial={{ x: "-100%" }}
+            initial={{ x: "-1500%" }}
             animate={{ x: "0%" }}
-            transition={{ repeat: Infinity, duration: 5, ease: "linear" }}
+            transition={{ repeat: Infinity, duration: 100, ease: "linear" }}
           >
             {row.map((name, i) => (
               <span key={i} className="text-4xl mx-4">
@@ -43,35 +44,33 @@ const SlideImage = () => {
         <img src="/Core/logomain.png" alt="new" className="relative z-10 w-auto" />
       </div>
 
+
       {/* Right Side - Image Animation */}
-      <div className="w-1/3 flex flex-col gap-4 overflow-hidden">
-        {[...Array(4)].map((_, row) => (
-          <motion.div 
-            key={row}
-            className="flex"
-            initial={{ x: "-100%" }}
-            animate={{ x: "0%" }}
-            transition={{ repeat: Infinity, duration: 6, ease: "linear" }}
-          >
-            {[...Array(6)].map((_, i) => (
-              <img
-                key={i}
-                src={`./image${i + 1}.png`}
-                className="w-20 h-20 mx-2"
-                alt=""
-              />
-            ))}
-            {[...Array(6)].map((_, i) => (
-              <img
-                key={`dup-${i}`}
-                src={`./image${i + 1}.png`}
-                className="w-20 h-20 mx-2"
-                alt=""
-              />
-            ))}
-          </motion.div>
-        ))}
-      </div>
+<div className="w-[40vw] overflow-hidden bg-black flex items-center justify-center">
+  <div className="w-full overflow-hidden relative">
+    <motion.div
+      className="flex min-w-max"
+      animate={{ x: ["-90%", "0%"] }}
+      transition={{
+        repeat: Infinity,
+        duration: 60,
+        ease: "linear",
+      }}
+    >
+      <img
+        src={getImageUrl('landingpage','horizonalimage')}
+        alt="Scrolling Banner"
+        className="h-[400px] w-auto" // ← match logo height
+      />
+      <img
+        src={getImageUrl('landingpage','horizonalimage')}
+        alt="Scrolling Banner Duplicate"
+        className="h-[400px] w-auto" // ← match logo height
+      />
+    </motion.div>
+  </div>
+</div>
+
     </div>
   );
 };

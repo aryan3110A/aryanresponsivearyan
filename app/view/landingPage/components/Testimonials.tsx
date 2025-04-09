@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { getImageUrl } from "@/routes/imageroute";
 
 const testimonials = [
   {
@@ -6,21 +7,21 @@ const testimonials = [
       "Sarvam AI has completely transformed my creative process! The speed and precision of its textto-image generation are unmatched. I can bring my ideas to life faster than ever, and the results are simply stunning. A game-changer for designers like me!",
     user: "Emily Johnson,",
     role: "Digital Artist",
-    image: "/emily.png",
+    image: getImageUrl("landingpage",'saying1')
   },
   {
     quote:
       "I've used many AI tools, but nothing comes close to the versatility and power of Sarvam AI. From generating unique game assets to conceptualizing entire environments, this platform saves me hours of work while delivering incredible quality. Highly recommend it!",
     user: "Mark Thompson, ",
     role: "Game Developer",
-    image: "/mark.png",
+    image: getImageUrl("landingpage",'saying2')
   },
   {
     quote:
       "Sarvam AI brings imagination to reality with eortless creativity. Its powerful features helped me create dynamic visuals for multiple branding projects, impressing my clients every time. The userfriendly interface and performance are top-notch!",
     user: "Sophia Patel, ",
     role: "Branding Consultant",
-    image: "/sophia.png",
+    image: getImageUrl("landingpage",'saying3')
   },
 ];
 
