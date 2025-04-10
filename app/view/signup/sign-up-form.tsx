@@ -11,6 +11,9 @@ import {
 import { auth, db } from "../../../database/firebase";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc, getDoc, updateDoc } from "firebase/firestore";
+import { v4 as uuidv4 } from "uuid";
+
+
 
 export default function SignInForm() {
   const router = useRouter();
@@ -20,6 +23,9 @@ export default function SignInForm() {
   const [error, setError] = useState("");
   const [processing, setProcessing] = useState(false);
   const [timer, setTimer] = useState(0);
+  const [username, setUsername] = useState("");
+const [showUsernameForm, setShowUsernameForm] = useState(false);
+
 
   const handleSendOtp = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -41,7 +47,6 @@ export default function SignInForm() {
     setError("");
     try {
       setProcessing(true);
-  
       await axios.post("http://localhost:5001/verify-otp", {
         email,
         otp: otp.trim(),
@@ -54,15 +59,20 @@ export default function SignInForm() {
   
       if (userSnap.exists()) {
         const data = userSnap.data();
-        localStorage.setItem("username", data.username || "");
+        if (data.username) {
+          localStorage.setItem("username", data.username);
+          router.push("/view/home");
+        } else {
+          setShowUsernameForm(true);
+        }
       } else {
-        await setDoc(userRef, { email }); // first-time login with OTP
+        await setDoc(userRef, { email });
+        setShowUsernameForm(true);
       }
   
       setOtp("");
       setOtpSent(false);
       setError("");
-      router.push("/view/home");
     } catch (err) {
       console.error("OTP verification error:", err);
       setError("Invalid OTP or expired.");
@@ -70,6 +80,7 @@ export default function SignInForm() {
       setProcessing(false);
     }
   };
+  
   
   
 
@@ -95,29 +106,27 @@ export default function SignInForm() {
       if (!userEmail) throw new Error("No email from Google user");
   
       localStorage.setItem("otpUser", userEmail);
-  
       const userRef = doc(db, "users", userEmail);
       const userSnap = await getDoc(userRef);
   
       if (userSnap.exists()) {
         const data = userSnap.data();
-        localStorage.setItem("username", data.username || "");
-        if (!data.username) {
-          // ⚠️ Prompt user for username
-          localStorage.setItem("needsUsername", "true");
+        if (data.username) {
+          localStorage.setItem("username", data.username);
+          router.push("/view/home");
+        } else {
+          setShowUsernameForm(true);
         }
       } else {
-        // First-time Google user → create doc with empty username
-        await setDoc(userRef, { email: userEmail, username: "" });
-        localStorage.setItem("needsUsername", "true");
+        await setDoc(userRef, { email: userEmail });
+        setShowUsernameForm(true);
       }
-  
-      router.push("/view/home");
     } catch (err) {
       setError("Google sign-in failed.");
       console.error(err);
     }
   };
+  
   
   
   
@@ -207,99 +216,127 @@ export default function SignInForm() {
   const handleUsernameSubmit = async () => {
     const email = localStorage.getItem("otpUser");
     if (email && username.trim()) {
+      const slug = `${username.trim()}-${uuidv4().slice(0, 6)}`; // Secure but short
+  
       await setDoc(doc(db, "users", email), {
         email,
         username: username.trim(),
+        slug, // 🔐 Store slug in DB
       }, { merge: true });
   
       localStorage.setItem("username", username.trim());
-      setShowUsernamePrompt(false);
+      localStorage.setItem("slug", slug); // Store locally for routing
+  
+      router.push(`/u/${slug}`); // 🔗 Redirect to personal profile
     }
   };
+  
   
   
   
   return (
     <div className="min-h-screen bg-black text-white flex items-center justify-center">
       <div className="w-full max-w-sm p-6 space-y-6 bg-[#1e1e1e] rounded-xl shadow-md">
-        <h2 className="text-xl text-center font-semibold">
-          {otpSent ? "Enter OTP" : "Sign in with Email or Social"}
-        </h2>
-
-        <div className="space-y-2">
-          <button
-            onClick={handleGoogleLogin}
-            className="w-full bg-white text-black py-2 rounded hover:bg-gray-100"
-          >
-            Continue with Google
-          </button>
-          <button
-            onClick={handleAppleLogin}
-            className="w-full bg-[#161616] text-white py-2 rounded hover:bg-[#333]"
-          >
-            Continue with Apple
-          </button>
-          <button
-            onClick={handleMicrosoftLogin}
-            className="w-full bg-[#2F2FDC] text-white py-2 rounded hover:bg-[#4646f0]"
-          >
-            Continue with Microsoft
-          </button>
-        </div>
-
-        {!otpSent ? (
-          <form onSubmit={handleSendOtp} className="space-y-4 pt-4">
-            <input
-              type="email"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value.trim())}
-              className="w-full px-4 py-2 rounded bg-[#2e2e2e] focus:outline-none"
-              required
-            />
-            {error && <p className="text-red-400 text-sm">{error}</p>}
-            <button
-              type="submit"
-              disabled={processing}
-              className="w-full bg-blue-600 hover:bg-blue-700 py-2 rounded"
-            >
-              {processing ? "Sending..." : "Send OTP"}
-            </button>
-          </form>
-        ) : (
-          <form onSubmit={handleVerifyOtp} className="space-y-4 pt-4">
+        {showUsernameForm ? (
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold text-center">Create a Username</h2>
             <input
               type="text"
-              placeholder="Enter OTP"
-              value={otp}
-              onChange={(e) => setOtp(e.target.value)}
+              placeholder="Enter a username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               className="w-full px-4 py-2 rounded bg-[#2e2e2e] focus:outline-none"
-              required
-              disabled={timer === 0}
             />
-            <p className="text-sm text-gray-400">
-              {timer > 0 ? `OTP expires in ${timer}s` : "OTP expired."}
-            </p>
-            {error && <p className="text-red-400 text-sm">{error}</p>}
             <button
-              type="submit"
-              disabled={processing || timer === 0}
-              className="w-full bg-green-600 hover:bg-green-700 py-2 rounded"
+              onClick={handleUsernameSubmit}
+              className="w-full bg-purple-600 hover:bg-purple-700 py-2 rounded"
             >
-              {processing ? "Verifying..." : "Verify OTP"}
+              Save Username
             </button>
-            {timer === 0 && (
+          </div>
+        ) : (
+          <>
+            <h2 className="text-xl text-center font-semibold">
+              {otpSent ? "Enter OTP" : "Sign in with Email or Social"}
+            </h2>
+  
+            <div className="space-y-2">
               <button
-                type="button"
-                onClick={handleResendOtp}
-                className="w-full mt-2 text-sm text-blue-400 hover:underline"
+                onClick={handleGoogleLogin}
+                className="w-full bg-white text-black py-2 rounded hover:bg-gray-100"
               >
-                Resend OTP
+                Continue with Google
               </button>
+              <button
+                onClick={handleAppleLogin}
+                className="w-full bg-[#161616] text-white py-2 rounded hover:bg-[#333]"
+              >
+                Continue with Apple
+              </button>
+              <button
+                onClick={handleMicrosoftLogin}
+                className="w-full bg-[#2F2FDC] text-white py-2 rounded hover:bg-[#4646f0]"
+              >
+                Continue with Microsoft
+              </button>
+            </div>
+  
+            {!otpSent ? (
+              <form onSubmit={handleSendOtp} className="space-y-4 pt-4">
+                <input
+                  type="email"
+                  placeholder="Email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value.trim())}
+                  className="w-full px-4 py-2 rounded bg-[#2e2e2e] focus:outline-none"
+                  required
+                />
+                {error && <p className="text-red-400 text-sm">{error}</p>}
+                <button
+                  type="submit"
+                  disabled={processing}
+                  className="w-full bg-blue-600 hover:bg-blue-700 py-2 rounded"
+                >
+                  {processing ? "Sending..." : "Send OTP"}
+                </button>
+              </form>
+            ) : (
+              <form onSubmit={handleVerifyOtp} className="space-y-4 pt-4">
+                <input
+                  type="text"
+                  placeholder="Enter OTP"
+                  value={otp}
+                  onChange={(e) => setOtp(e.target.value)}
+                  className="w-full px-4 py-2 rounded bg-[#2e2e2e] focus:outline-none"
+                  required
+                  disabled={timer === 0}
+                />
+                <p className="text-sm text-gray-400">
+                  {timer > 0 ? `OTP expires in ${timer}s` : "OTP expired."}
+                </p>
+                {error && <p className="text-red-400 text-sm">{error}</p>}
+                <button
+                  type="submit"
+                  disabled={processing || timer === 0}
+                  className="w-full bg-green-600 hover:bg-green-700 py-2 rounded"
+                >
+                  {processing ? "Verifying..." : "Verify OTP"}
+                </button>
+                {timer === 0 && (
+                  <button
+                    type="button"
+                    onClick={handleResendOtp}
+                    className="w-full mt-2 text-sm text-blue-400 hover:underline"
+                  >
+                    Resend OTP
+                  </button>
+                )}
+              </form>
             )}
-          </form>
+          </>
         )}
       </div>
     </div>
   );
+  
 }
