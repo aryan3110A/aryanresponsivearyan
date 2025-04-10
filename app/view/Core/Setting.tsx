@@ -36,6 +36,16 @@ const SettingNavigation: React.FC<SettingsProps> = ({
     }
   }, [hamburgerOpen, isOpen, onClose]);
 
+  const [email, setEmail] = useState("");
+  useEffect(() => {
+    const storedUsername = localStorage.getItem("username");
+    const storedEmail = localStorage.getItem("otpUser");
+  
+    if (storedUsername) setUsername(storedUsername);
+    if (storedEmail) setEmail(storedEmail);
+  }, []);
+  
+
   // Hide success message after 3 seconds
   useEffect(() => {
     if (showSuccessMessage) {
@@ -100,11 +110,12 @@ const SettingNavigation: React.FC<SettingsProps> = ({
                   This cannot be changed.
                 </p>
                 <input
-                  type="email"
-                  value="name@host.com"
-                  disabled
-                  className="w-[40vw] bg-[#111111] border border-gray-700 rounded-lg p-3 text-gray-300"
-                />
+              type="email"
+  value={email}
+  disabled
+  className="w-[40vw] bg-[#111111] border border-gray-700 rounded-lg p-3 text-gray-300"
+/>
+
               </div>
 
               <div className="mb-6">

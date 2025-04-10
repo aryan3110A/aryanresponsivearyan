@@ -9,11 +9,12 @@ import {
   OAuthProvider,
 } from "firebase/auth";
 import { auth, db } from "../../../database/firebase";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import { doc, setDoc, getDoc, updateDoc } from "firebase/firestore";
+import {
+  doc,
+  setDoc,
+  getDoc,
+} from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
-
-
 
 export default function SignInForm() {
   const router = useRouter();
@@ -24,8 +25,7 @@ export default function SignInForm() {
   const [processing, setProcessing] = useState(false);
   const [timer, setTimer] = useState(0);
   const [username, setUsername] = useState("");
-const [showUsernameForm, setShowUsernameForm] = useState(false);
-
+  const [showUsernameForm, setShowUsernameForm] = useState(false);
 
   const handleSendOtp = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -51,17 +51,17 @@ const [showUsernameForm, setShowUsernameForm] = useState(false);
         email,
         otp: otp.trim(),
       });
-  
+
       localStorage.setItem("otpUser", email);
-  
+
       const userRef = doc(db, "users", email);
       const userSnap = await getDoc(userRef);
-  
+
       if (userSnap.exists()) {
         const data = userSnap.data();
         if (data.username) {
           localStorage.setItem("username", data.username);
-          router.push("/view/home");
+          router.push(`/view/home/${data.username}`);
         } else {
           setShowUsernameForm(true);
         }
@@ -69,7 +69,7 @@ const [showUsernameForm, setShowUsernameForm] = useState(false);
         await setDoc(userRef, { email });
         setShowUsernameForm(true);
       }
-  
+
       setOtp("");
       setOtpSent(false);
       setError("");
@@ -80,9 +80,6 @@ const [showUsernameForm, setShowUsernameForm] = useState(false);
       setProcessing(false);
     }
   };
-  
-  
-  
 
   const handleResendOtp = async () => {
     try {
@@ -102,18 +99,18 @@ const [showUsernameForm, setShowUsernameForm] = useState(false);
       const provider = new GoogleAuthProvider();
       const result = await signInWithPopup(auth, provider);
       const userEmail = result.user.email;
-  
+
       if (!userEmail) throw new Error("No email from Google user");
-  
+
       localStorage.setItem("otpUser", userEmail);
       const userRef = doc(db, "users", userEmail);
       const userSnap = await getDoc(userRef);
-  
+
       if (userSnap.exists()) {
         const data = userSnap.data();
         if (data.username) {
           localStorage.setItem("username", data.username);
-          router.push("/view/home");
+          router.push(`/view/home/${data.username}`);
         } else {
           setShowUsernameForm(true);
         }
@@ -126,32 +123,26 @@ const [showUsernameForm, setShowUsernameForm] = useState(false);
       console.error(err);
     }
   };
-  
-  
-  
-  
 
-  const handleAppleLogin = async () => {
-    try {
-      const provider = new OAuthProvider("apple.com");
-      await signInWithPopup(auth, provider);
-      router.push("/view/home");
-    } catch (err) {
-      setError("Apple sign-in failed.");
-      console.error(err);
+  const handleUsernameSubmit = async () => {
+    const email = localStorage.getItem("otpUser");
+    if (email && username.trim()) {
+      const realUsername = username.trim();
+      const slug = `${realUsername.toLowerCase().replace(/\s+/g, "-")}-${uuidv4().slice(0, 6)}`;
+  
+      await setDoc(doc(db, "users", email), {
+        email,
+        username: realUsername,
+        slug, // only used for routing
+      }, { merge: true });
+  
+      localStorage.setItem("username", realUsername);
+      localStorage.setItem("slug", slug);
+  
+      router.push(`/view/home/${slug}`);
     }
   };
-
-  const handleMicrosoftLogin = async () => {
-    try {
-      const provider = new OAuthProvider("microsoft.com");
-      await signInWithPopup(auth, provider);
-      router.push("/view/home");
-    } catch (err) {
-      setError("Microsoft sign-in failed.");
-      console.error(err);
-    }
-  };
+  
 
   useEffect(() => {
     if (otpSent && timer > 0) {
@@ -162,78 +153,6 @@ const [showUsernameForm, setShowUsernameForm] = useState(false);
     }
   }, [otpSent, timer]);
 
-
-  const handleSignUp = async (email) => {
-    try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email);
-      const user = userCredential.user;
-  
-      // Create a user document in Firestore
-      await setDoc(doc(db, "users", user.uid), {
-        email: user.email,
-        // Additional fields can be added here
-      });
-  
-      // Proceed to prompt for username
-    } catch (error) {
-      console.error("Error signing up:", error);
-    }
-  };
-
-
-  const handleSignIn = async (email) => {
-    try {
-      const userCredential = await signInWithEmailAndPassword(auth, email);
-      const user = userCredential.user;
-  
-      const userDoc = await getDoc(doc(db, "users", user.uid));
-      if (userDoc.exists()) {
-        const userData = userDoc.data();
-        if (!userData.username) {
-          // Prompt for username
-        } else {
-          // Username exists, proceed normally
-        }
-      }
-    } catch (error) {
-      console.error("Error signing in:", error);
-    }
-  };
-
-
-  const updateUsername = async (uid, username) => {
-    try {
-      const userRef = doc(db, "users", uid);
-      await updateDoc(userRef, {
-        username: username,
-      });
-      // Proceed after successful update
-    } catch (error) {
-      console.error("Error updating username:", error);
-    }
-  };
-
-  const handleUsernameSubmit = async () => {
-    const email = localStorage.getItem("otpUser");
-    if (email && username.trim()) {
-      const slug = `${username.trim()}-${uuidv4().slice(0, 6)}`; // Secure but short
-  
-      await setDoc(doc(db, "users", email), {
-        email,
-        username: username.trim(),
-        slug, // 🔐 Store slug in DB
-      }, { merge: true });
-  
-      localStorage.setItem("username", username.trim());
-      localStorage.setItem("slug", slug); // Store locally for routing
-  
-      router.push(`/u/${slug}`); // 🔗 Redirect to personal profile
-    }
-  };
-  
-  
-  
-  
   return (
     <div className="min-h-screen bg-black text-white flex items-center justify-center">
       <div className="w-full max-w-sm p-6 space-y-6 bg-[#1e1e1e] rounded-xl shadow-md">
@@ -259,7 +178,7 @@ const [showUsernameForm, setShowUsernameForm] = useState(false);
             <h2 className="text-xl text-center font-semibold">
               {otpSent ? "Enter OTP" : "Sign in with Email or Social"}
             </h2>
-  
+
             <div className="space-y-2">
               <button
                 onClick={handleGoogleLogin}
@@ -268,19 +187,19 @@ const [showUsernameForm, setShowUsernameForm] = useState(false);
                 Continue with Google
               </button>
               <button
-                onClick={handleAppleLogin}
+                onClick={() => {}}
                 className="w-full bg-[#161616] text-white py-2 rounded hover:bg-[#333]"
               >
                 Continue with Apple
               </button>
               <button
-                onClick={handleMicrosoftLogin}
+                onClick={() => {}}
                 className="w-full bg-[#2F2FDC] text-white py-2 rounded hover:bg-[#4646f0]"
               >
                 Continue with Microsoft
               </button>
             </div>
-  
+
             {!otpSent ? (
               <form onSubmit={handleSendOtp} className="space-y-4 pt-4">
                 <input
@@ -338,5 +257,4 @@ const [showUsernameForm, setShowUsernameForm] = useState(false);
       </div>
     </div>
   );
-  
 }
