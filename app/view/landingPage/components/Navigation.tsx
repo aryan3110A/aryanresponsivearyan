@@ -2,25 +2,57 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import {APP_ROUTES, NAV_ROUTES,FEATURE_ROUTES} from "../../../../routes/routes";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth, db } from "@/database/firebase";
+import { doc, getDoc } from "firebase/firestore";
+import { APP_ROUTES, NAV_ROUTES, FEATURE_ROUTES } from "../../../../routes/routes";
 
 const Navigation = () => {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);
-  const route = useRouter();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userSlug, setUserSlug] = useState("");
+  const router = useRouter();
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-    };
+    // check auth state on mount
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        setIsLoggedIn(true);
+        const docRef = doc(db, "users", user.email || "");
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          if (data?.slug) {
+            setUserSlug(data.slug); // get the unique slug
+          }
+        }
+      } else {
+        setIsLoggedIn(false);
+        setUserSlug("");
+      }
+    });
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => unsubscribe();
   }, []);
 
   const toggleDropdown = (dropdown: string) => {
     setActiveDropdown(activeDropdown === dropdown ? null : dropdown);
   };
+
+  const handleGetStarted = () => {
+    if (isLoggedIn && userSlug) {
+      router.push(`/view/home/${userSlug}`);
+    } else {
+      router.push(APP_ROUTES.SIGNUP);
+    }
+  };
+
+  
+  
+
+ 
+  
 
   return (
     <div
@@ -30,17 +62,12 @@ const Navigation = () => {
         scrolled
           ? "backdrop-blur-xl bg-black/30 shadow-lg"
           : "backdrop-blur-xl bg-black/10 shadow-lg"
-      } transition-all duration-300`}>
+      } transition-all duration-300`}
+    >
       {/* Logo */}
       <div>
         <span className="">
-          <Image
-            src="/Core/Logomain.png"
-            width={40}
-            height={40}
-            className="flex justify-center items-center"
-            alt="Main Logo"
-          />
+        <Image src="/Core/Logomain.png" width={40} height={40} alt="Main Logo" />
         </span>
       </div>
 
@@ -127,14 +154,11 @@ const Navigation = () => {
 
       {/* Get Started Button */}
       <div>
-        <button
+      <button
           className="relative bg-black/20 border border-white/20 rounded-full px-5 py-2 text-base font-medium border-t-[#acacac] border-b-[#6A0DAD] hover:border-t-[#6A0DAD] hover:border-b-[#acacac] 
                     text-transparent bg-clip-text bg-gradient-to-r from-[#5AD7FF] to-[#656BF5] shadow-[inset_0px_0px_8px_rgba(255,255,255,0.2)] 
-                    transition-all duration-500 ease-in-out hover:text-white 
-                    
-                    before:absolute before:inset-0 before:rounded-full before:border-[1.5px] before:border-white/20 before:transition-all before:duration-500 
-                     "
-          onClick={() => route.push(APP_ROUTES.SIGNUP)}
+                    transition-all duration-500 ease-in-out hover:text-white"
+          onClick={handleGetStarted}
         >
           Get Started
         </button>
