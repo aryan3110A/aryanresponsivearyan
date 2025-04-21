@@ -3,6 +3,7 @@
 import { useState, useEffect, FormEvent, useRef } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import {
   signInWithPopup,
   GoogleAuthProvider,
@@ -36,7 +37,7 @@ export default function SignInForm() {
       await axios.post("http://localhost:5001/send-otp", { email });
       setOtpSent(true);
       setTimer(60);
-    } catch (err) {
+    } catch  {
       setError("Failed to send OTP. Please try again.");
     } finally {
       setProcessing(false);
@@ -88,7 +89,7 @@ export default function SignInForm() {
       setError("");
       await axios.post("http://localhost:5001/send-otp", { email });
       setTimer(60);
-    } catch (err) {
+    // } catch  {
       setError("Failed to resend OTP.");
     } finally {
       setProcessing(false);
@@ -163,7 +164,7 @@ export default function SignInForm() {
     <div className="min-h-screen p-6 bg-[#171717] text-white flex items-center justify-center">
       <div className="w-full p-6 space-y-6 space-x-4 bg-[#171717] rounded-xl shadow-md">
         <div className="flex items-center justify-center mb-4">
-          <img src="/core/logomain.png" className="w-12 h-12" />
+          <Image src="/core/logomain.png" alt="WildMind Logo" width={48} height={48} className="w-12 h-12" />
           <h1 className="font-bold text-[25px]">WildMind</h1>
         </div>
         <div className="flex items-center justify-center mb-4">
@@ -197,9 +198,11 @@ export default function SignInForm() {
                 onClick={handleGoogleLogin}
                 className="w-[292.58px] h-[44px] max-w-full bg-[#26272C] text-white font-extralight pl-4 hover:bg-[#444D57] flex items-center justify-start gap-2 rounded-[8px]"
               >
-                <img
+                <Image
                   src="/core/google.svg"
                   alt="Google"
+                  width={20}
+                  height={20}
                   className="w-5 h-5"
                 />
                 <span>Google</span>
@@ -208,9 +211,11 @@ export default function SignInForm() {
                 onClick={() => {}}
                 className="w-[292.58px] h-[44px] bg-[#26272C] text-white font-extralight py-2 hover:bg-[#444D57] flex items-center justify-start pl-4 gap-2 rounded-[8px]"
               >
-                <img
+                <Image
                   src="/core/apple.svg"
                   alt="Apple"
+                  width={20}
+                  height={20}
                   className="w-5 h-5"
                 />
                 <span>Apple</span>
@@ -219,9 +224,11 @@ export default function SignInForm() {
                 onClick={() => {}}
                 className="w-[292.58px] h-[44px] bg-[#26272C] text-white py-2 font-extralight hover:bg-[#444D57] flex items-center justify-start pl-4 gap-2 rounded-[8px]"
               >
-                <img
+                <Image
                   src="/core/microsoft.svg"
                   alt="Microsoft"
+                  width={20}
+                  height={20}
                   className="w-5 h-5"
                 />
                 <span>Microsoft</span>
@@ -307,7 +314,7 @@ export default function SignInForm() {
 
                 {/* Timer and Resend */}
                 <div className="text-center text-sm text-[#A0A0A0] pt-2">
-                  Haven’t got the confirmation code yet?{" "}
+                  Haven&apos;t got the confirmation code yet?{" "}
                   {timer === 0 ? (
                     <button
                       type="button"

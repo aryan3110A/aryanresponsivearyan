@@ -11,7 +11,7 @@ import { auth } from "@/database/firebase";
 import {
   APP_ROUTES,
   NAV_ROUTES,
-  AUTH_ROUTES,
+  
   FEATURE_ROUTES,
 } from "@/routes/routes";
 import { getImageUrl } from "@/routes/imageroute";
@@ -25,7 +25,7 @@ interface DropdownItem {
 export default function NavigationFull() {
   const [isNavOpen, setIsNavOpen] = useState<boolean>(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-  const [animating, setAnimating] = useState<boolean>(false);
+  const [animating] = useState<boolean>(false);
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState<boolean>(false);
   const [userEmail, setUserEmail] = useState<string>("");
   const [username, setUsername] = useState<string>("");
@@ -63,7 +63,7 @@ export default function NavigationFull() {
   const handleLogout = async () => {
     try {
       await signOut(auth);
-    } catch (e) {}
+    } catch {}
     localStorage.removeItem("otpUser");
     localStorage.removeItem("username");
     setUserEmail("");

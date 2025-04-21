@@ -1,8 +1,14 @@
 import { db } from "@/database/firebase";
 import { doc, getDoc } from "firebase/firestore";
 
-export default async function UserHomePage({ params }: { params: { slug: string } }) {
-  const userRef = doc(db, "users", params.slug); // assuming doc ID is slug (or you can query by slug)
+interface PageProps {
+  params: Promise<{ slug: string }>;
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
+}
+
+export default async function UserHomePage({ params }: PageProps) {
+  const resolvedParams = await params;
+  const userRef = doc(db, "users", resolvedParams.slug);
   const userSnap = await getDoc(userRef);
 
   const username = userSnap.exists() ? userSnap.data().username : "User";

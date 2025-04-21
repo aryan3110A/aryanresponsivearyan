@@ -12,7 +12,7 @@ import SettingNavigation from "./Setting";
 export default function Hamburger({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const [showCloseButton, setShowCloseButton] = useState(true);
+  const [showCloseButton] = useState(true);
   const [username, setUsername] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
