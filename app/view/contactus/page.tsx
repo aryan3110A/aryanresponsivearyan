@@ -293,21 +293,22 @@ const ContactSection = () => {
                   </select>
 
                   <input
-                    type="tel"
-                    name="Phone"
-                    className="flex-1 h-10 md:h-12 bg-[#111111] text-white rounded-lg p-2 pl-4 text-xs md:text-sm 
-                    placeholder:text-[#FFFFFF99] mt-2 focus:outline-none focus:ring-2 focus:ring-[#444c55] 
-                    text-[13px] md:text-[15px] opacity-90 transition-all duration-300"
-                    placeholder="Enter your contact number"
-                    value={formData.phone}
-                    onChange={(e) => {
-                      const newValue = e.target.value.replace(/\D/g, "") // Remove non-numeric characters
-                      if (newValue.length <= 10) {
-                        setFormData({ ...formData, phone: newValue })
-                      }
-                    }}
-                    required
-                  />
+  type="tel"
+  name="Phone"
+  className="w-full h-10 md:h-12 bg-[#111111] text-white rounded-lg p-2 pl-4 text-xs md:text-sm 
+  placeholder:text-[#FFFFFF99] mt-2 focus:outline-none focus:ring-2 focus:ring-[#444c55] 
+  text-[13px] md:text-[15px] opacity-90 transition-all duration-300"
+  placeholder="Enter your contact number"
+  value={formData.phone}
+  onChange={(e) => {
+    const newValue = e.target.value.replace(/\D/g, "") // Remove non-numeric characters
+    if (newValue.length <= 10) {
+      setFormData({ ...formData, phone: newValue })
+    }
+  }}
+  required
+/>
+
                 </div>
                 {formErrors.phone && <p className="text-red-500 text-xs md:text-sm mt-1">{formErrors.phone}</p>}
               </div>
