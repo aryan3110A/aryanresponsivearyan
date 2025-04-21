@@ -46,7 +46,7 @@ const navigationLinks: NavigationLinks = {
   },
   Company: {
     Blog: NAV_ROUTES.BLOG,
-    "Contact Us": NAV_ROUTES.CONTACT,
+    ContactUs: NAV_ROUTES.CONTACT,
     Support: NAV_ROUTES.SUPPORT,
     "About us": "/about",
   },
