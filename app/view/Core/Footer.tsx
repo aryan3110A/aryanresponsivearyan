@@ -96,28 +96,33 @@ const socialLinks: SocialLink[] = [
 ]
 
 const Footer: React.FC = () => {
-  const [isMobile, setIsMobile] = useState(false)
+  const [screenWidth, setScreenWidth] = useState(0)
 
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768)
+    const checkScreenSize = () => {
+      setScreenWidth(window.innerWidth)
     }
 
     // Initial check
-    checkMobile()
+    checkScreenSize()
 
     // Add event listener for window resize
-    window.addEventListener("resize", checkMobile)
+    window.addEventListener("resize", checkScreenSize)
 
     // Cleanup
-    return () => window.removeEventListener("resize", checkMobile)
+    return () => window.removeEventListener("resize", checkScreenSize)
   }, [])
 
+  // Only modify below 768px (md breakpoint)
+  const isMobile = screenWidth > 0 && screenWidth < 768
+  // Tablet is between 768px and 1023px
+  const isTablet = screenWidth >= 768 && screenWidth < 1024
+
   return (
-    <footer className="bg-[#050505] text-gray-300 py-8 w-full">
+    <footer className="bg-[#050505] text-gray-300 py-8 w-full overflow-x-hidden">
       <div className="max-w-full px-4 md:px-20 lg:px-16">
-        {/* Desktop Layout */}
-        <div className={`${isMobile ? "hidden" : "flex"} sm:gap-[7.5rem] md:gap-[8rem] lg:gap-[15rem] mb-0`}>
+        {/* Desktop Layout - Using original code for desktop/laptop */}
+        <div className={`${isMobile ? "hidden" : "flex"} ${isTablet ? "gap-12" : "sm:gap-[7.5rem] md:gap-[8rem] lg:gap-[15rem]"} mb-0`}>
           {/* Logo and Description */}
           <div className="space-y-4">
             <div className="flex flex-col items-start space-y-2 -mb-2">
@@ -163,9 +168,9 @@ const Footer: React.FC = () => {
             </div>
           </div>
 
-          {/* Navigation Links */}
+          {/* Navigation Links - keeping as is for desktop */}
           {Object.entries(navigationLinks).map(([category, links]) => (
-            <div key={category} className="md:mt-8 mb-4 mr-10 lg:mr-16 md:-ml-5">
+            <div key={category} className={`md:mt-8 mb-4 mr-10 lg:mr-16 ${isTablet ? "" : "md:-ml-5"}`}>
               <h2 className="font-semibold text-white md:text-lg lg:text-xl mb-4">{category}</h2>
               <ul className="space-y-2">
                 {Object.entries(links).map(([name, href]) => (
@@ -183,7 +188,7 @@ const Footer: React.FC = () => {
           ))}
         </div>
 
-        {/* Mobile Layout */}
+        {/* Mobile Layout - Improved but maintaining your design approach */}
         {isMobile && (
           <div className="flex flex-col space-y-8">
             {/* Logo and Description */}
@@ -201,15 +206,15 @@ const Footer: React.FC = () => {
                   WildMind
                 </span>
               </h1>
-              <p className="text-sm text-gray-400">
+              <p className="text-sm text-gray-400 px-4">
                 Wild Child Studios uses advanced AI to turn imagination into high-quality, creative visuals.
               </p>
             </div>
 
-            {/* Mobile Navigation Links */}
-            <div className="grid grid-cols-2 gap-6">
+            {/* Mobile Navigation Links - Optimized for better display */}
+            <div className="grid grid-cols-2 gap-x-4 gap-y-4">
               {Object.entries(navigationLinks).map(([category, links], idx) => (
-                <div key={idx} className={idx === 2 ? "col-span-2" : ""}>
+                <div key={idx} className={idx === 2 ? "col-span-2 mt-2" : ""}>
                   <h2 className="font-semibold text-white text-base mb-3">{category}</h2>
                   <ul className="space-y-2">
                     {Object.entries(links).map(([name, href]) => (
@@ -230,17 +235,17 @@ const Footer: React.FC = () => {
                 <Link
                   key={index}
                   href={social.href}
-                  className={`w-14 h-14 rounded-full flex items-center justify-center border-2 border-[#545454] bg-[#1E1E1E] 
+                  className={`w-12 h-12 rounded-full flex items-center justify-center border-2 border-[#545454] bg-[#1E1E1E] 
                   ${social.hoverColor} ${social.borderHoverColor}`}
                 >
-                  <social.icon className="w-7 h-7" />
+                  <social.icon className="w-6 h-6" />
                 </Link>
               ))}
             </div>
           </div>
         )}
 
-        {/* Bottom Section */}
+        {/* Bottom Section - Fixed for responsiveness */}
         <div className="border-t border-[#FFFFFF52] pt-8 mt-8">
           <div
             className={`flex ${isMobile ? "flex-col space-y-4" : "flex-col md:flex-row"} justify-start items-center`}
@@ -249,7 +254,7 @@ const Footer: React.FC = () => {
               Copyright © 2025 WildMind Pvt Ltd. All rights reserved.
             </p>
             <div
-              className={`flex flex-wrap ${isMobile ? "gap-4 justify-center" : "sm:gap-4 md:gap-[1.8rem] lg:gap-[4.2rem] justify-center md:ml-[32%] lg:ml-[36%]"}`}
+              className={`flex flex-wrap ${isMobile ? "gap-4 justify-center" : isTablet ? "gap-6 justify-center md:ml-auto" : "sm:gap-4 md:gap-[1.8rem] lg:gap-[4.2rem] justify-center md:ml-[32%] lg:ml-[36%]"}`}
             >
               {legalLinks.map((link) => (
                 <Link
