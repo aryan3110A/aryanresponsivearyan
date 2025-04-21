@@ -1,31 +1,34 @@
-"use client";
+"use client"
 
-import Link from "next/link";
-import { IconBrandBlogger, IconBrandGithub, IconBrandYoutube, IconBrandInstagram } from "@tabler/icons-react";
-import { Icon } from "@tabler/icons-react";
-import { NAV_ROUTES,FEATURE_ROUTES} from "../../../routes/routes";
-import Image from "next/image";
-import { getImageUrl } from "@/routes/imageroute";
+import type React from "react"
+
+import Link from "next/link"
+import { IconBrandBlogger, IconBrandGithub, IconBrandYoutube, IconBrandInstagram } from "@tabler/icons-react"
+import type { Icon } from "@tabler/icons-react"
+import { NAV_ROUTES, FEATURE_ROUTES } from "../../../routes/routes"
+import Image from "next/image"
+import { getImageUrl } from "@/routes/imageroute"
+import { useState, useEffect } from "react"
 
 // Define types for navigation links
 interface NavigationLinks {
-  [key: string]: { [key: string]: string };
+  [key: string]: { [key: string]: string }
 }
 
 // Define types for social links
 interface SocialLink {
-  title: string;
-  icon: Icon;
-  href: string;
-  hoverColor: string;
-  borderHoverColor: string;
-  glowColor: string;
+  title: string
+  icon: Icon
+  href: string
+  hoverColor: string
+  borderHoverColor: string
+  glowColor: string
 }
 
 // Define types for legal links
 interface LegalLink {
-  name: string;
-  href: string;
+  name: string
+  href: string
 }
 
 const navigationLinks: NavigationLinks = {
@@ -47,7 +50,7 @@ const navigationLinks: NavigationLinks = {
     Support: NAV_ROUTES.SUPPORT,
     "About us": "/about",
   },
-};
+}
 
 const legalLinks: LegalLink[] = [
   { name: "Terms of use", href: "/terms" },
@@ -55,7 +58,7 @@ const legalLinks: LegalLink[] = [
   { name: "Cookies", href: "/cookies" },
   { name: "Legal Notice", href: "/legal" },
   { name: "DMCA", href: "/dmca" },
-];
+]
 
 const socialLinks: SocialLink[] = [
   {
@@ -90,19 +93,42 @@ const socialLinks: SocialLink[] = [
     borderHoverColor: "hover:border-green-500",
     glowColor: "hover:shadow-[0_0_15px_rgba(34,197,94,0.5)]",
   },
-];
+]
 
 const Footer: React.FC = () => {
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+
+    // Initial check
+    checkMobile()
+
+    // Add event listener for window resize
+    window.addEventListener("resize", checkMobile)
+
+    // Cleanup
+    return () => window.removeEventListener("resize", checkMobile)
+  }, [])
+
   return (
     <footer className="bg-[#050505] text-gray-300 py-8 w-full">
       <div className="max-w-full px-4 md:px-20 lg:px-16">
-        <div className="flex sm:gap-[7.5rem] md:gap-[8rem] lg:gap-[15rem] mb-0">
+        {/* Desktop Layout */}
+        <div className={`${isMobile ? "hidden" : "flex"} sm:gap-[7.5rem] md:gap-[8rem] lg:gap-[15rem] mb-0`}>
           {/* Logo and Description */}
           <div className="space-y-4">
             <div className="flex flex-col items-start space-y-2 -mb-2">
               {/* Logo Placeholder */}
               <div className="">
-                <Image src={getImageUrl('core', 'logo')} alt="logo" width={50} height={20}></Image>
+                <Image
+                  src={getImageUrl("core", "logo") || "/placeholder.svg"}
+                  alt="logo"
+                  width={50}
+                  height={20}
+                ></Image>
               </div>
 
               {/* Brand Name */}
@@ -113,8 +139,7 @@ const Footer: React.FC = () => {
               </h1>
             </div>
             <p className="sm:text-sm md:text-[1.120rem] lg:text-[1.2rem] lg:leading-6 text-nowrap">
-              Wild Child Studios uses advanced AI to turn <br /> imagination
-              into high-quality, creative visuals.
+              Wild Child Studios uses advanced AI to turn <br /> imagination into high-quality, creative visuals.
             </p>
 
             {/* Social Media Icons */}
@@ -141,9 +166,7 @@ const Footer: React.FC = () => {
           {/* Navigation Links */}
           {Object.entries(navigationLinks).map(([category, links]) => (
             <div key={category} className="md:mt-8 mb-4 mr-10 lg:mr-16 md:-ml-5">
-              <h2 className="font-semibold text-white md:text-lg lg:text-xl mb-4">
-                {category}
-              </h2>
+              <h2 className="font-semibold text-white md:text-lg lg:text-xl mb-4">{category}</h2>
               <ul className="space-y-2">
                 {Object.entries(links).map(([name, href]) => (
                   <li key={name} className="pb-2 mb-2">
@@ -160,18 +183,79 @@ const Footer: React.FC = () => {
           ))}
         </div>
 
+        {/* Mobile Layout */}
+        {isMobile && (
+          <div className="flex flex-col space-y-8">
+            {/* Logo and Description */}
+            <div className="flex flex-col items-center text-center">
+              <div className="mb-2">
+                <Image
+                  src={getImageUrl("core", "logo") || "/placeholder.svg"}
+                  alt="logo"
+                  width={40}
+                  height={16}
+                ></Image>
+              </div>
+              <h1 className="text-3xl font-bold mb-2">
+                <span className="bg-gradient-to-r from-[#5AD7FF] to-[#656BF5] bg-clip-text text-transparent">
+                  WildMind
+                </span>
+              </h1>
+              <p className="text-sm text-gray-400">
+                Wild Child Studios uses advanced AI to turn imagination into high-quality, creative visuals.
+              </p>
+            </div>
+
+            {/* Mobile Navigation Links */}
+            <div className="grid grid-cols-2 gap-6">
+              {Object.entries(navigationLinks).map(([category, links], idx) => (
+                <div key={idx} className={idx === 2 ? "col-span-2" : ""}>
+                  <h2 className="font-semibold text-white text-base mb-3">{category}</h2>
+                  <ul className="space-y-2">
+                    {Object.entries(links).map(([name, href]) => (
+                      <li key={name}>
+                        <Link href={href} className="text-[#616161] text-sm hover:text-white transition-colors">
+                          {name}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+
+            {/* Social Media Icons */}
+            <div className="flex justify-center gap-4">
+              {socialLinks.map((social, index) => (
+                <Link
+                  key={index}
+                  href={social.href}
+                  className={`w-14 h-14 rounded-full flex items-center justify-center border-2 border-[#545454] bg-[#1E1E1E] 
+                  ${social.hoverColor} ${social.borderHoverColor}`}
+                >
+                  <social.icon className="w-7 h-7" />
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Bottom Section */}
-        <div className="border-t border-[#FFFFFF52] pt-8">
-          <div className="flex flex-col md:flex-row justify-start items-center">
-            <p className="text-sm md:text-[0.875rem] lg:text-[1rem] text-[#616161] mb-4 md:mb-0">
+        <div className="border-t border-[#FFFFFF52] pt-8 mt-8">
+          <div
+            className={`flex ${isMobile ? "flex-col space-y-4" : "flex-col md:flex-row"} justify-start items-center`}
+          >
+            <p className="text-sm md:text-[0.875rem] lg:text-[1rem] text-[#616161] mb-4 md:mb-0 text-center">
               Copyright © 2025 WildMind Pvt Ltd. All rights reserved.
             </p>
-            <div className="flex flex-wrap sm:gap-4 md:gap-[1.8rem] lg:gap-[4.2rem] justify-center md:ml-[32%] lg:ml-[36%]">
+            <div
+              className={`flex flex-wrap ${isMobile ? "gap-4 justify-center" : "sm:gap-4 md:gap-[1.8rem] lg:gap-[4.2rem] justify-center md:ml-[32%] lg:ml-[36%]"}`}
+            >
               {legalLinks.map((link) => (
                 <Link
                   key={link.name}
                   href={link.href}
-                  className="text-sm md:text-[0.86rem] lg:text-[1rem] text-[#616161] hover:text-white transition-colors"
+                  className="text-xs md:text-sm lg:text-[1rem] text-[#616161] hover:text-white transition-colors"
                 >
                   {link.name}
                 </Link>
@@ -181,7 +265,7 @@ const Footer: React.FC = () => {
         </div>
       </div>
     </footer>
-  );
-};
+  )
+}
 
-export default Footer;
+export default Footer

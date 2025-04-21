@@ -1,12 +1,13 @@
-"use client"
+"use client" 
 
 import type React from "react"
 
 import { useRef, useState, useEffect } from "react"
 import Image from "next/image"
 import Footer from "../Core/Footer"
-import { getImageUrl } from "@/routes/imageroute";
-
+import { getImageUrl } from "@/routes/imageroute"
+import NavigationFull from "../Core/NavigationFull"
+import Navigation from "../landingPage/components/Navigation"
 
 const scriptURL =
   "https://script.google.com/macros/s/AKfycbz0dKO8m-4_vrGpnaPI4zP01OkoN5uXxo1DrJ9jY_oz5tsoNUYvtxxNKgvdYMiZUGsWBw/exec"
@@ -43,6 +44,8 @@ const ContactSection = () => {
   const [error, setError] = useState<string | null>(null)
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const [hasSelectedOption, setHasSelectedOption] = useState(false)
+  const [isLaptopOrLarger, setIsLaptopOrLarger] = useState(false)
+
 
   const dropdownRef = useRef<HTMLDivElement>(null)
   const formRef = useRef<HTMLFormElement>(null)
@@ -82,19 +85,19 @@ const ContactSection = () => {
 
     try {
       const form = new FormData()
-      form.append('Name', formData.fullName)
-      form.append('Email', formData.email)
-      form.append('Phone', formData.phone)
-      form.append('Option', formData.option)
-      form.append('Message', formData.message)
+      form.append("Name", formData.fullName)
+      form.append("Email", formData.email)
+      form.append("Phone", formData.phone)
+      form.append("Option", formData.option)
+      form.append("Message", formData.message)
 
       const response = await fetch(scriptURL, {
-        method: 'POST',
-        body: form
+        method: "POST",
+        body: form,
       })
 
       if (!response.ok) {
-        throw new Error('Failed to submit form')
+        throw new Error("Failed to submit form")
       }
 
       setSuccessMessage("Your form has been submitted successfully! Our team will reach out to you soon.")
@@ -153,7 +156,7 @@ const ContactSection = () => {
   }
 
   useEffect(() => {
-    const form = document.querySelector('form[name="submit-to-google-sheet"]') as HTMLFormElement | null;
+    const form = document.querySelector('form[name="submit-to-google-sheet"]') as HTMLFormElement | null
     // document.documentElement.style.overflow = "hidden"; // Hide scrolling
 
     if (form) {
@@ -166,23 +169,41 @@ const ContactSection = () => {
     }
   }, [])
 
+  useEffect(() => {
+    // Function to check screen size
+    const checkScreenSize = () => {
+      setIsLaptopOrLarger(window.innerWidth >= 1024) // Tailwind's lg breakpoint = 1024px
+    }
+
+    // Run once at start
+    checkScreenSize()
+
+    // Add event listener
+    window.addEventListener("resize", checkScreenSize)
+
+    // Cleanup
+    return () => window.removeEventListener("resize", checkScreenSize)
+  }, [])
+
   const [formErrors, setFormErrors] = useState<{
     email?: string
     phone?: string
   }>({})
 
   return (
-    <>
-      <div className="min-h-screen bg-gradient-to-br from-black to-black pt-16">
-        <div className="flex justify-evenly">
-          {/* Left Section (Fixed Position) */}
-          <div className="text-white mt-28 self-start ">
-            <h2 className="text-white text-2xl mb-2">Need immediate assistance?</h2>
-            <p className="sm:text-lg text-white lg:text-lg mb-16">
+    <> 
+      {isLaptopOrLarger ? <NavigationFull /> : <Navigation />}
+      <div className="min-h-screen bg-gradient-to-br from-black to-black pt-24">
+        {/* Main Contact Section */}
+        <div className="flex flex-col md:flex-row justify-evenly px-4">
+          {/* Left Section */}
+          <div className="text-white mt-10 md:mt-28 self-start mb-8 md:mb-0 text-center md:text-left">
+            <h2 className="text-white text-xl md:text-2xl mb-2">Need immediate assistance?</h2>
+            <p className="text-sm md:text-lg text-white lg:text-lg mb-6 md:mb-16">
               Let&apos;s make things happen—your goals, our expertise!
             </p>
 
-            <h1 className="text-5xl font-bold leading-tight mb-8">
+            <h1 className="text-3xl md:text-5xl font-bold leading-tight mb-8">
               COME ON,
               <br />
               GIVE US A SHOUT!
@@ -191,14 +212,14 @@ const ContactSection = () => {
 
           {/* Right Section - Contact Form */}
           <div
-            className={`backdrop-blur-3xl  bg-gradient-to-br from-[#262B30] via-[#3B4C5E] to-[#262B30] rounded-[3rem] p-14 shadow-[0_0_300px_80px_rgba(35,46,50,0.8)] mt-10 w-[36rem] ${
-              isDropdownOpen ? "h-[100%]" : "h-[95%]"
-            }`}
+            className={`backdrop-blur-3xl bg-gradient-to-br from-[#262B30] via-[#3B4C5E] to-[#262B30] 
+            rounded-2xl md:rounded-[3rem] p-6 md:p-14 shadow-[0_0_100px_40px_rgba(35,46,50,0.8)] md:shadow-[0_0_300px_80px_rgba(35,46,50,0.8)] 
+            w-full md:w-[36rem] ${isDropdownOpen ? "h-[100%]" : "h-[95%]"}`}
           >
-            <h3 className="text-white text-2xl lg:text-3xl font-bold mb-1">Contact Form</h3>
-            <p className="text-gray-300 text-sm lg:text-sm mb-4">
-              Fill out the form below, and our team will get back to you promptly. Let&apos;s connect and create solutions
-              together!
+            <h3 className="text-white text-xl md:text-2xl lg:text-3xl font-bold mb-1">Contact Form</h3>
+            <p className="text-gray-300 text-xs md:text-sm lg:text-sm mb-4">
+              Fill out the form below, and our team will get back to you promptly. Let&apos;s connect and create
+              solutions together!
             </p>
 
             <form ref={formRef} onSubmit={handleContactSubmit} className="space-y-2" name="submit-to-google-sheet">
@@ -210,13 +231,13 @@ const ContactSection = () => {
               {error && <div className="bg-red-500/10 border border-red-500 text-red-500 p-3 rounded-md">{error}</div>}
 
               <div className="mb-2">
-                <label className="text-white text-sm">
+                <label className="text-white text-xs md:text-sm">
                   Full name <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
                   name="Name"
-                  className="w-full h-12 bg-[#111111] text-white rounded-lg p-2 pl-4 text-sm placeholder:text-[#FFFFFF99] mt-2 focus:outline-none focus:ring-2 focus:ring-[#444c55] text-[15px] opacity-90 transition-all duration-300"
+                  className="w-full h-10 md:h-12 bg-[#111111] text-white rounded-lg p-2 pl-4 text-xs md:text-sm placeholder:text-[#FFFFFF99] mt-2 focus:outline-none focus:ring-2 focus:ring-[#444c55] text-[13px] md:text-[15px] opacity-90 transition-all duration-300"
                   placeholder="Enter your full name"
                   value={formData.fullName}
                   onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
@@ -224,81 +245,81 @@ const ContactSection = () => {
               </div>
 
               <div className="mb-2">
-                <label className="text-white text-sm">
+                <label className="text-white text-xs md:text-sm">
                   Email <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="email"
                   name="Email"
-                  className="w-full h-12 bg-[#111111] text-white rounded-lg p-2 pl-4 text-sm placeholder:text-[#FFFFFF99] mt-2 focus:outline-none focus:ring-2 focus:ring-[#444c55] text-[15px] opacity-90 transition-all duration-300"
+                  className="w-full h-10 md:h-12 bg-[#111111] text-white rounded-lg p-2 pl-4 text-xs md:text-sm placeholder:text-[#FFFFFF99] mt-2 focus:outline-none focus:ring-2 focus:ring-[#444c55] text-[13px] md:text-[15px] opacity-90 transition-all duration-300"
                   placeholder="Enter your email address"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 />
-                {formErrors.email && <p className="text-red-500 text-sm mt-1">{formErrors.email}</p>}
+                {formErrors.email && <p className="text-red-500 text-xs md:text-sm mt-1">{formErrors.email}</p>}
               </div>
 
               <div className="mb">
-      <label className="text-white text-sm">Phone</label>
-      <div className="flex gap-2 ">
-        <select
-          className="w-40 mt-2 bg-[#111111] text-white rounded-lg px-2 text-sm 
-          max-h-60 focus:outline-none focus:ring-2 focus:ring-[#444c55] text-[15px] opacity-90 
-          transition-all duration-300 overflow-y-auto scrollbar-none "
-          size={1} // Keeps it looking like a normal dropdown
-        >
-          <option value="+91">+91 (India)</option>
-          <option value="+1">+1 (USA/Canada)</option>
-          <option value="+44"> +44 (UK)</option>
-          <option value="+61"> +61 (Australia)</option>
-          <option value="+971"> +971 (UAE)</option>
-          <option value="+49">+49 (Germany)</option>
-          <option value="+33">+33 (France)</option>
-          <option value="+81"> +81 (Japan)</option>
-          <option value="+86"> +86 (China)</option>
-          <option value="+7"> +7 (Russia)</option>
-          <option value="+39"> +39 (Italy)</option>
-          <option value="+55"> +55 (Brazil)</option>
-          <option value="+34">+34 (Spain)</option>
-          <option value="+27">+27 (South Africa)</option>
-          <option value="+62">+62 (Indonesia)</option>
-          <option value="+82">+82 (South Korea)</option>
-          <option value="+52"> +52 (Mexico)</option>
-          <option value="+31">+31 (Netherlands)</option>
-          <option value="+46"> +46 (Sweden)</option>
-          <option value="+41"> +41 (Switzerland)</option>
-          <option value="+65"> +65 (Singapore)</option>
-          <option value="+20"> +20 (Egypt)</option>
-        </select>
+                <label className="text-white text-xs md:text-sm">Phone</label>
+                <div className="flex gap-2">
+                  <select
+                    className="w-24 md:w-40 mt-2 bg-[#111111] text-white rounded-lg px-2 text-xs md:text-sm 
+                    max-h-60 focus:outline-none focus:ring-2 focus:ring-[#444c55] text-[13px] md:text-[15px] opacity-90 
+                    transition-all duration-300 overflow-y-auto scrollbar-none h-10 md:h-12"
+                    size={1}
+                  >
+                    <option value="+91">+91 (India)</option>
+                    <option value="+1">+1 (USA/Canada)</option>
+                    <option value="+44"> +44 (UK)</option>
+                    <option value="+61"> +61 (Australia)</option>
+                    <option value="+971"> +971 (UAE)</option>
+                    <option value="+49">+49 (Germany)</option>
+                    <option value="+33">+33 (France)</option>
+                    <option value="+81"> +81 (Japan)</option>
+                    <option value="+86"> +86 (China)</option>
+                    <option value="+7"> +7 (Russia)</option>
+                    <option value="+39"> +39 (Italy)</option>
+                    <option value="+55"> +55 (Brazil)</option>
+                    <option value="+34">+34 (Spain)</option>
+                    <option value="+27">+27 (South Africa)</option>
+                    <option value="+62">+62 (Indonesia)</option>
+                    <option value="+82">+82 (South Korea)</option>
+                    <option value="+52"> +52 (Mexico)</option>
+                    <option value="+31">+31 (Netherlands)</option>
+                    <option value="+46"> +46 (Sweden)</option>
+                    <option value="+41"> +41 (Switzerland)</option>
+                    <option value="+65"> +65 (Singapore)</option>
+                    <option value="+20"> +20 (Egypt)</option>
+                  </select>
 
-        <input
-          type="tel"
-          name="Phone"
-          className="flex-1 h-12 bg-[#111111] text-white rounded-lg p-2 pl-4 text-sm 
-          placeholder:text-[#FFFFFF99] mt-2 focus:outline-none focus:ring-2 focus:ring-[#444c55] 
-          text-[15px] opacity-90 transition-all duration-300"
-          placeholder="Enter your contact number"
-          value={formData.phone}
-          onChange={(e) => {
-            const newValue = e.target.value.replace(/\D/g, ""); // Remove non-numeric characters
-            if (newValue.length <= 10) {
-              setFormData({ ...formData, phone: newValue });
-            }
-          }}
-          required
-        />
-      </div>
-      {formErrors.phone && <p className="text-red-500 text-sm mt-1">{formErrors.phone}</p>}
-    </div>
+                  <input
+                    type="tel"
+                    name="Phone"
+                    className="flex-1 h-10 md:h-12 bg-[#111111] text-white rounded-lg p-2 pl-4 text-xs md:text-sm 
+                    placeholder:text-[#FFFFFF99] mt-2 focus:outline-none focus:ring-2 focus:ring-[#444c55] 
+                    text-[13px] md:text-[15px] opacity-90 transition-all duration-300"
+                    placeholder="Enter your contact number"
+                    value={formData.phone}
+                    onChange={(e) => {
+                      const newValue = e.target.value.replace(/\D/g, "") // Remove non-numeric characters
+                      if (newValue.length <= 10) {
+                        setFormData({ ...formData, phone: newValue })
+                      }
+                    }}
+                    required
+                  />
+                </div>
+                {formErrors.phone && <p className="text-red-500 text-xs md:text-sm mt-1">{formErrors.phone}</p>}
+              </div>
 
               <div className="mt-2">
                 <div
                   ref={dropdownRef}
-                  className={`w-[50%] h-10 bg-[#111111] text-white border border-gray-300 rounded-lg p-2 pl-4 text-sm mt-2 transition-all duration-200 ${
+                  className={`w-full md:w-[50%] h-10 md:h-10 bg-[#111111] text-white border border-gray-300 rounded-lg p-2 pl-4 text-xs md:text-sm mt-2 transition-all duration-200 ${
                     isDropdownOpen ? "mb-48" : "mb-2"
                   }`}
                   onClick={(e) => {
-                    e.stopPropagation() // Prevent the click from immediately closing the dropdown
+                    e.stopPropagation()
                     if (!isDropdownOpen && !hasSelectedOption) {
                       setIsDropdownOpen(true)
                     } else {
@@ -323,7 +344,7 @@ const ContactSection = () => {
                   </div>
 
                   {isDropdownOpen && (
-                    <div className="absolute w-[40%] bg-[#111111] border border-gray-300 rounded-lg mt-4 z-10 -ml-4">
+                    <div className="absolute w-[80%] md:w-[40%] bg-[#111111] border border-gray-300 rounded-lg mt-4 z-10 -ml-4">
                       <div
                         className="p-2 pl-4 hover:bg-[#222222] cursor-pointer border-b border-gray-700"
                         onClick={(e) => {
@@ -389,9 +410,9 @@ const ContactSection = () => {
                   hasSelectedOption ? "mt-0" : isDropdownOpen ? "mt-36" : "mt-0"
                 }`}
               >
-                <label className="text-white text-sm transition-all">How can we help you?</label>
+                <label className="text-white text-xs md:text-sm transition-all">How can we help you?</label>
                 <textarea
-                  className="w-full h-24 bg-[#111111] text-white rounded-lg p-2 pl-4 text-sm placeholder:text-[#FFFFFF99] mt-2 focus:outline-none focus:ring-2 focus:ring-[#444c55] text-[15px] opacity-90 transition-all duration-300"
+                  className="w-full h-20 md:h-24 bg-[#111111] text-white rounded-lg p-2 pl-4 text-xs md:text-sm placeholder:text-[#FFFFFF99] mt-2 focus:outline-none focus:ring-2 focus:ring-[#444c55] text-[13px] md:text-[15px] opacity-90 transition-all duration-300"
                   placeholder="Enter your message here"
                   value={formData.message}
                   name="Message"
@@ -399,49 +420,50 @@ const ContactSection = () => {
                 />
               </div>
 
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className={`ml-[22rem] w-28 h-12 bg-gradient-to-r from-[#5AD7FF] to-[#656BF5] 
-                text-white rounded-full py-2 px-6 transition-all 
-                hover:opacity-100 hover:shadow-[0_0_10px_5px_rgba(101,107,245,0.8)]
-                ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
-              >
-                {isSubmitting ? 'Submitting...' : 'Submit'}
-              </button>
+              <div className="flex justify-end">
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className={`w-28 h-10 md:h-12 bg-gradient-to-r from-[#5AD7FF] to-[#656BF5] 
+                  text-white rounded-full py-2 px-6 transition-all 
+                  hover:opacity-100 hover:shadow-[0_0_10px_5px_rgba(101,107,245,0.8)]
+                  ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""}`}
+                >
+                  {isSubmitting ? "Submitting..." : "Submit"}
+                </button>
+              </div>
             </form>
           </div>
         </div>
 
         {/* Rating Section */}
         <div
-          className="relative mt-40 text-center text-white w-[100vw] "
+          className="relative mt-20 md:mt-40 text-center text-white w-[100vw]"
           style={{
-            backgroundImage: `url(${getImageUrl('contactus', 'bg_rating')})`,
-            backgroundSize: "contain", // Ensures the image maintains its original size
-            backgroundRepeat: "no-repeat", // Prevents repeating of the image
-            backgroundPosition: "center", // Centers the image
-            width: "100%", // Full width
-            height: "100vh", // Replace with the actual height of your image
-            opacity: "",
+            backgroundImage: `url(${getImageUrl("contactus", "bg_rating")})`,
+            backgroundSize: "cover", // Changed to cover for better mobile display
+            backgroundRepeat: "no-repeat",
+            backgroundPosition: "center",
+            width: "100%",
+            height: "60vh", // Reduced height for mobile
+            maxHeight: "100vh", // Max height for larger screens
           }}
         >
           {/* Content Wrapper */}
           <div className="relative z-10 flex flex-col items-center justify-center h-full">
             {/* Glowing Effect for Icon */}
-            <div className="inline-block rounded-full mb-0 p-4">
+            <div className="inline-block rounded-full mb-0 p-2">
               <Image
-                src={getImageUrl('contactus', 'rateicon')}
+                src={getImageUrl("contactus", "rateicon") || "/placeholder.svg"}
                 alt="Mobile App"
-                width={128}
-                height={128}
-                className="w-32 h-32 object-contain rounded-full "
+                width={80} // Smaller for mobile
+                height={80}
+                className="w-20 h-20 md:w-32 md:h-32 object-contain rounded-full"
               />
             </div>
 
             {/* Rating Heading */}
-            {/* Rating Heading */}
-            <h3 className="text-2xl mb-4">
+            <h3 className="text-xl md:text-2xl mb-8">
               How do you rate
               <br />
               Your app experience?
@@ -453,7 +475,7 @@ const ContactSection = () => {
                 <button
                   key={star}
                   onClick={() => handleRatingClick(star)}
-                  className={`text-[4rem] transition-all duration-200 ${
+                  className={`text-3xl md:text-[4rem] transition-all duration-200 ${
                     star <= rating ? "text-yellow-400" : "text-gray-500"
                   }`}
                 >
@@ -468,79 +490,68 @@ const ContactSection = () => {
         </div>
 
         {/* Newsletter Section */}
-        <div className="md:w-[86%] lg:w-[95%] bg-black py-12 mt-10 md:mt-10 lg:mt-10 md:mb-0 lg:mb-4 md:ml-16 lg:-ml-36">
-  <div className="max-w-[1440px] md:mx-auto lg:mx-auto md:px-8 lg:px-8 flex flex-row md:flex-row justify-between items-center gap-6 lg:gap-16">
-    
-    {/* Left side - Heading (Now moved to the start for lg:) */}
-    <div className="text-center md:text-left lg:text-left lg:self-start lg:mr-auto">
-      <h2 className="text-white text-2xl md:text-3xl lg:text-3xl font-semibold leading-tight lg:leading-1.2">
-        Join our newsletter to
-        <br />
-        keep up to date with us!
-      </h2>
-    </div>
+        <div className="w-full md:w-[86%] lg:w-[95%] bg-black py-8 md:py-12 mt-10 md:mt-10 lg:mt-10 md:mb-0 lg:mb-4 px-4 md:ml-16 lg:-ml-28">
+          <div className="max-w-[1440px] mx-auto flex flex-col md:flex-row justify-between items-center gap-6 lg:gap-16">
+            {/* Left side - Heading */}
+            <div className="text-center md:text-left lg:text-left lg:self-start lg:mr-auto">
+              <h2 className="text-white text-2xl md:text-3xl lg:text-3xl font-semibold leading-tight lg:leading-1.2">
+                Join our newsletter to
+                <br />
+                keep up to date with us!
+              </h2>
+            </div>
 
-
-
-
-
-
-
-    {/* Right side - Form */}
-    <div className="w-full md:w-auto lg:w-auto lg:-mr-[19rem]">
-      <form
-        onSubmit={handleNewsletterSubmit}
-        className="flex flex-col md:flex-row gap-12 lg:gap-14 w-full max-w-2xl"
-        name="submit-to-google-sheet"
-      >
-        <div className="flex-grow relative w-[22rem] lg:w-[28rem]">
-          <input
-            type="email"
-            name="NewsLetterEmail"
-            placeholder="Enter your email"
-            className="w-[110%] bg-transparent border border-[#414141] rounded-full py-3 px-12 text-white placeholder-gray-400 
-              focus:outline-none focus:ring-2 focus:ring-[#444c55] text-[15px] lg:text-[1rem] opacity-90 transition-all duration-300"
-            value={newsletterEmail}
-            onChange={(e) => setNewsletterEmail(e.target.value)}
-            required
-          />
-          <span className="absolute left-4 top-1/2 -translate-y-1/2">
-            <svg
-              className="w-6 h-6 lg:w-6 lg:h-6   text-gray-400"
-              fill="none"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="1"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-            </svg>
-          </span>
-        </div>
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className={`px-6 -mr-20 w-[8rem] lg:w-[10rem] rounded-full font-medium text-white transition-colors 
-            bg-gradient-to-b from-[#5AD7FF] to-[#656BF5] 
-            hover:bg-white hover:text-black hover:from-white hover:to-white
-            ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
-        >
-          {isSubmitting ? 'Subscribing...' : 'Subscribe'}
-        </button>
-      </form>
+            {/* Right side - Form */}
+            <div className="w-full md:w-auto lg:w-auto lg:-mr-[19rem]">
+              <form
+                onSubmit={handleNewsletterSubmit}
+                className="flex flex-col md:flex-row gap-4 md:gap-12 lg:gap-14 w-full max-w-2xl"
+                name="submit-to-google-sheet"
+              >
+                <div className="flex-grow relative w-full md:w-[22rem] lg:w-[28rem]">
+                  <input
+                    type="email"
+                    name="NewsLetterEmail"
+                    placeholder="Enter your email"
+                    className="w-full md:w-[110%] bg-transparent border border-[#414141] rounded-full py-3 px-12 text-white placeholder-gray-400 
+                      focus:outline-none focus:ring-2 focus:ring-[#444c55] text-sm md:text-[15px] lg:text-[1rem] opacity-90 transition-all duration-300"
+                    value={newsletterEmail}
+                    onChange={(e) => setNewsletterEmail(e.target.value)}
+                    required
+                  />
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2">
+                    <svg
+                      className="w-5 h-5 md:w-6 md:h-6 text-gray-400"
+                      fill="none"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="1"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                  </span>
+                </div>
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className={`mobile:w-[30vw] py-3 px-5 w-full md:w-[8rem] lg:w-[10rem] rounded-full font-medium text-white transition-colors 
+                    bg-gradient-to-b from-[#5AD7FF] to-[#656BF5] 
+                    hover:bg-white hover:text-black hover:from-white hover:to-white
+                    ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""}`}
+                >
+                  {isSubmitting ? "Subscribing..."  : "Subscribe"}
+                </button>
+              </form>
             </div>
           </div>
 
           {/* Message Display */}
-          <div className="flex justify-end mr-[13.2rem] text-sm sm:mr-[7rem] lg:mr-[3.4rem]">
-            {newsletterMessage && (
-              <div className="bg-green-500/0   text-green-500   text-center mt-2">
-                {newsletterMessage}
-              </div>
-            )}
+          <div className="flex justify-center md:justify-end md:mr-[13.2rem] text-xs md:text-sm sm:mr-[7rem] lg:mr-[3.4rem] mt-2">
+            {newsletterMessage && <div className="bg-green-500/0 text-green-500 text-center">{newsletterMessage}</div>}
             {newsletterError && (
-              <div className="md:-mr-[3rem] lg:mr-[4.5rem]  bg-green-500/0   text-red-500   text-center mt-2">
+              <div className="md:-mr-[3rem] lg:mr-[4.5rem] bg-green-500/0 text-red-500 text-center">
                 {newsletterError}
               </div>
             )}
@@ -548,10 +559,10 @@ const ContactSection = () => {
         </div>
 
         {/* Bottom Border */}
-        <div className="border-t border-[#FFFFFF52] w-[86%] md:w-[87%] lg:w-[93%] mx-auto"></div>
+        <div className="border-t border-[#FFFFFF52] w-[90%] md:w-[87%] lg:w-[93%] mx-auto"></div>
       </div>
-            <Footer />
+      <Footer />
     </>
-  );
-};
-export default ContactSection;
+  )
+}
+export default ContactSection                            

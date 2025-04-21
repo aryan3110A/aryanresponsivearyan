@@ -7,6 +7,7 @@ import Main from "./view/landingPage/page";
 const Page: React.FC = () => {
   return (
     <>
+    
       <Main />
     </>
   );
