@@ -33,7 +33,7 @@ interface LegalLink {
 
 const navigationLinks: NavigationLinks = {
   Home: {
-    Features: "/features",
+    Features: "",
     Templets: NAV_ROUTES.TEMPLATES,
     "Art station": NAV_ROUTES.ART_STATION,
     "Plans & Pricing": NAV_ROUTES.PRICING,
@@ -48,16 +48,16 @@ const navigationLinks: NavigationLinks = {
     Blog: NAV_ROUTES.BLOG,
     ContactUs: NAV_ROUTES.CONTACT,
     Support: NAV_ROUTES.SUPPORT,
-    "About us": "/about",
+    "About us": "",
   },
 }
 
 const legalLinks: LegalLink[] = [
-  { name: "Terms of use", href: "/terms" },
-  { name: "Privacy Policy", href: "/privacy" },
-  { name: "Cookies", href: "/cookies" },
-  { name: "Legal Notice", href: "/legal" },
-  { name: "DMCA", href: "/dmca" },
+  { name: "Terms of use", href: "" },
+  { name: "Privacy Policy", href: "" },
+  { name: "Cookies", href: "" },
+  { name: "Legal Notice", href: "" },
+  { name: "DMCA", href: "" },
 ]
 
 const socialLinks: SocialLink[] = [
