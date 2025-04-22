@@ -88,7 +88,7 @@ export default function SupportPage() {
         </div>
 
         {/* Bottom Row */}
-        <div className="flex flex-wrap justify-center md:justify-between lg:justify-evenly gap-3 md:gap-4 lg:gap-0 mb-3 md:mb-4 lg:mb-5">
+<div className="flex flex-wrap justify-center md:justify-between lg:justify-evenly gap-3 md:gap-0 lg:gap-0 mb-3 md:mb-4 lg:mb-5">
           <div className="relative w-[48%] md:w-[18%] lg:w-[18%] aspect-[6/3] rounded-2xl overflow-hidden">
             <Image
               src="/supportus/support5.png" // ✅ Another local image
@@ -125,12 +125,12 @@ export default function SupportPage() {
         </div>
 
         {/* Text Content */}
-        <div className="text-center mb-8 md:mb-14 md:mt-10 lg:mb-16 lg:mt-10">
-          <h1 className="text-4xl md:text-5xl lg:text-5xl font-bold mb-4 md:mb-5 lg:mb-2 transition-colors 
+        <div className="text-center mb-4 md:mb-14 md:mt-10 lg:mb-16 lg:mt-10">
+          <h1 className="text-3xl md:text-5xl lg:text-5xl font-bold mb-2 md:mb-5 lg:mb-2 transition-colors 
             bg-gradient-to-b from-[#5AD7FF] to-[#656BF5]  text-transparent bg-clip-text">
             We&apos;re Ready to Help!
           </h1> 
-          <p className="text-white text-lg md:text-lg lg:text-lg max-w-full mx-auto ">
+          <p className="text-white text-sm md:text-lg lg:text-lg max-w-full mx-auto ">
             Got a question or need help? Browse our FAQs or contact our support team for fast assistance.
           </p>
         </div>
@@ -149,20 +149,20 @@ export default function SupportPage() {
 
 
 
-        <div className="max-w-[60rem] mx-auto mt-16 md:mt-36 lg:mt-36 px-4 md:px-8 lg:px-8">
-  <h2 className="text-4xl md:text-6xl lg:text-7xl font-bold text-center mb-12 md:mb-12 lg:mb-14">
-    Frequently Asked <br /> Questions
+        <div className="max-w-[60rem] mx-auto mt-6 md:mt-36 lg:mt-36 px-4 md:px-8 lg:px-8">
+  <h2 className="text-2xl md:text-6xl lg:text-7xl font-bold text-center mb-6 md:mb-12 lg:mb-14">
+             Frequently Asked <br /> Questions
   </h2>
 
-  <div className="md:space-y-8 lg:space-y-8">
+  <div className="space-y-2 md:space-y-8 lg:space-y-8 pb-10">
     {faqs.map((faq) => (
       <div
         key={faq.id}
-        className="border border-[#152329]  rounded-sm md:rounded-lg md:border-[3px] lg:rounded-xl  overflow-hidden"
+        className="border border-[#152329]  mobile:rounded-xl  md:rounded-xl md:border-[3px] lg:rounded-xl  overflow-hidden"
       >
         <button
           onClick={() => setOpenQuestion(openQuestion === faq.id ? "" : faq.id)}
-          className="w-full flex items-center justify-between  p-0 md:p-0 lg:pt-0 lg:pl-0 text-left hover:bg-gray-900/50 transition-colors"
+          className="w-full flex items-center justify-between  pl-2 md:p-0 lg:pt-0 lg:pl-0 text-left hover:bg-gray-900/50 transition-colors"
           aria-expanded={openQuestion === faq.id}
           aria-controls={`faq-${faq.id}`}
         >
