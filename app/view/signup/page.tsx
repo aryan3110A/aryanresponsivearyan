@@ -1,7 +1,6 @@
 "use client";
 
 
-import SignUpForm from "./sign-up-form";
 import Image from "next/image";
 import { getImageUrl } from "@/routes/imageroute";
 import SignInForm from "./sign-up-form";

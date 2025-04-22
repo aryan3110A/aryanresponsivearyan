@@ -37,7 +37,7 @@ export default function SignInForm() {
       await axios.post("http://localhost:5001/send-otp", { email });
       setOtpSent(true);
       setTimer(60);
-    } catch (err) {
+    } catch  {
       setError("Failed to send OTP. Please try again.");
     } finally {
       setProcessing(false);
@@ -89,7 +89,7 @@ export default function SignInForm() {
       setError("");
       await axios.post("http://localhost:5001/send-otp", { email });
       setTimer(60);
-    } catch (err) {
+    } catch  {
       setError("Failed to resend OTP.");
     } finally {
       setProcessing(false);

@@ -10,7 +10,7 @@ import NavigationFull from "../Core/NavigationFull"
 const faqs = [
   {
     id: "01",
-    question: "How does Wild Mind’s text-to-image generation work?",
+    question: "How does Wild Mind's text-to-image generation work?",
     answer:
       "WildMind uses advanced AI models to convert text descriptions into high-quality images. Simply enter a detailed prompt, and our AI will generate stunning visuals based on your input.",
   },
@@ -34,7 +34,7 @@ const faqs = [
   {
     id: "05",
     question: "How long does it take to generate an image?",
-    answer: "We optimize our AI models for fast image generation. On average, it takes 10-15 seconds to generate an image for premium users. Free users may experience slightly longer wait times.",
+    answer: "We optimize our AI models for fast image generation. On average, it takes 10-15 seconds to generate an image for premium users. Free users may experience slightly longer wait times.",
   },
 ]
 
@@ -42,13 +42,11 @@ export default function SupportPage() {
   const [openQuestion, setOpenQuestion] = useState("01") // First question open by default
   const [isMobile, setIsMobile] = useState(false)
   const [isTablet, setIsTablet] = useState(false)
-  const [isLaptopOrLarger, setIsLaptopOrLarger] = useState(false)
 
   useEffect(() => {
     const checkScreenSize = () => {
       setIsMobile(window.innerWidth < 768)
       setIsTablet(window.innerWidth >= 768 && window.innerWidth < 1024)
-      setIsLaptopOrLarger(window.innerWidth >= 1024)
     }
 
     // Initial check
