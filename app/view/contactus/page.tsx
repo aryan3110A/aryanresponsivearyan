@@ -47,6 +47,8 @@ const ContactSection = () => {
   const dropdownRef = useRef<HTMLDivElement>(null)
   const formRef = useRef<HTMLFormElement>(null)
   useEffect(() => {
+    if (typeof window === "undefined") return
+
     function handleClickOutside(event: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsDropdownOpen(false)
@@ -153,16 +155,18 @@ const ContactSection = () => {
   }
 
   useEffect(() => {
-    const form = document.querySelector('form[name="submit-to-google-sheet"]') as HTMLFormElement | null
-    // document.documentElement.style.overflow = "hidden"; // Hide scrolling
+    if (typeof window !== "undefined") {
+      const form = document.querySelector('form[name="submit-to-google-sheet"]') as HTMLFormElement | null
+      // document.documentElement.style.overflow = "hidden"; // Hide scrolling
 
-    if (form) {
-      form.addEventListener("submit", (e) => {
-        e.preventDefault()
-        fetch(scriptURL, { method: "POST", body: new FormData(form) })
-          .then((response) => console.log("Success!", response))
-          .catch((error) => console.error("Error!", error.message))
-      })
+      if (form) {
+        form.addEventListener("submit", (e) => {
+          e.preventDefault()
+          fetch(scriptURL, { method: "POST", body: new FormData(form) })
+            .then((response) => console.log("Success!", response))
+            .catch((error) => console.error("Error!", error.message))
+        })
+      }
     }
   }, [])
 
@@ -421,7 +425,7 @@ const ContactSection = () => {
         <div
           className="relative mt-20 md:mt-40 text-center text-white w-full"
           style={{
-            backgroundImage: `url(${getImageUrl("contactus", "bg_rating")})`,
+            backgroundImage: `url(${typeof window !== "undefined" ? getImageUrl("contactus", "bg_rating") : ""})`,
             backgroundSize: "cover", // Changed to cover for better mobile display
             backgroundRepeat: "no-repeat",
             backgroundPosition: "center",

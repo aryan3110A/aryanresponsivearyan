@@ -1,164 +1,165 @@
-"use client";
+"use client"
 
-import { useState, useEffect, FormEvent, useRef } from "react";
-import axios from "axios";
-import { useRouter } from "next/navigation";
-import {
-  signInWithPopup,
-  GoogleAuthProvider,
-} from "firebase/auth";
-import { auth, db } from "../../../database/firebase";
-import {
-  doc,
-  setDoc,
-  getDoc,
-} from "firebase/firestore";
-import { v4 as uuidv4 } from "uuid";
-import Image from "next/image";
+import { useState, useEffect, type FormEvent, useRef } from "react"
+import axios from "axios"
+import { useRouter } from "next/navigation"
+import { signInWithPopup, GoogleAuthProvider } from "firebase/auth"
+import { auth, db } from "../../../database/firebase"
+import { doc, setDoc, getDoc } from "firebase/firestore"
+import { v4 as uuidv4 } from "uuid"
+import Image from "next/image"
 
 export default function SignInForm() {
-  const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [otp, setOtp] = useState("");
-  const [otpSent, setOtpSent] = useState(false);
-  const [error, setError] = useState("");
-  const [processing, setProcessing] = useState(false);
-  const [timer, setTimer] = useState(0);
-  const [username, setUsername] = useState("");
-  const [showUsernameForm, setShowUsernameForm] = useState(false);
+  const router = useRouter()
+  const [email, setEmail] = useState("")
+  const [otp, setOtp] = useState("")
+  const [otpSent, setOtpSent] = useState(false)
+  const [error, setError] = useState("")
+  const [processing, setProcessing] = useState(false)
+  const [timer, setTimer] = useState(0)
+  const [username, setUsername] = useState("")
+  const [showUsernameForm, setShowUsernameForm] = useState(false)
 
-  const inputRef = useRef<HTMLInputElement>(null); // Ref for hidden input
+  const inputRef = useRef<HTMLInputElement>(null) // Ref for hidden input
 
   const handleSendOtp = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setError("");
+    e.preventDefault()
+    setError("")
     try {
-      setProcessing(true);
-      await axios.post("http://localhost:5001/send-otp", { email });
-      setOtpSent(true);
-      setTimer(60);
-    } catch  {
-      setError("Failed to send OTP. Please try again.");
+      setProcessing(true)
+      await axios.post("http://localhost:5001/send-otp", { email })
+      setOtpSent(true)
+      setTimer(60)
+    } catch {
+      setError("Failed to send OTP. Please try again.")
     } finally {
-      setProcessing(false);
+      setProcessing(false)
     }
-  };
+  }
 
   const handleVerifyOtp = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setError("");
+    e.preventDefault()
+    setError("")
     try {
-      setProcessing(true);
+      setProcessing(true)
       await axios.post("http://localhost:5001/verify-otp", {
         email,
         otp: otp.trim(),
-      });
+      })
 
-      localStorage.setItem("otpUser", email);
+      localStorage.setItem("otpUser", email)
 
-      const userRef = doc(db, "users", email);
-      const userSnap = await getDoc(userRef);
+      const userRef = doc(db, "users", email)
+      const userSnap = await getDoc(userRef)
 
       if (userSnap.exists()) {
-        const data = userSnap.data();
+        const data = userSnap.data()
         if (data.username) {
-          localStorage.setItem("username", data.username);
-          router.push(`/view/home/${data.username}`);
+          localStorage.setItem("username", data.username)
+          router.push(`/view/home/${data.username}`)
         } else {
-          setShowUsernameForm(true);
+          setShowUsernameForm(true)
         }
       } else {
-        await setDoc(userRef, { email });
-        setShowUsernameForm(true);
+        await setDoc(userRef, { email })
+        setShowUsernameForm(true)
       }
 
-      setOtp("");
-      setOtpSent(false);
-      setError("");
+      setOtp("")
+      setOtpSent(false)
+      setError("")
     } catch (err) {
-      console.error("OTP verification error:", err);
-      setError("Invalid OTP or expired.");
+      console.error("OTP verification error:", err)
+      setError("Invalid OTP or expired.")
     } finally {
-      setProcessing(false);
+      setProcessing(false)
     }
-  };
+  }
 
   const handleResendOtp = async () => {
     try {
-      setProcessing(true);
-      setError("");
-      await axios.post("http://localhost:5001/send-otp", { email });
-      setTimer(60);
-    } catch  {
-      setError("Failed to resend OTP.");
+      setProcessing(true)
+      setError("")
+      await axios.post("http://localhost:5001/send-otp", { email })
+      setTimer(60)
+    } catch {
+      setError("Failed to resend OTP.")
     } finally {
-      setProcessing(false);
+      setProcessing(false)
     }
-  };
+  }
 
   const handleGoogleLogin = async () => {
     try {
-      const provider = new GoogleAuthProvider();
-      const result = await signInWithPopup(auth, provider);
-      const userEmail = result.user.email;
+      const provider = new GoogleAuthProvider()
+      const result = await signInWithPopup(auth, provider)
+      const userEmail = result.user.email
 
-      if (!userEmail) throw new Error("No email from Google user");
+      if (!userEmail) throw new Error("No email from Google user")
 
-      localStorage.setItem("otpUser", userEmail);
-      const userRef = doc(db, "users", userEmail);
-      const userSnap = await getDoc(userRef);
+      localStorage.setItem("otpUser", userEmail)
+      const userRef = doc(db, "users", userEmail)
+      const userSnap = await getDoc(userRef)
 
       if (userSnap.exists()) {
-        const data = userSnap.data();
+        const data = userSnap.data()
         if (data.username) {
-          localStorage.setItem("username", data.username);
-          router.push(`/view/home/${data.username}`);
+          localStorage.setItem("username", data.username)
+          router.push(`/view/home/${data.username}`)
         } else {
-          setShowUsernameForm(true);
+          setShowUsernameForm(true)
         }
       } else {
-        await setDoc(userRef, { email: userEmail });
-        setShowUsernameForm(true);
+        await setDoc(userRef, { email: userEmail })
+        setShowUsernameForm(true)
       }
     } catch (err) {
-      setError("Google sign-in failed.");
-      console.error(err);
+      setError("Google sign-in failed.")
+      console.error(err)
     }
-  };
+  }
 
   const handleUsernameSubmit = async () => {
-    const email = localStorage.getItem("otpUser");
+    const email = localStorage.getItem("otpUser")
     if (email && username.trim()) {
-      const realUsername = username.trim();
-      const slug = `${realUsername.toLowerCase().replace(/\s+/g, "-")}-${uuidv4().slice(0, 6)}`;
-  
-      await setDoc(doc(db, "users", email), {
-        email,
-        username: realUsername,
-        slug, // only used for routing
-      }, { merge: true });
-  
-      localStorage.setItem("username", realUsername);
-      localStorage.setItem("slug", slug);
-  
-      router.push(`/view/home/${slug}`);
+      const realUsername = username.trim()
+      const slug = `${realUsername.toLowerCase().replace(/\s+/g, "-")}-${uuidv4().slice(0, 6)}`
+
+      await setDoc(
+        doc(db, "users", email),
+        {
+          email,
+          username: realUsername,
+          slug, // only used for routing
+        },
+        { merge: true },
+      )
+
+      localStorage.setItem("username", realUsername)
+      localStorage.setItem("slug", slug)
+
+      router.push(`/view/home/${slug}`)
     }
-  };
+  }
 
   useEffect(() => {
+    if (typeof window === "undefined") return
+
     if (otpSent && timer > 0) {
       const interval = setInterval(() => {
-        setTimer((prev) => prev - 1);
-      }, 1000);
-      return () => clearInterval(interval);
+        setTimer((prev) => prev - 1)
+      }, 1000)
+      return () => clearInterval(interval)
     }
-  }, [otpSent, timer]);
+  }, [otpSent, timer])
 
   useEffect(() => {
+    if (typeof window === "undefined") return
+
     if (otpSent && inputRef.current) {
-      inputRef.current.focus();
+      inputRef.current.focus()
     }
-  }, [otpSent]);
+  }, [otpSent])
 
   return (
     <div className="min-h-screen p-6 bg-[#171717] text-white flex items-center justify-center">
@@ -180,57 +181,34 @@ export default function SignInForm() {
               onChange={(e) => setUsername(e.target.value)}
               className="w-full px-4 py-2 rounded bg-[#2e2e2e] focus:outline-none"
             />
-            <button
-              onClick={handleUsernameSubmit}
-              className="w-full bg-purple-600 hover:bg-purple-700 py-2 rounded"
-            >
+            <button onClick={handleUsernameSubmit} className="w-full bg-purple-600 hover:bg-purple-700 py-2 rounded">
               Save Username
             </button>
           </div>
         ) : (
           <>
-            <h2 className="text-xl text-center font-semibold">
-              {otpSent ? "Enter OTP" : ""}
-            </h2>
+            <h2 className="text-xl text-center font-semibold">{otpSent ? "Enter OTP" : ""}</h2>
 
             <div className="space-y-2">
               <button
                 onClick={handleGoogleLogin}
                 className="w-[292.58px] h-[44px] max-w-full bg-[#26272C] text-white font-extralight pl-4 hover:bg-[#444D57] flex items-center justify-start gap-2 rounded-[8px]"
               >
-                <Image
-                  src="/core/google.svg"
-                  alt="Google"
-                  width={20}
-                  height={20}
-                  className="w-5 h-5"
-                />
+                <Image src="/core/google.svg" alt="Google" width={20} height={20} className="w-5 h-5" />
                 <span>Google</span>
               </button>
               <button
                 onClick={() => {}}
                 className="w-[292.58px] h-[44px] bg-[#26272C] text-white font-extralight py-2 hover:bg-[#444D57] flex items-center justify-start pl-4 gap-2 rounded-[8px]"
               >
-                <Image
-                  src="/core/apple.svg"
-                  alt="Apple"
-                  width={20}
-                  height={20}
-                  className="w-5 h-5"
-                />
+                <Image src="/core/apple.svg" alt="Apple" width={20} height={20} className="w-5 h-5" />
                 <span>Apple</span>
               </button>
               <button
                 onClick={() => {}}
                 className="w-[292.58px] h-[44px] bg-[#26272C] text-white py-2 font-extralight hover:bg-[#444D57] flex items-center justify-start pl-4 gap-2 rounded-[8px]"
               >
-                <Image
-                  src="/core/microsoft.svg"
-                  alt="Microsoft"
-                  width={20}
-                  height={20}
-                  className="w-5 h-5"
-                />
+                <Image src="/core/microsoft.svg" alt="Microsoft" width={20} height={20} className="w-5 h-5" />
                 <span>Microsoft</span>
               </button>
             </div>
@@ -261,7 +239,7 @@ export default function SignInForm() {
                   className="w-full bg-gradient-to-b from-[#5AD7FF] to-[#656BF5] py-2 rounded"
                 >
                   {processing ? "Sending..." : "Send OTP"}
-                </button> 
+                </button>
               </form>
             ) : (
               <form onSubmit={handleVerifyOtp} className="space-y-4 pt-4">
@@ -281,18 +259,15 @@ export default function SignInForm() {
                   maxLength={4}
                   value={otp}
                   onChange={(e) => {
-                    const value = e.target.value.replace(/\D/g, "").slice(0, 4);
-                    setOtp(value);
+                    const value = e.target.value.replace(/\D/g, "").slice(0, 4)
+                    setOtp(value)
                   }}
                   className="absolute opacity-0 pointer-events-none"
                   autoFocus
                 />
 
                 {/* 4-digit visual boxes */}
-                <div
-                  className="flex justify-center gap-3 pt-4"
-                  onClick={() => inputRef.current?.focus()}
-                >
+                <div className="flex justify-center gap-3 pt-4" onClick={() => inputRef.current?.focus()}>
                   {[...Array(4)].map((_, idx) => (
                     <div
                       key={idx}
@@ -303,7 +278,7 @@ export default function SignInForm() {
                       }`}
                       onClick={() => {
                         if (!otp[idx]) {
-                          inputRef.current?.focus(); // Focus the hidden input when clicking an empty box
+                          inputRef.current?.focus() // Focus the hidden input when clicking an empty box
                         }
                       }}
                     >
@@ -316,11 +291,7 @@ export default function SignInForm() {
                 <div className="text-center text-sm text-[#A0A0A0] pt-2">
                   Haven&apos;t got the confirmation code yet?{" "}
                   {timer === 0 ? (
-                    <button
-                      type="button"
-                      onClick={handleResendOtp}
-                      className="text-blue-400 hover:underline"
-                    >
+                    <button type="button" onClick={handleResendOtp} className="text-blue-400 hover:underline">
                       Resend
                     </button>
                   ) : (
@@ -348,5 +319,5 @@ export default function SignInForm() {
         )}
       </div>
     </div>
-  );
+  )
 }

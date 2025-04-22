@@ -101,6 +101,8 @@ export default function SubscriptionToggle() {
   const sliderRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    if (typeof window === "undefined") return
+
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768)
     }
@@ -142,7 +144,7 @@ export default function SubscriptionToggle() {
   }
 
   const onTouchEnd = () => {
-    if (!touchStart || !touchEnd) return
+    if (!touchStart || !touchEnd || typeof window === "undefined") return
 
     const distance = touchStart - touchEnd
     const isLeftSwipe = distance > minSwipeDistance

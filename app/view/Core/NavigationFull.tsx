@@ -32,6 +32,8 @@ export default function NavigationFull() {
   const router = useRouter()
 
   useEffect(() => {
+    if (typeof window === "undefined") return
+
     const checkScreenSize = () => {
       setIsMobile(window.innerWidth < 768)
       setIsTablet(window.innerWidth >= 768 && window.innerWidth < 1024)
@@ -76,7 +78,7 @@ export default function NavigationFull() {
   const handleLogout = async () => {
     try {
       await signOut(auth)
-    } catch  {}
+    } catch {}
     localStorage.removeItem("otpUser")
     localStorage.removeItem("username")
     setUserEmail("")
@@ -100,6 +102,8 @@ export default function NavigationFull() {
   }
 
   useEffect(() => {
+    if (typeof window === "undefined") return
+
     const handleClickOutside = (event: MouseEvent) => {
       if (headerRef.current && !headerRef.current.contains(event.target as Node)) {
         setActiveDropdown(null)
@@ -122,6 +126,8 @@ export default function NavigationFull() {
   }, [])
 
   useEffect(() => {
+    if (typeof window === "undefined") return
+
     const needsUsername = localStorage.getItem("needsUsername")
     if (needsUsername === "true") {
       setShowUsernamePrompt(true) // this controls your prompt modal

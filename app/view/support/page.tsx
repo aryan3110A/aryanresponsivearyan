@@ -29,12 +29,14 @@ const faqs = [
   {
     id: "04",
     question: "Can I use the generated images for commercial purposes?",
-    answer: "Yes! With a premium subscription, you get full commercial usage rights for your generated images. Free-tier users may have limitations, so check our terms of use for more details.",
+    answer:
+      "Yes! With a premium subscription, you get full commercial usage rights for your generated images. Free-tier users may have limitations, so check our terms of use for more details.",
   },
   {
     id: "05",
     question: "How long does it take to generate an image?",
-    answer: "We optimize our AI models for fast image generation. On average, it takes 10-15 seconds to generate an image for premium users. Free users may experience slightly longer wait times.",
+    answer:
+      "We optimize our AI models for fast image generation. On average, it takes 10-15 seconds to generate an image for premium users. Free users may experience slightly longer wait times.",
   },
 ]
 
@@ -44,6 +46,8 @@ export default function SupportPage() {
   const [isTablet, setIsTablet] = useState(false)
 
   useEffect(() => {
+    if (typeof window === "undefined") return
+
     const checkScreenSize = () => {
       setIsMobile(window.innerWidth < 768)
       setIsTablet(window.innerWidth >= 768 && window.innerWidth < 1024)
