@@ -1,11 +1,11 @@
 "use client"
 
+import type React from "react"
+
 import { useState, useEffect, useRef } from "react"
-import { Check, ChevronLeft, ChevronRight, Menu, X } from "lucide-react"
+import { Check } from "lucide-react"
 import Image from "next/image"
 import Footer from "../Core/Footer"
-import { getImageUrl } from "@/routes/imageroute"
-import Navigation from "../landingPage/components/Navigation"
 import NavigationFull from "../Core/NavigationFull"
 
 type BillingPeriod = "monthly" | "yearly"
@@ -91,35 +91,28 @@ export default function SubscriptionToggle() {
   const [animateToggle, setAnimateToggle] = useState(false)
   const [selectedPlan, setSelectedPlan] = useState(0)
   const [isMobile, setIsMobile] = useState(false)
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const [isLaptopOrLarger, setIsLaptopOrLarger] = useState(false)
-
-  // For mobile slider
-  const sliderRef = useRef<HTMLDivElement>(null)
   const [currentSlide, setCurrentSlide] = useState(0)
+  const [touchStart, setTouchStart] = useState<number | null>(null)
+  const [touchEnd, setTouchEnd] = useState<number | null>(null)
+
+  // Swipe threshold (in px)
+  const minSwipeDistance = 50
+
+  const sliderRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768)
     }
 
-    const checkScreenSize = () => {
-      setIsLaptopOrLarger(window.innerWidth >= 1024) // Tailwind's lg breakpoint = 1024px
-    }
-
     // Initial check
     checkMobile()
-    checkScreenSize()
 
     // Add event listener for window resize
     window.addEventListener("resize", checkMobile)
-    window.addEventListener("resize", checkScreenSize)
 
     // Cleanup
-    return () => {
-      window.removeEventListener("resize", checkMobile)
-      window.removeEventListener("resize", checkScreenSize)
-    }
+    return () => window.removeEventListener("resize", checkMobile)
   }, [])
 
   const handleToggle = (period: BillingPeriod) => {
@@ -138,12 +131,32 @@ export default function SubscriptionToggle() {
     }
   }, [animateToggle])
 
-  const nextSlide = () => {
-    setCurrentSlide((prev) => (prev === pricingPlans.length - 1 ? 0 : prev + 1))
+  // Touch event handlers for swipe functionality
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null)
+    setTouchStart(e.targetTouches[0].clientX)
   }
 
-  const prevSlide = () => {
-    setCurrentSlide((prev) => (prev === 0 ? pricingPlans.length - 1 : prev - 1))
+  const onTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX)
+  }
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return
+
+    const distance = touchStart - touchEnd
+    const isLeftSwipe = distance > minSwipeDistance
+    const isRightSwipe = distance < -minSwipeDistance
+
+    if (isLeftSwipe) {
+      // Next slide
+      setCurrentSlide((prev) => (prev === pricingPlans.length - 1 ? 0 : prev + 1))
+    }
+
+    if (isRightSwipe) {
+      // Previous slide
+      setCurrentSlide((prev) => (prev === 0 ? pricingPlans.length - 1 : prev - 1))
+    }
   }
 
   const goToSlide = (index: number) => {
@@ -152,82 +165,9 @@ export default function SubscriptionToggle() {
 
   return (
     <>
-      {isLaptopOrLarger ? <NavigationFull /> : <Navigation />}
+      <NavigationFull />
 
       <div className="min-h-screen relative text-white p-4 md:p-10 flex flex-col items-center justify-center overflow-hidden">
-        {/* Mobile Navigation */}
-        {isMobile && (
-          <div className="fixed top-0 left-0 w-full z-[1000] bg-black/80 backdrop-blur-xl">
-            <div className="flex items-center justify-between p-4">
-              <div className="flex items-center">
-                <Image
-                  src={getImageUrl("core", "logo") || "/Core/Logomain.png"}
-                  width={30}
-                  height={30}
-                  alt="WildMind Logo"
-                />
-                <span className="ml-2 text-xl font-bold">WildMind</span>
-              </div>
-
-              <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="text-white p-2">
-                {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-              </button>
-            </div>
-
-            {isMobileMenuOpen && (
-              <Navigation />
-            )}
-          </div>
-        )}
-
-        {/* Desktop Navigation */}
-        {!isMobile && !isLaptopOrLarger && (
-          <div
-            className="fixed top-5 left-1/2 -translate-x-1/2 z-[1000] flex items-center justify-between p-2 rounded-[50px] 
-            border-[1px] border-white/20 w-[45vw] text-white backdrop-blur-xl bg-black/10 shadow-lg transition-all duration-300"
-          >
-            {/* Logo */}
-            <div>
-              <span className="">
-                <Image src="/Core/Logomain.png" width={40} height={40} alt="Main Logo" />
-              </span>
-            </div>
-
-            {/* Navigation Links */}
-            <div>
-              <span className="px-3 py-1 hover:bg-gradient-to-l hover:bg-clip-text cursor-pointer hover:text-[#dbdbdb]">
-                Features
-              </span>
-            </div>
-            <div>
-              <span className="px-3 py-1 hover:bg-gradient-to-l hover:bg-clip-text cursor-pointer hover:text-[#dbdbdb]">
-                Templates
-              </span>
-            </div>
-            <div>
-              <span className="px-3 py-1 hover:bg-gradient-to-l hover:bg-clip-text cursor-pointer hover:text-[#dbdbdb]">
-                Pricing
-              </span>
-            </div>
-            <div>
-              <span className="px-3 py-1 hover:bg-gradient-to-l hover:bg-clip-text cursor-pointer hover:text-[#dbdbdb]">
-                Art Station
-              </span>
-            </div>
-
-            {/* Get Started Button */}
-            <div>
-              <button
-                className="relative bg-black/20 border border-white/20 rounded-full px-5 py-2 text-base font-medium border-t-[#acacac] border-b-[#6A0DAD] hover:border-t-[#6A0DAD] hover:border-b-[#acacac] 
-                          text-transparent bg-clip-text bg-gradient-to-r from-[#5AD7FF] to-[#656BF5] shadow-[inset_0px_0px_8px_rgba(255,255,255,0.2)] 
-                          transition-all duration-500 ease-in-out hover:text-white"
-              >
-                Get Started
-              </button>
-            </div>
-          </div>
-        )}
-
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-black"></div>
           <Image
@@ -337,26 +277,17 @@ export default function SubscriptionToggle() {
             </div>
           )}
 
-          {/* Mobile Pricing Cards with Slider */}
+          {/* Mobile Pricing Cards with Swipe Functionality */}
           {isMobile && (
             <div className="relative w-full px-2">
-              {/* Navigation Arrows */}
-              <button
-                onClick={prevSlide}
-                className="absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-black/50 rounded-full p-1"
+              {/* Slider Container with Touch Events */}
+              <div
+                ref={sliderRef}
+                className="overflow-hidden rounded-3xl border border-gray-800"
+                onTouchStart={onTouchStart}
+                onTouchMove={onTouchMove}
+                onTouchEnd={onTouchEnd}
               >
-                <ChevronLeft className="w-6 h-6" />
-              </button>
-
-              <button
-                onClick={nextSlide}
-                className="absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-black/50 rounded-full p-1"
-              >
-                <ChevronRight className="w-6 h-6" />
-              </button>
-
-              {/* Slider Container */}
-              <div ref={sliderRef} className="overflow-hidden rounded-3xl border border-gray-800">
                 {/* Current Plan Card */}
                 <div className="bg-black text-white backdrop-blur-sm p-6 flex flex-col">
                   <div className="mb-4">
@@ -405,6 +336,9 @@ export default function SubscriptionToggle() {
                   </button>
                 </div>
               </div>
+
+              {/* Swipe Instruction */}
+              <p className="text-center text-sm text-gray-400 mt-2">Swipe left or right to view more plans</p>
 
               {/* Pagination Dots */}
               <div className="flex justify-center mt-4 space-x-2">

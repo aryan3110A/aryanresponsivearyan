@@ -1,4 +1,4 @@
-"use client" 
+"use client"
 
 import type React from "react"
 
@@ -7,7 +7,6 @@ import Image from "next/image"
 import Footer from "../Core/Footer"
 import { getImageUrl } from "@/routes/imageroute"
 import NavigationFull from "../Core/NavigationFull"
-import Navigation from "../landingPage/components/Navigation"
 
 const scriptURL =
   "https://script.google.com/macros/s/AKfycbz0dKO8m-4_vrGpnaPI4zP01OkoN5uXxo1DrJ9jY_oz5tsoNUYvtxxNKgvdYMiZUGsWBw/exec"
@@ -44,8 +43,6 @@ const ContactSection = () => {
   const [error, setError] = useState<string | null>(null)
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const [hasSelectedOption, setHasSelectedOption] = useState(false)
-  const [isLaptopOrLarger, setIsLaptopOrLarger] = useState(false)
-
 
   const dropdownRef = useRef<HTMLDivElement>(null)
   const formRef = useRef<HTMLFormElement>(null)
@@ -169,31 +166,15 @@ const ContactSection = () => {
     }
   }, [])
 
-  useEffect(() => {
-    // Function to check screen size
-    const checkScreenSize = () => {
-      setIsLaptopOrLarger(window.innerWidth >= 1024) // Tailwind's lg breakpoint = 1024px
-    }
-
-    // Run once at start
-    checkScreenSize()
-
-    // Add event listener
-    window.addEventListener("resize", checkScreenSize)
-
-    // Cleanup
-    return () => window.removeEventListener("resize", checkScreenSize)
-  }, [])
-
   const [formErrors, setFormErrors] = useState<{
     email?: string
     phone?: string
   }>({})
 
   return (
-    <> 
-      {isLaptopOrLarger ? <NavigationFull /> : <Navigation />}
-      <div className="min-h-screen bg-gradient-to-br from-black to-black pt-24">
+    <>
+      <NavigationFull />
+      <div className="min-h-screen bg-gradient-to-br from-black to-black pt-16">
         {/* Main Contact Section */}
         <div className="flex flex-col md:flex-row justify-evenly px-4">
           {/* Left Section */}
@@ -293,22 +274,21 @@ const ContactSection = () => {
                   </select>
 
                   <input
-  type="tel"
-  name="Phone"
-  className="w-full h-10 md:h-12 bg-[#111111] text-white rounded-lg p-2 pl-4 text-xs md:text-sm 
-  placeholder:text-[#FFFFFF99] mt-2 focus:outline-none focus:ring-2 focus:ring-[#444c55] 
-  text-[13px] md:text-[15px] opacity-90 transition-all duration-300"
-  placeholder="Enter your contact number"
-  value={formData.phone}
-  onChange={(e) => {
-    const newValue = e.target.value.replace(/\D/g, "") // Remove non-numeric characters
-    if (newValue.length <= 10) {
-      setFormData({ ...formData, phone: newValue })
-    }
-  }}
-  required
-/>
-
+                    type="tel"
+                    name="Phone"
+                    className="flex-1 h-10 md:h-12 bg-[#111111] text-white rounded-lg p-2 pl-4 text-xs md:text-sm 
+                    placeholder:text-[#FFFFFF99] mt-2 focus:outline-none focus:ring-2 focus:ring-[#444c55] 
+                    text-[13px] md:text-[15px] opacity-90 transition-all duration-300"
+                    placeholder="Enter your contact number"
+                    value={formData.phone}
+                    onChange={(e) => {
+                      const newValue = e.target.value.replace(/\D/g, "") // Remove non-numeric characters
+                      if (newValue.length <= 10) {
+                        setFormData({ ...formData, phone: newValue })
+                      }
+                    }}
+                    required
+                  />
                 </div>
                 {formErrors.phone && <p className="text-red-500 text-xs md:text-sm mt-1">{formErrors.phone}</p>}
               </div>
@@ -439,7 +419,7 @@ const ContactSection = () => {
 
         {/* Rating Section */}
         <div
-          className="relative mt-20 md:mt-40 text-center text-white w-[100vw]"
+          className="relative mt-20 md:mt-40 text-center text-white w-full"
           style={{
             backgroundImage: `url(${getImageUrl("contactus", "bg_rating")})`,
             backgroundSize: "cover", // Changed to cover for better mobile display
@@ -447,13 +427,13 @@ const ContactSection = () => {
             backgroundPosition: "center",
             width: "100%",
             height: "60vh", // Reduced height for mobile
-            maxHeight: "100vh", // Max height for larger screens
+            maxHeight: "500px", // Max height for larger screens
           }}
         >
           {/* Content Wrapper */}
           <div className="relative z-10 flex flex-col items-center justify-center h-full">
             {/* Glowing Effect for Icon */}
-            <div className="inline-block rounded-full mb-0 p-2">
+            <div className="inline-block rounded-full mb-0 p-4">
               <Image
                 src={getImageUrl("contactus", "rateicon") || "/placeholder.svg"}
                 alt="Mobile App"
@@ -464,7 +444,7 @@ const ContactSection = () => {
             </div>
 
             {/* Rating Heading */}
-            <h3 className="text-xl md:text-2xl mb-8">
+            <h3 className="text-xl md:text-2xl mb-4">
               How do you rate
               <br />
               Your app experience?
@@ -491,11 +471,11 @@ const ContactSection = () => {
         </div>
 
         {/* Newsletter Section */}
-        <div className="w-full md:w-[86%] lg:w-[95%] bg-black py-8 md:py-12 mt-10 md:mt-10 lg:mt-10 md:mb-0 lg:mb-4 px-4 md:ml-16 lg:-ml-28">
+        <div className="w-full md:w-[86%] lg:w-[95%] bg-black py-8 md:py-12 mt-10 md:mt-10 lg:mt-10 md:mb-0 lg:mb-4 px-4 md:ml-16 lg:-ml-36">
           <div className="max-w-[1440px] mx-auto flex flex-col md:flex-row justify-between items-center gap-6 lg:gap-16">
             {/* Left side - Heading */}
             <div className="text-center md:text-left lg:text-left lg:self-start lg:mr-auto">
-              <h2 className="text-white text-2xl md:text-3xl lg:text-3xl font-semibold leading-tight lg:leading-1.2">
+              <h2 className="text-white text-xl md:text-3xl lg:text-3xl font-semibold leading-tight lg:leading-1.2">
                 Join our newsletter to
                 <br />
                 keep up to date with us!
@@ -537,12 +517,12 @@ const ContactSection = () => {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className={`mobile:w-[30vw] py-3 px-5 w-full md:w-[8rem] lg:w-[10rem] rounded-full font-medium text-white transition-colors 
+                  className={`px-6 w-full md:w-[8rem] lg:w-[10rem] rounded-full font-medium text-white transition-colors 
                     bg-gradient-to-b from-[#5AD7FF] to-[#656BF5] 
                     hover:bg-white hover:text-black hover:from-white hover:to-white
                     ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""}`}
                 >
-                  {isSubmitting ? "Subscribing..."  : "Subscribe"}
+                  {isSubmitting ? "Subscribing..." : "Subscribe"}
                 </button>
               </form>
             </div>
@@ -566,4 +546,5 @@ const ContactSection = () => {
     </>
   )
 }
-export default ContactSection                            
+
+export default ContactSection
