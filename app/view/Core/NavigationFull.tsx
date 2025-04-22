@@ -17,6 +17,7 @@ interface DropdownItem {
 }
 
 export default function NavigationFull() {
+  // All state declarations grouped at the top
   const [isNavOpen, setIsNavOpen] = useState<boolean>(false)
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState<boolean>(false)
