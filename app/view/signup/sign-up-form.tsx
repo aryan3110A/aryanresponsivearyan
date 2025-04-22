@@ -3,7 +3,6 @@
 import { useState, useEffect, FormEvent, useRef } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import {
   signInWithPopup,
   GoogleAuthProvider,
@@ -15,6 +14,7 @@ import {
   getDoc,
 } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
+import Image from "next/image";
 
 export default function SignInForm() {
   const router = useRouter();
@@ -89,7 +89,7 @@ export default function SignInForm() {
       setError("");
       await axios.post("http://localhost:5001/send-otp", { email });
       setTimer(60);
-    // } catch  {
+    } catch  {
       setError("Failed to resend OTP.");
     } finally {
       setProcessing(false);
@@ -261,7 +261,7 @@ export default function SignInForm() {
                   className="w-full bg-gradient-to-b from-[#5AD7FF] to-[#656BF5] py-2 rounded"
                 >
                   {processing ? "Sending..." : "Send OTP"}
-                </button>
+                </button> 
               </form>
             ) : (
               <form onSubmit={handleVerifyOtp} className="space-y-4 pt-4">
