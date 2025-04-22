@@ -276,7 +276,7 @@ const ContactSection = () => {
                   <input
                     type="tel"
                     name="Phone"
-                    className="flex-1 h-10 md:h-12 bg-[#111111] text-white rounded-lg p-2 pl-4 text-xs md:text-sm 
+                    className="w-full flex-1 h-10 md:h-12 bg-[#111111] text-white rounded-lg p-2 pl-4 text-xs md:text-sm 
                     placeholder:text-[#FFFFFF99] mt-2 focus:outline-none focus:ring-2 focus:ring-[#444c55] 
                     text-[13px] md:text-[15px] opacity-90 transition-all duration-300"
                     placeholder="Enter your contact number"
@@ -427,7 +427,7 @@ const ContactSection = () => {
             backgroundPosition: "center",
             width: "100%",
             height: "60vh", // Reduced height for mobile
-            maxHeight: "500px", // Max height for larger screens
+            maxHeight: "100vh", // Max height for larger screens
           }}
         >
           {/* Content Wrapper */}
@@ -444,19 +444,19 @@ const ContactSection = () => {
             </div>
 
             {/* Rating Heading */}
-            <h3 className="text-xl md:text-2xl mb-4">
+            <h3 className="text-xl md:text-2xl mb-10">
               How do you rate
               <br />
               Your app experience?
             </h3>
 
             {/* Star Rating */}
-            <div className="-mt-6 flex justify-center gap-2">
+            <div className="-mt-12 flex justify-center gap-2">
               {[1, 2, 3, 4, 5].map((star) => (
                 <button
                   key={star}
                   onClick={() => handleRatingClick(star)}
-                  className={`text-3xl md:text-[4rem] transition-all duration-200 ${
+                  className={`text-[3rem] md:text-[4rem] transition-all duration-200 ${
                     star <= rating ? "text-yellow-400" : "text-gray-500"
                   }`}
                 >
@@ -471,7 +471,7 @@ const ContactSection = () => {
         </div>
 
         {/* Newsletter Section */}
-        <div className="w-full md:w-[86%] lg:w-[95%] bg-black py-8 md:py-12 mt-10 md:mt-10 lg:mt-10 md:mb-0 lg:mb-4 px-4 md:ml-16 lg:-ml-36">
+        <div className="w-full md:w-[86%] lg:w-[95%] bg-black  md:py-12 mt-10 md:mt-10 lg:mt-10 md:mb-0 lg:mb-4 px-4 md:ml-16 lg:-ml-28">
           <div className="max-w-[1440px] mx-auto flex flex-col md:flex-row justify-between items-center gap-6 lg:gap-16">
             {/* Left side - Heading */}
             <div className="text-center md:text-left lg:text-left lg:self-start lg:mr-auto">
@@ -517,7 +517,7 @@ const ContactSection = () => {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className={`px-6 w-full md:w-[8rem] lg:w-[10rem] rounded-full font-medium text-white transition-colors 
+                  className={`px-6 py-2 w-[35vw] ml-2 md:w-[8rem] lg:w-[10rem] rounded-full font-medium text-white transition-colors 
                     bg-gradient-to-b from-[#5AD7FF] to-[#656BF5] 
                     hover:bg-white hover:text-black hover:from-white hover:to-white
                     ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""}`}

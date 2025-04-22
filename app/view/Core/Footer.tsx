@@ -212,9 +212,9 @@ const Footer: React.FC = () => {
             </div>
 
             {/* Mobile Navigation Links - Optimized for better display */}
-            <div className="grid grid-cols-2 gap-x-4 gap-y-4">
+            <div className="grid grid-cols-1 gap-x-4 gap-y-4">
               {Object.entries(navigationLinks).map(([category, links], idx) => (
-                <div key={idx} className={idx === 2 ? "col-span-2 mt-2" : ""}>
+                <div key={idx} className={idx === 1 ? "col-span-1 mt-2" : ""}>
                   <h2 className="font-semibold text-white text-base mb-3">{category}</h2>
                   <ul className="space-y-2">
                     {Object.entries(links).map(([name, href]) => (
