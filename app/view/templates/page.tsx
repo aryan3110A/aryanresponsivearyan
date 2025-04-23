@@ -102,28 +102,26 @@ export default function TextGenerationTemplate() {
           </button>
         </div>
 
-        {/* <mobile responsive ></mobile> */}
-        <div className=" md:hidden lg:hidden mt-16 ml-[136px] flex items-center gap-0">
+        <div className="md:hidden lg:hidden mt-[8vh] ml-[140px] flex items-center gap-0">
   {/* Settings Button */}
-  <button className="bg-[#262626] hover:bg-black/70 transition-colors backdrop-blur-md rounded-xl pl-2  mt-2 flex items-center justify-center ">
-    <Settings className="w-8 h-8 text-white" />
+  <button className="bg-[#262626] hover:bg-black/70 transition-colors backdrop-blur-md rounded-xl p-2 flex items-center justify-center">
+    <Settings className="w-7 h-7 text-white" />
+  </button>
 
-    <button className="bg-gradient-to-b  from-[#5AD7FF] to-[#656BF5] transition-all rounded-xl py-2 px-5 ml-2 text-white font-medium text-sm flex items-center gap-2">
+  {/* Generate Button */}
+  <button className="bg-gradient-to-b from-[#5AD7FF]  to-[#656BF5] transition-all rounded-xl py-3 px-5 text-white font-medium text-sm flex items-center gap-2">
     <span>Generate</span>
     <Image
-      src="/navigationSetting/coins.png" // replace with your credit icon path
-      width={32}
-      height={32}
+      src="/navigationSetting/coins.png"
+      width={20}
+      height={20}
       alt="credits"
-      className="inline-block "
+      className="inline-block"
     />
     <span>40</span>
   </button>
-  </button>
-
-  {/* Generate Button / Aryan */}
-  
 </div>
+
 
         
         {/* Heading */}
