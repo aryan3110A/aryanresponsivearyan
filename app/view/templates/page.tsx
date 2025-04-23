@@ -4,6 +4,7 @@ import { useState } from "react"
 import { Settings } from "lucide-react"
 import Image from "next/image"
 import NavigationFull from "../Core/NavigationFull"
+import Footer from "../Core/Footer"
 
 // Sample data for the templates
 const templates = [
@@ -45,18 +46,18 @@ export default function TextGenerationTemplate() {
     setInputPrompt(prompt)
   }
 
-  return (
+  return (<>
     <div className="pb-10 w-full min-h-screen bg-gradient-to-b from-black via-black to-black text-white relative overflow-hidden">
       <NavigationFull />
       {/* Main content container */}
       <div className="w-full max-w-[100%] mx-auto pt-[10vh] px-[5vw]">
         {/* Header section with background image and input */}
-        <div
-          className="w-full relative mb-[5vh] rounded-[2vw] overflow-hidden"
+        <div className="hidden md:block w-full relative mb-[5vh] rounded-[2vw] overflow-hidden"
+
           style={{
             boxShadow: "0px 10px 120px 5px #399FC0",
           }}
-        >
+         >
           {/* Background image */}
           <div className="w-full h-[30vh] relative rounded-[2vw] overflow-hidden shadow-lg">
             {/* Dark Overlay */}
@@ -72,38 +73,63 @@ export default function TextGenerationTemplate() {
           </div>
         </div>
 
-        <div className="absolute font-poppins -mt-[9vh] left-[50%] transform -translate-x-[50%] w-[60%] max-w-[800px] flex items-center gap-[1vw] z-10">
+        <div className="absolute font-poppins   mobile:mt-0 md:-mt-[9vh] lg:-mt-[9vh] px-[30%] lg:px-0 md:px-0 md:left-[50%] transform -translate-x-[50%] w-[60%] max-w-[800px] flex items-center gap-[1vw] z-10">
           {/* Input Wrapper */}
           <div
-            className="relative flex-1 rounded-full"
+            className="hidden mobile:block relative flex-1 rounded-full md:rounded-full lg:rounded-full"
             style={{
-              boxShadow: "100px 100px 200px 10px #399FC0",
+              boxShadow: "",
             }}
           >
             <input
               type="text"
-              placeholder="Select a prompt..."
-              className="w-full bg-[#262626] text-white rounded-full h-[8vh] py-[1.5vh] px-[2vw] outline-none border-none backdrop-blur-md placeholder-gray-500"
+              placeholder="Type a prompt..."
+              className="w-[90vw] md:w-full bg-[#262626] text-white mobile:rounded-2xl py-8 px-10 md:rounded-full h-[6vh] md:h-[8vh] md:py-[1.5vh] md:px-[2vw] outline-none border-none backdrop-blur-md placeholder-gray-500"
               value={inputPrompt}
               onChange={(e) => setInputPrompt(e.target.value)}
             />
 
             {/* Generate Button (Inside Input) */}
-            <button className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-gradient-to-b from-[#5AD7FF] to-[#656BF5] transition-all rounded-full py-[1.5vh] px-[3vw] flex items-center gap-[0.5vw]">
+            <button className=" hidden md:block absolute right-2 top-1/2 transform -translate-y-1/2 bg-gradient-to-b from-[#5AD7FF] to-[#656BF5] transition-all rounded-full py-[1.5vh] px-[3vw]  items-center gap-[0.5vw]">
               <span className="text-xl">Generate</span>
             </button>
           </div>
+          
 
           {/* Settings Button */}
-          <button className="bg-[#262626] hover:bg-black/70 transition-colors backdrop-blur-md rounded-full p-[2vh] flex items-center justify-center">
+          <button className="hidden md:block bg-[#262626] hover:bg-black/70 transition-colors backdrop-blur-md rounded-full p-[2vh]  items-center justify-center">
             <Settings className="w-[4vh] h-[4vh]" />
           </button>
         </div>
 
+        {/* <mobile responsive ></mobile> */}
+        <div className=" md:hidden lg:hidden mt-16 ml-[136px] flex items-center gap-0">
+  {/* Settings Button */}
+  <button className="bg-[#262626] hover:bg-black/70 transition-colors backdrop-blur-md rounded-xl pl-2  mt-2 flex items-center justify-center ">
+    <Settings className="w-8 h-8 text-white" />
+
+    <button className="bg-gradient-to-b  from-[#5AD7FF] to-[#656BF5] transition-all rounded-xl py-2 px-5 ml-2 text-white font-medium text-sm flex items-center gap-2">
+    <span>Generate</span>
+    <Image
+      src="/navigationSetting/coins.png" // replace with your credit icon path
+      width={32}
+      height={32}
+      alt="credits"
+      className="inline-block "
+    />
+    <span>40</span>
+  </button>
+  </button>
+
+  {/* Generate Button / Aryan */}
+  
+</div>
+
+        
         {/* Heading */}
-        <div className="mb-[5vh] mt-[10vh] font-poppins">
-          <h1 className="text-[4vh] font-bold mb-[1vh]">Explore. Copy. Generate.</h1>
-          <p className="text-[2vh] text-gray-300">
+        <div className="mb-[5vh] mt-[4vh] font-poppins md:mt-[10vh]">
+          <h1 className="mobile:text-2xl text-[4vh] font-bold mb-[1vh]">Explore. Copy. Generate.</h1>
+          <p className="mobile:text-sm font-thin text-[2vh] text-gray-300">
             Professional-quality results, no guesswork—just pick, prompt, and create
           </p>
         </div>
@@ -123,6 +149,8 @@ export default function TextGenerationTemplate() {
         </div>
       </div>
     </div>
+    <Footer />
+    </>
   )
 }
 
@@ -166,7 +194,7 @@ function TemplateCard({ template, onSelect }: TemplateCardProps) {
 
       <div className="flex flex-col md:flex-row">
         {/* Image section */}
-        <div className="w-[55%] aspect-square relative overflow-hidden p-[3%]">
+        <div className="mobile:w-full w-[55%] aspect-square relative overflow-hidden p-[3%]">
           <div className="w-full h-full relative">
             <Image
               src={template.image || "/placeholder.svg"}
@@ -200,12 +228,16 @@ function TemplateCard({ template, onSelect }: TemplateCardProps) {
           </div>
         </div>
       </div>
+     
 
       {/* Click to use indicator */}
       <div className="absolute bottom-3 right-3 bg-[#4FD4E6]/80 text-white text-xs py-1 px-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
         Click to use
       </div>
+      
     </div>
+  
+   
   )
 }
 

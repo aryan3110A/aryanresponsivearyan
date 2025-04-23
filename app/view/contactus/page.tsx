@@ -521,7 +521,7 @@ const ContactSection = () => {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className={`px-6 py-2 w-[35vw] ml-2 md:w-[8rem] lg:w-[10rem] rounded-full font-medium text-white transition-colors 
+                  className={`px-6 py-3 w-[90vw] ml-1 md:w-[8rem] lg:w-[10rem] rounded-full font-medium text-white transition-colors 
                     bg-gradient-to-b from-[#5AD7FF] to-[#656BF5] 
                     hover:bg-white hover:text-black hover:from-white hover:to-white
                     ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""}`}
