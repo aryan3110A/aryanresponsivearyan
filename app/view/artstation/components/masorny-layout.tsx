@@ -175,7 +175,7 @@ export default function MasonryLayout({
                     src={image.src || "/placeholder.svg"}
                     alt={image.alt}
                     fill
-                    sizes={isMobile ? "auto" : isTablet ? "50vw" : "(max-width: 1024px) 33vw, 25vw"}
+                    sizes={isMobile ? "70vw" : isTablet ? "50vw" : "(max-width: 1024px) 33vw, 25vw"}
                     className="object-contain rounded-lg"
                   />
                 </div>
