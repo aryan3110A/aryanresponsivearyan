@@ -278,7 +278,7 @@ const Navigation = () => {
             {/* Sidebar */}
             <div
               ref={menuRef}
-              className="fixed inset-y-0 left-0 w-64 bg-black z-50 transform transition-transform duration-300 ease-in-out animate-in slide-in-from-left"
+              className="fixed inset-y-0 left-0 w-80 bg-black z-50 transform transition-transform duration-300 ease-in-out animate-in slide-in-from-left"
             >
               <div className="flex justify-between items-center p-4 border-b border-gray-800">
                 <div className="flex items-center">
@@ -306,7 +306,7 @@ const Navigation = () => {
                   </div>
 
                   {activeDropdown === "features" && (
-                    <div className="pl-4 py-2 space-y-2 animate-in slide-in-from-left duration-300">
+                    <div className="pl-0 py-2 space-y-2 text-sm animate-in slide-in-from-left duration-300">
                       <div
                         className="py-1 text-gray-300 hover:text-white cursor-pointer"
                         onClick={() => {
@@ -329,28 +329,15 @@ const Navigation = () => {
                   )}
                 </div>
 
-                {/* Templates Dropdown */}
-                <div className="border-b border-gray-800 pb-3">
-                  <div
-                    className="flex justify-between items-center py-2 cursor-pointer"
-                    onClick={() => toggleDropdown("templates")}
-                  >
-                    <span className="text-white text-lg">Templates</span>
-                    {activeDropdown === "templates" ? (
-                      <ChevronUp className="w-5 h-5 text-white" />
-                    ) : (
-                      <ChevronDown className="w-5 h-5 text-white" />
-                    )}
-                  </div>
-
-                  {activeDropdown === "templates" && (
-                    <div className="pl-4 py-2 space-y-2 animate-in slide-in-from-left duration-300">
-                      <div className="py-1 text-gray-300 hover:text-white cursor-pointer">Image generation</div>
-                      <div className="py-1 text-gray-300 hover:text-white cursor-pointer">
-                        Video generation (Coming soon)
-                      </div>
-                    </div>
-                  )}
+                {/* Templates */}
+                <div
+                  className="py-2 text-lg text-white border-b border-gray-800 pb-3 cursor-pointer"
+                  onClick={() => {
+                    router.push(NAV_ROUTES.TEMPLATES)
+                    setIsMobileMenuOpen(false)
+                  }}
+                >
+                  Templates
                 </div>
 
                 {/* Pricing */}
@@ -375,16 +362,7 @@ const Navigation = () => {
                   Art Station
                 </div>
 
-                {/* Get Started Button */}
-                <button
-                  className="mt-4 w-full bg-gradient-to-r from-[#5AD7FF] to-[#656BF5] text-white rounded-full py-2 px-6"
-                  onClick={() => {
-                    handleGetStarted()
-                    setIsMobileMenuOpen(false)
-                  }}
-                >
-                  Get Started
-                </button>
+                
               </div>
             </div>
           </>
