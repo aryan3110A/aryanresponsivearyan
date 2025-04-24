@@ -284,7 +284,7 @@ export default function MasonryLayout({
                       <p>
                         <span className="font-semibold">Model:</span> {image.model}
                       </p>
-                      <p className="truncate">
+                      <p className="">
                         <span className="font-semibold">Prompt:</span> {image.prompt}
                       </p>
                     </div>
