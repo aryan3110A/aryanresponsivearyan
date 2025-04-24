@@ -4,7 +4,7 @@ import type React from "react"
 
 import { useEffect, useState, useRef } from "react"
 import Image from "next/image"
-import { Heart, Bookmark } from "lucide-react"
+import { Heart, Bookmark, Share2 } from "lucide-react"
 
 interface ArtImage {
   id: string
@@ -35,21 +35,12 @@ export default function MasonryLayout({
   isTablet = false,
 }: MasonryLayoutProps) {
   const [hoveredImageId, setHoveredImageId] = useState<string | null>(null)
-  const [longPressedImageId, setLongPressedImageId] = useState<string | null>(null)
   const [imageDimensions, setImageDimensions] = useState<Record<string, { width: number; height: number }>>({})
   const [imagesLoaded, setImagesLoaded] = useState(false)
   const [modifiedImages, setModifiedImages] = useState<ArtImage[]>(images)
   const containerRef = useRef<HTMLDivElement>(null)
-  const longPressTimerRef = useRef<NodeJS.Timeout | null>(null)
-
-  // Determine number of columns based on screen size
-  const getColumns = () => {
-    if (isMobile) return 1
-    if (isTablet) return 2
-    return 3 // Default for desktop
-  }
-
-  const columns = getColumns()
+  
+  // We'll remove the unused long press functionality since we're displaying info below images for mobile/tablet
 
   useEffect(() => {
     const loadImageDimensions = async () => {
@@ -82,6 +73,11 @@ export default function MasonryLayout({
     loadImageDimensions()
   }, [images])
 
+  useEffect(() => {
+    // Update modifiedImages when images prop changes
+    setModifiedImages(images)
+  }, [images])
+
   const getColumnImages = () => {
     if (!imagesLoaded) return Array.from({ length: columns }, () => [])
 
@@ -100,6 +96,15 @@ export default function MasonryLayout({
 
     return columnImages
   }
+
+  // Determine number of columns based on screen size
+  const getColumns = () => {
+    if (isMobile) return 1
+    if (isTablet) return 2
+    return 3 // Default for desktop
+  }
+
+  const columns = getColumns()
 
   const handleLikeToggle = (image: ArtImage, e: React.MouseEvent) => {
     e.stopPropagation()
@@ -123,37 +128,20 @@ export default function MasonryLayout({
     }
   }
 
-  // Long press handlers for mobile/tablet
-  const handleTouchStart = (imageId: string) => {
-    if (isMobile || isTablet) {
-      longPressTimerRef.current = setTimeout(() => {
-        setLongPressedImageId(imageId)
-      }, 500) // 500ms for long press
+  const handleShareClick = (image: ArtImage, e: React.MouseEvent) => {
+    e.stopPropagation()
+    // Implement share functionality here
+    if (navigator.share) {
+      navigator.share({
+        title: image.alt,
+        text: `Check out this artwork: ${image.prompt}`,
+        url: window.location.href,
+      }).catch((error) => console.log('Error sharing', error));
+    } else {
+      console.log('Web Share API not supported');
+      // Fallback - perhaps copy to clipboard
     }
   }
-
-  const handleTouchEnd = () => {
-    if (longPressTimerRef.current) {
-      clearTimeout(longPressTimerRef.current)
-      longPressTimerRef.current = null
-    }
-  }
-
-  const handleTouchMove = () => {
-    handleTouchEnd() // Cancel long press if moving
-  }
-
-  // Clear long press when clicking elsewhere
-  useEffect(() => {
-    const handleClickOutside = () => {
-      setLongPressedImageId(null)
-    }
-
-    document.addEventListener("click", handleClickOutside)
-    return () => {
-      document.removeEventListener("click", handleClickOutside)
-    }
-  }, [])
 
   if (!imagesLoaded) {
     return (
@@ -173,15 +161,12 @@ export default function MasonryLayout({
             return (
               <div
                 key={image.id}
-                className="relative w-full cursor-pointer pb-2"
-                style={{ marginBottom: 0 }}
-                onMouseEnter={() => setHoveredImageId(image.id)}
-                onMouseLeave={() => setHoveredImageId(null)}
+                className="relative w-full cursor-pointer mb-6"
+                onMouseEnter={() => !isMobile && !isTablet && setHoveredImageId(image.id)}
+                onMouseLeave={() => !isMobile && !isTablet && setHoveredImageId(null)}
                 onClick={() => onImageClick(image)}
-                onTouchStart={() => handleTouchStart(image.id)}
-                onTouchEnd={handleTouchEnd}
-                onTouchMove={handleTouchMove}
               >
+                {/* Image container */}
                 <div
                   className="relative w-full"
                   style={{ paddingBottom: `${(dimensions.height / dimensions.width) * 100}%` }}
@@ -195,22 +180,18 @@ export default function MasonryLayout({
                   />
                 </div>
 
-                {/* Show overlay on hover for desktop or on long press for mobile/tablet */}
-                {(hoveredImageId === image.id || longPressedImageId === image.id) && (
+                {/* Desktop hover overlay */}
+                {!isMobile && !isTablet && hoveredImageId === image.id && (
                   <div
-                    className="absolute inset-0 bg-black bg-opacity-70 flex flex-col justify-between p-4 transition-opacity duration-300 rounded-lg"
+                    className="absolute inset-0 top-0 bg-black bg-opacity-70 flex flex-col justify-between p-4 transition-opacity duration-300 rounded-lg"
                     onClick={(e) => {
-                      // This ensures clicking on the overlay still triggers the parent onClick to open the full overlay
                       e.stopPropagation()
                       onImageClick(image)
                     }}
                   >
                     <div className="flex justify-end space-x-4 mb-auto">
                       <Heart
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          handleLikeToggle(image, e)
-                        }}
+                        onClick={(e) => handleLikeToggle(image, e)}
                         className={`
                           w-6 h-6 
                           ${image.liked ? "text-[#FF4444] fill-current scale-125" : "text-white hover:scale-110"}
@@ -220,10 +201,7 @@ export default function MasonryLayout({
                         `}
                       />
                       <Bookmark
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          handleBookmarkToggle(image, e)
-                        }}
+                        onClick={(e) => handleBookmarkToggle(image, e)}
                         className={`
                           w-6 h-6 
                           ${image.bookmarked ? "text-[#FFA800] fill-current scale-125" : "text-white hover:scale-110"}
@@ -248,6 +226,50 @@ export default function MasonryLayout({
                         <p>
                           <span className="font-semibold">Prompt:</span> {image.prompt}
                         </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Mobile and tablet info section below image */}
+                {(isMobile || isTablet) && (
+                  <div className="w-full text-white mt-2 rounded-lg">
+                    <div className="flex items-center mb-2">
+                      <div className="mr-2 flex items-center justify-center">
+                        <Image src="/artstation/usr.png" alt="user" width={24} height={24} />
+                      </div>
+                      <span className="text-sm">{image.username}</span>
+                    </div>
+                    <div className="text-xs mb-2">
+                      <p>
+                        <span className="font-semibold">Model:</span> {image.model}
+                      </p>
+                      <p className="truncate">
+                        <span className="font-semibold">Prompt:</span> {image.prompt}
+                      </p>
+                    </div>
+                    <div className="flex justify-between items-center mt-2">
+                      <div className="flex space-x-4">
+                        <Heart
+                          onClick={(e) => handleLikeToggle(image, e)}
+                          className={`
+                            w-5 h-5 
+                            ${image.liked ? "text-[#FF4444] fill-current" : "text-white"}
+                            transform transition-all duration-300 ease-out
+                          `}
+                        />
+                        <Bookmark
+                          onClick={(e) => handleBookmarkToggle(image, e)}
+                          className={`
+                            w-5 h-5 
+                            ${image.bookmarked ? "text-[#FFA800] fill-current" : "text-white"}
+                            transform transition-all duration-300 ease-out
+                          `}
+                        />
+                        <Share2
+                          onClick={(e) => handleShareClick(image, e)}
+                          className="w-5 h-5 text-white transform transition-all duration-300 ease-out"
+                        />
                       </div>
                     </div>
                   </div>

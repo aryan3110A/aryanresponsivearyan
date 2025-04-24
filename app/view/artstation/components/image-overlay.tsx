@@ -151,7 +151,7 @@ export default function ImageOverlay({
         </div>
 
         {/* User info */}
-        <div className="px-4 py-2">
+        <div className="px-8 py-0">
           <div className="flex items-center mb-2">
             <div className="w-8 h-8 rounded-full overflow-hidden mr-3 bg-zinc-800 flex items-center justify-center">
               <Image src="/artstation/usr.png" alt="User" width={32} height={32} />
@@ -174,7 +174,7 @@ export default function ImageOverlay({
         </div>
 
         {/* Prompt */}
-        <div className="px-4 py-2">
+        <div className="px-6 py-2">
           <div className="mb-2">
             <p className="text-gray-300 text-sm">
               <span className="font-semibold">Model:</span> {currentImage.model}
@@ -188,7 +188,7 @@ export default function ImageOverlay({
         </div>
 
         {/* Remix input */}
-        <div className="px-4 py-3 sticky bottom-0 bg-black">
+        <div className="px-6 py-0 sticky bottom-0 bg-black">
           <div className="relative">
             <input
               type="text"
