@@ -92,7 +92,7 @@ const Navigation = () => {
   const handleLogout = async () => {
     try {
       await signOut(auth)
-    } catch (e) {}
+    } catch {}
     localStorage.removeItem("otpUser")
     localStorage.removeItem("username")
     setUserEmail("")
