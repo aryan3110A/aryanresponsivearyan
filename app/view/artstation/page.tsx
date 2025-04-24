@@ -182,8 +182,8 @@ export default function ArtStation() {
       {isMobile || isTablet ? <Navigation /> : <NavigationFull />}
 
       <div className="w-full min-h-screen bg-black text-white p-5">
-        <div className="max-w-[90%] mx-auto mt-10 md:mt-16">
-          <h1 className="text-2xl md:text-3xl font-bold mb-2">ArtStation Gallery</h1>
+        <div className="max-w-[90%] mx-auto mt-12 md:mt-16">
+          <h1 className="text-2xl md:text-3xl font-bold mb-0 md:mb-2">ArtStation Gallery</h1>
           <p className="md:text-xl mb-2 md:mb-10">Explore AI-generated artwork</p>
 
           {/* Use the MasonryLayout component */}
