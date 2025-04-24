@@ -38,11 +38,20 @@ export default function MasonryLayout({
   const [imageDimensions, setImageDimensions] = useState<Record<string, { width: number; height: number }>>({})
   const [imagesLoaded, setImagesLoaded] = useState(false)
   const [modifiedImages, setModifiedImages] = useState<ArtImage[]>(images)
+  const [containerWidth, setContainerWidth] = useState(0)
   const containerRef = useRef<HTMLDivElement>(null)
   
-  // We'll remove the unused long press functionality since we're displaying info below images for mobile/tablet
+  // Determine number of columns based on screen size
+  const getColumns = () => {
+    if (isMobile) return 1
+    if (isTablet) return 2
+    return 3 // Default for desktop
+  }
+
+  const columns = getColumns()
 
   useEffect(() => {
+    // Load image dimensions
     const loadImageDimensions = async () => {
       const dimensions: Record<string, { width: number; height: number }> = {}
 
@@ -78,6 +87,25 @@ export default function MasonryLayout({
     setModifiedImages(images)
   }, [images])
 
+  useEffect(() => {
+    // Monitor container width for responsive sizing
+    const updateContainerWidth = () => {
+      if (containerRef.current) {
+        setContainerWidth(containerRef.current.clientWidth)
+      }
+    }
+
+    // Initial width calculation
+    updateContainerWidth()
+
+    // Set up resize listener
+    window.addEventListener('resize', updateContainerWidth)
+
+    return () => {
+      window.removeEventListener('resize', updateContainerWidth)
+    }
+  }, [])
+
   const getColumnImages = () => {
     if (!imagesLoaded) return Array.from({ length: columns }, () => [])
 
@@ -96,15 +124,6 @@ export default function MasonryLayout({
 
     return columnImages
   }
-
-  // Determine number of columns based on screen size
-  const getColumns = () => {
-    if (isMobile) return 1
-    if (isTablet) return 2
-    return 3 // Default for desktop
-  }
-
-  const columns = getColumns()
 
   const handleLikeToggle = (image: ArtImage, e: React.MouseEvent) => {
     e.stopPropagation()
@@ -151,10 +170,27 @@ export default function MasonryLayout({
     )
   }
 
+  // Calculate column width including gap
+  const gap = 10;
+  const columnWidth = containerWidth > 0 
+    ? `calc(${100 / columns}% - ${gap * (columns - 1) / columns}px)` 
+    : `100%`;
+
   return (
-    <div ref={containerRef} className="flex w-full flex-wrap" style={{ gap: 10 }}>
+    <div 
+      ref={containerRef} 
+      className="flex w-full flex-wrap" 
+      style={{ gap }}
+    >
       {getColumnImages().map((column, columnIndex) => (
-        <div key={`column-${columnIndex}`} className="flex-1" style={{ marginRight: 0 }}>
+        <div 
+          key={`column-${columnIndex}`} 
+          className="flex-shrink-0 overflow-hidden"
+          style={{ 
+            width: columnWidth,
+            maxWidth: "100%" 
+          }}
+        >
           {column.map((image) => {
             const dimensions = imageDimensions[image.id] || { width: 1, height: 1 }
 
@@ -169,14 +205,18 @@ export default function MasonryLayout({
                 {/* Image container */}
                 <div
                   className="relative w-full"
-                  style={{ paddingBottom: `${(dimensions.height / dimensions.width) * 100}%` }}
+                  style={{ 
+                    paddingBottom: `${(dimensions.height / dimensions.width) * 100}%`,
+                    maxWidth: "100%" 
+                  }}
                 >
                   <Image
                     src={image.src || "/placeholder.svg"}
                     alt={image.alt}
                     fill
-                    sizes={isMobile ? "70vw" : isTablet ? "50vw" : "(max-width: 1024px) 33vw, 25vw"}
-                    className="object-contain rounded-lg"
+                    sizes={isMobile ? "100vw" : isTablet ? "50vw" : "33vw"}
+                    className="object-cover rounded-lg"
+                    priority={true}
                   />
                 </div>
 
