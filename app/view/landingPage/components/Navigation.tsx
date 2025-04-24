@@ -241,8 +241,8 @@ const Navigation = () => {
 
           {/* Logo and Name */}
           <div className="flex items-center">
-            <Image src="/Core/Logomain.png" width={30} height={30} alt="Main Logo" className="mr-2" />
-            <span className="text-white text-xl font-bold">WildMind</span>
+          <Image src={getImageUrl("core", "logo")} width={32} height={20} alt="logo" onClick={() => router.push("/")} />
+          <span className="text-white text-xl font-bold">WildMind</span>
           </div>
 
           </div>
