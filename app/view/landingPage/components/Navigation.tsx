@@ -7,6 +7,7 @@ import { onAuthStateChanged, signOut } from "firebase/auth"
 import { auth, db } from "@/database/firebase"
 import { doc, getDoc } from "firebase/firestore"
 import { APP_ROUTES, NAV_ROUTES, FEATURE_ROUTES } from "../../../../routes/routes"
+import { getImageUrl } from "@/routes/imageroute";
 
 const Navigation = () => {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
@@ -114,11 +115,9 @@ const Navigation = () => {
         } transition-all duration-300 hidden md:flex`}
       >
         {/* Logo */}
-        <div>
-          <span className="">
-            <Image src="/Core/Logomain.png" width={40} height={40} alt="Main Logo" />
-          </span>
-        </div>
+        <div className="flex">
+              <Image src={getImageUrl("core", "logo")} width={32} height={20} alt="logo" onClick={() => router.push("/")} />
+            </div>
 
         {/* Features Dropdown */}
         <div className="relative">
