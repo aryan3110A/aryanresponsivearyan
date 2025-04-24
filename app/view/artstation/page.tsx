@@ -1,21 +1,22 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import ImageOverlay from "./components/image-overlay";
-import MasonryLayout from "./components/masorny-layout";
-import NavigationFull from "../Core/NavigationFull";
-import Footer from "../Core/Footer";
+import { useState, useEffect } from "react"
+import ImageOverlay from "./components/image-overlay"
+import Footer from "../Core/Footer"
+import NavigationFull from "../Core/NavigationFull"
+import Navigation from "../landingPage/components/Navigation"
+import MasonryLayout from "./components/masorny-layout"
 
 // Define the image data structure
 interface ArtImage {
-  id: string;
-  src: string;
-  alt: string;
-  username: string;
-  model: string;
-  prompt: string;
-  liked?: boolean;
-  bookmarked?: boolean;
+  id: string
+  src: string
+  alt: string
+  username: string
+  model: string
+  prompt: string
+  liked?: boolean
+  bookmarked?: boolean
 }
 
 // Sample images without hardcoded dimensions
@@ -130,7 +131,6 @@ const sampleImages: ArtImage[] = [
     liked: false,
     bookmarked: false,
   },
-
   {
     id: "12",
     src: "/artstation/Card2.png",
@@ -141,43 +141,59 @@ const sampleImages: ArtImage[] = [
     liked: false,
     bookmarked: false,
   },
-
-];
+]
 
 export default function ArtStation() {
-  const [selectedImage, setSelectedImage] = useState<ArtImage | null>(null);
-  const [images, setImages] = useState(sampleImages);
+  const [selectedImage, setSelectedImage] = useState<ArtImage | null>(null)
+  const [images, setImages] = useState(sampleImages)
+  const [isMobile, setIsMobile] = useState(false)
+  const [isTablet, setIsTablet] = useState(false)
+
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsMobile(window.innerWidth < 768)
+      setIsTablet(window.innerWidth >= 768 && window.innerWidth < 1024)
+    }
+
+    // Initial check
+    checkScreenSize()
+
+    // Add event listener for window resize
+    window.addEventListener("resize", checkScreenSize)
+
+    // Cleanup
+    return () => window.removeEventListener("resize", checkScreenSize)
+  }, [])
 
   const handleLikeToggle = (image: ArtImage) => {
-    const updatedImages = images.map((img) =>
-      img.id === image.id ? { ...img, liked: !img.liked } : img
-    );
-    setImages(updatedImages);
-  };
+    const updatedImages = images.map((img) => (img.id === image.id ? { ...img, liked: !img.liked } : img))
+    setImages(updatedImages)
+  }
 
   // Handle image bookmark toggle
   const handleBookmarkToggle = (image: ArtImage) => {
-    const updatedImages = images.map((img) =>
-      img.id === image.id ? { ...img, bookmarked: !img.bookmarked } : img
-    );
-    setImages(updatedImages);
-  };
+    const updatedImages = images.map((img) => (img.id === image.id ? { ...img, bookmarked: !img.bookmarked } : img))
+    setImages(updatedImages)
+  }
 
   return (
     <>
-      {" "}
-        <NavigationFull />
+      {/* Conditional rendering based on screen size */}
+      {isMobile || isTablet ? <Navigation /> : <NavigationFull />}
+
       <div className="w-full min-h-screen bg-black text-white p-5">
-        <div className="max-w-[90%] mx-auto mt-20">
-          <h1 className="text-3xl font-bold mb-2">ArtStation Gallery</h1>
-          <p className="text-xl mb-10">Explore AI-generated artwork</p>
+        <div className="max-w-[90%] mx-auto mt-10 md:mt-16">
+          <h1 className="text-2xl md:text-3xl font-bold mb-2">ArtStation Gallery</h1>
+          <p className="md:text-xl mb-2 md:mb-10">Explore AI-generated artwork</p>
 
           {/* Use the MasonryLayout component */}
           <MasonryLayout
-            images={sampleImages}
+            images={images}
             onImageClick={setSelectedImage}
             onLikeToggle={handleLikeToggle}
             onBookmarkToggle={handleBookmarkToggle}
+            isMobile={isMobile}
+            isTablet={isTablet}
           />
         </div>
 
@@ -186,11 +202,15 @@ export default function ArtStation() {
           <ImageOverlay
             image={selectedImage}
             onClose={() => setSelectedImage(null)}
+            onLike={handleLikeToggle}
+            onBookmark={handleBookmarkToggle}
+            isMobile={isMobile}
+            isTablet={isTablet}
           />
         )}
       </div>
 
       <Footer />
     </>
-  );
+  )
 }

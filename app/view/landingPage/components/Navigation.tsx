@@ -1,8 +1,9 @@
 "use client"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
-import { onAuthStateChanged } from "firebase/auth"
+import { User, X, ChevronDown, ChevronUp, LogOut } from "lucide-react"
+import { onAuthStateChanged, signOut } from "firebase/auth"
 import { auth, db } from "@/database/firebase"
 import { doc, getDoc } from "firebase/firestore"
 import { APP_ROUTES, NAV_ROUTES, FEATURE_ROUTES } from "../../../../routes/routes"
@@ -13,6 +14,10 @@ const Navigation = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [userSlug, setUserSlug] = useState("")
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false)
+  const [userEmail, setUserEmail] = useState<string>("")
+  const [username, setUsername] = useState<string>("")
+  const menuRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
 
   useEffect(() => {
@@ -20,6 +25,7 @@ const Navigation = () => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         setIsLoggedIn(true)
+        setUserEmail(user.email || "")
         const docRef = doc(db, "users", user.email || "")
         const docSnap = await getDoc(docRef)
         if (docSnap.exists()) {
@@ -28,14 +34,48 @@ const Navigation = () => {
             setUserSlug(data.slug) // get the unique slug
           }
         }
+
+        // Get username from localStorage if available
+        const storedUsername = localStorage.getItem("username")
+        if (storedUsername) {
+          setUsername(storedUsername)
+        }
       } else {
-        setIsLoggedIn(false)
-        setUserSlug("")
+        const otpEmail = localStorage.getItem("otpUser")
+        if (otpEmail) {
+          setUserEmail(otpEmail)
+          const storedUsername = localStorage.getItem("username")
+          if (storedUsername) {
+            setUsername(storedUsername)
+          }
+        } else {
+          setIsLoggedIn(false)
+          setUserSlug("")
+          setUserEmail("")
+          setUsername("")
+        }
       }
     })
 
     return () => unsubscribe()
   }, [])
+
+  useEffect(() => {
+    // Handle clicks outside the menu to close it
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsMobileMenuOpen(false)
+      }
+    }
+
+    if (isMobileMenuOpen) {
+      document.addEventListener("mousedown", handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside)
+    }
+  }, [isMobileMenuOpen])
 
   const toggleDropdown = (dropdown: string) => {
     setActiveDropdown(activeDropdown === dropdown ? null : dropdown)
@@ -47,6 +87,20 @@ const Navigation = () => {
     } else {
       router.push(APP_ROUTES.SIGNUP)
     }
+  }
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth)
+    } catch (e) {}
+    localStorage.removeItem("otpUser")
+    localStorage.removeItem("username")
+    setUserEmail("")
+    setUsername("")
+    setIsLoggedIn(false)
+    setUserSlug("")
+    setIsUserDropdownOpen(false)
+    router.push("/")
   }
 
   return (
@@ -124,7 +178,7 @@ const Navigation = () => {
                 Image generation
               </li>
               <li className="w-full px-3 py-2 cursor-pointer text-center hover:text-[#dbdbdb] hover:bg-gradient-to-l hover:bg-clip-text">
-                video generation (Comming soon)
+                video generation (Coming soon)
               </li>
             </ul>
           )}
@@ -164,93 +218,177 @@ const Navigation = () => {
       {/* Mobile Navigation */}
       <div className="fixed top-0 left-0 w-full z-[1000] md:hidden">
         <div className="flex items-center justify-between p-4 bg-black/80 backdrop-blur-xl">
+          {/* Menu Button */}
+          <div className="flex">
+
+          
+          <button onClick={() => setIsMobileMenuOpen(true)} className="text-white p-1">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+
+          {/* Logo and Name */}
           <div className="flex items-center">
-            <Image src="/Core/Logomain.png" width={30} height={30} alt="Main Logo" />
+            <Image src="/Core/Logomain.png" width={30} height={30} alt="Main Logo" className="mr-2" />
+            <span className="text-white text-xl font-bold">WildMind</span>
           </div>
 
-          <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="text-white p-2">
-            {isMobileMenuOpen ? (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-              </svg>
-            ) : (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <line x1="3" y1="12" x2="21" y2="12"></line>
-                <line x1="3" y1="6" x2="21" y2="6"></line>
-                <line x1="3" y1="18" x2="21" y2="18"></line>
-              </svg>
-            )}
+          </div>
+
+          {/* User Profile Button */}
+          <button onClick={() => setIsUserDropdownOpen(!isUserDropdownOpen)} className="text-white p-1">
+            <User className="w-6 h-6" />
           </button>
         </div>
 
-        {isMobileMenuOpen && (
-          <div className="bg-black/95 backdrop-blur-xl text-white p-4 animate-in slide-in-from-top">
-            <div className="flex flex-col space-y-4">
-              <div className="border-b border-white/10 pb-2">
-                <div className="flex items-center justify-between py-2" onClick={() => toggleDropdown("features")}>
-                  <span>Features</span>
-                  <span>{activeDropdown === "features" ? "▲" : "▼"}</span>
-                </div>
-                {activeDropdown === "features" && (
-                  <div className="pl-4 py-2 space-y-2">
-                    <div className="py-1">Text to image</div>
-                    <div className="py-1">Text to video (coming soon)</div>
-                    <div className="py-1">Sketch to image (coming soon)</div>
-                    <div className="py-1">Real-time generation (coming soon)</div>
-                  </div>
-                )}
+        {/* User Dropdown */}
+        {isUserDropdownOpen && (
+          <div className="absolute right-4 top-16 w-[180px] bg-black/90 backdrop-blur-xl rounded-md shadow-lg z-30 animate-in fade-in slide-in-from-top-5 duration-300">
+            <div className="py-2 flex flex-col">
+              <div className="px-4 py-2 text-white flex flex-col items-start">
+                <span className="text-sm font-semibold">{username || "Guest"}</span>
+                <span className="text-xs text-gray-400">{userEmail || "Not signed in"}</span>
               </div>
-
-              <div className="border-b border-white/10 pb-2">
-                <div className="flex items-center justify-between py-2" onClick={() => toggleDropdown("templates")}>
-                  <span>Templates</span>
-                  <span>{activeDropdown === "templates" ? "▲" : "▼"}</span>
-                </div>
-                {activeDropdown === "templates" && (
-                  <div className="pl-4 py-2 space-y-2">
-                    <div className="py-1">Image generation</div>
-                    <div className="py-1">Video generation (Coming soon)</div>
-                  </div>
-                )}
-              </div>
-
-              <div className="py-2 border-b border-white/10" onClick={() => router.push(NAV_ROUTES.PRICING)}>
-                Pricing
-              </div>
-
-              <div className="py-2 border-b border-white/10" onClick={() => router.push(NAV_ROUTES.ART_STATION)}>
-                Art Station
-              </div>
-
-              <button
-                className="mt-4 w-full bg-gradient-to-r from-[#5AD7FF] to-[#656BF5] text-white rounded-full py-2 px-6"
-                onClick={handleGetStarted}
-              >
-                Get Started
+              <button onClick={handleLogout} className="px-4 py-2 text-white hover:text-blue-400 flex items-center">
+                <LogOut className="w-4 h-4 mr-2" />
+                Logout
               </button>
             </div>
           </div>
+        )}
+
+        {/* Mobile Menu Sidebar */}
+        {isMobileMenuOpen && (
+          <>
+            {/* Overlay */}
+            <div className="fixed inset-0 bg-black/50 z-40" onClick={() => setIsMobileMenuOpen(false)}></div>
+
+            {/* Sidebar */}
+            <div
+              ref={menuRef}
+              className="fixed inset-y-0 left-0 w-64 bg-black z-50 transform transition-transform duration-300 ease-in-out animate-in slide-in-from-left"
+            >
+              <div className="flex justify-between items-center p-4 border-b border-gray-800">
+                <div className="flex items-center">
+                  <Image src="/Core/Logomain.png" width={30} height={30} alt="Main Logo" className="mr-2" />
+                  <span className="text-white text-xl font-bold">WildMind</span>
+                </div>
+                <button onClick={() => setIsMobileMenuOpen(false)} className="text-white p-1">
+                  <X className="w-6 h-6" />
+                </button>
+              </div>
+
+              <div className="p-4 flex flex-col space-y-4">
+                {/* Features Dropdown */}
+                <div className="border-b border-gray-800 pb-3">
+                  <div
+                    className="flex justify-between items-center py-2 cursor-pointer"
+                    onClick={() => toggleDropdown("features")}
+                  >
+                    <span className="text-white text-lg">Features</span>
+                    {activeDropdown === "features" ? (
+                      <ChevronUp className="w-5 h-5 text-white" />
+                    ) : (
+                      <ChevronDown className="w-5 h-5 text-white" />
+                    )}
+                  </div>
+
+                  {activeDropdown === "features" && (
+                    <div className="pl-4 py-2 space-y-2 animate-in slide-in-from-left duration-300">
+                      <div
+                        className="py-1 text-gray-300 hover:text-white cursor-pointer"
+                        onClick={() => {
+                          router.push(FEATURE_ROUTES.IMAGE_GENERATION)
+                          setIsMobileMenuOpen(false)
+                        }}
+                      >
+                        Text to image
+                      </div>
+                      <div className="py-1 text-gray-300 hover:text-white cursor-pointer">
+                        Text to video (coming soon)
+                      </div>
+                      <div className="py-1 text-gray-300 hover:text-white cursor-pointer">
+                        Sketch to image (coming soon)
+                      </div>
+                      <div className="py-1 text-gray-300 hover:text-white cursor-pointer">
+                        Real-time generation (coming soon)
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Templates Dropdown */}
+                <div className="border-b border-gray-800 pb-3">
+                  <div
+                    className="flex justify-between items-center py-2 cursor-pointer"
+                    onClick={() => toggleDropdown("templates")}
+                  >
+                    <span className="text-white text-lg">Templates</span>
+                    {activeDropdown === "templates" ? (
+                      <ChevronUp className="w-5 h-5 text-white" />
+                    ) : (
+                      <ChevronDown className="w-5 h-5 text-white" />
+                    )}
+                  </div>
+
+                  {activeDropdown === "templates" && (
+                    <div className="pl-4 py-2 space-y-2 animate-in slide-in-from-left duration-300">
+                      <div className="py-1 text-gray-300 hover:text-white cursor-pointer">Image generation</div>
+                      <div className="py-1 text-gray-300 hover:text-white cursor-pointer">
+                        Video generation (Coming soon)
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Pricing */}
+                <div
+                  className="py-2 text-lg text-white border-b border-gray-800 pb-3 cursor-pointer"
+                  onClick={() => {
+                    router.push(NAV_ROUTES.PRICING)
+                    setIsMobileMenuOpen(false)
+                  }}
+                >
+                  Pricing
+                </div>
+
+                {/* Art Station */}
+                <div
+                  className="py-2 text-lg text-white border-b border-gray-800 pb-3 cursor-pointer"
+                  onClick={() => {
+                    router.push(NAV_ROUTES.ART_STATION)
+                    setIsMobileMenuOpen(false)
+                  }}
+                >
+                  Art Station
+                </div>
+
+                {/* Get Started Button */}
+                <button
+                  className="mt-4 w-full bg-gradient-to-r from-[#5AD7FF] to-[#656BF5] text-white rounded-full py-2 px-6"
+                  onClick={() => {
+                    handleGetStarted()
+                    setIsMobileMenuOpen(false)
+                  }}
+                >
+                  Get Started
+                </button>
+              </div>
+            </div>
+          </>
         )}
       </div>
     </>
