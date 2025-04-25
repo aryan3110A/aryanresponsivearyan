@@ -230,9 +230,9 @@ export default function CategorySections() {
       {categorySections.map((section) => (
         <div
           key={section.id}
-          className="macbook:max-w-[1100px] md:max-w-[1200px] md:min-w-[1000px] lg:max-w-[1600px] mb-8 md:mb-20 md:px-10 lg:px-12"
+          className="macbook:max-w-[1100px] md:max-w-[1200px] md:min-w-[1000px] lg:max-w-[1600px] mb-8 md:mb-20    md:px-10 lg:px-12"
         >
-          <div className="flex flex-col md:flex-row items-start gap-8 pl-10">
+          <div className="flex flex-col md:flex-row items-start gap-8 pl-4 md:pl-10">
             <div className="flex flex-col items-start -mb-4 md:mb-4 w-full md:w-64 flex-shrink-0">
               <h2 className="text-2xl font-bold mb-3">{section.title}</h2>
               <button className="flex items-center justify-center bg-[#FFFFFF] hover:bg-[#DADCE0] text-[#1A73E8] hover:text-[#1474F1] py-2 px-6 rounded-md transition-colors">
