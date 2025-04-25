@@ -102,14 +102,14 @@ export default function TextGenerationTemplate() {
           </button>
         </div>
 
-        <div className="md:hidden lg:hidden mt-[7vh] ml-[140px] flex items-center gap-0">
+        <div className="md:hidden lg:hidden mt-[10vh] ml-[140px] flex items-center gap-0">
   {/* Settings Button */}
-  <button className="bg-[#262626] hover:bg-black/70 transition-colors backdrop-blur-md rounded-xl p-2 flex items-center justify-center my-auto mx-auto">
+  <button className="bg-[#262626] hover:bg-black/70 transition-colors backdrop-blur-md  rounded-xl p-2 flex items-center justify-center my-auto mx-auto">
     <Settings className="my-auto mx-auto w-7 h-7 text-white" />
   </button>
 
   {/* Generate Button */}
-  <button className="bg-gradient-to-b from-[#5AD7FF]  to-[#656BF5] transition-all rounded-xl my-auto py-3 mx-auto px-2 text-white font-medium text-sm flex items-center gap-2">
+  <button className="bg-gradient-to-b from-[#5AD7FF]  to-[#656BF5] transition-all rounded-xl my-auto py-3 mx-auto px-2 text-white font-medium text-sm flex items-center gap-1">
     <span>Generate</span>
     <Image
       src="/navigationSetting/coins.png"
