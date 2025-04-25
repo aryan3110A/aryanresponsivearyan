@@ -84,7 +84,7 @@ export default function TextGenerationTemplate() {
             <input
               type="text"
               placeholder="Type a prompt..."
-              className="w-[90vw] md:w-full bg-[#262626] text-white mobile:rounded-2xl py-8 px-10 md:rounded-full h-[6vh] md:h-[8vh] md:py-[1.5vh] md:px-[2vw] outline-none border-none backdrop-blur-md placeholder-gray-500"
+              className="w-[90vw]  md:w-full bg-[#262626] text-white mobile:rounded-2xl my-auto px-10 md:rounded-full h-[6vh] md:h-[8vh] md:py-[1.5vh] md:px-[2vw] outline-none border-none backdrop-blur-md placeholder-gray-500"
               value={inputPrompt}
               onChange={(e) => setInputPrompt(e.target.value)}
             />
@@ -102,14 +102,14 @@ export default function TextGenerationTemplate() {
           </button>
         </div>
 
-        <div className="md:hidden lg:hidden mt-[8vh] ml-[140px] flex items-center gap-0">
+        <div className="md:hidden lg:hidden mt-[7vh] ml-[140px] flex items-center gap-0">
   {/* Settings Button */}
-  <button className="bg-[#262626] hover:bg-black/70 transition-colors backdrop-blur-md rounded-xl p-2 flex items-center justify-center">
-    <Settings className="w-7 h-7 text-white" />
+  <button className="bg-[#262626] hover:bg-black/70 transition-colors backdrop-blur-md rounded-xl p-2 flex items-center justify-center my-auto mx-auto">
+    <Settings className="my-auto mx-auto w-7 h-7 text-white" />
   </button>
 
   {/* Generate Button */}
-  <button className="bg-gradient-to-b from-[#5AD7FF]  to-[#656BF5] transition-all rounded-xl py-3 px-5 text-white font-medium text-sm flex items-center gap-2">
+  <button className="bg-gradient-to-b from-[#5AD7FF]  to-[#656BF5] transition-all rounded-xl my-auto py-3 mx-auto px-2 text-white font-medium text-sm flex items-center gap-2">
     <span>Generate</span>
     <Image
       src="/navigationSetting/coins.png"
