@@ -6,6 +6,13 @@ import Footer from "../Core/Footer"
 import NavigationFull from "../Core/NavigationFull"
 import Navigation from "../landingPage/components/Navigation"
 import MasonryLayout from "./components/masorny-layout"
+import { bookmarkStore } from "../Bookmark/page"
+import { Bookmark } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { NAV_ROUTES } from "@/routes/routes"
+
+
+
 
 // Define the image data structure
 interface ArtImage {
@@ -18,6 +25,7 @@ interface ArtImage {
   liked?: boolean
   bookmarked?: boolean
 }
+
 
 // Sample images without hardcoded dimensions
 const sampleImages: ArtImage[] = [
@@ -145,7 +153,35 @@ const sampleImages: ArtImage[] = [
 
 export default function ArtStation() {
   const [selectedImage, setSelectedImage] = useState<ArtImage | null>(null)
-  const [images, setImages] = useState(sampleImages)
+  const [images, setImages] = useState<ArtImage[]>([])
+  const router = useRouter()
+
+  useEffect(() => {
+    // Initialize images with bookmark status from store
+    const initialImages = sampleImages.map((img) => ({
+      ...img,
+      bookmarked: bookmarkStore.isBookmarked(img.id),
+    }))
+    setImages(initialImages)
+
+    // Listen for bookmark updates
+    const handleBookmarkUpdate = () => {
+      setImages((prev) =>
+        prev.map((img) => ({
+          ...img,
+          bookmarked: bookmarkStore.isBookmarked(img.id),
+        })),
+      )
+    }
+
+    window.addEventListener("bookmarkUpdated", handleBookmarkUpdate)
+
+    return () => {
+      window.removeEventListener("bookmarkUpdated", handleBookmarkUpdate)
+    }
+  }, [])
+
+ 
   const [isMobile, setIsMobile] = useState(false)
   const [isTablet, setIsTablet] = useState(false)
 
@@ -172,8 +208,26 @@ export default function ArtStation() {
 
   // Handle image bookmark toggle
   const handleBookmarkToggle = (image: ArtImage) => {
-    const updatedImages = images.map((img) => (img.id === image.id ? { ...img, bookmarked: !img.bookmarked } : img))
+    const newBookmarkedState = !image.bookmarked
+
+    const updatedImages = images.map((img) => (img.id === image.id ? { ...img, bookmarked: newBookmarkedState } : img))
     setImages(updatedImages)
+
+    if (newBookmarkedState) {
+      bookmarkStore.addBookmark({
+        id: image.id,
+        src: image.src,
+        alt: image.alt,
+        username: image.username,
+        model: image.model,
+        prompt: image.prompt,
+      })
+    } else {
+      bookmarkStore.removeBookmark(image.id)
+    }
+
+    // Dispatch event to notify bookmark component
+    window.dispatchEvent(new Event("bookmarkUpdated"))
   }
 
   return (
@@ -184,8 +238,16 @@ export default function ArtStation() {
       <div className="w-full min-h-screen bg-black text-white  p-2 md:p-5">
         <div className="max-w-full md:max-w-[90%] mx-auto mt-16 md:mt-16">
           <h1 className="text-2xl md:text-3xl font-bold mb-0 md:mb-2 ml-4 md:ml-0">ArtStation Gallery</h1>
-          <p className="md:text-xl mb-2 md:mb-10 ml-4 md:ml-0">Explore AI-generated artwork</p>
-
+          <div className="flex items-center justify-between"> 
+            <p className="md:text-xl mb-2 md:mb-10 ml-4 md:ml-0">Explore AI-generated artwork</p>
+          <button
+             onClick={() => router.push(NAV_ROUTES.BOOKMARK)}
+              className=" flex rounded-md -mt-14  gap-1 px-2 py-1 md:py-2 md:px-4 bg-gradient-to-b from-[#5AD7FF] to-[#656BF5] transition-colors"
+            >
+              <Bookmark className="w-3 h-4 md:w-5 md:h-7" />
+              <span className="text-xs md:text-lg">Bookmarks</span>
+            </button>
+            </div>
           {/* Use the MasonryLayout component */}
           <MasonryLayout
             images={images}

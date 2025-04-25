@@ -30,6 +30,7 @@ export const NAV_ROUTES = {
   CONTACT: '/view/contactus',
   SUPPORT: '/view/support',
   ABOUT: '/about',
+  BOOKMARK:'/view/Bookmark'
 
 } as const;
 
