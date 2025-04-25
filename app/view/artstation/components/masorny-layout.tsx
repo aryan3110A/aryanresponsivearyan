@@ -159,14 +159,22 @@ export default function MasonryLayout({
             return (
               <div
                 key={image.id}
-                className="relative w-full cursor-pointer  mb-4 md:mb-6"
+                className="relative w-full cursor-pointer border border-[#222222] rounded-2xl md:border-hidden mb-4 md:mb-6"
                 onMouseEnter={() => !isMobile && !isTablet && setHoveredImageId(image.id)}
                 onMouseLeave={() => !isMobile && !isTablet && setHoveredImageId(null)}
                 onClick={() => onImageClick(image)}
               >
                 {/* Image container */}
+
+                <div className=" md:hidden py-4 md:py-0 flex items-center text-[#777777] mb-2">
+                      <div className="mr-2 flex items-center justify-center pl-4">
+                        <Image src="/artstation/usr.png" alt="user" width={24} height={24} />
+                      </div>
+                      <span className="text-sm">{image.username}</span>
+                    </div>
+
                 <div
-                  className="relative w-auto mx-4 mb-4 md:mx-0 md:mb-0"
+                  className="relative -mt-4 w-auto mx-4 mb-4 md:mx-0 md:mb-0"
                   style={{ paddingBottom: `${(dimensions.height / dimensions.width) * 100}%` }}
                 >
                   <Image
@@ -231,44 +239,45 @@ export default function MasonryLayout({
 
                 {/* Mobile and tablet info section below image */}
                 {(isMobile || isTablet) && (
-                  <div className="w-full text-white mt-2  rounded-lg">
-                    <div className="flex items-center mb-2">
-                      <div className="mr-2 flex items-center justify-center pl-4">
-                        <Image src="/artstation/usr.png" alt="user" width={24} height={24} />
-                      </div>
-                      <span className="text-sm">{image.username}</span>
-                    </div>
-                    <div className="text-xs mb-2">
+                  <div className="w-full text-white -mt-2  rounded-lg mb-2">
+                    
+                    {/* <div className="text-xs mb-2">
                       <p>
                         <span className="font-semibold pl-4">Model:</span> {image.model}
                       </p>
                       <p className="pl-4">
                         <span className="font-semibold ">Prompt:</span> {image.prompt}
                       </p>
-                    </div>
-                    <div className="flex justify-between items-center mt-2">
-                      <div className="flex space-x-4 pl-4">
+                    </div> */}
+                    <div className="flex justify-between items-center mt-0">
+                      <div className="flex  pl-4 justify-between  ">
                         <Heart
                           onClick={(e) => handleLikeToggle(image, e)}
-                          className={`
-                            w-5 h-5 
-                            ${image.liked ? "text-[#FF4444] fill-current" : "text-white"}
+                          className={` border border-[#222222] rounded-3xl  p-1
+                            w-12 h-8 
+                            ${image.liked ? "text-[#FF4444] fill-current" : "text-[#777777]"}
                             transform transition-all duration-300 ease-out
                           `}
                         />
+
+                      </div>
+                        <div className="flex pr-4  gap-1 text-[#777777]">
+                          <div className="flex border border-[#222222] rounded-full items-center px-4 gap-1 text-sm">
                         <Bookmark
                           onClick={(e) => handleBookmarkToggle(image, e)}
-                          className={`
+                          className={`  
                             w-5 h-5 
-                            ${image.bookmarked ? "text-[#FFA800] fill-current" : "text-white"}
+                            ${image.bookmarked ? "text-[#FFA800] fill-current" : "text-[#777777]"}
                             transform transition-all duration-300 ease-out
                           `}
-                        />
+                        />BookMark
+                        </div>
                         <Share2
                           onClick={(e) => handleShareClick(image, e)}
-                          className="w-5 h-5 text-white transform transition-all duration-300 ease-out"
-                        />
-                      </div>
+                          className="border  border-[#222222] rounded-full p-2  w-9 h-9  text-[#777777] transform transition-all duration-300 ease-out"
+                        /> </div>
+                        
+                      
                     </div>
                   </div>
                 )}
