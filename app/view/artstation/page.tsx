@@ -181,10 +181,10 @@ export default function ArtStation() {
       {/* Conditional rendering based on screen size */}
       {isMobile || isTablet ? <Navigation /> : <NavigationFull />}
 
-      <div className="w-full min-h-screen bg-black text-white p-5">
-        <div className="max-w-[90%] mx-auto mt-12 md:mt-16">
-          <h1 className="text-2xl md:text-3xl font-bold mb-0 md:mb-2">ArtStation Gallery</h1>
-          <p className="md:text-xl mb-2 md:mb-10">Explore AI-generated artwork</p>
+      <div className="w-full min-h-screen bg-black text-white  p-2 md:p-5">
+        <div className="max-w-full md:max-w-[90%] mx-auto mt-16 md:mt-16">
+          <h1 className="text-2xl md:text-3xl font-bold mb-0 md:mb-2 ml-4 md:ml-0">ArtStation Gallery</h1>
+          <p className="md:text-xl mb-2 md:mb-10 ml-4 md:ml-0">Explore AI-generated artwork</p>
 
           {/* Use the MasonryLayout component */}
           <MasonryLayout

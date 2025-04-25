@@ -1,8 +1,10 @@
-"use client";
+"use client"
 
-import { useState, useEffect } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import Image from "next/image";
+import type React from "react"
+
+import { useState, useEffect, useRef } from "react"
+import { ChevronLeft, ChevronRight } from "lucide-react"
+import Image from "next/image"
 
 // Featured articles data
 const featuredArticles = [
@@ -42,56 +44,93 @@ const featuredArticles = [
       "Post-production workflows are being revolutionized by AI technologies that can automate tedious tasks and enhance creative possibilities. From automatic rotoscoping and color grading to scene extensions and digital doubles, AI tools are enabling VFX artists to achieve high-quality results in a fraction of the time. Discover how studios are implementing AI solutions to streamline their pipelines and deliver stunning visual effects for films, TV shows, and commercials.",
     image: "/blog/blog4.png",
   },
-];
+]
 
 export default function FeaturedArticles() {
-  const [currentSlide, setCurrentSlide] = useState(0);
+  const [currentSlide, setCurrentSlide] = useState(0)
+  const touchStartX = useRef<number>(0)
+  const touchEndX = useRef<number>(0)
+  const isMobile = useRef<boolean>(false)
+
+  // Check if device is mobile or tablet
+  useEffect(() => {
+    const checkDevice = () => {
+      isMobile.current = window.innerWidth < 1024
+    }
+
+    checkDevice()
+    window.addEventListener("resize", checkDevice)
+
+    return () => {
+      window.removeEventListener("resize", checkDevice)
+    }
+  }, [])
 
   // Auto-rotate featured articles
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentSlide((prev) =>
-        prev === featuredArticles.length - 1 ? 0 : prev + 1
-      );
-    }, 8000);
-    return () => clearInterval(interval);
-  }, []);
+      setCurrentSlide((prev) => (prev === featuredArticles.length - 1 ? 0 : prev + 1))
+    }, 8000)
+    return () => clearInterval(interval)
+  }, [])
 
   // Navigation functions for featured articles
   const nextSlide = () => {
-    setCurrentSlide((prev) =>
-      prev === featuredArticles.length - 1 ? prev : prev + 1
-    );
-  };
+    setCurrentSlide((prev) => (prev === featuredArticles.length - 1 ? prev : prev + 1))
+  }
 
   const prevSlide = () => {
-    setCurrentSlide((prev) => (prev === 0 ? prev : prev - 1));
-  };
+    setCurrentSlide((prev) => (prev === 0 ? prev : prev - 1))
+  }
 
-  const gridPatternStyle = {
-    backgroundImage: `linear-gradient(to right, rgba(255, 255, 255, 0.1) 1px, transparent 1px), 
-                      linear-gradient(to bottom, rgba(255, 255, 255, 0.1) 1px, transparent 1px)`,
-    backgroundSize: "40px 40px",
-  };
+  // Touch handlers for swiping
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX
+  }
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    touchEndX.current = e.touches[0].clientX
+  }
+
+  const handleTouchEnd = () => {
+    if (touchStartX.current - touchEndX.current > 50) {
+      // Swipe left
+      nextSlide()
+    } else if (touchEndX.current - touchStartX.current > 50) {
+      // Swipe right
+      prevSlide()
+    }
+    touchStartX.current = 0
+    touchEndX.current = 0
+  }
 
   return (
     <div
-      className="relative w-full h-[600px] mb-60"
+      className="relative w-full h-[400px] md:h-[600px] mobile:mb-0 md:mb-60"
       style={{
-        backgroundImage: `url('/Blog/background.png')`,
+        backgroundImage: isMobile.current ? "none" : `url('/Blog/background.png')`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
       }}
     >
       <div
-        className="absolute inset-0 opacity-20 font-poppins"
-        style={gridPatternStyle}
+        className="mobile:hidden absolute inset-0 opacity-20 font-poppins hidden lg:block"
+        style={{
+          backgroundImage: `linear-gradient(to right, rgba(255, 255, 255, 0.1) 1px, transparent 1px), 
+                            linear-gradient(to bottom, rgba(255, 255, 255, 0.1) 1px, transparent 1px)`,
+          backgroundSize: "40px 40px",
+        }}
       ></div>
-      <div className="lg:max-w-7xl md:max-w-5xl mx-auto px-4 py-10 -mt-[60]">
-        <div className="w-full max-w-4xl  bg-black rounded-lg overflow-hidden mx-auto my-auto border border-gray-800 max-h-[100%] relative">
-          <div className="p-6 pt-8">
-            <h2 className="text-2xl font-bold mb-4">Featured articles</h2>
+      <div className="lg:max-w-7xl md:max-w-5xl mx-auto px-4 py-10 -mt-32 md:-mt-[60]">
+        <div
+          className="w-full max-w-4xl md:bg-black rounded-lg overflow-hidden mx-auto my-auto md:border md:border-gray-800 max-h-[100%] relative"
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+        >
+          <div className="p-0 md:p-6 md:pt-8">
+            <h2 className="text-2xl mobile:text-center md:text-left font-bold mobile:ml-4 mb-0">Featured articles</h2>
             <div className="relative">
               <div className="overflow-hidden rounded-lg relative">
                 <div
@@ -108,7 +147,7 @@ export default function FeaturedArticles() {
                           <Image
                             src={article.image || "/placeholder.svg"}
                             alt={article.title}
-                            className="w-full aspect-video object-contain rounded-lg px-4"
+                            className="w-full mobile:h-auto aspect-video object-contain rounded-lg px-4"
                             width={640}
                             height={320}
                             priority={index === 0}
@@ -117,19 +156,11 @@ export default function FeaturedArticles() {
                         </div>
                         <div className="px-4 -mt-4">
                           <div className="flex items-center space-x-2">
-                            <span className="text-blue-400 uppercase text-sm font-semibold">
-                              {article.author}
-                            </span>
-                            <span className="text-blue-400 uppercase text-sm font-semibold">
-                              {article.authorTag}
-                            </span>
+                            <span className="text-blue-400 uppercase text-sm font-semibold">{article.author}</span>
+                            <span className="text-blue-400 uppercase text-sm font-semibold">{article.authorTag}</span>
                           </div>
-                          <h3 className="text-lg md:text-3xl font-bold mb-2 font-poppins">
-                            {article.title}
-                          </h3>
-                          <p className="text-gray-300 text-sm font-poppins">
-                            {article.content}
-                          </p>
+                          <h3 className="text-sm md:text-3xl font-thin md:font-bold mb-2 font-poppins">{article.title}</h3>
+                          <p className="mobile:hidden text-gray-300 text-sm font-poppins">{article.content}</p>
                         </div>
                       </div>
                     </div>
@@ -139,21 +170,21 @@ export default function FeaturedArticles() {
             </div>
           </div>
 
-          {/* Navigation buttons positioned on the card */}
-          {currentSlide > 0 && (
+          {/* Navigation buttons - only visible on desktop */}
+          {currentSlide > 0 && !isMobile.current && (
             <button
               onClick={prevSlide}
-              className="absolute left-4 top-[40%]  transform -translate-y-1/2 bg-white rounded-full p-4 text-black z-10"
+              className="absolute left-4 top-[40%] transform -translate-y-1/2 bg-white rounded-full p-4 text-black z-10 hidden lg:block"
               aria-label="Previous slide"
             >
               <ChevronLeft size="2rem" />
             </button>
           )}
 
-          {currentSlide < featuredArticles.length - 1 && (
+          {currentSlide < featuredArticles.length - 1 && !isMobile.current && (
             <button
               onClick={nextSlide}
-              className="absolute right-4 top-[40%] transform -translate-y-1/2 bg-white rounded-full p-4 text-black z-10"
+              className="absolute right-4 top-[40%] transform -translate-y-1/2 bg-white rounded-full p-4 text-black z-10 hidden lg:block"
               aria-label="Next slide"
             >
               <ChevronRight size="2rem" />
@@ -165,14 +196,12 @@ export default function FeaturedArticles() {
             <button
               key={index}
               onClick={() => setCurrentSlide(index)}
-              className={`w-2 h-2 rounded-full ${
-                currentSlide === index ? "bg-white" : "bg-gray-600"
-              }`}
+              className={`w-2 h-2 rounded-full ${currentSlide === index ? "bg-white" : "bg-gray-600"}`}
               aria-label={`Go to slide ${index + 1}`}
             />
           ))}
         </div>
       </div>
     </div>
-  );
+  )
 }

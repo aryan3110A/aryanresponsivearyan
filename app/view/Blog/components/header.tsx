@@ -48,7 +48,7 @@ export default function Header() {
   };
 
   return (
-    <header className="fixed top-0 left-0 w-full z-50 bg-[#353535] border-b border-gray-800 py-3 px-4 md:px-8 flex items-center justify-between">
+    <header className="md:fixed top-0 left-0 w-full z-50  md:bg-[#353535] border-b border-gray-800 py-3 px-4 md:px-8 flex items-center justify-between">
       <div className="flex items-center flex-1">
         <div className="relative flex-1 max-w-[700px]">
           <Search
@@ -58,19 +58,19 @@ export default function Header() {
           <input
             type="text"
             placeholder="Search all articles..."
-            className="w-full py-2 pl-10 pr-3 rounded-md bg-[#F1F3F4] text-black border border-gray-700 focus:outline-none focus:border-gray-600"
+            className="w-full py-2 pl-10 pr-3 rounded-md bg-[#353535] md:bg-[#F1F3F4] text-black border border-gray-700 focus:outline-none focus:border-gray-600"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
         <button
           className=" 
-            bg-gradient-to-b from-[#5AD7FF] to-[#656BF5]  text-white py-2 px-8 rounded-md transition-colors ml-4"
+            bg-gradient-to-b from-[#5AD7FF] to-[#656BF5]  text-white py-2 px-4 md:px-8 rounded-md transition-colors ml-4"
         >
           Search
         </button>
       </div>
-      <div className="flex items-center mr-10">
+      <div className="mobile:hidden md:block  flex items-center mr-10">
         <div className="relative" ref={languageDropdownRef}>
           <button
             onClick={toggleLanguageDropdown}

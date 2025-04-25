@@ -1,28 +1,30 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import Image from "next/image";
+import type React from "react"
+
+import { useState, useEffect, useRef } from "react"
+import { ChevronLeft, ChevronRight } from "lucide-react"
+import Image from "next/image"
+
+// Define section IDs as a type for type safety
+type SectionId = "image-creation" | "video-animations" | "sound-designing" | "product-branding"
 
 // Category sections data
 const categorySections = [
   {
-    id: "image-creation",
+    id: "image-creation" as SectionId,
     title: "Image Creation",
     articles: [
       {
-        title:
-          "The Art of AI: How AI-Generated Images are Changing Digital Creativity",
+        title: "The Art of AI: How AI-Generated Images are Changing Digital Creativity",
         image: "https://placehold.co/320x200/gray/white",
       },
       {
-        title:
-          "Stable Diffusion vs. MidJourney: Which AI Image Tool is Best for You?",
+        title: "Stable Diffusion vs. MidJourney: Which AI Image Tool is Best for You?",
         image: "https://placehold.co/320x200/gray/white",
       },
       {
-        title:
-          "From Text to Masterpiece: The Best AI Prompt Strategies for Stunning Images",
+        title: "From Text to Masterpiece: The Best AI Prompt Strategies for Stunning Images",
         image: "https://placehold.co/320x200/gray/white",
       },
       {
@@ -44,7 +46,7 @@ const categorySections = [
     ],
   },
   {
-    id: "video-animations",
+    id: "video-animations" as SectionId,
     title: "Video & Animations",
     articles: [
       {
@@ -56,8 +58,7 @@ const categorySections = [
         image: "https://placehold.co/400x200/gray/white",
       },
       {
-        title:
-          "From Text to Short Film: How AI Can Create a 15-Second Video in Minutes",
+        title: "From Text to Short Film: How AI Can Create a 15-Second Video in Minutes",
         image: "https://placehold.co/400x200/gray/white",
       },
       {
@@ -83,7 +84,7 @@ const categorySections = [
     ],
   },
   {
-    id: "sound-designing",
+    id: "sound-designing" as SectionId,
     title: "Sound Designing",
     articles: [
       {
@@ -91,8 +92,7 @@ const categorySections = [
         image: "https://placehold.co/320x200/gray/white",
       },
       {
-        title:
-          "AI and Virtual Environments: How Studios Are Using AI for Film and Game Worlds",
+        title: "AI and Virtual Environments: How Studios Are Using AI for Film and Game Worlds",
         image: "https://placehold.co/320x200/gray/white",
       },
       {
@@ -122,7 +122,7 @@ const categorySections = [
     ],
   },
   {
-    id: "product-branding",
+    id: "product-branding" as SectionId,
     title: "Product Branding",
     articles: [
       {
@@ -130,8 +130,7 @@ const categorySections = [
         image: "https://placehold.co/320x200/gray/white",
       },
       {
-        title:
-          "AI and Virtual Environments: How Studios Are Using AI for Film and Game Worlds",
+        title: "AI and Virtual Environments: How Studios Are Using AI for Film and Game Worlds",
         image: "https://placehold.co/320x200/gray/white",
       },
       {
@@ -160,45 +159,81 @@ const categorySections = [
       },
     ],
   },
-];
+]
 
 export default function CategorySections() {
-  // State for category sections
-  const [scrollPositions, setScrollPositions] = useState({
+  // State for category sections with proper typing
+  const [scrollPositions, setScrollPositions] = useState<Record<SectionId, number>>({
     "image-creation": 0,
     "video-animations": 0,
     "sound-designing": 0,
     "product-branding": 0,
-  });
+  })
+
+  // Properly type the ref objects
+  const touchStartX = useRef<Record<string, number>>({})
+  const touchEndX = useRef<Record<string, number>>({})
+  const isMobile = useRef<boolean>(false)
+
+  // Check if device is mobile or tablet
+  useEffect(() => {
+    const checkDevice = () => {
+      isMobile.current = window.innerWidth < 1024
+    }
+
+    checkDevice()
+    window.addEventListener("resize", checkDevice)
+
+    return () => {
+      window.removeEventListener("resize", checkDevice)
+    }
+  }, [])
 
   // Generic scroll functions for category sections
-  const scrollRight = (sectionId: string, maxLength: number) => {
+  const scrollRight = (sectionId: SectionId, maxLength: number) => {
     setScrollPositions((prev) => ({
       ...prev,
-      [sectionId]: Math.min(
-        prev[sectionId as keyof typeof prev] + 1,
-        maxLength - 3
-      ),
-    }));
-  };
+      [sectionId]: Math.min(prev[sectionId] + 1, maxLength - 3),
+    }))
+  }
 
-  const scrollLeft = (sectionId: string) => {
+  const scrollLeft = (sectionId: SectionId) => {
     setScrollPositions((prev) => ({
       ...prev,
-      [sectionId]: Math.max(prev[sectionId as keyof typeof prev] - 1, 0),
-    }));
-  };
+      [sectionId]: Math.max(prev[sectionId] - 1, 0),
+    }))
+  }
+
+  // Touch handlers for swiping
+  const handleTouchStart = (e: React.TouchEvent, sectionId: string) => {
+    touchStartX.current[sectionId] = e.touches[0].clientX
+  }
+
+  const handleTouchMove = (e: React.TouchEvent, sectionId: string) => {
+    touchEndX.current[sectionId] = e.touches[0].clientX
+  }
+
+  const handleTouchEnd = (sectionId: SectionId, maxLength: number) => {
+    if (touchStartX.current[sectionId] - touchEndX.current[sectionId] > 50) {
+      // Swipe left
+      scrollRight(sectionId, maxLength)
+    } else if (touchEndX.current[sectionId] - touchStartX.current[sectionId] > 50) {
+      // Swipe right
+      scrollLeft(sectionId)
+    }
+    touchStartX.current[sectionId] = 0
+    touchEndX.current[sectionId] = 0
+  }
 
   return (
-    <>
-    <div className=" lg:px-6 py-10">
+    <div className="lg:px-6 md:py-0 pt-0 pb-0">
       {categorySections.map((section) => (
         <div
           key={section.id}
-          className=" macbook:max-w-[1100px] md:max-w-[1200px] md:min-w-[1000px] lg:max-w-[1600px] mb-20  md:px-10 lg:px-12"
+          className="macbook:max-w-[1100px] md:max-w-[1200px] md:min-w-[1000px] lg:max-w-[1600px] mb-8 md:mb-20 md:px-10 lg:px-12"
         >
           <div className="flex flex-col md:flex-row items-start gap-8 pl-10">
-            <div className="flex flex-col items-start mb-4 w-full md:w-64 flex-shrink-0">
+            <div className="flex flex-col items-start -mb-4 md:mb-4 w-full md:w-64 flex-shrink-0">
               <h2 className="text-2xl font-bold mb-3">{section.title}</h2>
               <button className="flex items-center justify-center bg-[#FFFFFF] hover:bg-[#DADCE0] text-[#1A73E8] hover:text-[#1474F1] py-2 px-6 rounded-md transition-colors">
                 <span className="mr-2">See posts</span>
@@ -211,27 +246,19 @@ export default function CategorySections() {
                 <div
                   className="flex gap-4 transition-transform duration-500 ease-in-out"
                   style={{
-                    transform: `translateX(-${
-                      scrollPositions[
-                        section.id as keyof typeof scrollPositions
-                      ] * 320
-                    }px)`,
+                    transform: `translateX(-${scrollPositions[section.id as SectionId] * 320}px)`,
                   }}
+                  onTouchStart={(e) => handleTouchStart(e, section.id)}
+                  onTouchMove={(e) => handleTouchMove(e, section.id)}
+                  onTouchEnd={() => handleTouchEnd(section.id as SectionId, section.articles.length)}
                 >
                   {section.articles.map((article, index) => (
-                    <div
-                      key={index}
-                      className="w-[300px] flex-shrink-0 font-poppins"
-                    >
-                      <h3 className="text-lg font-semibold h-[6rem] line-clamp-3 overflow-hidden font-poppins mb-0">
+                    <div key={index} className="w-[300px] flex-shrink-0 font-poppins">
+                      <h3 className="text-sm md:text-lg  font-semibold h-14 md:h-[6rem]  line-clamp-3 overflow-hidden font-poppins mb-0">
                         {article.title}
                       </h3>
                       <Image
-                        src={
-                          article.image ||
-                          "/placeholder.svg?height=200&width=300" ||
-                          "/placeholder.svg"
-                        }
+                        src={article.image || "/placeholder.svg?height=200&width=300" || "/placeholder.svg"}
                         alt={article.title}
                         width={300}
                         height={200}
@@ -243,11 +270,11 @@ export default function CategorySections() {
                 </div>
               </div>
 
-              {scrollPositions[section.id as keyof typeof scrollPositions] >
-                0 && (
+              {/* Navigation arrows - only visible on desktop */}
+              {scrollPositions[section.id as SectionId] > 0 && !isMobile.current && (
                 <button
-                  onClick={() => scrollLeft(section.id)}
-                  className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-2 text-black z-10 shadow-lg"
+                  onClick={() => scrollLeft(section.id as SectionId)}
+                  className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-2 text-black z-10 shadow-lg hidden lg:block"
                   aria-label="Scroll left"
                 >
                   <ChevronLeft size="1.5rem" />
@@ -255,13 +282,11 @@ export default function CategorySections() {
               )}
 
               {section.articles.length > 3 &&
-                scrollPositions[section.id as keyof typeof scrollPositions] <
-                  section.articles.length - 3 && (
+                scrollPositions[section.id as SectionId] < section.articles.length - 3 &&
+                !isMobile.current && (
                   <button
-                    onClick={() =>
-                      scrollRight(section.id, section.articles.length)
-                    }
-                    className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-2 text-black z-10 shadow-lg"
+                    onClick={() => scrollRight(section.id as SectionId, section.articles.length)}
+                    className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-2 text-black z-10 shadow-lg hidden lg:block"
                     aria-label="Scroll right"
                   >
                     <ChevronRight size="1.5rem" />
@@ -272,6 +297,5 @@ export default function CategorySections() {
         </div>
       ))}
     </div>
-    </>
-  );
+  )
 }

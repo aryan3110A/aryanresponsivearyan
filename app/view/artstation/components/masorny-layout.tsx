@@ -4,7 +4,7 @@ import type React from "react"
 
 import { useEffect, useState, useRef } from "react"
 import Image from "next/image"
-import { Heart, Bookmark, Share2 } from "lucide-react"
+import { Heart, Bookmark, Share2 } from 'lucide-react'
 
 interface ArtImage {
   id: string
@@ -38,20 +38,9 @@ export default function MasonryLayout({
   const [imageDimensions, setImageDimensions] = useState<Record<string, { width: number; height: number }>>({})
   const [imagesLoaded, setImagesLoaded] = useState(false)
   const [modifiedImages, setModifiedImages] = useState<ArtImage[]>(images)
-  const [containerWidth, setContainerWidth] = useState(0)
   const containerRef = useRef<HTMLDivElement>(null)
   
-  // Determine number of columns based on screen size
-  const getColumns = () => {
-    if (isMobile) return 1
-    if (isTablet) return 2
-    return 3 // Default for desktop
-  }
-
-  const columns = getColumns()
-
   useEffect(() => {
-    // Load image dimensions
     const loadImageDimensions = async () => {
       const dimensions: Record<string, { width: number; height: number }> = {}
 
@@ -87,24 +76,14 @@ export default function MasonryLayout({
     setModifiedImages(images)
   }, [images])
 
-  useEffect(() => {
-    // Monitor container width for responsive sizing
-    const updateContainerWidth = () => {
-      if (containerRef.current) {
-        setContainerWidth(containerRef.current.clientWidth)
-      }
-    }
+  // Determine number of columns based on screen size
+  const getColumns = () => {
+    if (isMobile) return 1
+    if (isTablet) return 2
+    return 3 // Default for desktop
+  }
 
-    // Initial width calculation
-    updateContainerWidth()
-
-    // Set up resize listener
-    window.addEventListener('resize', updateContainerWidth)
-
-    return () => {
-      window.removeEventListener('resize', updateContainerWidth)
-    }
-  }, [])
+  const columns = getColumns()
 
   const getColumnImages = () => {
     if (!imagesLoaded) return Array.from({ length: columns }, () => [])
@@ -170,53 +149,32 @@ export default function MasonryLayout({
     )
   }
 
-  // Calculate column width including gap
-  const gap = 10;
-  const columnWidth = containerWidth > 0 
-    ? `calc(${100 / columns}% - ${gap * (columns - 1) / columns}px)` 
-    : `100%`;
-
   return (
-    <div 
-      ref={containerRef} 
-      className="flex w-full flex-wrap" 
-      style={{ gap }}
-    >
+    <div ref={containerRef} className="flex w-full gap-2 md:gap-3 ">
       {getColumnImages().map((column, columnIndex) => (
-        <div 
-          key={`column-${columnIndex}`} 
-          className="flex-shrink-0 overflow-hidden"
-          style={{ 
-            width: columnWidth,
-            maxWidth: "100%" 
-          }}
-        >
+        <div key={`column-${columnIndex}`} className="flex-1">
           {column.map((image) => {
             const dimensions = imageDimensions[image.id] || { width: 1, height: 1 }
 
             return (
               <div
                 key={image.id}
-                className="relative w-full cursor-pointer mb-6"
+                className="relative w-full cursor-pointer  mb-4 md:mb-6"
                 onMouseEnter={() => !isMobile && !isTablet && setHoveredImageId(image.id)}
                 onMouseLeave={() => !isMobile && !isTablet && setHoveredImageId(null)}
                 onClick={() => onImageClick(image)}
               >
                 {/* Image container */}
                 <div
-                  className="relative w-full"
-                  style={{ 
-                    paddingBottom: `${(dimensions.height / dimensions.width) * 100}%`,
-                    maxWidth: "100%" 
-                  }}
+                  className="relative w-auto mx-4 mb-4 md:mx-0 md:mb-0"
+                  style={{ paddingBottom: `${(dimensions.height / dimensions.width) * 100}%` }}
                 >
                   <Image
                     src={image.src || "/placeholder.svg"}
                     alt={image.alt}
                     fill
-                    sizes={isMobile ? "100vw" : isTablet ? "50vw" : "33vw"}
+                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     className="object-cover rounded-lg"
-                    priority={true}
                   />
                 </div>
 
@@ -273,23 +231,23 @@ export default function MasonryLayout({
 
                 {/* Mobile and tablet info section below image */}
                 {(isMobile || isTablet) && (
-                  <div className="w-full text-white mt-2 rounded-lg">
+                  <div className="w-full text-white mt-2  rounded-lg">
                     <div className="flex items-center mb-2">
-                      <div className="mr-2 flex items-center justify-center">
+                      <div className="mr-2 flex items-center justify-center pl-4">
                         <Image src="/artstation/usr.png" alt="user" width={24} height={24} />
                       </div>
                       <span className="text-sm">{image.username}</span>
                     </div>
                     <div className="text-xs mb-2">
                       <p>
-                        <span className="font-semibold">Model:</span> {image.model}
+                        <span className="font-semibold pl-4">Model:</span> {image.model}
                       </p>
-                      <p className="">
-                        <span className="font-semibold">Prompt:</span> {image.prompt}
+                      <p className="pl-4">
+                        <span className="font-semibold ">Prompt:</span> {image.prompt}
                       </p>
                     </div>
                     <div className="flex justify-between items-center mt-2">
-                      <div className="flex space-x-4">
+                      <div className="flex space-x-4 pl-4">
                         <Heart
                           onClick={(e) => handleLikeToggle(image, e)}
                           className={`
