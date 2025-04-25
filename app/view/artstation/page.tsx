@@ -6,13 +6,10 @@ import Footer from "../Core/Footer"
 import NavigationFull from "../Core/NavigationFull"
 import Navigation from "../landingPage/components/Navigation"
 import MasonryLayout from "./components/masorny-layout"
-import { bookmarkStore } from "../Bookmark/page"
+import { bookmarkStore } from "../../utils/bookmarkUtils"
 import { Bookmark } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { NAV_ROUTES } from "@/routes/routes"
-
-
-
 
 // Define the image data structure
 interface ArtImage {
@@ -25,7 +22,6 @@ interface ArtImage {
   liked?: boolean
   bookmarked?: boolean
 }
-
 
 // Sample images without hardcoded dimensions
 const sampleImages: ArtImage[] = [
