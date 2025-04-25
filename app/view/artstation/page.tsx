@@ -238,7 +238,7 @@ export default function ArtStation() {
             <p className="md:text-xl mb-2 md:mb-10 ml-4 md:ml-0">Explore AI-generated artwork</p>
           <button
              onClick={() => router.push(NAV_ROUTES.BOOKMARK)}
-              className=" flex rounded-md -mt-14  gap-1 px-2 py-1 md:py-2 md:px-4 bg-gradient-to-b from-[#5AD7FF] to-[#656BF5] transition-colors"
+              className=" flex rounded-md mb-4  gap-1 px-2 py-1 md:py-2 md:px-4 bg-gradient-to-b from-[#5AD7FF] to-[#656BF5] transition-colors"
             >
               <Bookmark className="w-3 h-4 md:w-5 md:h-7" />
               <span className="text-xs md:text-lg">Bookmarks</span>
