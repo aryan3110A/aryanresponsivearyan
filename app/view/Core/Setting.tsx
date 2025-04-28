@@ -71,8 +71,8 @@ const SettingNavigation: React.FC<SettingsProps> = ({
 
   // Mobile/tablet specific styles
   const mobileStyles = isMobileOrTablet ? {
-    left: "0",
-    width: "150%",
+    left: "0px",
+    width: "calc(100vw - 0px)",
     height: "100%",
     zIndex: "100"
   } : {

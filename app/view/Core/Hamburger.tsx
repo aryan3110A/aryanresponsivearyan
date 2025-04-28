@@ -188,7 +188,7 @@ export default function Hamburger({ isOpen, onClose }: { isOpen: boolean; onClos
       )}
 
       <nav
-        className={`fixed top-0 left-0 bottom-0 w-[20vw] max-w-[280px] min-w-[250px] bg-[#171717] border-r border-gray-800 transform transition-transform duration-300 ease-in-out z-40 flex flex-col ${
+        className={`fixed top-0 left-0 bottom-0 mobile:w-[90vw] max-w-[280px] min-w-[250px] bg-[#171717] border-r border-gray-800 transform transition-transform duration-300 ease-in-out z-40 flex flex-col ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
