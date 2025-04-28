@@ -355,10 +355,10 @@ export default function Hamburger({ isOpen, onClose }: { isOpen: boolean; onClos
                 <a href="#" className="hover:text-gray-300 flex-nowrap">
                   Terms of uses
                 </a>
-                <a href="#" className="hover:text-gray-300 flex-nowrap ml-[0.6vw]">
+                <a href="#" className="hover:text-gray-300 flex-nowrap ml-3 md:ml-[0.6vw]">
                   Privacy Policy
                 </a>
-                <a href="#" className="hover:text-gray-300 flex-nowrap ml-[1vw]">
+                <a href="#" className="hover:text-gray-300 flex-nowrap ml-3 md:ml-[1vw]">
                   DMCA
                 </a>
               </div>
