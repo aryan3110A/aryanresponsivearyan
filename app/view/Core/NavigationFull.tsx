@@ -149,7 +149,7 @@ export default function NavigationFull() {
             </div>
           </div>
 
-          <nav className="hidden md:flex lg:flex items-center justify-center gap-[4vw] font-poppins sm:pl-[34vw] md:pl-[21vw] lg:pl-[25vw]">
+          <nav className="hidden md:flex lg:flex items-center justify-center gap-[4vw] font-poppins sm:pl-[18vw] md:pl-[21vw] lg:pl-[25vw]">
             <div className="relative">
               <button onClick={() => toggleDropdown("features")} className="flex items-center hover:text-[#dbdbdb]">
                 <span>Features</span>
@@ -197,7 +197,7 @@ export default function NavigationFull() {
         {activeDropdown && (
           <div className="left-0 right-0 overflow-hidden transition-all duration-1000 z-10" style={{ ...backgroundStyle, maxHeight: activeDropdown ? "50vh" : "0", opacity: animating ? 0 : 1 }}>
             <div className="container py-2">
-              <div className="flex flex-col sm:ml-[31.4vw] md:ml-[39.6vw] lg:ml-[38vw]">
+              <div className="flex flex-col sm:ml-[31.4vw] md:ml-[35.5vw] lg:ml-[37.3vw]">
                 <h3 className="text-lg font-bold mb-[2vh]">CREATE</h3>
                 <div className="flex flex-col space-y-[1.5vh]">
                   {(activeDropdown === "features" ? featuresDropdownItems : templatesDropdownItems).map((item, index) => (

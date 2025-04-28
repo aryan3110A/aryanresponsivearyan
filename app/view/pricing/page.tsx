@@ -91,30 +91,34 @@ export default function SubscriptionToggle() {
   const [animateToggle, setAnimateToggle] = useState(false)
   const [selectedPlan, setSelectedPlan] = useState(0)
   const [isMobile, setIsMobile] = useState(false)
+  const [isTablet, setIsTablet] = useState(false)
   const [currentSlide, setCurrentSlide] = useState(0)
   const [touchStart, setTouchStart] = useState<number | null>(null)
   const [touchEnd, setTouchEnd] = useState<number | null>(null)
+  const [isDragging, setIsDragging] = useState(false)
+  const [startX, setStartX] = useState(0)
+  const [scrollLeft, setScrollLeft] = useState(0)
 
   // Swipe threshold (in px)
   const minSwipeDistance = 50
 
   const sliderRef = useRef<HTMLDivElement>(null)
+  const cardsContainerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    if (typeof window === "undefined") return
-
-    const checkMobile = () => {
+    const checkScreenSize = () => {
       setIsMobile(window.innerWidth < 768)
+      setIsTablet(window.innerWidth >= 768 && window.innerWidth < 1024)
     }
 
     // Initial check
-    checkMobile()
+    checkScreenSize()
 
     // Add event listener for window resize
-    window.addEventListener("resize", checkMobile)
+    window.addEventListener("resize", checkScreenSize)
 
     // Cleanup
-    return () => window.removeEventListener("resize", checkMobile)
+    return () => window.removeEventListener("resize", checkScreenSize)
   }, [])
 
   const handleToggle = (period: BillingPeriod) => {
@@ -144,7 +148,7 @@ export default function SubscriptionToggle() {
   }
 
   const onTouchEnd = () => {
-    if (!touchStart || !touchEnd || typeof window === "undefined") return
+    if (!touchStart || !touchEnd) return
 
     const distance = touchStart - touchEnd
     const isLeftSwipe = distance > minSwipeDistance
@@ -152,13 +156,48 @@ export default function SubscriptionToggle() {
 
     if (isLeftSwipe) {
       // Next slide
-      setCurrentSlide((prev) => (prev === pricingPlans.length - 1 ? 0 : prev + 1))
+      setCurrentSlide((prev) => (prev === pricingPlans.length - 1 ? prev : prev + 1))
     }
 
     if (isRightSwipe) {
       // Previous slide
-      setCurrentSlide((prev) => (prev === 0 ? pricingPlans.length - 1 : prev - 1))
+      setCurrentSlide((prev) => (prev === 0 ? 0 : prev - 1))
     }
+  }
+
+  // Mouse drag handlers for desktop
+  const onMouseDown = (e: React.MouseEvent) => {
+    if (!cardsContainerRef.current || !(isMobile || isTablet)) return
+
+    setIsDragging(true)
+    setStartX(e.pageX - cardsContainerRef.current.offsetLeft)
+    setScrollLeft(cardsContainerRef.current.scrollLeft)
+  }
+
+  const onMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging || !cardsContainerRef.current || !(isMobile || isTablet)) return
+
+    e.preventDefault()
+    const x = e.pageX - cardsContainerRef.current.offsetLeft
+    const walk = (x - startX) * 2 // Scroll speed multiplier
+    cardsContainerRef.current.scrollLeft = scrollLeft - walk
+  }
+
+  const onMouseUp = () => {
+    setIsDragging(false)
+
+    if (!cardsContainerRef.current || !(isMobile || isTablet)) return
+
+    // Calculate which slide to snap to based on scroll position
+    const cardWidth = cardsContainerRef.current.scrollWidth / pricingPlans.length
+    const newSlide = Math.round(cardsContainerRef.current.scrollLeft / cardWidth)
+    setCurrentSlide(Math.max(0, Math.min(newSlide, pricingPlans.length - 1)))
+
+    // Smooth scroll to the selected slide
+    cardsContainerRef.current.scrollTo({
+      left: newSlide * cardWidth,
+      behavior: "smooth",
+    })
   }
 
   const goToSlide = (index: number) => {
@@ -220,7 +259,7 @@ export default function SubscriptionToggle() {
           </div>
 
           {/* Desktop Pricing Cards */}
-          {!isMobile && (
+          {!isMobile && !isTablet && (
             <div className="m-4 p-4 rounded-3xl w-full bg-[linear-gradient(to_bottom,black_60%,gray_100%,white_100%)]">
               <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-4 gap-6 relative z-10">
                 {pricingPlans.map((plan, index) => (
@@ -279,82 +318,92 @@ export default function SubscriptionToggle() {
             </div>
           )}
 
-          {/* Mobile Pricing Cards with Swipe Functionality */}
-          {isMobile && (
-            <div className="relative w-full px-2">
-              {/* Slider Container with Touch Events */}
-              <div
-                ref={sliderRef}
-                className="overflow-hidden rounded-3xl border border-gray-800"
-                onTouchStart={onTouchStart}
-                onTouchMove={onTouchMove}
-                onTouchEnd={onTouchEnd}
-              >
-                {/* Current Plan Card */}
-                <div className="bg-black text-white backdrop-blur-sm p-6 flex flex-col">
-                  <div className="mb-4">
-                    <h2 className="text-xl font-bold mb-2">{pricingPlans[currentSlide].name}</h2>
-                    <div className="flex mt-2">
-                      <span className="text-4xl font-bold">
-                        $
-                        {billingPeriod === "monthly"
-                          ? pricingPlans[currentSlide].monthlyPrice
-                          : pricingPlans[currentSlide].yearlyPrice}
-                      </span>
-                      <span className="mt-0 ml-2 text-sm text-gray-400">
-                        per editor/month
-                        <br />
-                        billed {billingPeriod}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="space-y-3 flex-grow">
-                    <div className="flex items-start gap-2">
-                      <div className="mt-1 flex-shrink-0 rounded-full bg-[#35F148] p-1">
-                        <Check className="h-3 w-3 text-black" />
-                      </div>
-                      <span className="text-sm">{pricingPlans[currentSlide].fastGenerations} Fast generations</span>
-                    </div>
-
-                    {pricingPlans[currentSlide].features.map((feature, featureIndex) => (
-                      <div key={featureIndex} className="flex items-start gap-2">
-                        <div className="mt-1 flex-shrink-0 rounded-full bg-[#35F148] p-1">
-                          <Check className="h-3 w-3 text-black" />
-                        </div>
-                        <span className="text-sm font-poppins font-thin mt-1">{feature.text}</span>
-                      </div>
-                    ))}
-                  </div>
-
-                  <button
-                    className={`mt-6 py-3 px-4 rounded-xl text-center text-base w-full ${
-                      pricingPlans[currentSlide].isCurrent
-                        ? "bg-gradient-to-b from-[#5AD7FF] to-[#656BF5]"
-                        : "bg-gradient-to-b from-[#5AD7FF] to-[#656BF5] text-white transition-colors"
-                    }`}
-                  >
-                    {pricingPlans[currentSlide].isCurrent ? "Current Plan" : "Choose Plan"}
-                  </button>
-                </div>
-              </div>
-
-              {/* Swipe Instruction */}
-              <p className="text-center text-sm text-gray-400 mt-2">Swipe left or right to view more plans</p>
-
-              {/* Pagination Dots */}
-              <div className="flex justify-center mt-4 space-x-2">
+          {/* Mobile and Tablet Pricing Cards with Swipe Functionality */}
+          {(isMobile || isTablet) && (
+            <div className="relative w-full">
+              {/* Pagination Dots at the top */}
+              <div className="flex justify-center mb-4 space-x-2">
                 {pricingPlans.map((_, index) => (
                   <button
                     key={index}
                     onClick={() => goToSlide(index)}
                     className={`w-2 h-2 rounded-full transition-all ${
-                      currentSlide === index ? "bg-white w-4" : "bg-gray-500"
+                      currentSlide === index ? "bg-white" : "bg-gray-500"
                     }`}
                     aria-label={`Go to slide ${index + 1}`}
                   />
                 ))}
               </div>
+
+              {/* Card Slider with Peek Effect */}
+              <div className="overflow-hidden">
+                <div
+                  ref={cardsContainerRef}
+                  className="flex snap-x snap-mandatory touch-pan-x"
+                  style={{
+                    transform: `translateX(calc(-${currentSlide * 85}% + ${currentSlide > 0 ? "15%" : "0%"}))`,
+                    transition: "transform 0.3s ease-out",
+                    width: "100%",
+                  }}
+                  onTouchStart={onTouchStart}
+                  onTouchMove={onTouchMove}
+                  onTouchEnd={onTouchEnd}
+                  onMouseDown={onMouseDown}
+                  onMouseMove={onMouseMove}
+                  onMouseUp={onMouseUp}
+                  onMouseLeave={onMouseUp}
+                >
+                  {pricingPlans.map((plan, index) => (
+                    <div
+                      key={index}
+                      className={`flex-shrink-0 w-[80%] mx-[1%] snap-center bg-black border border-gray-800 rounded-3xl p-6 flex flex-col ${
+                        currentSlide === index ? "opacity-100" : "opacity-70"
+                      }`}
+                    >
+                      <div className="mb-4">
+                        <h2 className="text-xl font-bold mb-2">{plan.name}</h2>
+                        <div className="flex items-center">
+                          <span className="text-4xl font-bold">
+                            ${billingPeriod === "monthly" ? plan.monthlyPrice : plan.yearlyPrice}
+                          </span>
+                          <span className="ml-2  text-sm text-gray-400">
+                            per editor/month
+                            <br />
+                            billed {billingPeriod}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="space-y-3 flex-grow">
+                        <div className="flex items-start gap-2">
+                          <div className="mt-1 flex-shrink-0 rounded-full bg-[#35F148] p-1">
+                            <Check className="h-3 w-3 text-black" />
+                          </div>
+                          <span className="text-sm">{plan.fastGenerations} Fast generations</span>
+                        </div>
+
+                        {plan.features.map((feature, featureIndex) => (
+                          <div key={featureIndex} className="flex items-start gap-2">
+                            <div className="mt-1 flex-shrink-0 rounded-full bg-[#35F148] p-1">
+                              <Check className="h-3 w-3 text-black" />
+                            </div>
+                            <span className="text-sm font-poppins font-thin mt-1">{feature.text}</span>
+                          </div>
+                        ))}
+                      </div>
+
+                      <button
+                        className={`mt-6 py-3 px-4 rounded-xl text-center text-base w-full bg-gradient-to-b from-[#5AD7FF] to-[#656BF5] text-white`}
+                      >
+                        {plan.isCurrent ? "Current Plan" : "Choose Plan"}
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Swipe Instruction */}
+              <p className="text-center text-sm text-gray-400 mt-4">Swipe left or right to view more plans</p>
             </div>
           )}
         </div>

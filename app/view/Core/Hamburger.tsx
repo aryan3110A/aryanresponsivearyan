@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { ChevronDown, X, Settings, LogOut, Home, Grid, Boxes, FileText, FolderKanban, Bookmark } from "lucide-react";
+import { ChevronDown, X, Settings, LogOut, Home, Grid, Boxes, FileText, FolderKanban, Bookmark } from 'lucide-react';
 import { auth } from "@/database/firebase";
 import { signOut } from "firebase/auth";
 import { getImageUrl } from "@/routes/imageroute";
@@ -16,23 +16,15 @@ import {
   IconBrandInstagram,
 } from "@tabler/icons-react";
 import Link from "next/link";
+import { NAV_ROUTES } from "@/routes/routes";
 
+// Removed unused interface NavbarProps
 
-interface NavbarProps {
-  isOpen: boolean
-  onClose: () => void
-}
-
-interface Profile {
-  name: string
-  credits: number
-  isActive?: boolean
-}
 
 interface NavItem {
   label: string
   href: string
-  icon?: JSX.Element
+  icon?: React.ReactNode
 }
 
 interface SocialLink {
@@ -43,18 +35,13 @@ interface SocialLink {
   glowColor: string
 }
 
-const profiles: Profile[] = [
-  { name: "Name 1", credits: 20, isActive: true },
-  { name: "Name 2", credits: 120 },
-]
-
 const sidebarItems: NavItem[] = [
   { label: "Home", href: "/", icon: <Home className="w-6 h-6" /> },
   { label: "Apps", href: "/apps", icon: <Grid className="w-5 h-5" /> },
   { label: "Models", href: "/models", icon: <Boxes className="w-5 h-5" /> },
   {
     label: "Templates",
-    href: "/templates",
+    href: NAV_ROUTES.TEMPLATES,
     icon: <FileText className="w-6 h-6" />,
   },
   {
@@ -64,7 +51,7 @@ const sidebarItems: NavItem[] = [
   },
   {
     label: "Bookmark",
-    href: "/Booksmarks",
+    href: NAV_ROUTES.BOOKMARK,
     icon: <Bookmark className="w-6 h-6" />,
   },
 ]
@@ -72,8 +59,8 @@ const sidebarItems: NavItem[] = [
 const plansetting: NavItem[] = [
   {
     label: "Plans",
-    href: "/subscription-toggle",
-    icon: <Image src={getImageUrl("core", "diamond")} alt="User" width={20} height={20} className="" />,
+    href: NAV_ROUTES.PRICING,
+    icon: <Image src={getImageUrl("core", "diamond") || "/placeholder.svg"} alt="User" width={20} height={20} className="" />,
   },
   {
     label: "Settings",
@@ -113,16 +100,15 @@ const socialLinks: SocialLink[] = [
   },
 ]
 
-
-
 export default function Hamburger({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const [showCloseButton] = useState(true);
+  const [showCloseButton, setShowCloseButton] = useState(true);
+  // Removed unused state variable activeItem
+  
   const [username, setUsername] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
-
 
   const handleSettingsClick = () => {
     setIsSettingsOpen(!isSettingsOpen)
@@ -171,7 +157,6 @@ export default function Hamburger({ isOpen, onClose }: { isOpen: boolean; onClos
       scrollContainer.removeEventListener("scroll", handleScroll)
     }
   }, [])
-
 
   useEffect(() => {
     const storedUsername = localStorage.getItem("username");
@@ -226,7 +211,7 @@ export default function Hamburger({ isOpen, onClose }: { isOpen: boolean; onClos
                 className="w-full flex items-center justify-between p-3 rounded-lg bg-[#252525] hover:bg-gray-800 transition-colors"
               >
                 <div className="flex items-center gap-3 ml-[2%]">
-                  <Image src={getImageUrl("core", "profile")} alt="User" width={32} height={32} className="rounded-full object-cover" />
+                  <Image src={getImageUrl("core", "profile") || "/placeholder.svg"} alt="User" width={32} height={32} className="rounded-full object-cover" />
                   <span>Profile</span>
                 </div>
                 <ChevronDown className={`w-6 h-6 transition-transform ${isProfileOpen ? "rotate-180" : ""}`} />
@@ -238,7 +223,7 @@ export default function Hamburger({ isOpen, onClose }: { isOpen: boolean; onClos
                   <div className="p-2">
                     <div className="flex items-center gap-3 p-2 rounded-lg bg-[#1e1e1e]">
                       <Image
-                        src={getImageUrl("core", "profile")}
+                        src={getImageUrl("core", "profile") || "/placeholder.svg"}
                         alt="User"
                         width={32}
                         height={32}
@@ -250,7 +235,7 @@ export default function Hamburger({ isOpen, onClose }: { isOpen: boolean; onClos
                           <div className="w-2 h-2 rounded-full bg-blue-500" />
                         </div>
                         <div className="flex items-center gap-1 text-sm text-gray-400">
-                          <Image src={getImageUrl("core", "coins")} alt="coins" width={16} height={16} />
+                          <Image src={getImageUrl("core", "coins") || "/placeholder.svg"} alt="coins" width={16} height={16} />
                           <div className="bg-gray-800 rounded px-1 text-xs">20</div>
                         </div>
                       </div>
@@ -259,7 +244,7 @@ export default function Hamburger({ isOpen, onClose }: { isOpen: boolean; onClos
                     <div className="border-t border-gray-800 my-2" />
 
                     <button
-                      onClick={() => setIsSettingsOpen(true)}
+                      onClick={handleSettingsClick}
                       className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-blue-500/20 transition-colors"
                     >
                       <Settings className="w-5 h-5" />
@@ -282,14 +267,14 @@ export default function Hamburger({ isOpen, onClose }: { isOpen: boolean; onClos
               {/* "20" Div */}
               <div className="items gap-0">
                 <div className="flex rounded-full py-[1vh] pl-2 w-[6vw] border-2 gap-1 border-[#484848] bg-black text-white text-xs">
-                  <Image src={getImageUrl("core", "coins")} alt="User" width={20} height={20} className="" />
+                  <Image src={getImageUrl("core", "coins") || "/placeholder.svg"} alt="User" width={20} height={20} className="" />
                   <div className="flex items-center gap-3"></div> 20
                 </div>
               </div>
 
               {/* Upgrade Button Overlapping */}
               <button className="flex bg-gradient-to-b from-[#5AD7FF] to-[#656BF5] text-[0.72rem] px-2 py-[1.2vh] rounded-full hover:bg-blue-600 transition-colors -ml-[24%] gap-1">
-                <Image src={getImageUrl("core", "diamond")} alt="User" width={16} height={16} className="" /> Upgrade
+                <Image src={getImageUrl("core", "diamond") || "/placeholder.svg"} alt="User" width={16} height={16} className="" /> Upgrade
               </button>
             </div>
 
@@ -307,7 +292,6 @@ export default function Hamburger({ isOpen, onClose }: { isOpen: boolean; onClos
                   href={item.href}
                   className="flex items-center gap-4 p-3 py-[2.5%] transition-colors pl-[6%] text-white hover:bg-gradient-to-b from-[#5AD7FF] to-[#656BF5]"
                   onClick={() => {
-                    setActiveItem(item.label)
                     onClose()
                     setIsSettingsOpen(false)
                   }}
@@ -329,7 +313,6 @@ export default function Hamburger({ isOpen, onClose }: { isOpen: boolean; onClos
                     key={item.label}
                     className="flex items-center gap-4 p-3 py-[2.5%] transition-colors pl-[6%] text-white hover:bg-gradient-to-b from-[#5AD7FF] to-[#656BF5] text-left"
                     onClick={() => {
-                      setActiveItem(item.label)
                       handleSettingsClick()
                     }}
                   >
@@ -342,7 +325,6 @@ export default function Hamburger({ isOpen, onClose }: { isOpen: boolean; onClos
                     href={item.href}
                     className="flex items-center gap-4 p-3 py-[2.5%] transition-colors pl-[6%] text-white hover:bg-gradient-to-b from-[#5AD7FF] to-[#656BF5]"
                     onClick={() => {
-                      setActiveItem(item.label)
                       onClose()
                       setIsSettingsOpen(false)
                     }}
@@ -359,7 +341,7 @@ export default function Hamburger({ isOpen, onClose }: { isOpen: boolean; onClos
             <div className="flex flex-col items-start">
               {/* Logo */}
               <div className="flex items-center gap-[6%] pb-4 justify-center pl-[2vw]">
-                <Image src={getImageUrl("core", "logo")} alt="WildMind Logo" width={32} height={32} className="" />
+                <Image src={getImageUrl("core", "logo") || "/placeholder.svg"} alt="WildMind Logo" width={32} height={32} className="" />
                 <span className="text-white font-bold text-3xl">WildMind</span>
               </div>
 
@@ -407,7 +389,7 @@ export default function Hamburger({ isOpen, onClose }: { isOpen: boolean; onClos
           {/* Settings UI */}
           <SettingNavigation
             isOpen={isSettingsOpen}
-            onClose={() => setIsSettingsOpen(false)}
+            onClose={handleSettingsClose}
             hamburgerOpen={isOpen}
             profiles={[{ name: username, credits: 20, isActive: true }]}
           />
