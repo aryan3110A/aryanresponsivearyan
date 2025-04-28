@@ -144,6 +144,7 @@ export default function SubscriptionToggle() {
 
   const onTouchMove = (e: React.TouchEvent) => {
     setTouchEnd(e.targetTouches[0].clientX)
+    // Don't prevent default behavior to allow vertical scrolling
   }
 
   const onTouchEnd = () => {
@@ -176,7 +177,7 @@ export default function SubscriptionToggle() {
   const onMouseMove = (e: React.MouseEvent) => {
     if (!isDragging || !cardsContainerRef.current || !(isMobile || isTablet)) return
 
-    e.preventDefault()
+    // Only prevent default for horizontal movement to allow vertical scrolling
     const x = e.pageX - cardsContainerRef.current.offsetLeft
     const walk = (x - startX) * 2 // Scroll speed multiplier
     cardsContainerRef.current.scrollLeft = scrollLeft - walk
@@ -207,7 +208,7 @@ export default function SubscriptionToggle() {
     <>
       <NavigationFull />
 
-      <div className="min-h-screen relative text-white p-4 md:p-10 flex flex-col items-center justify-center overflow-hidden">
+      <div className="min-h-screen relative text-white p-4 md:p-10 flex flex-col items-center justify-center overflow-x-hidden overflow-y-auto">
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-black"></div>
           <Image
@@ -362,10 +363,10 @@ export default function SubscriptionToggle() {
                       <div className="mb-4">
                         <h2 className="text-xl font-bold mb-2">{plan.name}</h2>
                         <div className="flex items-center">
-                          <span className="text-4xl font-bold">
+                          <span className="text-3xl font-bold">
                             ${billingPeriod === "monthly" ? plan.monthlyPrice : plan.yearlyPrice}
                           </span>
-                          <span className="ml-2  text-sm text-gray-400">
+                          <span className="ml-1  text-xs text-gray-400">
                             per editor/month
                             <br />
                             billed {billingPeriod}
