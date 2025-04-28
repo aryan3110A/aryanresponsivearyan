@@ -4,13 +4,13 @@ import type React from "react";
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUserCheck } from "@fortawesome/free-solid-svg-icons"; // Use the free solid version
+import { faUserCheck } from "@fortawesome/free-solid-svg-icons";
 import { getImageUrl } from "@/routes/imageroute";
 
 interface SettingsProps {
   isOpen: boolean;
   onClose: () => void;
-  hamburgerOpen: boolean; // Add this prop to track hamburger state
+  hamburgerOpen: boolean;
   profiles: { name: string; credits: number; isActive?: boolean }[];
 }
 
@@ -28,6 +28,18 @@ const SettingNavigation: React.FC<SettingsProps> = ({
   const [isAgeConfirmed, setIsAgeConfirmed] = useState(false);
   const [showAgeError, setShowAgeError] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [isMobileOrTablet, setIsMobileOrTablet] = useState(false);
+
+  // Check for mobile or tablet viewport
+  useEffect(() => {
+    const checkDevice = () => {
+      setIsMobileOrTablet(window.innerWidth < 1080); // Based on your sm-laptop breakpoint
+    };
+    
+    checkDevice();
+    window.addEventListener('resize', checkDevice);
+    return () => window.removeEventListener('resize', checkDevice);
+  }, []);
 
   // Close settings when hamburger closes
   useEffect(() => {
@@ -45,7 +57,6 @@ const SettingNavigation: React.FC<SettingsProps> = ({
     if (storedEmail) setEmail(storedEmail);
   }, []);
   
-
   // Hide success message after 3 seconds
   useEffect(() => {
     if (showSuccessMessage) {
@@ -58,25 +69,44 @@ const SettingNavigation: React.FC<SettingsProps> = ({
 
   if (!isOpen) return null;
 
+  // Mobile/tablet specific styles
+  const mobileStyles = isMobileOrTablet ? {
+    left: "0",
+    width: "150%",
+    height: "100%",
+    zIndex: "100"
+  } : {
+    left: "280px",
+    width: "calc(100vw - 250px)"
+  };
+
   return (
     <div
-      className="font-poppins fixed top-0 right-0 h-full  bg-[#111111] border-l border-gray-800 z-50 transform transition-all duration-300 ease-in-out"
-      style={{
-        left: "280px", // Match the width of hamburger menu exactly
-        width: "calc(100vw - 250px)", // Take up remaining screen width
-      }}
+      className="font-poppins fixed top-0 right-0 h-full bg-[#111111] border-l border-gray-800 z-50 transform transition-all duration-300 ease-in-out overflow-y-auto"
+      style={mobileStyles}
     >
-      {/* Content area */}
-      <div className="p-8 overflow-y-auto h-full">
-        <div className="max-w-3xl ml-2">
-          {/* Close Button */}
+      {/* Close button for mobile */}
+      {isMobileOrTablet && (
+        <button 
+          onClick={onClose}
+          className="absolute top-4 right-4 text-white p-2"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      )}
 
-          <div className="text-[3.5rem] font-bold bg-gradient-to-b from-[#5AD7FF] to-[#656BF5] bg-clip-text text-transparent mt-[4vh] mb-8">
+      {/* Content area */}
+      <div className={`pl-2 pr-4 md:p-8 overflow-y-auto h-full ${isMobileOrTablet ? 'pt-2' : ''}`}>
+        <div className={`${isMobileOrTablet ? 'max-w-full' : 'max-w-3xl'} ml-2`}>
+          <div className="text-[1.5rem] md:text-[3.5rem] font-bold bg-gradient-to-b from-[#5AD7FF] to-[#656BF5] bg-clip-text text-transparent mt-[4vh] mb-0 md:mb-8">
             Settings
           </div>
 
           {/* Tab navigation */}
-          <div className="mb-8">
+          <div className="mb-2   md:mb-8">
             <div className="flex space-x-10 border-b border-gray-800 pb-3">
               <button
                 onClick={() => setActiveTab("Profile")}
@@ -105,22 +135,21 @@ const SettingNavigation: React.FC<SettingsProps> = ({
           {activeTab === "Profile" && (
             <div className="">
               <div className="mb-4">
-                <h3 className="text-lg mb-1">Your email</h3>
-                <p className="text-[#757575] mb-2 text-md">
+                <h3 className="text-md md:text-lg mb-0">Your email</h3>
+                <p className="text-[#757575] mb-0 md:mb-2 text-sm md:text-md">
                   This cannot be changed.
                 </p>
                 <input
-              type="email"
-  value={email}
-  disabled
-  className="w-[40vw] bg-[#111111] border border-gray-700 rounded-lg p-3 text-gray-300"
-/>
-
+                  type="email"
+                  value={email}
+                  disabled
+                  className={`${isMobileOrTablet ? 'w-full' : 'w-[40vw]'} bg-[#111111] border border-gray-700 rounded-lg p-2 md:p-3 text-gray-300`}
+                />
               </div>
 
               <div className="mb-6">
-                <h3 className="text-lg mb-1">Your username</h3>
-                <p className="text-[#757575] mb-2 tetx-md">
+                <h3 className="text-md md:text-lg mb-1">Your username</h3>
+                <p className="text-[#757575]  mb-1 md:mb-2 text-sm md:text-md">
                   Automatically saves as you change it to a valid username.
                 </p>
                 <div className="relative">
@@ -135,7 +164,7 @@ const SettingNavigation: React.FC<SettingsProps> = ({
                       setUsername(e.target.value);
                       if (showUsernameError) setShowUsernameError(false);
                     }}
-                    className="w-[40vw] bg-[#111111]  border border-gray-700 rounded-lg py-3 pl-8 text-gray-300 focus:outline-none"
+                    className={`${isMobileOrTablet ? 'w-full' : 'w-[40vw]'} bg-[#111111] border border-gray-700 rounded-lg p-2 md:p-3 pl-8 text-gray-300 focus:outline-none`}
                   />
                 </div>
                 {showUsernameError && (
@@ -146,9 +175,9 @@ const SettingNavigation: React.FC<SettingsProps> = ({
                 )}
               </div>
 
-              <div className="flex items-center space-x-4 cursor-pointer   pl-2">
+              <div className="flex items-center space-x-4 cursor-pointer pl-2">
                 <label className="flex items-center space-x-4 cursor-pointer">
-                  <div className="relative">
+                  <div className="relative -mt-6 md:mt-0">
                     <input
                       type="checkbox"
                       className="sr-only peer"
@@ -162,11 +191,11 @@ const SettingNavigation: React.FC<SettingsProps> = ({
                     <div className="dot absolute left-1 top-1 bg-white w-5 h-5 rounded-full transition-all duration-300 peer-checked:left-10"></div>
                   </div>
                   <div className="pl-2">
-                    <h3 className="text-md">
+                    <h3 className="text-xs md:text-md">
                       I confirm that I am over 18 and want to show explicit
                       content by default
                     </h3>
-                    <p className="text-gray-400 text-md">
+                    <p className="text-gray-400 text-xs md:text-md">
                       Automatically saves on toggle.
                     </p>
                   </div>
@@ -194,15 +223,14 @@ const SettingNavigation: React.FC<SettingsProps> = ({
 
                   // Only proceed if both conditions are met
                   if (!hasError) {
-                    // Add your save logic here
+                    // Save to local storage
+                    localStorage.setItem("username", username);
                     console.log("Changes saved successfully");
-                    // Reset username field
-                    setUsername("");
                     // Show success message
                     setShowSuccessMessage(true);
                   }
                 }}
-                className={`mt-4 flex w-[15vw] items-center justify-center gap-2 py-3 rounded-lg border transition-all group hover:bg-black
+                className={`mt-4 flex ${isMobileOrTablet ? 'w-full' : 'w-[15vw]'} items-center justify-center gap-2 py-3 rounded-lg border transition-all group hover:bg-black
 ${
   isValid && isAgeConfirmed
     ? "bg-black text-blue-500 border-gray-600"
@@ -218,13 +246,13 @@ ${isValid && isAgeConfirmed ? "hover:bg-black hover:border-gray-700" : ""}`}
                       : "text-[#757575]"
                   } group-hover:text-blue-500`}
                 />
-                <span className="transition-all  group-hover:text-blue-500 ">
+                <span className="transition-all group-hover:text-blue-500">
                   Save Changes
                 </span>
               </button>
               {/* Success message */}
               {showSuccessMessage && (
-                <div className="bg-green-900/3 text-green-400  py-2  ">
+                <div className="bg-green-900/3 text-green-400 py-2 mt-2">
                   Changes saved successfully!
                 </div>
               )}
@@ -234,29 +262,29 @@ ${isValid && isAgeConfirmed ? "hover:bg-black hover:border-gray-700" : ""}`}
           {activeTab === "Account management" && (
             <div className="space-y-8">
               <div>
-                <h3 className="text-lg mb-1">Plans & Billing</h3>
-                <p className="text-[#757575] mb-4 text-md">
+                <h3 className="text-md md:text-lg mb-1">Plans & Billing</h3>
+                <p className="text-[#757575] mb-4 text-sm md:text-md">
                   Keep track of your subscription details, update your plans &
                   billing information, and control account &apos;s payment.
                 </p>
 
-                <div className="flex items-center justify-between border border-[#2D2D2D]   bg-[#171717]  rounded-full w-[70%]">
-                  <div className="flex ">
-                    <div className="px-4 py-3">Current plan: Basic</div>
-                    <div className="h-8 w-[2px] mt-2 bg-gray-500"></div>
-
-                    <div className="flex items-center px-2 py-3  rounded-lg">
+                <div className={`flex items-center justify-between border border-[#2D2D2D] bg-[#171717] rounded-full ${isMobileOrTablet ? 'w-full flex-row p-0' : 'w-[70%]'}`}>
+                  <div className={`flex ${isMobileOrTablet ? 'flex-row w-full items-center mb-0' : ''}`}>
+                    <div className="px-4 py-3 text-xs lg:text-[1rem] ">Current plan: Basic</div>
+                     <div className="h-8 w-[2px] md:text-md mt-1 bg-gray-500"></div>
+                    
+                    <div className={`flex items-center px-2 py-3 rounded-lg text-xs md:text-[1rem] ${isMobileOrTablet ? 'mt-2' : ''}`}>
                       <Image
                         src={getImageUrl('core','coins')}
                         alt="Credits"
                         width={16}
                         height={16}
-                        className="mr-2"
+                        className="mr-2"  
                       />
                       Available credits: 20
                     </div>
                   </div>
-                  <button className="flex items-center  gap-2 bg-gradient-to-b from-[#5AD7FF] to-[#656BF5] px-6 py-3 rounded-full text-white">
+                  <button className="mobile:hidden  md:flex items-center gap-2 bg-gradient-to-b from-[#5AD7FF] to-[#656BF5] px-6 py-3 rounded-full text-white">
                     <Image
                       src={getImageUrl('core','diamond')}
                       alt="Upgrade"
@@ -266,11 +294,23 @@ ${isValid && isAgeConfirmed ? "hover:bg-black hover:border-gray-700" : ""}`}
                     Upgrade
                   </button>
                 </div>
+
+                <button className=" md:hidden ml-1 mobile:flex items-center gap-2 bg-gradient-to-b from-[#5AD7FF] to-[#656BF5] px-4 py-2 rounded-full text-white mt-2">
+                    <Image
+                      src={getImageUrl('core','diamond')}
+                      alt="Upgrade"
+                      width={16}
+                      height={16}
+                    />
+                    Upgrade
+                  </button>
+
+
               </div>
 
               <div>
-                <h3 className="text-lg mb-1">Delete Account</h3>
-                <p className="text-[#757575] mb-4 text-md">
+                <h3 className="text-md md:text-lg mb-1">Delete Account</h3>
+                <p className="text-[#757575] mb-4 text-sm md:text-md">
                   Deleting your account will remove all of your information from
                   our database. This cannot be undone.
                 </p>

@@ -337,7 +337,7 @@ export default function Hamburger({ isOpen, onClose }: { isOpen: boolean; onClos
             </div>
 
             {/* WildMind Footer - Fixed at bottom */}
-          <div className="bg-[#171717] p-[5%] font-poppins border-t border-gray-800">
+          <div className="bg-[#171717] p-[5%] font-poppins border-t border-gray-800 ">
             <div className="flex flex-col items-start">
               {/* Logo */}
               <div className="flex items-center gap-[6%] pb-4 justify-center pl-[2vw]">
