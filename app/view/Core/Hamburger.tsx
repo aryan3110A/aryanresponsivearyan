@@ -337,7 +337,7 @@ export default function Hamburger({ isOpen, onClose }: { isOpen: boolean; onClos
             </div>
 
             {/* WildMind Footer - Fixed at bottom */}
-          <div className="bg-[#171717] p-[5%] font-poppins border-t border-gray-800 ">
+          <div className="bg-[#171717] p-[2%] font-poppins border-t border-gray-800 pt-10">
             <div className="flex flex-col items-start">
               {/* Logo */}
               <div className="flex items-center gap-[6%] pb-4 justify-center pl-[2vw]">
@@ -346,7 +346,7 @@ export default function Hamburger({ isOpen, onClose }: { isOpen: boolean; onClos
               </div>
 
               {/* Tagline */}
-              <p className="flex items-center justify-center -mt-[2vh] text-xs text-gray-400 mb-[5%]">
+              <p className="flex items-center justify-center -mt-[1vh] text-xs text-gray-400 mb-[5%]">
                 We growing up your business with personal AI manager
               </p>
 
@@ -355,10 +355,10 @@ export default function Hamburger({ isOpen, onClose }: { isOpen: boolean; onClos
                 <a href="#" className="hover:text-gray-300 flex-nowrap">
                   Terms of uses
                 </a>
-                <a href="#" className="hover:text-gray-300 flex-nowrap ml-[1.2vw]">
+                <a href="#" className="hover:text-gray-300 flex-nowrap ml-[0.6vw]">
                   Privacy Policy
                 </a>
-                <a href="#" className="hover:text-gray-300 flex-nowrap ml-[1.4vw]">
+                <a href="#" className="hover:text-gray-300 flex-nowrap ml-[1vw]">
                   DMCA
                 </a>
               </div>
