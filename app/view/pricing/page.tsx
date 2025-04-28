@@ -344,7 +344,7 @@ export default function SubscriptionToggle() {
                   ref={cardsContainerRef}
                   className="flex snap-x snap-mandatory touch-pan-x touch-action-pan-y"
                   style={{
-                    transform: `translateX(calc(-${currentSlide * 85}% + ${currentSlide > 0 ? "15%" : "0%"}))`,
+                    transform: `translateX(calc(-${currentSlide * 95}% + ${currentSlide > 0 ? "10%" : "0%"}))`,
                     transition: "transform 0.3s ease-out",
                     width: "100%",
                     touchAction: "pan-y" /* This allows vertical scrolling */,
@@ -360,7 +360,7 @@ export default function SubscriptionToggle() {
                   {pricingPlans.map((plan, index) => (
                     <div
                       key={index}
-                      className={`flex-shrink-0 w-[80%] mx-[1%] snap-center bg-black border border-gray-800 rounded-3xl p-6 flex flex-col ${
+                      className={`flex-shrink-0 w-[90%] mx-[1%] snap-center bg-black border border-gray-800 rounded-3xl p-6 flex flex-col ${
                         currentSlide === index ? "opacity-100" : "opacity-70"
                       }`}
                     >
