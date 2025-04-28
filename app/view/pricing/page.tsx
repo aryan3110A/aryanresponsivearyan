@@ -136,15 +136,17 @@ export default function SubscriptionToggle() {
     }
   }, [animateToggle])
 
-  // Touch event handlers for swipe functionality
+  // Touch event handlers that allow vertical scrolling
   const onTouchStart = (e: React.TouchEvent) => {
+    // Store both X and Y coordinates
     setTouchEnd(null)
     setTouchStart(e.targetTouches[0].clientX)
+    // Don't prevent default to allow vertical scrolling
   }
 
   const onTouchMove = (e: React.TouchEvent) => {
     setTouchEnd(e.targetTouches[0].clientX)
-    // Don't prevent default behavior to allow vertical scrolling
+    // Don't prevent default to allow vertical scrolling
   }
 
   const onTouchEnd = () => {
@@ -165,19 +167,20 @@ export default function SubscriptionToggle() {
     }
   }
 
-  // Mouse drag handlers for desktop
+  // Mouse drag handlers that allow vertical scrolling
   const onMouseDown = (e: React.MouseEvent) => {
     if (!cardsContainerRef.current || !(isMobile || isTablet)) return
 
     setIsDragging(true)
     setStartX(e.pageX - cardsContainerRef.current.offsetLeft)
     setScrollLeft(cardsContainerRef.current.scrollLeft)
+    // Don't prevent default to allow vertical scrolling
   }
 
   const onMouseMove = (e: React.MouseEvent) => {
     if (!isDragging || !cardsContainerRef.current || !(isMobile || isTablet)) return
 
-    // Only prevent default for horizontal movement to allow vertical scrolling
+    // Don't prevent default here to allow vertical scrolling
     const x = e.pageX - cardsContainerRef.current.offsetLeft
     const walk = (x - startX) * 2 // Scroll speed multiplier
     cardsContainerRef.current.scrollLeft = scrollLeft - walk
@@ -339,11 +342,12 @@ export default function SubscriptionToggle() {
               <div className="overflow-hidden">
                 <div
                   ref={cardsContainerRef}
-                  className="flex snap-x snap-mandatory touch-pan-x"
+                  className="flex snap-x snap-mandatory touch-pan-x touch-action-pan-y"
                   style={{
                     transform: `translateX(calc(-${currentSlide * 85}% + ${currentSlide > 0 ? "15%" : "0%"}))`,
                     transition: "transform 0.3s ease-out",
                     width: "100%",
+                    touchAction: "pan-y" /* This allows vertical scrolling */,
                   }}
                   onTouchStart={onTouchStart}
                   onTouchMove={onTouchMove}
@@ -363,10 +367,10 @@ export default function SubscriptionToggle() {
                       <div className="mb-4">
                         <h2 className="text-xl font-bold mb-2">{plan.name}</h2>
                         <div className="flex items-center">
-                          <span className="text-3xl font-bold">
+                          <span className="text-4xl font-bold">
                             ${billingPeriod === "monthly" ? plan.monthlyPrice : plan.yearlyPrice}
                           </span>
-                          <span className="ml-1  text-xs text-gray-400">
+                          <span className="ml-2  text-sm text-gray-400">
                             per editor/month
                             <br />
                             billed {billingPeriod}
