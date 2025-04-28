@@ -102,7 +102,6 @@ export default function SubscriptionToggle() {
   // Swipe threshold (in px)
   const minSwipeDistance = 50
 
-  const sliderRef = useRef<HTMLDivElement>(null)
   const cardsContainerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
