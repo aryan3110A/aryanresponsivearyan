@@ -2,14 +2,17 @@
 
 import { useEffect, useState } from "react"
 import Image from "next/image"
-import Link from "next/link"
 import { format } from "date-fns"
 import NavigationFull from "../Core/NavigationFull"
 import { BookmarkedImage, bookmarkStore, groupBookmarksByDate } from "../../utils/bookmarkUtils"
+import { useRouter } from "next/navigation"
+import { NAV_ROUTES } from "@/routes/routes"
+
 
 export default function Bookmark() {
   const [dateGroups, setDateGroups] = useState<{ date: Date; images: BookmarkedImage[] }[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const router=useRouter();
   
   useEffect(() => {
     // Load bookmarks
@@ -32,6 +35,7 @@ export default function Bookmark() {
   
   return (
     <>
+
     <NavigationFull />
     <div className="min-h-screen bg-black text-white p-4 md:p-6">
       <div className="max-w-7xl mx-auto mt-16 md:mt-20">
@@ -71,12 +75,12 @@ export default function Bookmark() {
         ) : (
           <div className="text-center py-16">
             <p className="text-xl text-gray-400">No bookmarks yet</p>
-            <Link
-              href="/art-station"
-              className="inline-block mt-4 px-6 py-3 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors"
+            <button
+             onClick={() => router.push(NAV_ROUTES.ART_STATION)}
+             className="inline-block mt-4 px-6 py-3 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors"
             >
               Explore ArtStation
-            </Link>
+            </button>
           </div>
         )}
         

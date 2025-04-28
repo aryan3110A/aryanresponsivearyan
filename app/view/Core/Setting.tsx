@@ -159,16 +159,17 @@ const SettingNavigation: React.FC<SettingsProps> = ({
                   <input
                     type="text"
                     placeholder="Username"
+                    
                     value={username}
                     onChange={(e) => {
                       setUsername(e.target.value);
                       if (showUsernameError) setShowUsernameError(false);
                     }}
-                    className={`${isMobileOrTablet ? 'w-full' : 'w-[40vw]'} bg-[#111111] border border-gray-700 rounded-lg p-2 md:p-3 pl-8 text-gray-300 focus:outline-none`}
+                    className={`${isMobileOrTablet ? 'w-full' : 'w-[40vw]'} bg-[#111111] border border-gray-700 rounded-lg p-2 md:p-3 pl-8 md:pl-8  text-gray-300 focus:outline-none`}
                   />
                 </div>
                 {showUsernameError && (
-                  <p className="text-red-500 mt-2">
+                  <p className="text-xs md:text-md text-red-500 mt-2">
                     Username must start with a letter and must have atleast
                     three characters.
                   </p>
@@ -203,7 +204,7 @@ const SettingNavigation: React.FC<SettingsProps> = ({
               </div>
               {/* Moved error message below the toggle div */}
               {showAgeError && (
-                <p className="text-red-500 mt-2 ml-2">
+                <p className="text-xs md:text-md text-red-500 mt-2 ml-2">
                   You must confirm you are over 18 to save changes.
                 </p>
               )}
@@ -270,10 +271,10 @@ ${isValid && isAgeConfirmed ? "hover:bg-black hover:border-gray-700" : ""}`}
 
                 <div className={`flex items-center justify-between border border-[#2D2D2D] bg-[#171717] rounded-full ${isMobileOrTablet ? 'w-full flex-row p-0' : 'w-[70%]'}`}>
                   <div className={`flex ${isMobileOrTablet ? 'flex-row w-full items-center mb-0' : ''}`}>
-                    <div className="px-4 py-3 text-xs lg:text-[1rem] ">Current plan: Basic</div>
-                     <div className="h-8 w-[2px] md:text-md mt-1 bg-gray-500"></div>
+                    <div className="px-4 py-3 text-xs md:text-[0.9rem] ">Current plan: Basic</div>
+                     <div className="h-6 md:h-8 w-[2px] md:text-md mt-0 md:mt-1 bg-gray-500"></div>
                     
-                    <div className={`flex items-center px-2 py-3 rounded-lg text-xs md:text-[1rem] ${isMobileOrTablet ? 'mt-2' : ''}`}>
+                    <div className={`flex items-center px-4 py-3 rounded-lg text-xs md:text-[0.9rem] ${isMobileOrTablet ? 'mt-0' : ''}`}>
                       <Image
                         src={getImageUrl('core','coins')}
                         alt="Credits"
@@ -295,7 +296,7 @@ ${isValid && isAgeConfirmed ? "hover:bg-black hover:border-gray-700" : ""}`}
                   </button>
                 </div>
 
-                <button className=" md:hidden ml-1 mobile:flex items-center gap-2 bg-gradient-to-b from-[#5AD7FF] to-[#656BF5] px-4 py-2 rounded-full text-white mt-2">
+                <button className=" md:hidden ml-1 text-sm mobile:flex items-center gap-2 bg-gradient-to-b from-[#5AD7FF] to-[#656BF5] px-4 py-2 rounded-full text-white mt-2">
                     <Image
                       src={getImageUrl('core','diamond')}
                       alt="Upgrade"

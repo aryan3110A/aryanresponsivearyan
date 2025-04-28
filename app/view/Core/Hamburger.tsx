@@ -266,14 +266,14 @@ export default function Hamburger({ isOpen, onClose }: { isOpen: boolean; onClos
             <div className="flex items-center mt-[6%] bg-gray-900/50 rounded-lg pl-[16%] lg:gap-0 md:gap-6">
               {/* "20" Div */}
               <div className="items gap-0">
-                <div className="flex rounded-full py-[1vh] pl-2 w-[6vw] border-2 gap-1 border-[#484848] bg-black text-white text-xs">
+                <div className="flex rounded-full py-[0.9vh] md:py-[1vh] pl-2 w-[24vw] md:w-[6vw] border-2 gap-1 border-[#484848] bg-black text-white text-xs">
                   <Image src={getImageUrl("core", "coins") || "/placeholder.svg"} alt="User" width={20} height={20} className="" />
                   <div className="flex items-center gap-3"></div> 20
                 </div>
               </div>
 
               {/* Upgrade Button Overlapping */}
-              <button className="flex bg-gradient-to-b from-[#5AD7FF] to-[#656BF5] text-[0.72rem] px-2 py-[1.2vh] rounded-full hover:bg-blue-600 transition-colors -ml-[24%] gap-1">
+              <button className="flex bg-gradient-to-b from-[#5AD7FF] to-[#656BF5] text-[0.72rem] px-3 py-[1vh] md:py-[1.2vh] rounded-full hover:bg-blue-600 transition-colors -ml-[12%] md:-ml-[24%] gap-1">
                 <Image src={getImageUrl("core", "diamond") || "/placeholder.svg"} alt="User" width={16} height={16} className="" /> Upgrade
               </button>
             </div>

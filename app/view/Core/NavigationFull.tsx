@@ -197,7 +197,7 @@ export default function NavigationFull() {
         {activeDropdown && (
           <div className="left-0 right-0 overflow-hidden transition-all duration-1000 z-10" style={{ ...backgroundStyle, maxHeight: activeDropdown ? "50vh" : "0", opacity: animating ? 0 : 1 }}>
             <div className="container py-2">
-              <div className="flex flex-col sm:ml-[31.4vw] md:ml-[35.5vw] lg:ml-[37.3vw]">
+              <div className="flex flex-col sm:ml-[31.4vw] md:ml-[36.5vw] lg:ml-[37.3vw]">
                 <h3 className="text-lg font-bold mb-[2vh]">CREATE</h3>
                 <div className="flex flex-col space-y-[1.5vh]">
                   {(activeDropdown === "features" ? featuresDropdownItems : templatesDropdownItems).map((item, index) => (
