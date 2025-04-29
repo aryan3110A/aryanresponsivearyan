@@ -174,11 +174,16 @@ export default function CategorySections() {
   const touchStartX = useRef<Record<string, number>>({})
   const touchEndX = useRef<Record<string, number>>({})
   const isMobile = useRef<boolean>(false)
+  const isTablet = useRef<boolean>(false)
+  const isMediumScreen = useRef<boolean>(false)
 
-  // Check if device is mobile or tablet
+  // Check if device is mobile, tablet, or medium-sized screen
   useEffect(() => {
     const checkDevice = () => {
-      isMobile.current = window.innerWidth < 1024
+      const width = window.innerWidth
+      isMobile.current = width < 768
+      isTablet.current = width >= 768 && width < 1024
+      isMediumScreen.current = width >= 1024 && width < 1280
     }
 
     checkDevice()
@@ -230,7 +235,7 @@ export default function CategorySections() {
       {categorySections.map((section) => (
         <div
           key={section.id}
-          className="macbook:max-w-[1100px] md:max-w-[1200px] md:min-w-[1000px] lg:max-w-[1600px] mb-8 md:mb-20    md:px-10 lg:px-12"
+          className="macbook:max-w-[1100px] md:max-w-[1200px] md:min-w-[1000px] lg:max-w-[1600px] mb-8 md:mb-20 md:px-10 lg:px-12"
         >
           <div className="flex flex-col md:flex-row items-start gap-8 pl-4 md:pl-10">
             <div className="flex flex-col items-start -mb-4 md:mb-4 w-full md:w-64 flex-shrink-0">
@@ -254,7 +259,7 @@ export default function CategorySections() {
                 >
                   {section.articles.map((article, index) => (
                     <div key={index} className="w-[300px] flex-shrink-0 font-poppins">
-                      <h3 className="text-sm md:text-lg  font-semibold h-14 md:h-[6rem]  line-clamp-3 overflow-hidden font-poppins mb-0">
+                      <h3 className="text-sm md:text-lg font-semibold h-14 md:h-[6rem] line-clamp-3 overflow-hidden font-poppins mb-0">
                         {article.title}
                       </h3>
                       <Image
@@ -270,11 +275,11 @@ export default function CategorySections() {
                 </div>
               </div>
 
-              {/* Navigation arrows - only visible on desktop */}
-              {scrollPositions[section.id as SectionId] > 0 && !isMobile.current && (
+              {/* Navigation arrows - now visible on medium and large screens */}
+              {scrollPositions[section.id as SectionId] > 0 && !(isMobile.current || isTablet.current) && (
                 <button
                   onClick={() => scrollLeft(section.id as SectionId)}
-                  className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-2 text-black z-10 shadow-lg hidden lg:block"
+                  className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-2 text-black z-10 shadow-lg hidden md:block"
                   aria-label="Scroll left"
                 >
                   <ChevronLeft size="1.5rem" />
@@ -283,10 +288,10 @@ export default function CategorySections() {
 
               {section.articles.length > 3 &&
                 scrollPositions[section.id as SectionId] < section.articles.length - 3 &&
-                !isMobile.current && (
+                !(isMobile.current || isTablet.current) && (
                   <button
                     onClick={() => scrollRight(section.id as SectionId, section.articles.length)}
-                    className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-2 text-black z-10 shadow-lg hidden lg:block"
+                    className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-2 text-black z-10 shadow-lg hidden md:block"
                     aria-label="Scroll right"
                   >
                     <ChevronRight size="1.5rem" />

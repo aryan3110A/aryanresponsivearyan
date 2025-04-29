@@ -51,11 +51,16 @@ export default function FeaturedArticles() {
   const touchStartX = useRef<number>(0)
   const touchEndX = useRef<number>(0)
   const isMobile = useRef<boolean>(false)
+  const isTablet = useRef<boolean>(false)
+  const isMediumScreen = useRef<boolean>(false)
 
-  // Check if device is mobile or tablet
+  // Check if device is mobile, tablet, or medium-sized screen
   useEffect(() => {
     const checkDevice = () => {
-      isMobile.current = window.innerWidth < 1024
+      const width = window.innerWidth
+      isMobile.current = width < 768
+      isTablet.current = width >= 768 && width < 1024
+      isMediumScreen.current = width >= 1024 && width < 1280
     }
 
     checkDevice()
@@ -108,7 +113,7 @@ export default function FeaturedArticles() {
     <div
       className="relative w-full h-[400px] md:h-[600px] mobile:mb-0 md:mb-60"
       style={{
-        backgroundImage: isMobile.current ? "none" : `url('/Blog/background.png')`,
+        backgroundImage: isMobile.current || isTablet.current ? "none" : `url('/Blog/background.png')`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
@@ -159,7 +164,9 @@ export default function FeaturedArticles() {
                             <span className="text-blue-400 uppercase text-sm font-semibold">{article.author}</span>
                             <span className="text-blue-400 uppercase text-sm font-semibold">{article.authorTag}</span>
                           </div>
-                          <h3 className="text-sm md:text-3xl font-thin md:font-bold mb-2 font-poppins">{article.title}</h3>
+                          <h3 className="text-sm md:text-3xl font-thin md:font-bold mb-2 font-poppins">
+                            {article.title}
+                          </h3>
                           <p className="mobile:hidden text-gray-300 text-sm font-poppins">{article.content}</p>
                         </div>
                       </div>
@@ -170,21 +177,21 @@ export default function FeaturedArticles() {
             </div>
           </div>
 
-          {/* Navigation buttons - only visible on desktop */}
-          {currentSlide > 0 && !isMobile.current && (
+          {/* Navigation buttons - now visible on medium and large screens */}
+          {currentSlide > 0 && !(isMobile.current || isTablet.current) && (
             <button
               onClick={prevSlide}
-              className="absolute left-4 top-[40%] transform -translate-y-1/2 bg-white rounded-full p-4 text-black z-10 hidden lg:block"
+              className="absolute left-4 top-[40%] transform -translate-y-1/2 bg-white rounded-full p-4 text-black z-10 hidden md:block"
               aria-label="Previous slide"
             >
               <ChevronLeft size="2rem" />
             </button>
           )}
 
-          {currentSlide < featuredArticles.length - 1 && !isMobile.current && (
+          {currentSlide < featuredArticles.length - 1 && !(isMobile.current || isTablet.current) && (
             <button
               onClick={nextSlide}
-              className="absolute right-4 top-[40%] transform -translate-y-1/2 bg-white rounded-full p-4 text-black z-10 hidden lg:block"
+              className="absolute right-4 top-[40%] transform -translate-y-1/2 bg-white rounded-full p-4 text-black z-10 hidden md:block"
               aria-label="Next slide"
             >
               <ChevronRight size="2rem" />
