@@ -120,7 +120,7 @@ export default function FeaturedArticles() {
       }}
     >
       <div
-        className="mobile:hidden absolute inset-0 opacity-20 font-poppins hidden lg:block"
+        className="mobile:hidden absolute inset-0 opacity-20 font-poppins hidden lg:block "
         style={{
           backgroundImage: `linear-gradient(to right, rgba(255, 255, 255, 0.1) 1px, transparent 1px), 
                             linear-gradient(to bottom, rgba(255, 255, 255, 0.1) 1px, transparent 1px)`,
@@ -129,7 +129,7 @@ export default function FeaturedArticles() {
       ></div>
       <div className="lg:max-w-7xl md:max-w-5xl mx-auto px-4 py-10 -mt-32 md:-mt-[60]">
         <div
-          className="w-full max-w-4xl md:bg-black rounded-lg overflow-hidden mx-auto my-auto md:border md:border-gray-800 max-h-[100%] relative"
+          className="w-full max-w-4xl md:bg-black rounded-lg overflow-hidden mx-auto my-auto md:mt-20 md:border md:border-gray-800 max-h-[100%] relative"
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
