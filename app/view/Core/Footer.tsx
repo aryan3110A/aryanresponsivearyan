@@ -38,10 +38,11 @@ interface LegalLink {
 
 const navigationLinks: NavigationLinks = {
   Home: {
+    Plans: NAV_ROUTES.PRICING,
     Features: "",
     Templets: NAV_ROUTES.TEMPLATES,
     "Art station": NAV_ROUTES.ART_STATION,
-    Plans: NAV_ROUTES.PRICING,
+    
   },
   Features: {
     "Text to Image": FEATURE_ROUTES.IMAGE_GENERATION,
