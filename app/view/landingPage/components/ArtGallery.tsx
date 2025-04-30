@@ -2,7 +2,7 @@
 import React from 'react';
 import Image from 'next/image';
 // import { Poppins } from 'next/font/google';
-// // import { SparklesCore } from "../ui/sparkles";
+// import { SparklesCore } from "../ui/sparkles";
 
 // const poppins = Poppins({ 
 //   subsets: ['latin'], 

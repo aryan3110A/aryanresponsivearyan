@@ -45,7 +45,7 @@ export function Testimonials() {
           <div className="grid grid-cols-1 md:grid-cols-3 divide-x divide-gray-800 mb:flex mb:flex-col mb:divide-none">
             {testimonials.map((testimonial, idx) => (
               <div key={idx} className="group text-l p-6 text-white hover:cursor-pointer text-center md:text-left">
-                <p className="mb-4 italic text-[18px] mb:text-[12px]">&quot{testimonial.quote}&quot</p>
+                <p className="mb-4 italic text-[18px] mb:text-[12px]">&quot;{testimonial.quote}&quot;</p>
                 
                 {/* User Info */}
                 <div className="flex items-center justify-center md:justify-start gap-2">
