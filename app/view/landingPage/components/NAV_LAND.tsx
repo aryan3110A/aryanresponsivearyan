@@ -204,7 +204,7 @@ const NAV_LAND = () => {
         {/* Get Started Button */}
         <div>
           <button
-            className="hidden md:hidden  relative bg-black/20 border border-white/20 rounded-full px-5 py-2 text-base font-medium border-t-[#acacac] border-b-[#6A0DAD] hover:border-t-[#6A0DAD] hover:border-b-[#acacac] 
+            className="hidden md:block  relative bg-black/20 border border-white/20 rounded-full px-5 py-2 text-base font-medium border-t-[#acacac] border-b-[#6A0DAD] hover:border-t-[#6A0DAD] hover:border-b-[#acacac] 
                       text-transparent bg-clip-text bg-gradient-to-r from-[#5AD7FF] to-[#656BF5] shadow-[inset_0px_0px_8px_rgba(255,255,255,0.2)] 
                       transition-all duration-500 ease-in-out hover:text-white"
             onClick={handleGetStarted}

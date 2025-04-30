@@ -1,34 +1,39 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import Link from "next/link"
-import { IconBrandBlogger, IconBrandGithub, IconBrandYoutube, IconBrandInstagram } from "@tabler/icons-react"
-import type { Icon } from "@tabler/icons-react"
-import { NAV_ROUTES, FEATURE_ROUTES } from "../../../routes/routes"
-import Image from "next/image"
-import { getImageUrl } from "@/routes/imageroute"
-import { useState, useEffect } from "react"
+import Link from "next/link";
+import {
+  IconBrandBlogger,
+  IconBrandGithub,
+  IconBrandYoutube,
+  IconBrandInstagram,
+} from "@tabler/icons-react";
+import type { Icon } from "@tabler/icons-react";
+import { NAV_ROUTES, FEATURE_ROUTES } from "../../../routes/routes";
+import Image from "next/image";
+import { getImageUrl } from "@/routes/imageroute";
+import { useState, useEffect } from "react";
 
 // Define types for navigation links
 interface NavigationLinks {
-  [key: string]: { [key: string]: string }
+  [key: string]: { [key: string]: string };
 }
 
 // Define types for social links
 interface SocialLink {
-  title: string
-  icon: Icon
-  href: string
-  hoverColor: string
-  borderHoverColor: string
-  glowColor: string
+  title: string;
+  icon: Icon;
+  href: string;
+  hoverColor: string;
+  borderHoverColor: string;
+  glowColor: string;
 }
 
 // Define types for legal links
 interface LegalLink {
-  name: string
-  href: string
+  name: string;
+  href: string;
 }
 
 const navigationLinks: NavigationLinks = {
@@ -36,7 +41,7 @@ const navigationLinks: NavigationLinks = {
     Features: "",
     Templets: NAV_ROUTES.TEMPLATES,
     "Art station": NAV_ROUTES.ART_STATION,
-    "Plans & Pricing": NAV_ROUTES.PRICING,
+    Plans: NAV_ROUTES.PRICING,
   },
   Features: {
     "Text to Image": FEATURE_ROUTES.IMAGE_GENERATION,
@@ -50,7 +55,7 @@ const navigationLinks: NavigationLinks = {
     Support: NAV_ROUTES.SUPPORT,
     "About us": "",
   },
-}
+};
 
 const legalLinks: LegalLink[] = [
   { name: "Terms of use", href: "" },
@@ -58,7 +63,7 @@ const legalLinks: LegalLink[] = [
   { name: "Cookies", href: "" },
   { name: "Legal Notice", href: "" },
   { name: "DMCA", href: "" },
-]
+];
 
 const socialLinks: SocialLink[] = [
   {
@@ -93,36 +98,42 @@ const socialLinks: SocialLink[] = [
     borderHoverColor: "hover:border-green-500",
     glowColor: "hover:shadow-[0_0_15px_rgba(34,197,94,0.5)]",
   },
-]
+];
 
 const Footer: React.FC = () => {
-  const [screenWidth, setScreenWidth] = useState(0)
+  const [screenWidth, setScreenWidth] = useState(0);
 
   useEffect(() => {
     const checkScreenSize = () => {
-      setScreenWidth(window.innerWidth)
-    }
+      setScreenWidth(window.innerWidth);
+    };
 
     // Initial check
-    checkScreenSize()
+    checkScreenSize();
 
     // Add event listener for window resize
-    window.addEventListener("resize", checkScreenSize)
+    window.addEventListener("resize", checkScreenSize);
 
     // Cleanup
-    return () => window.removeEventListener("resize", checkScreenSize)
-  }, [])
+    return () => window.removeEventListener("resize", checkScreenSize);
+  }, []);
 
   // Only modify below 768px (md breakpoint)
-  const isMobile = screenWidth > 0 && screenWidth < 768
+  const isMobile = screenWidth > 0 && screenWidth < 768;
   // Tablet is between 768px and 1023px
-  const isTablet = screenWidth >= 768 && screenWidth < 1024
+  const isTablet = screenWidth >= 768 && screenWidth < 1024;
 
   return (
     <footer className="bg-[#050505] text-gray-300 py-8 w-full overflow-x-hidden">
       <div className="max-w-full px-4 md:px-20 lg:px-16">
         {/* Desktop Layout - Using original code for desktop/laptop */}
-        <div className={`${isMobile ? "hidden" : "flex"} ${isTablet ? "gap-12" : "sm:gap-[7.5rem] md:gap-[7.5rem] lg:gap-[13rem]"} mb-0`}>
+        <div
+          className={`${isMobile ? "hidden" : "flex"} ${
+            isTablet
+              ? "gap-12"
+              : "sm:gap-[7.5rem] md:gap-[8.5rem] lg:gap-[14rem]"
+          } mb-0`}
+        >
           {/* Logo and Description */}
           <div className="space-y-4">
             <div className="flex flex-col items-start space-y-2 -mb-2">
@@ -144,7 +155,8 @@ const Footer: React.FC = () => {
               </h1>
             </div>
             <p className="sm:text-sm md:text-[1.120rem] lg:text-[1.2rem] lg:leading-6 text-nowrap">
-              Wild Child Studios uses advanced AI to turn <br /> imagination into high-quality, creative visuals.
+              WildMind Studios uses advanced AI to turn <br /> imagination into
+              high-quality, creative visuals.
             </p>
 
             {/* Social Media Icons */}
@@ -170,8 +182,15 @@ const Footer: React.FC = () => {
 
           {/* Navigation Links - keeping as is for desktop */}
           {Object.entries(navigationLinks).map(([category, links]) => (
-            <div key={category} className={`md:mt-8 mb-4 mr-10 lg:mr-16 ${isTablet ? "" : "md:-ml-5"}`}>
-              <h2 className="font-semibold text-white md:text-lg lg:text-xl mb-4">{category}</h2>
+            <div
+              key={category}
+              className={`md:mt-8 mb-4 mr-10 lg:mr-16 ${
+                isTablet ? "" : "md:-ml-5"
+              }`}
+            >
+              <h2 className="font-semibold text-white md:text-lg lg:text-xl mb-4">
+                {category}
+              </h2>
               <ul className="space-y-2">
                 {Object.entries(links).map(([name, href]) => (
                   <li key={name} className="pb-2 mb-2">
@@ -207,7 +226,8 @@ const Footer: React.FC = () => {
                 </span>
               </h1>
               <p className="text-sm text-gray-400 px-4">
-                Wild Child Studios uses advanced AI to turn imagination into high-quality, creative visuals.
+                Wild Child Studios uses advanced AI to turn imagination into
+                high-quality, creative visuals.
               </p>
             </div>
 
@@ -215,11 +235,16 @@ const Footer: React.FC = () => {
             <div className="grid grid-cols-1 gap-x-4 gap-y-4">
               {Object.entries(navigationLinks).map(([category, links], idx) => (
                 <div key={idx} className={idx === 1 ? "col-span-1 mt-2" : ""}>
-                  <h2 className="font-semibold text-white text-base mb-3">{category}</h2>
+                  <h2 className="font-semibold text-white text-base mb-3">
+                    {category}
+                  </h2>
                   <ul className="space-y-2">
                     {Object.entries(links).map(([name, href]) => (
                       <li key={name}>
-                        <Link href={href} className="text-[#616161] text-sm hover:text-white transition-colors">
+                        <Link
+                          href={href}
+                          className="text-[#616161] text-sm hover:text-white transition-colors"
+                        >
                           {name}
                         </Link>
                       </li>
@@ -246,15 +271,23 @@ const Footer: React.FC = () => {
         )}
 
         {/* Bottom Section - Fixed for responsiveness */}
-        <div className="border-t border-[#FFFFFF52] pt-8 mt-8">
+        <div className="border-t border-[#FFFFFF52] pt-8 mt-2">
           <div
-            className={`flex ${isMobile ? "flex-col space-y-4" : "flex-col md:flex-row"} justify-start items-center`}
+            className={`flex ${
+              isMobile ? "flex-col space-y-4" : "flex-col md:flex-row"
+            } justify-start items-center`}
           >
             <p className="text-sm md:text-[0.875rem] lg:text-[1rem] text-[#616161] mb-4 md:mb-0 text-center">
               Copyright © 2025 WildMind Pvt Ltd. All rights reserved.
             </p>
             <div
-              className={`flex flex-wrap ${isMobile ? "gap-4 justify-center" : isTablet ? "gap-6 justify-center md:ml-auto" : "sm:gap-4 md:gap-[1.8rem] lg:gap-[4.2rem] justify-center md:ml-[31%] lg:ml-[33%]"}`}
+              className={`flex flex-wrap ${
+                isMobile
+                  ? "gap-4 justify-center"
+                  : isTablet
+                  ? "gap-6 justify-center md:ml-auto"
+                  : "sm:gap-4 md:gap-[2.5rem] lg:gap-[4.2rem] justify-center md:ml-[29.5%] lg:ml-[33%]"
+              }`}
             >
               {legalLinks.map((link) => (
                 <Link
@@ -270,7 +303,7 @@ const Footer: React.FC = () => {
         </div>
       </div>
     </footer>
-  )
-}
+  );
+};
 
-export default Footer
+export default Footer;
