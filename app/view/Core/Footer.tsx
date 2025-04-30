@@ -122,7 +122,7 @@ const Footer: React.FC = () => {
     <footer className="bg-[#050505] text-gray-300 py-8 w-full overflow-x-hidden">
       <div className="max-w-full px-4 md:px-20 lg:px-16">
         {/* Desktop Layout - Using original code for desktop/laptop */}
-        <div className={`${isMobile ? "hidden" : "flex"} ${isTablet ? "gap-12" : "sm:gap-[7.5rem] md:gap-[8rem] lg:gap-[15rem]"} mb-0`}>
+        <div className={`${isMobile ? "hidden" : "flex"} ${isTablet ? "gap-12" : "sm:gap-[7.5rem] md:gap-[7.5rem] lg:gap-[13rem]"} mb-0`}>
           {/* Logo and Description */}
           <div className="space-y-4">
             <div className="flex flex-col items-start space-y-2 -mb-2">
@@ -254,7 +254,7 @@ const Footer: React.FC = () => {
               Copyright © 2025 WildMind Pvt Ltd. All rights reserved.
             </p>
             <div
-              className={`flex flex-wrap ${isMobile ? "gap-4 justify-center" : isTablet ? "gap-6 justify-center md:ml-auto" : "sm:gap-4 md:gap-[1.8rem] lg:gap-[4.2rem] justify-center md:ml-[32%] lg:ml-[36%]"}`}
+              className={`flex flex-wrap ${isMobile ? "gap-4 justify-center" : isTablet ? "gap-6 justify-center md:ml-auto" : "sm:gap-4 md:gap-[1.8rem] lg:gap-[4.2rem] justify-center md:ml-[31%] lg:ml-[33%]"}`}
             >
               {legalLinks.map((link) => (
                 <Link

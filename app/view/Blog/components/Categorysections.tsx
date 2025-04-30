@@ -231,7 +231,7 @@ export default function CategorySections() {
   }
 
   return (
-    <div className="lg:px-6 md:py-0 pt-0 pb-0">
+    <div className="pt-2 md:pt-60  pb-0">
       {categorySections.map((section) => (
         <div
           key={section.id}

@@ -70,7 +70,7 @@ export default function Header() {
           Search
         </button>
       </div>
-      <div className="mobile:hidden md:block  flex items-center mr-10">
+      <div className="hidden md:block   items-center mr-10">
         <div className="relative" ref={languageDropdownRef}>
           <button
             onClick={toggleLanguageDropdown}
@@ -87,7 +87,7 @@ export default function Header() {
           </button>
 
           {isLanguageDropdownOpen && (
-            <div className="absolute right-0 mt-1 bg-white text-black border border-gray-700 rounded-md shadow-lg overflow-hidden z-50">
+            <div className="absolute md:block right-0 mt-1 bg-white text-black border border-gray-700 rounded-md shadow-lg overflow-hidden z-50">
               <ul className="py-1">
                 {languages.map((language) => (
                   <li

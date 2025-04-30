@@ -1,3 +1,4 @@
+import Footer from "../Core/Footer"
 import CategorySections from "./components/Categorysections"
 import FeaturedArticles from "./components/FeaturedArticles"
 import FollowSection from "./components/Follow"
@@ -5,6 +6,7 @@ import Header from "./components/header"
 
 export default function Blog() {
   return (
+    <>
     <div className="flex flex-col min-h-screen w-full bg-black text-white font-poppins overflow-x-hidden">
       <Header />
 
@@ -15,5 +17,7 @@ export default function Blog() {
         <FollowSection />
       </main>
     </div>
+    <Footer />
+    </>
   )
 }

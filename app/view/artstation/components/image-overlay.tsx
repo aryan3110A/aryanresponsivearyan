@@ -281,7 +281,7 @@ export default function ImageOverlay({
       <div
         className="relative bg-[#1F1F1F] rounded-lg w-[75%] max-w-7xl mx-auto mt-[15vh] mb-[5vh]"
         style={{
-          overscrollBehavior: "none",
+          overscrollBehavior:"none",
         }}
       >
         {/* Close button */}
@@ -312,11 +312,11 @@ export default function ImageOverlay({
           <div className="w-full md:w-1/2 p-6 flex flex-col">
             {/* User info */}
             <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center">
+              <div className="flex items-center font-thin">
                 <div className="w-10 h-10 rounded-full overflow-hidden mr-3">
                   <Image src="/artstation/usr.png" alt="User" width={40} height={40} />
                 </div>
-                <span className="text-lg font-semibold text-white">{currentImage.username}</span>
+                <span className="text-lg font-thin text-white">{currentImage.username}</span>
               </div>
 
               <div className="flex space-x-8">
@@ -419,7 +419,7 @@ export default function ImageOverlay({
                 <div className="w-10 h-10 rounded-full overflow-hidden mr-3">
                   <Image src="/artstation/usr.png" alt="User" width={40} height={40} />
                 </div>
-                <span className="text-lg font-semibold text-white">{originalImage.username}</span>
+                <span className="text-sm font-thin text-white">{originalImage.username}</span>
 
                 <div className="flex space-x-8 pl-20">
                   <button className="flex items-center space-x-2 px-3 py-1 rounded-md border border-[#919191] bg-[#1f1f1f] hover:bg-[#3D3D3D] hover:border-white transition-colors">

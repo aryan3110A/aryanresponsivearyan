@@ -174,13 +174,13 @@ export default function NavigationFull() {
             </button>
 
             {isUserDropdownOpen && (
-              <div className="absolute -ml-[3vw] mt-[1.4vh] w-[8vw] min-w-[150px] bg-black/40 backdrop-blur-3xl rounded-md shadow-lg z-30 animate-dropdown">
+              <div className="absolute -ml-[20vw] md:-ml-[3vw] mt-[1.3vh] w-[8vw] min-w-[150px] bg-black/40 backdrop-blur-3xl rounded-md shadow-lg z-30 animate-dropdown">
                 <div className="py-2 flex flex-col">
                   <div className="px-4 py-2 text-white flex flex-col items-start">
                     <span className="text-sm font-semibold">{username || "Guest"}</span>
                     <span className="text-xs text-gray-400">{userEmail}</span>
                   </div>
-                  <button onClick={handleLogout} className="px-4 py-2 text-white hover:text-blue-400 flex items-center">
+                  <button onClick={handleLogout} className="px-4 py-2 text-white hover:text-blue-400 flex items-center text-xs md:text-[1rem]">
                     <svg className="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
                       <polyline points="16 17 21 12 16 7" />
@@ -219,7 +219,7 @@ export default function NavigationFull() {
       <Hamburger isOpen={isNavOpen} onClose={() => setIsNavOpen(false)} />
 
       {showUsernamePrompt && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-md flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-md flex items-center justify-center z-50 ">
           <div className="bg-[#1e1e1e] p-6 rounded-lg shadow-lg text-white">
             <h2 className="text-lg mb-2">Create Your Username</h2>
             <input
