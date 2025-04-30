@@ -16,7 +16,7 @@ const Main = () => {
   return (
     <div className="bg-black relative">
       {/* Navigation (Fixed on top with highest z-index) */}
-      <div className="fixed top-0 left-0 right-0 z-[100] flex justify-center md:hidden">
+      <div className="fixed top-0 left-0 right-0 z-[100] flex justify-center ">
         <NAV_LAND />
       </div>
 

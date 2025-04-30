@@ -204,7 +204,7 @@ const NAV_LAND = () => {
         {/* Get Started Button */}
         <div>
           <button
-            className="relative bg-black/20 border border-white/20 rounded-full px-5 py-2 text-base font-medium border-t-[#acacac] border-b-[#6A0DAD] hover:border-t-[#6A0DAD] hover:border-b-[#acacac] 
+            className="hidden md:hidden  relative bg-black/20 border border-white/20 rounded-full px-5 py-2 text-base font-medium border-t-[#acacac] border-b-[#6A0DAD] hover:border-t-[#6A0DAD] hover:border-b-[#acacac] 
                       text-transparent bg-clip-text bg-gradient-to-r from-[#5AD7FF] to-[#656BF5] shadow-[inset_0px_0px_8px_rgba(255,255,255,0.2)] 
                       transition-all duration-500 ease-in-out hover:text-white"
             onClick={handleGetStarted}
@@ -215,7 +215,7 @@ const NAV_LAND = () => {
       </div>
 
       {/* Mobile Navigation */}
-      <div className="fixed top-0 left-0 w-full z-[1000] md:hidden">
+      <div className="hidden fixed top-0 left-0 w-full z-[1000] mb:block md:hidden">
         <div className="flex items-center justify-between p-4 bg-black/80 backdrop-blur-xl">
           {/* Menu Button */}
           <div className="flex">
@@ -248,7 +248,7 @@ const NAV_LAND = () => {
           </div>
 
           {/* User Profile Button */}
-          <button onClick={() => setIsUserDropdownOpen(!isUserDropdownOpen)} className="hidden mb:hidden text-white p-1">
+          <button onClick={() => setIsUserDropdownOpen(!isUserDropdownOpen)} className="hidden text-white p-1">
             <User className="w-6 h-6" />
           </button>
         </div>
@@ -273,7 +273,7 @@ const NAV_LAND = () => {
         {isMobileMenuOpen && (
           <>
             {/* Overlay */}
-            <div className="fixed inset-0 bg-black/50 z-40" onClick={() => setIsMobileMenuOpen(false)}></div>
+            <div className="hiddden fixed inset-0 bg-black/50 z-40" onClick={() => setIsMobileMenuOpen(false)}></div>
 
             {/* Sidebar */}
             <div

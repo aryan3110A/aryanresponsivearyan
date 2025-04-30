@@ -12,7 +12,7 @@ const Page: React.FC = () => {
   return (
     <>
     <Main />
-    <Home />
+    {/* <Home /> */}
     {/* <ContactSection /> */}
     </>
   );
