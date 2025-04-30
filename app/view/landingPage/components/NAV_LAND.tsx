@@ -109,14 +109,14 @@ const NAV_LAND = () => {
       {/* Desktop Navigation */}
       <div
         className={`fixed top-5 left-1/2 -translate-x-1/2 z-[1000] items-center justify-between p-2 rounded-[50px] 
-        border-[1px] border-white/20 w-[90vw] md:w-[70vw] lg:w-[45vw] text-white
+        border-[1px] border-white/20 w-[90vw] md:w-[45vw] lg:w-[45vw] text-white
         ${
           scrolled ? "backdrop-blur-xl bg-black/30 shadow-lg" : "backdrop-blur-xl bg-black/10 shadow-lg"
         } transition-all duration-300 hidden md:flex`}
       >
         {/* Logo */}
         <div className="flex">
-              <Image src={getImageUrl("core", "logo")} width={32} height={20} alt="logo" onClick={() => router.push("/")} />
+              <Image src={getImageUrl("core", "logo")} width={40} height={24} alt="logo" onClick={() => router.push("/")} />
             </div>
 
         {/* Features Dropdown */}
