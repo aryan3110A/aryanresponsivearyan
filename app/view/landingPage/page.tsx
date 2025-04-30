@@ -7,7 +7,7 @@ import StartUsingAi from "./components/start-using-ai";
 import DiscordLanding from "./components/discord-landing";
 import Header from "./components/Header";
 import Footer from "../Core/Footer";
-import Commingsoon from "./components/Commingsoon";
+// import Commingsoon from "./components/Commingsoon";
 import { PartnersSection } from "./components/partners-section";
 import { Testimonials } from "./components/Testimonials";
 
@@ -15,7 +15,7 @@ const Main = () => {
   return (
     <div className="bg-black relative">
       {/* Navigation (Fixed on top with highest z-index) */}
-      <div className="fixed top-0 left-0 right-0 z-[100] flex justify-center">
+      <div className="fixed top-0 left-0 right-0 z-[100] flex justify-center mb:hidden">
         <Navigation />
       </div>
 
@@ -38,9 +38,9 @@ const Main = () => {
         <DiscordLanding />
       </div>
 
-      <div className="relative z-[50]">
+      {/* <div className="relative z-[50]">
         <Commingsoon />
-      </div>
+      </div> */}
 
       <div className="relative z-[60]">
         <Testimonials />

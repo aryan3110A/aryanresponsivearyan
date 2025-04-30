@@ -18,6 +18,7 @@ const config: Config = {
         poppins: ["Poppins", "sans-serif"],
       },
       screens: {
+        "mb":{max:"640px"},
         "mobile":"350px",
         "tablet":"768px",
         "sm-laptop": "1080px",

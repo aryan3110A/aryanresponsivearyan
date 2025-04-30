@@ -1,12 +1,13 @@
 'use client';
 import React from 'react';
 import Image from 'next/image';
-import { Poppins } from 'next/font/google';
+// import { Poppins } from 'next/font/google';
+// // import { SparklesCore } from "../ui/sparkles";
 
-const poppins = Poppins({ 
-  subsets: ['latin'], 
-  weight: ['400', '700'] 
-});
+// const poppins = Poppins({ 
+//   subsets: ['latin'], 
+//   weight: ['400', '700'] 
+// });
 
 const ArtGallery = () => {
   const galleryImages = [
@@ -28,12 +29,14 @@ const ArtGallery = () => {
   return (
     <div className="min-h-screen flex flex-col items-center overflow-hidden bg-black">
       {/* Title */}
-      <h1 className={`text-5xl font-medium text-center text-white -mb-96 tracking-wide py-8 z-40 ${poppins.className}`}>
-        Art Gallery
-      </h1>
+      <div>
+        <h1 className='text-5xl font-extrabold text-center text-white -mb-[300px] tracking-wide py-8 z-50'>
+          Art gallary
+        </h1>
+      </div>
 
       {/* Top Image */}
-      <div className="w-full h-full z-30 ">
+      <div className="w-full h-full z-30 -mt-96 ">
         <Image
           src="/Landingpage/ArtGallery/topimage.png"
           alt="Top Decorative Path"
@@ -75,7 +78,7 @@ const ArtGallery = () => {
       </div>
 
       {/* Bottom Image */}
-      <div className="w-full h-auto z-30 -mb-56">
+      <div className="w-full h-auto z-30 -mb-[500px]">
         <Image
           src="/Landingpage/ArtGallery/bottomimage.png"
           alt="Bottom Decorative Path"
