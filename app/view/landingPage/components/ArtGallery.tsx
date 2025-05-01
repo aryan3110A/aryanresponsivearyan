@@ -24,7 +24,7 @@ const ANIMATION_SPEED = 15;
 
 const ArtGallery = () => {
   return (
-    <div className="min-h-screen flex flex-col items-center overflow-hidden bg-black">
+    <div className=" flex flex-col items-center overflow-hidden bg-black">
       {/* Title */}
       <h1
         className={`text-white text-3xl sm:text-4xl md:text-6xl font-bold mt-10 md:mt-20 z-40 text-center ${poppins.className}`}

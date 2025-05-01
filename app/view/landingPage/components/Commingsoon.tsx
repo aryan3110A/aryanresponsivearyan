@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import Particles from "@tsparticles/react";
+// import Particles from "@tsparticles/react";
 import { loadSlim } from "@tsparticles/slim";
 import { getImageUrl } from "@/routes/imageroute";
 import { initParticlesEngine } from "@tsparticles/react";
@@ -76,7 +76,7 @@ const HoverEffectText = ({
 
   return (
     <div
-      className="flex items-center cursor-pointer relative space-x-[10px] mb:space-x-[6px] mb:justify-center mb:items-center mb:scale-[0.9] mb:origin-center"
+      className="flex items-center cursor-pointer mb:-mt-80 relative space-x-[10px] mb:space-x-[6px] mb:justify-center mb:items-center mb:scale-[0.9] mb:origin-center"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -202,13 +202,13 @@ const ComingSoon = () => {
   return (
     <div
       ref={sectionRef}
-      className="relative h-screen flex flex-col items-center justify-center text-white font-semibold bg-gradient-to-br from-[#050505] via-[#0f0f25] to-[#121212] overflow-hidden"
+      className="relative  h-screen flex flex-col items-center justify-center text-white font-semibold bg-gradient-to-br from-[#050505] via-[#0f0f25] to-[#121212] overflow-hidden"
     >
       {/* Overlay */}
       <div className="absolute inset-0 bg-black/60 z-0 pointer-events-none" />
 
       {/* Particles */}
-      <Particles
+      {/* <Particles
         id="tsparticles"
         options={{
           fullScreen: { enable: false },
@@ -222,7 +222,7 @@ const ComingSoon = () => {
           }
         }}
         className="absolute inset-0 z-0"
-      />
+      /> */}
 
       {/* Content */}
       <div className="z-10 flex flex-col items-center justify-center space-y-20 text-center text-6xl text-[100px] mb:text-[35px]">

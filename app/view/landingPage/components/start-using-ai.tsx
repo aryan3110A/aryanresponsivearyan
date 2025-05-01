@@ -11,7 +11,7 @@ export default function StartUsingAi() {
     <div>
       {/* Hero Section */}
       <div
-        className="relative w-full h-[500px] overflow-hidden flex items-center mb:flex-col mb:h-auto mb:pt-10 mb:pb-6"
+        className="relative w-full h-[500px] overflow-hidden flex items-center mb:flex-col mb:h-auto mb:-mt-10 mb:pb-6"
         style={{
           background: `linear-gradient(to bottom, 
             rgba(0, 0, 0, 1) 20%, 

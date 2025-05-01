@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import Particles from '@tsparticles/react';
+// import Particles from '@tsparticles/react';
 import { loadSlim } from '@tsparticles/slim';
 import Button from './Button';
 import SlideImage from './Slideimage';
@@ -19,11 +19,11 @@ const Header = () => {
 
   return (
     <div className="relative h-screen bg-gradient-to-br from-[#050505] via-[#0a0a1f] to-[#0c0c0c] overflow-hidden flex flex-col justify-center items-center 
-    mb:h-auto mb:min-h-[80vh] mb:px-2 mb:items-center mb:justify-center mb:flex-col">
+    mb:h-auto mb:min-h-[100vh] mb:px-2 mb:items-center mb:justify-center mb:flex-col">
 
 
       {/* Particles Background */}
-      <Particles
+      {/* <Particles
         id="tsparticles"
         options={{
           fullScreen: { enable: false },
@@ -38,7 +38,7 @@ const Header = () => {
           },
         }}
         className="absolute inset-0 z-0"
-      />
+      /> */}
 
       {/* Main Content */}
       <div className="z-20 w-full h-full flex flex-col justify-between items-center px-4 md:px-10 mb-28">

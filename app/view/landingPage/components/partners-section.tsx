@@ -69,7 +69,7 @@ export function PartnersSection() {
   }, []);
 
   return (
-    <section className="w-full bg-black py-20 pb-52">
+    <section className="w-full bg-black md:py-20 mb:-mt-20 pb-52">
       <div className="container mx-auto px-4">
         <h2 className="mb-12 text-center text-6xl font-bold ">
           <span className="text-white mb:text-[24px] mb:font-bold">Our </span>
@@ -88,14 +88,14 @@ export function PartnersSection() {
           {/* Scrolling container */}
           <div
             ref={scrollRef}
-            className="flex gap-40 overflow-hidden whitespace-nowrap py-8"
+            className="flex mb:gap-10 md:gap-40 overflow-hidden whitespace-nowrap py-8"
           >
             {partners.map((partner, idx) => (
               <div
                 key={`${partner.name}-${idx}`}
                 className="flex min-w-[300px] items-center justify-center"
               >
-                <div className="w-full h-24 bg-white rounded-xl flex items-center justify-center overflow-hidden mb:w-[112px] mb:h-[31px] mb:rounded-[5px]">
+                <div className="w-full h-24 bg-white rounded-xl flex items-center justify-center overflow-hidden mb:w-[170px] mb:h-[50px] mb:rounded-[5px]">
                   <Image
                     src={partner.logo || "/placeholder.svg"}
                     alt={partner.name}
