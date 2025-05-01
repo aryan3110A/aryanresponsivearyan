@@ -5,6 +5,7 @@ import type React from "react"
 import { useState, useRef, useEffect } from "react"
 import Image from "next/image"
 import { X, Heart, Bookmark, Download, ChevronDown, ChevronUp, Share2 } from "lucide-react"
+import { bookmarkStore } from "@/app/utils/bookmarkUtils"
 
 interface ArtImage {
   id: string
@@ -109,7 +110,28 @@ export default function ImageOverlay({
         bookmarked: newBookmarkedState,
       })
     }
+    
+    // Directly integrate with bookmarkStore
+    if (newBookmarkedState) {
+      // Add to bookmarks
+      bookmarkStore.addBookmark({
+        id: currentImage.id,
+        src: currentImage.src,
+        alt: currentImage.alt,
+        username: currentImage.username,
+        model: currentImage.model,
+        prompt: currentImage.prompt,
+      })
+    } else {
+      // Remove from bookmarks
+      bookmarkStore.removeBookmark(currentImage.id)
+    }
+
+    // Dispatch event to notify bookmark component
+    window.dispatchEvent(new Event("bookmarkUpdated"))
   }
+
+  
 
   const handleShareClick = (image: ArtImage, e: React.MouseEvent) => {
     e.stopPropagation()
