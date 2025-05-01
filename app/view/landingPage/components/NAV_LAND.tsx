@@ -161,7 +161,7 @@ const NAV_LAND = () => {
             className="px-3 py-1 hover:bg-gradient-to-l hover:bg-clip-text cursor-pointer hover:text-[#dbdbdb]"
             onClick={() => router.push(NAV_ROUTES.TEMPLATES)}
           >
-            Art Station
+            Templates
           </span>
         </div>
 
