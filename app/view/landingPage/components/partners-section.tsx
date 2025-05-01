@@ -72,8 +72,8 @@ export function PartnersSection() {
     <section className="w-full bg-black md:py-20 mb:-mt-20 pb-52">
       <div className="container mx-auto px-4">
         <h2 className="mb-12 text-center text-6xl font-bold ">
-          <span className="text-white mb:text-[24px] mb:font-bold">Our </span>
-          <span className="bg-gradient-to-r from-[#5AD7FF] to-[#656BF5] bg-clip-text text-transparent mb:text-[24px] mb:font-bold">
+          <span className="text-white mb:text-[30px] mb:font-bold">Our </span>
+          <span className="bg-gradient-to-r from-[#5AD7FF] to-[#656BF5] bg-clip-text text-transparent mb:text-[30px] mb:font-bold">
             Partners
           </span>
         </h2>

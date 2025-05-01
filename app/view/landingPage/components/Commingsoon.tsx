@@ -76,7 +76,7 @@ const HoverEffectText = ({
 
   return (
     <div
-      className="flex items-center cursor-pointer mb:-mt-80 relative space-x-[10px] mb:space-x-[6px] mb:justify-center mb:items-center mb:scale-[0.9] mb:origin-center"
+      className="flex items-center cursor-pointer mb:-mt-64 relative space-x-[10px] mb:space-x-[6px] mb:justify-center mb:items-center mb:scale-[0.9] mb:origin-center"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
