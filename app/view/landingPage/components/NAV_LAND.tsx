@@ -136,7 +136,7 @@ const NAV_LAND = () => {
           </span>
 
           {activeDropdown === "features" && (
-            <ul className="absolute left-1/2 -translate-x-1/2 mt-4 w-80 bg-black text-white rounded-lg border border-[#5f5e5e] shadow-[6px_6px_10px_rgba(0,0,0,0.6)] p-3 flex flex-col items-center overflow-hidden whitespace-nowrap">
+            <ul className="absolute left-1/2 -translate-x-1/2 mt-4 w-80 bg-black text-white rounded-lg border border-[#5f5e5e] shadow-[6px_6px_10px_rgba(0,0,0,0.6)] p-3 pr-4 flex flex-col items-center overflow-hidden whitespace-nowrap">
               <li
                 className="w-full px-3 py-2 cursor-pointer text-center hover:text-[#dbdbdb] hover:bg-gradient-to-l hover:bg-clip-text"
                 onClick={() => router.push(FEATURE_ROUTES.IMAGE_GENERATION)}
@@ -149,7 +149,7 @@ const NAV_LAND = () => {
               <li className="w-full px-3 py-2 cursor-pointer text-center hover:text-[#dbdbdb] hover:bg-gradient-to-l hover:bg-clip-text">
                 Sketch to image (coming soon)
               </li>
-              <li className="w-full px-3 py-2 cursor-pointer text-center hover:text-[#dbdbdb] hover:bg-gradient-to-l hover:bg-clip-text">
+              <li className="w-full px-1 py-2 cursor-pointer text-center hover:text-[#dbdbdb] hover:bg-gradient-to-l hover:bg-clip-text">
                 Real-time generation (coming soon)
               </li>
             </ul>
