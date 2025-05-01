@@ -278,7 +278,7 @@ const Footer: React.FC = () => {
               isMobile ? "flex-col space-y-4" : "flex-col md:flex-row"
             } justify-start items-center`}
           >
-            <p className="text-sm md:text-[0.875rem] lg:text-[1rem] text-[#616161] mb-4 md:mb-0 text-center">
+            <p className="text-sm md:text-[0.875rem] lg:text-[0.875rem] text-[#616161] mb-4 md:mb-0 text-center">
               Copyright © 2025 WildMind Pvt Ltd. All rights reserved.
             </p>
             <div
@@ -294,7 +294,7 @@ const Footer: React.FC = () => {
                 <Link
                   key={link.name}
                   href={link.href}
-                  className="text-xs md:text-sm lg:text-[1rem] text-[#616161] hover:text-white transition-colors"
+                  className="text-xs md:text-sm lg:text-sm text-[#616161] hover:text-white transition-colors"
                 >
                   {link.name}
                 </Link>
