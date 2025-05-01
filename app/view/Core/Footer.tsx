@@ -132,7 +132,7 @@ const Footer: React.FC = () => {
           className={`${isMobile ? "hidden" : "flex"} ${
             isTablet
               ? "gap-12"
-              : "sm:gap-[7.5rem] md:gap-[8.5rem] lg:gap-[14.3rem]"
+              : "sm:gap-[7.5rem] md:gap-[8.5rem] lg:gap-[13.3rem]"
           } mb-0`}
         >
           {/* Logo and Description */}
@@ -272,7 +272,7 @@ const Footer: React.FC = () => {
         )}
 
         {/* Bottom Section - Fixed for responsiveness */}
-        <div className="border-t border-[#FFFFFF52] pt-8 mt-2">
+        <div className="border-t border-[#FFFFFF52] pt-4 mt-2">
           <div
             className={`flex ${
               isMobile ? "flex-col space-y-4" : "flex-col md:flex-row"
@@ -287,7 +287,7 @@ const Footer: React.FC = () => {
                   ? "gap-4 justify-center"
                   : isTablet
                   ? "gap-6 justify-center md:ml-auto"
-                  : "sm:gap-4 md:gap-[2.5rem] lg:gap-[4.2rem] justify-center md:ml-[29.5%] lg:ml-[33%]"
+                  : "sm:gap-4 md:gap-[2.5rem] lg:gap-[4rem] justify-center md:ml-[29.5%] lg:ml-[34%]"
               }`}
             >
               {legalLinks.map((link) => (
