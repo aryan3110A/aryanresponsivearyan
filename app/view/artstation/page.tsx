@@ -233,7 +233,7 @@ export default function ArtStation() {
 
       <div className="w-full min-h-screen bg-black text-white  p-2 md:p-5">
         <div className="max-w-full md:max-w-[90%] mx-auto mt-16 md:mt-16">
-          <h1 className="text-2xl md:text-3xl font-bold mb-0 md:mb-2 ml-4 md:ml-0">ArtStation Gallery</h1>
+          <h1 className="text-2xl md:text-3xl font-bold mb-0 md:mb-2 ml-4 md:ml-0">ArtStation </h1>
           <div className="flex items-center justify-between"> 
             <p className="md:text-xl mb-2 md:mb-10 ml-4 md:ml-0">Explore AI-generated artwork</p>
           <button
