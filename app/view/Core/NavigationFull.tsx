@@ -251,7 +251,7 @@ export default function NavigationFull() {
             }}
           >
             <div className="container py-2">
-              <div className="flex flex-col sm:ml-[31.4vw] md:ml-[36vw] lg:ml-[37.3vw]">
+              <div className="flex flex-col sm:ml-[31.4vw] md:ml-[36vw] lg:ml-[38vw]">
                 <h3 className="text-lg font-bold mb-[2vh]">CREATE</h3>
                 <div className="flex flex-col space-y-[1.5vh]">
                   {(activeDropdown === "features"
