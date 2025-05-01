@@ -2,90 +2,74 @@
 import React from 'react';
 import Image from 'next/image';
 import { Poppins } from 'next/font/google';
-// import { SparklesCore } from "../ui/sparkles";
 
 const poppins = Poppins({ 
   subsets: ['latin'], 
   weight: ['400', '700'] 
 });
 
+const galleryImages = [
+  { id: 1, src: '/Landingpage/ArtGallery/img1.png' },
+  { id: 2, src: '/Landingpage/ArtGallery/img2.png' },
+  { id: 3, src: '/Landingpage/ArtGallery/img3.png' },
+  { id: 4, src: '/Landingpage/ArtGallery/img4.png' },
+  { id: 5, src: '/Landingpage/ArtGallery/img5.png' },
+  { id: 6, src: '/Landingpage/ArtGallery/img6.png' },
+  { id: 7, src: '/Landingpage/ArtGallery/img7.png' },
+  { id: 8, src: '/Landingpage/ArtGallery/img8.png' },
+  { id: 9, src: '/Landingpage/ArtGallery/img9.png' },
+];
+
+const ANIMATION_SPEED = 15;
+
 const ArtGallery = () => {
-  const galleryImages = [
-    { id: 1, src: '/Landingpage/ArtGallery/img1.png' },
-    { id: 2, src: '/Landingpage/ArtGallery/img2.png' },
-    { id: 3, src: '/Landingpage/ArtGallery/img3.png' },
-    { id: 4, src: '/Landingpage/ArtGallery/img4.png' },
-    { id: 5, src: '/Landingpage/ArtGallery/img5.png' },
-    { id: 6, src: '/Landingpage/ArtGallery/img6.png' },
-    { id: 7, src: '/Landingpage/ArtGallery/img7.png' },
-    { id: 8, src: '/Landingpage/ArtGallery/img8.png' },
-    { id: 9, src: '/Landingpage/ArtGallery/img9.png' },
-  ];
-
-  const CARD_WIDTH = 400;
-  const CARD_HEIGHT = 750;
-  const ANIMATION_SPEED = 15; // Adjust speed (lower = faster)
-
   return (
     <div className="min-h-screen flex flex-col items-center overflow-hidden bg-black">
       {/* Title */}
-      {/* Title */}
-<h1
-  className={`text-white text-4xl md:text-6xl font-bold mt-14 -mb-24 z-40 ${poppins.className}`}
-  style={{
-    marginTop: '20px',
-    textAlign: 'center',
-  }}
->
-  Art Gallery
-</h1>
+      <h1
+        className={`text-white text-3xl sm:text-4xl md:text-6xl font-bold mt-10 md:mt-20 z-40 text-center ${poppins.className}`}
+      >
+        Art Gallery
+      </h1>
 
-      
-
-      {/* Top Image */}
-      <div className="w-full h-full z-30 -mt-96 lg:-mb-[300px] ">
+      {/* Top Decorative Image */}
+      <div className="w-full h-auto z-30 -mt-24 -mb-40 md:-mt-[40rem] md:-mb-80">
         <Image
           src="/Landingpage/ArtGallery/topimage.png"
           alt="Top Decorative Path"
           width={1920}
           height={1080}
-          className="w-full h-full"
+          className="w-full h-auto"
         />
       </div>
 
       {/* Infinite Scrolling Gallery */}
-      <div className="w-full my-10 overflow-hidden relative z-10 -mt-[1025px] -mb-[1260px]">
+      <div className="w-full  md:my-10 overflow-hidden relative z-10 -mt-40 md:-mt-[1025px] md:-mb-[1260px]">
         <div
-          className="flex gap-4 relative animate-scroll"
+          className="flex gap-1 md:gap-4 animate-scroll"
           style={{
-            width: 'max-content',
-            display: 'flex',
             animation: `scrollAnimation ${ANIMATION_SPEED}s linear infinite`,
+            width: 'max-content'
           }}
         >
           {[...galleryImages, ...galleryImages].map((image, index) => (
             <div
               key={`image-${index}`}
-              className="flex-shrink-0 relative"
-              style={{ width: `${CARD_WIDTH}px` }}
+              className="flex-shrink-0 relative w-[200px] h-[450px] sm:w-[250px] sm:h-[500px] md:w-[600px] md:h-[1050px]"
             >
-              <div className="relative" style={{ height: `${CARD_HEIGHT}px` }}>
-                <Image
-                  src={image.src}
-                  alt={`Artwork ${image.id}`}
-                  width={CARD_WIDTH}
-                  height={CARD_HEIGHT}
-                  objectFit="cover"
-                  className="shadow-2xl rounded-lg"
-                />
-              </div>
+              <Image
+                src={image.src}
+                alt={`Artwork ${image.id}`}
+                fill
+                className="object-cover shadow-2xl rounded-lg"
+              />
             </div>
           ))}
         </div>
       </div>
 
-      {/* Bottom Image */}
-      <div className="w-full h-auto z-30 -mb-[500px] lg:-mt-[340px]">
+      {/* Bottom Decorative Image */}
+      <div className="w-full h-auto z-30 -mb-20 -mt-80 md:-mb-[500px] md:-mt-[340px]">
         <Image
           src="/Landingpage/ArtGallery/bottomimage.png"
           alt="Bottom Decorative Path"
@@ -95,11 +79,15 @@ const ArtGallery = () => {
         />
       </div>
 
-      {/* Smooth Scrolling Keyframes */}
+      {/* Keyframe Animation */}
       <style jsx>{`
         @keyframes scrollAnimation {
-          from { transform: translateX(0); }
-          to { transform: translateX(-50%); }
+          from {
+            transform: translateX(0);
+          }
+          to {
+            transform: translateX(-50%);
+          }
         }
       `}</style>
     </div>

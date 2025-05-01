@@ -23,33 +23,37 @@ function Card({ title, description, imageSrc, scrollYProgress, index, total }: C
 
   return (
     <motion.div
-      className="absolute inset-0 rounded-3xl overflow-hidden border border-white/10"
+      className="absolute inset-0 rounded-3xl overflow-hidden border border-white/10 mb:inset-[-10px]"
       style={{
         opacity,
         y,
         background: "linear-gradient(to right, rgba(24, 26, 27, 0.2), rgba(18, 18, 18, 0.8))",
         backdropFilter: "blur(12px)",
-        WebkitBackdropFilter: "blur(12px)", // For Safari support
+        WebkitBackdropFilter: "blur(12px)",
         boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
       }}
     >
       <div
-        className="h-full p-8 md:p-12 flex gap-6 md:gap-8"
+        className="h-full p-4 md:p-12 mb:flex-col md:flex-row flex mb:items-center mb:justify-center md:justify-start md:gap-8 mb:gap-1 gap-6 mb:px-6"
         style={{
           background: "linear-gradient(105deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02))",
         }}
       >
-        {/* Left Content */}
-        <div className="flex-1 flex flex-col justify-center ml-10">
-          <h2 className="text-[40px] md:text-5xl font-extralight text-white mb-4 md:mb-6 -mt-44">{title}</h2>
-          <p className="text-[16px] md:text-base text-white font-light leading-relaxed max-w-xl">{description}</p>
-        </div>
-
-        {/* Right Image */}
-        <div className="flex-1 flex items-center justify-center">
-          <div className="w-full aspect-square rounded-2xl overflow-hidden">
+        {/* Image on Top (Mobile), Right (Desktop) */}
+        <div className="flex-1 mb:w-full mb:flex mb:justify-center md:items-center">
+        <div className="w-full mb:w-[90%] mb:max-w-[350px] mb:aspect-square md:aspect-square md:-mt-16 rounded-2xl overflow-hidden">
             <Image src={imageSrc} alt={title} width={500} height={500} className="w-full h-full object-cover" />
           </div>
+        </div>
+
+        {/* Text Content */}
+        <div className="flex-1 flex flex-col justify-center md:ml-10 mb:items-center mb:text-center">
+          <h2 className="text-[22px] mb:font-extralight mb:text-[18px] md:text-5xl font-light text-white mb-2 md:mb-6 mb:mt-1 md:-mt-44 leading-tight">
+            {title}
+          </h2>
+          <p className="text-[12px] md:text-base text-white mb:font-light font-light leading-relaxed max-w-xl mb:max-w-[90%] mb:mt-2 mb:text-justify">
+            {description}
+          </p>
         </div>
       </div>
     </motion.div>
@@ -130,18 +134,20 @@ export default function Cards() {
   ];
 
   return (
-    <div className="bg-black">
+    <div className="bg-black mb:-mt-24">
       {/* Cards Section */}
-      <div ref={containerRef} className="relative h-[1000vh]">
-        <div className="sticky top-0 h-screen flex items-center justify-center">
-          <div className="relative w-[80vw] aspect-[3/2] h-[70vh]">
+      <div ref={containerRef} className="relative h-[1000vh] mb:h-[800vh]">
+        <div className="sticky top-0 h-screen flex items-center justify-center mb:pt-16">
+          <div className="relative w-[80vw] aspect-[3/2] h-[70vh] mb:h-[60vh]">
             {/* Cards */}
             {cardData.map((card, index) => (
               <Card key={index} scrollYProgress={scrollYProgress} index={index} total={cardData.length} {...card} />
             ))}
 
             {/* Progress Bar */}
-            <ProgressBar scrollYProgress={scrollYProgress} />
+            <div className="mb:hidden">
+              <ProgressBar scrollYProgress={scrollYProgress} />
+            </div>
           </div>
         </div>
       </div>

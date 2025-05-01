@@ -145,7 +145,7 @@ export default function NavigationFull() {
             >
               <Menu className="w-7 h-7" />
             </button>
-            <div className="flex">
+            <div className="flex cursor-pointer">
               <IMAGE
                 src={getImageUrl("core", "logo")}
                 width={32}

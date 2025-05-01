@@ -1,5 +1,5 @@
 import React from "react";
-import Navigation from "./components/Navigation";
+// import Navigation from "./components/Navigation";
 import ArtGallery from "./components/ArtGallery";
 import Cards from "./components/Cards";
 
@@ -10,22 +10,23 @@ import Footer from "../Core/Footer";
 import Commingsoon from "./components/Commingsoon";
 import { PartnersSection } from "./components/partners-section";
 import { Testimonials } from "./components/Testimonials";
+import NAV_LAND from "./components/NAV_LAND";
 
 const Main = () => {
   return (
-    <div className="bg-black relative">
+    <div className="bg-black relative mb:bg-gradient-to-br from-[#050505] via-[#0a0a1f] to-[#0c0c0c]">
       {/* Navigation (Fixed on top with highest z-index) */}
-      <div className="fixed top-0 left-0 right-0 z-[100] flex justify-center">
-        <Navigation />
+      <div className="fixed top-0 left-0 right-0 z-[100] flex justify-center ">
+        <NAV_LAND />
       </div>
 
       {/* Main Content with Increasing z-index Order */}
-      <div className="pt-16 relative">
-        <div className="relative z-[30]">
+      <div className="pt-20 relative">
+        <div className="relative z-[30] mb:z-[10]">
           <Header />
         </div>
 
-        <div className="relative z-[20]">
+        <div className="relative z-[20] ">
           <Cards />
         </div>
       </div>

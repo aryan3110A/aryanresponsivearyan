@@ -22,6 +22,10 @@ export const imageRoutes: FolderImageRoutes = {
         saying1:'/Landingpage/Sayings/svg1.svg',
         saying2:'/Landingpage/Sayings/svg2.svg',
         saying3:'/Landingpage/Sayings/sophia.png',
+        realtimegen:'/Landingpage/commingsoon/realtime-canvas.gif',
+        sketchtoimage:'/Landingpage/commingsoon/Sketchtoimage.png',
+        texttovideo:'/Landingpage/commingsoon/realtime-canvas.gif',
+        texttod:'/Landingpage/commingsoon/realtime-canvas.gif',
     },
     contactus:{
         bg_rating:'/contactus/bg_rating7.png',
