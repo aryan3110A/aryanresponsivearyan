@@ -102,7 +102,7 @@ export default function TextGenerationTemplate() {
           </button>
         </div>
 
-        <div className="md:hidden lg:hidden mt-[8vh] ml-[140px] flex items-center gap-0">
+        <div className="md:hidden lg:hidden mt-[7vh] ml-[140px] flex items-center gap-0">
         {/* Settings Button */}
           <button className="bg-[#262626] hover:bg-black/70 transition-colors backdrop-blur-md  rounded-xl p-2 flex items-center justify-center my-auto mx-auto">
             <Settings className="my-auto mx-auto w-7 h-7 text-white" />
