@@ -208,13 +208,13 @@ export default function NavigationFull() {
             </button>
 
             {isUserDropdownOpen && (
-              <div className="absolute -ml-[20vw] md:-ml-[3vw] mt-[1.3vh] w-[8vw] min-w-[150px] bg-black/100 backdrop-blur-3xl rounded-md shadow-lg z-30 animate-dropdown">
+              <div className="absolute -ml-[31vw] md:-ml-[6vw] mt-[1.3vh] w-auto min-w-[150px] bg-black/80 backdrop-blur-3xl rounded-md shadow-lg z-30 animate-dropdown">
                 <div className="py-2 flex flex-col">
                   <div className="px-4 py-2 text-white flex flex-col items-start">
-                    <span className="text-sm font-semibold">
+                    <span className="text-xs md:text-sm font-semibold">
                       {username || "Guest"}
                     </span>
-                    <span className="text-xs text-gray-400">{userEmail}</span>
+                    <span className="text-[0.5rem] md:text-xs text-gray-400">{userEmail}</span>
                   </div>
                   <button
                     onClick={handleLogout}
