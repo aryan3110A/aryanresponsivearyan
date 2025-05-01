@@ -156,31 +156,13 @@ const NAV_LAND = () => {
           )}
         </div>
 
-        <div className="relative">
+        <div>
           <span
-            onClick={() => toggleDropdown("templates")}
-            className="cursor-pointer hover:text-[#dbdbdb] bg-transparent px-3 py-1 flex items-center gap-1 
-             hover:bg-gradient-to-l hover:bg-clip-text"
+            className="px-3 py-1 hover:bg-gradient-to-l hover:bg-clip-text cursor-pointer hover:text-[#dbdbdb]"
+            onClick={() => router.push(NAV_ROUTES.TEMPLATES)}
           >
-            Templates
-            <Image
-              width={12}
-              height={12}
-              src={activeDropdown === "templates" ? "/Core/arrowup.svg" : "/Core/arrowdown.svg"}
-              alt="dropdown-arrow"
-              className="ml-1"
-            />
+            Art Station
           </span>
-          {activeDropdown === "templates" && (
-            <ul className="absolute left-1/2 -translate-x-1/2 mt-4 w-80 bg-black text-white rounded-lg border border-[#5f5e5e] shadow-[6px_6px_10px_rgba(0,0,0,0.6)] p-3 flex flex-col items-center overflow-hidden whitespace-nowrap">
-              <li className="w-full px-3 py-2 cursor-pointer text-center hover:text-[#dbdbdb] hover:bg-gradient-to-l hover:bg-clip-text">
-                Image generation
-              </li>
-              <li className="w-full px-3 py-2 cursor-pointer text-center hover:text-[#dbdbdb] hover:bg-gradient-to-l hover:bg-clip-text">
-                video generation (Coming soon)
-              </li>
-            </ul>
-          )}
         </div>
 
         {/* Other Links */}
