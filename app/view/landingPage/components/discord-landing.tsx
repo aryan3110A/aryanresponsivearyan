@@ -11,7 +11,7 @@ export default function DiscordLanding() {
   const [discordIcon, setDiscordIcon] = useState("/Landingpage/DiscordView/discord.svg"); // Default icon
 
   return (
-    <div className="relative w-full h-[404px] mt-auto  overflow-hidden z-40 mb:h-auto mb:pt-10 ">
+    <div className="relative w-full h-[404px] mt-auto  overflow-hidden z-40 mb:h-auto mb:pt-10  ">
       {/* Background Gradient */}
       <div
         className="absolute inset-0"

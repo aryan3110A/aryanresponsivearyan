@@ -69,7 +69,7 @@ const ArtGallery = () => {
       </div>
 
       {/* Bottom Decorative Image */}
-      <div className="w-full h-auto z-30 -mb-20 -mt-80 md:-mb-[500px] md:-mt-[340px]">
+      <div className="w-full h-auto z-30 -mb-0 -mt-80 md:-mb-[500px] md:-mt-[340px]">
         <Image
           src="/Landingpage/ArtGallery/bottomimage.png"
           alt="Bottom Decorative Path"

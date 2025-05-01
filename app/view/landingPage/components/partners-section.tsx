@@ -69,7 +69,9 @@ export function PartnersSection() {
   }, []);
 
   return (
+    
     <section className="w-full bg-black md:py-20 mb:-mt-20 pb-52">
+      
       <div className="container mx-auto px-4">
         <h2 className="mb-12 text-center text-6xl font-bold ">
           <span className="text-white mb:text-[30px] mb:font-bold">Our </span>

@@ -41,7 +41,7 @@ const Header = () => {
       /> */}
 
       {/* Main Content */}
-      <div className="z-20 w-full h-full flex flex-col justify-between items-center px-4 md:px-10 mb-28">
+      <div className="z-20 w-full h-full flex flex-col justify-between items-center px-0 md:px-10 mb-28">
         <HeroHighlightDemo />
         
         <SlideImage />
