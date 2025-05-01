@@ -132,7 +132,7 @@ const Footer: React.FC = () => {
           className={`${isMobile ? "hidden" : "flex"} ${
             isTablet
               ? "gap-12"
-              : "sm:gap-[7.5rem] md:gap-[8.5rem] lg:gap-[14rem]"
+              : "sm:gap-[7.5rem] md:gap-[8.5rem] lg:gap-[14.3rem]"
           } mb-0`}
         >
           {/* Logo and Description */}

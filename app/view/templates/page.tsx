@@ -73,7 +73,7 @@ export default function TextGenerationTemplate() {
           </div>
         </div>
 
-        <div className="absolute font-poppins   mobile:mt-0 md:-mt-[9vh] lg:-mt-[9vh] px-[30%] lg:px-0 md:px-0 md:left-[50%] transform -translate-x-[50%] w-[60%] max-w-[800px] flex items-center gap-[1vw] z-10">
+        <div className="absolute font-poppins mt-0 md:-mt-[9vh] lg:-mt-[9vh] px-[30%] lg:px-0 md:px-0 md:left-[50%] transform -translate-x-[50%] w-[60%] max-w-[800px] flex items-center gap-[1vw] z-10">
           {/* Input Wrapper */}
           <div
             className="hidden mobile:block relative flex-1 rounded-full md:rounded-full lg:rounded-full"
@@ -84,7 +84,7 @@ export default function TextGenerationTemplate() {
             <input
               type="text"
               placeholder="Type a prompt..."
-              className="w-[90vw]  md:w-full bg-[#262626] text-white mobile:rounded-2xl my-auto px-10 md:rounded-full h-[6vh] md:h-[8vh] md:py-[1.5vh] md:px-[2vw] outline-none border-none backdrop-blur-md placeholder-gray-500"
+              className="w-[90vw]  md:w-full bg-[#262626] text-white rounded-2xl my-auto px-10 md:rounded-full h-[6vh] md:h-[8vh] md:py-[1.5vh] md:px-[2vw] outline-none border-none backdrop-blur-md placeholder-gray-500"
               value={inputPrompt}
               onChange={(e) => setInputPrompt(e.target.value)}
             />
@@ -103,24 +103,24 @@ export default function TextGenerationTemplate() {
         </div>
 
         <div className="md:hidden lg:hidden mt-[8vh] ml-[140px] flex items-center gap-0">
-  {/* Settings Button */}
-  <button className="bg-[#262626] hover:bg-black/70 transition-colors backdrop-blur-md  rounded-xl p-2 flex items-center justify-center my-auto mx-auto">
-    <Settings className="my-auto mx-auto w-7 h-7 text-white" />
-  </button>
+        {/* Settings Button */}
+          <button className="bg-[#262626] hover:bg-black/70 transition-colors backdrop-blur-md  rounded-xl p-2 flex items-center justify-center my-auto mx-auto">
+            <Settings className="my-auto mx-auto w-7 h-7 text-white" />
+          </button>
 
-  {/* Generate Button */}
-  <button className="bg-gradient-to-b from-[#5AD7FF]  to-[#656BF5] transition-all rounded-xl my-auto py-3 mx-auto px-2 text-white font-medium text-sm flex items-center gap-1">
-    <span>Generate</span>
-    <Image
-      src="/navigationSetting/coins.png"
-      width={20}
-      height={20}
-      alt="credits"
-      className="inline-block"
-    />
-    <span>40</span>
-  </button>
-</div>
+        {/* Generate Button */}
+        <button className="bg-gradient-to-b from-[#5AD7FF]  to-[#656BF5] transition-all rounded-xl my-auto py-3 mx-auto px-2 text-white font-medium text-sm flex items-center gap-1">
+          <span>Generate</span>
+          <Image
+            src="/navigationSetting/coins.png"
+            width={20}
+            height={20}
+            alt="credits"
+            className="inline-block"
+          />
+          <span>40</span>
+            </button>
+        </div>
 
 
         

@@ -256,7 +256,7 @@ export default function SubscriptionToggle() {
                   billingPeriod === "yearly" ? "text-white" : "text-[#1D2127]"
                 }`}
               >
-                Yearly <span className="text-xs md:text-sm text-emerald-300">-20% off</span>
+                Yearly <span className="text-xs md:text-sm text-black">-20% off</span>
               </button>
             </div>
           </div>
