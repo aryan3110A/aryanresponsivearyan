@@ -150,7 +150,7 @@ export default function MasonryLayout({
   }
 
   return (
-    <div ref={containerRef} className="flex w-full gap-2 md:gap-3 ">
+    <div ref={containerRef} className="flex w-full gap-2 md:gap-2 ">
       {getColumnImages().map((column, columnIndex) => (
         <div key={`column-${columnIndex}`} className="flex-1">
           {column.map((image) => {
