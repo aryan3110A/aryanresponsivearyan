@@ -227,7 +227,7 @@ const Footer: React.FC = () => {
                 </span>
               </h1>
               <p className="text-sm text-gray-400 px-4">
-                Wild Child Studios uses advanced AI to turn imagination into
+                WildMind Studios uses advanced AI to turn imagination into
                 high-quality, creative visuals.
               </p>
             </div>

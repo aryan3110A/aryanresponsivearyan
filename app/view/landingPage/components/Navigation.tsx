@@ -255,13 +255,13 @@ const Navigation = () => {
 
         {/* User Dropdown */}
         {isUserDropdownOpen && (
-          <div className="absolute right-4 top-16 w-[180px] bg-black/90 backdrop-blur-xl rounded-md shadow-lg z-30 animate-in fade-in slide-in-from-top-5 duration-300">
+          <div className="absolute right-6 top-16 w-[120px] bg-black/90 backdrop-blur-xl rounded-md shadow-lg z-30 animate-in fade-in slide-in-from-top-5 duration-300">
             <div className="py-2 flex flex-col">
               <div className="px-4 py-2 text-white flex flex-col items-start">
-                <span className="text-sm font-semibold">{username || "Guest"}</span>
+                <span className="text-xs font-semibold">{username || "Guest"}</span>
                 <span className="text-xs text-gray-400">{userEmail || "Not signed in"}</span>
               </div>
-              <button onClick={handleLogout} className="px-4 py-2 text-white hover:text-blue-400 flex items-center">
+              <button onClick={handleLogout} className="px-4 py-2 text-sm text-white hover:text-blue-400 flex items-center">
                 <LogOut className="w-4 h-4 mr-2" />
                 Logout
               </button>
@@ -270,16 +270,21 @@ const Navigation = () => {
         )}
 
         {/* Mobile Menu Sidebar */}
-        {isMobileMenuOpen && (
-          <>
-            {/* Overlay */}
-            <div className="fixed inset-0 bg-black/50 z-40" onClick={() => setIsMobileMenuOpen(false)}></div>
+       {isMobileMenuOpen && (
+  <>
+    {/* Overlay */}
+    <div
+      className="fixed inset-0 bg-black/50 z-40"
+      onClick={() => setIsMobileMenuOpen(false)}
+    ></div>
 
-            {/* Sidebar */}
-            <div
-              ref={menuRef}
-              className="fixed inset-y-0 left-0 w-80 bg-black z-50 transform transition-transform duration-300 ease-in-out animate-in slide-in-from-left"
-            >
+    {/* Sidebar */}
+    <div
+      ref={menuRef}
+      className={`fixed inset-y-0 left-0 w-80 bg-black tansform transition-transform duration-1000 ease-out z-40 ${
+        isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
+      }`}
+    >
               <div className="flex justify-between items-center p-4 border-b border-gray-800">
                 <div className="flex items-center">
                 <Image src={getImageUrl("core", "logo")} width={32} height={20} alt="logo" onClick={() => router.push("/")} />

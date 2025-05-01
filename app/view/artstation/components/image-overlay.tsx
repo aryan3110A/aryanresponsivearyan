@@ -1,8 +1,10 @@
 "use client"
 
+import type React from "react"
+
 import { useState, useRef, useEffect } from "react"
 import Image from "next/image"
-import { X, Heart, Bookmark, Share, Download, ChevronDown, ChevronUp } from "lucide-react"
+import { X, Heart, Bookmark, Download, ChevronDown, ChevronUp, Share2 } from "lucide-react"
 
 interface ArtImage {
   id: string
@@ -109,6 +111,72 @@ export default function ImageOverlay({
     }
   }
 
+  const handleShareClick = (image: ArtImage, e: React.MouseEvent) => {
+    e.stopPropagation()
+    // Implement share functionality here
+    if (navigator.share) {
+      navigator
+        .share({
+          title: image.alt,
+          text: `Check out this artwork: ${image.prompt}`,
+          url: window.location.href,
+        })
+        .catch((error) => console.log("Error sharing", error))
+    } else {
+      console.log("Web Share API not supported")
+      // Fallback - perhaps copy to clipboard
+    }
+  }
+
+  // Download functionality
+  const handleDownloadClick = (e: React.MouseEvent) => {
+    e.stopPropagation()
+
+    // Get the image to download - we need to be more specific about which image to download
+    // If we're in the original image section (showOriginal is true), download the original
+    // Otherwise, download the current image (which could be the remixed version)
+    const imageToDownload = showOriginal ? originalImage : currentImage
+
+    // Create a descriptive filename
+    const filename = `${imageToDownload.alt || "artwork"}-${imageToDownload.id}${isRemixMode && !showOriginal ? "-remixed" : ""}.jpg`
+
+    // Create a link element
+    const link = document.createElement("a")
+
+    // Set the download attributes
+    link.href = imageToDownload.src
+    link.download = filename
+
+    // For images that might be protected or cross-origin, we need to fetch and convert to blob
+    fetch(imageToDownload.src)
+      .then((response) => response.blob())
+      .then((blob) => {
+        // Create a blob URL
+        const blobUrl = URL.createObjectURL(blob)
+
+        // Update the link to use the blob URL
+        link.href = blobUrl
+
+        // Append to body, click and remove
+        document.body.appendChild(link)
+        link.click()
+
+        // Clean up
+        setTimeout(() => {
+          document.body.removeChild(link)
+          URL.revokeObjectURL(blobUrl)
+        }, 100)
+      })
+      .catch((error) => {
+        console.error("Error downloading image:", error)
+
+        // Fallback to direct download if fetch fails
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+      })
+  }
+
   const isRemixButtonDisabled = promptText.trim() === ""
 
   // Mobile/Tablet Layout
@@ -123,16 +191,19 @@ export default function ImageOverlay({
         }}
       >
         {/* Header with action buttons */}
-        <div className="sticky  z-10 flex justify-between items-center p-4 bg-black">
+        <div className="sticky z-10 flex justify-between items-center p-4 bg-black">
           {/* Close button */}
-          <button onClick={onClose} className="p-1  ">
-            <X className="w-6 h-6 text-white bg-zinc-800  rounded-full " />
+          <button onClick={onClose} className="p-1">
+            <X className="w-6 h-6 text-white bg-zinc-800 rounded-full" />
           </button>
 
           {/* Action buttons */}
           <div className="flex items-center space-x-3">
-            <button className="flex items-center space-x-1 bg-zinc-800 rounded-md px-2 py-1">
-              <Share className="w-4 h-4 text-white" />
+            <button
+              onClick={(e) => handleShareClick(currentImage, e)}
+              className="flex items-center space-x-1 bg-zinc-800 rounded-md px-2 py-1"
+            >
+              <Share2 className="w-4 h-4 text-white" />
               <span className="text-white text-sm">Share</span>
             </button>
 
@@ -144,7 +215,7 @@ export default function ImageOverlay({
               <Heart className={`w-5 h-5 ${liked ? "fill-current" : ""}`} />
             </button>
 
-            <button className="text-white">
+            <button onClick={handleDownloadClick} className="text-white hover:text-blue-400 transition-colors">
               <Download className="w-5 h-5" />
             </button>
           </div>
@@ -281,7 +352,7 @@ export default function ImageOverlay({
       <div
         className="relative bg-[#1F1F1F] rounded-lg w-[75%] max-w-7xl mx-auto mt-[15vh] mb-[5vh]"
         style={{
-          overscrollBehavior:"none",
+          overscrollBehavior: "none",
         }}
       >
         {/* Close button */}
@@ -320,8 +391,11 @@ export default function ImageOverlay({
               </div>
 
               <div className="flex space-x-8">
-                <button className="flex items-center space-x-2 px-3 py-1 rounded-md border border-[#919191] bg-[#1f1f1f] hover:bg-[#3D3D3D] hover:border-white transition-colors">
-                  <Share className="w-4 h-4" />
+                <button
+                  onClick={(e) => handleShareClick(currentImage, e)}
+                  className="flex items-center space-x-2 px-3 py-1 rounded-md border border-[#919191] bg-[#1f1f1f] hover:bg-[#3D3D3D] hover:border-white transition-colors"
+                >
+                  <Share2 className="w-4 h-4" />
                   <span>Share</span>
                 </button>
                 <button
@@ -339,7 +413,7 @@ export default function ImageOverlay({
                 >
                   <Heart className={`w-6 h-6 ${liked ? "fill-current" : ""}`} />
                 </button>
-                <button className="text-[#777777] hover:text-white transition-colors">
+                <button onClick={handleDownloadClick} className="text-[#777777] hover:text-white transition-colors">
                   <Download className="w-6 h-6" />
                 </button>
               </div>
@@ -422,18 +496,27 @@ export default function ImageOverlay({
                 <span className="text-sm font-thin text-white">{originalImage.username}</span>
 
                 <div className="flex space-x-8 pl-20">
-                  <button className="flex items-center space-x-2 px-3 py-1 rounded-md border border-[#919191] bg-[#1f1f1f] hover:bg-[#3D3D3D] hover:border-white transition-colors">
-                    <Share className="w-4 h-4" />
+                  <button
+                    onClick={(e) => handleShareClick(originalImage, e)}
+                    className="flex items-center space-x-2 px-3 py-1 rounded-md border border-[#919191] bg-[#1f1f1f] hover:bg-[#3D3D3D] hover:border-white transition-colors"
+                  >
+                    <Share2 className="w-4 h-4" />
                     <span>Share</span>
                   </button>
-                  <button className="flex items-center space-x-2 px-3 py-1 rounded-md hover:bg-[#3D3D3D] transition-colors">
+                  <button
+                    onClick={() => handleBookmarkToggle()}
+                    className="flex items-center space-x-2 px-3 py-1 rounded-md hover:bg-[#3D3D3D] transition-colors"
+                  >
                     <Bookmark className="w-4 h-4" />
                     <span>Bookmark</span>
                   </button>
-                  <button className="text-[#777777] hover:text-red-600 transition-colors">
+                  <button
+                    onClick={() => handleLikeToggle()}
+                    className="text-[#777777] hover:text-red-600 transition-colors"
+                  >
                     <Heart className="w-6 h-6" />
                   </button>
-                  <button className="text-[#777777] hover:text-white transition-colors">
+                  <button onClick={handleDownloadClick} className="text-[#777777] hover:text-white transition-colors">
                     <Download className="w-6 h-6" />
                   </button>
                 </div>

@@ -195,11 +195,11 @@ export default function MasonryLayout({
                       onImageClick(image)
                     }}
                   >
-                    <div className="flex justify-end space-x-4 mb-auto">
+                    <div className="flex  justify-center space-x-4 mt-[26vh]">
                       <Heart
                         onClick={(e) => handleLikeToggle(image, e)}
                         className={`
-                          w-6 h-6 
+                          w-8 h-8 
                           ${image.liked ? "text-[#FF4444] fill-current scale-125" : "text-white hover:scale-110"}
                           transform transition-all duration-300 ease-out
                           hover:drop-shadow-lg 
@@ -209,7 +209,7 @@ export default function MasonryLayout({
                       <Bookmark
                         onClick={(e) => handleBookmarkToggle(image, e)}
                         className={`
-                          w-6 h-6 
+                          w-8 h-8 
                           ${image.bookmarked ? "text-[#FFA800] fill-current scale-125" : "text-white hover:scale-110"}
                           transform transition-all duration-300 ease-out
                           hover:drop-shadow-lg 
@@ -262,7 +262,7 @@ export default function MasonryLayout({
 
                       </div>
                         <div className="flex pr-4  gap-1 text-[#777777]">
-                          <div className="flex border border-[#222222] rounded-full items-center px-4 gap-1 text-sm">
+                          <div className="flex border border-[#222222] rounded-full items-center px-2 gap-1 text-sm">
                         <Bookmark
                           onClick={(e) => handleBookmarkToggle(image, e)}
                           className={`  
@@ -270,11 +270,11 @@ export default function MasonryLayout({
                             ${image.bookmarked ? "text-[#FFA800] fill-current" : "text-[#777777]"}
                             transform transition-all duration-300 ease-out
                           `}
-                        />BookMark
+                        />
                         </div>
                         <Share2
                           onClick={(e) => handleShareClick(image, e)}
-                          className="border  border-[#222222] rounded-full p-2  w-9 h-9  text-[#777777] transform transition-all duration-300 ease-out"
+                          className="border  border-[#222222] rounded-full px-2  w-9 h-9  text-[#777777] transform transition-all duration-300 ease-out"
                         /> </div>
                         
                       
