@@ -5,9 +5,9 @@ import type React from "react";
 import Link from "next/link";
 import {
   IconBrandBlogger,
-  IconBrandGithub,
   IconBrandYoutube,
   IconBrandInstagram,
+  IconBrandX,
 } from "@tabler/icons-react";
 import type { Icon } from "@tabler/icons-react";
 import { NAV_ROUTES, FEATURE_ROUTES } from "../../../routes/routes";
@@ -68,8 +68,8 @@ const legalLinks: LegalLink[] = [
 
 const socialLinks: SocialLink[] = [
   {
-    title: "GitHub",
-    icon: IconBrandGithub,
+    title: "X",
+    icon: IconBrandX,
     href: "#",
     hoverColor: "hover:text-blue-500",
     borderHoverColor: "hover:border-blue-500",
