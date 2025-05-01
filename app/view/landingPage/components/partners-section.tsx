@@ -72,18 +72,18 @@ export function PartnersSection() {
     <section className="w-full bg-black py-20 pb-52">
       <div className="container mx-auto px-4">
         <h2 className="mb-12 text-center text-6xl font-bold ">
-          <span className="text-white mb:text-[24px] mb:font-bold">Our </span>
-          <span className="bg-gradient-to-r from-[#5AD7FF] to-[#656BF5] bg-clip-text text-transparent mb:text-[24px] mb:font-bold">
+          <span className="text-white">Our </span>
+          <span className="bg-gradient-to-r from-[#5AD7FF] to-[#656BF5] bg-clip-text text-transparent">
             Partners
           </span>
         </h2>
 
         <div className="relative overflow-hidden ">
           {/* Left gradient mask */}
-          <div className="absolute left-0 z-10 h-full w-52 overflow-visible px-52 bg-gradient-to-r from-black to-transparent mb:px-10 mb:w-[112px] mb:h-[31px]" />
+          <div className="absolute left-0 z-10 h-full w-52 overflow-visible px-52 bg-gradient-to-r from-black to-transparent" />
 
           {/* Right gradient mask */}
-          <div className="pointer-events-none absolute right-0 z-10 h-full w-52 overflow-hidden px-52 bg-gradient-to-r from-transparent to-black mb:px-10" />
+          <div className="pointer-events-none absolute right-0 z-10 h-full w-52 overflow-hidden px-52 bg-gradient-to-r from-transparent to-black" />
 
           {/* Scrolling container */}
           <div
@@ -95,13 +95,13 @@ export function PartnersSection() {
                 key={`${partner.name}-${idx}`}
                 className="flex min-w-[300px] items-center justify-center"
               >
-                <div className="w-full h-24 bg-white rounded-xl flex items-center justify-center overflow-hidden mb:w-[112px] mb:h-[31px] mb:rounded-[5px]">
+                <div className="w-full h-24 bg-white rounded-xl flex items-center justify-center overflow-hidden">
                   <Image
                     src={partner.logo || "/placeholder.svg"}
                     alt={partner.name}
                     width={560} // Adjust the width as needed
                     height={80}
-                    className="max-h-16 w-auto object-contain "
+                    className="max-h-16 w-auto object-contain"
                     
                   />
                 </div>

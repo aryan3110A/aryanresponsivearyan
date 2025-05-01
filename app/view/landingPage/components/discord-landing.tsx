@@ -11,7 +11,7 @@ export default function DiscordLanding() {
   const [discordIcon, setDiscordIcon] = useState("/Landingpage/DiscordView/discord.svg"); // Default icon
 
   return (
-    <div className="relative w-full h-[404px] mx-auto overflow-hidden z-40 mb:h-auto mb:py-10">
+    <div className="relative w-full h-[404px] mx-auto overflow-hidden z-40">
       {/* Background Gradient */}
       <div
         className="absolute inset-0"
@@ -23,17 +23,14 @@ export default function DiscordLanding() {
       />
 
       {/* Content Container */}
-      <div className="relative z-10 flex items-center justify-between w-full h-full px-10 mb:flex-col mb:items-center">
+      <div className="relative z-10 flex items-center justify-between w-full h-full px-10">
         {/* Left Content */}
-        <div className="max-w-lg absolute left-[200px] mb:static mb:text-center">
-        <h1 className={`text-[36px] font-medium text-white mb-6 text-left ${poppins.className} mb:text-[30px] mb:px-4 mb:text-center`}>
-          Be part of a  
-          creative  
-          community!
-        </h1>
-
+        <div className="max-w-lg absolute left-[200px]">
+          <h1 className={`text-[36px] font-medium text-white mb-6 ${poppins.className}`}>
+            Be part of a creative community!
+          </h1>
           <button
-            className="flex items-center justify-center gap-2 w-[245px] h-[51px] rounded-[18px] text-white bg-[#5865F2] hover:bg-white hover:text-[#5865F2] hover:shadow-none transition duration-200 shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#5865F2] mb:mx-auto mb:mb-6"
+            className="flex items-center justify-center gap-2 w-[245px] h-[51px] rounded-[18px] text-white bg-[#5865F2] hover:bg-white hover:text-[#5865F2] hover:shadow-none transition duration-200 shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#5865F2]"
             onMouseEnter={() => setDiscordIcon(getImageUrl('landingpage', 'discorddark'))} 
             onMouseLeave={() => setDiscordIcon(getImageUrl('landingpage', 'discord'))} 
           >
@@ -43,13 +40,13 @@ export default function DiscordLanding() {
         </div>
 
         {/* Right Content - GIF */}
-        <div className="block w-[299px] h-[291px] absolute right-[200px] mb:static mb:w-[250px] mb:h-[250px] mb:flex mb:justify-center mb:mt-6">
+        <div className="hidden md:block w-[299px] h-[291px] absolute right-[200px]">
           <Image
-            src={getImageUrl('landingpage', 'discordimage')}
+            src= {getImageUrl('landingpage', 'discordimage')}
             alt="Creative visual effect"
-            width={262}
-            height={255}
-            className="rounded-[56px] mb:rounded-[32px]"
+            width={299}
+            height={291}
+            className="rounded-[56px]"
           />
         </div>
       </div>

@@ -286,10 +286,11 @@ const Navigation = () => {
       }`}
     >
               <div className="flex justify-between items-center p-4 border-b border-gray-800">
-                <div className="flex items-center">
-                <Image src={getImageUrl("core", "logo")} width={32} height={20} alt="logo" onClick={() => router.push("/")} />
-                <span className="text-white text-xl font-bold">WildMind</span>
-                </div>
+                <button onClick={() => router.push(NAV_ROUTES.TEMPLATES)} 
+                  className="flex items-center">
+                  <Image src={getImageUrl("core", "logo")} width={32} height={20} alt="logo" />
+                  <button onClick={() => router.push(NAV_ROUTES.TEMPLATES)} className="text-white text-xl font-bold">WildMind</button>
+                </button>
                 <button onClick={() => setIsMobileMenuOpen(false)} className="text-white p-1">
                   <X className="w-6 h-6" />
                 </button>

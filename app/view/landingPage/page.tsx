@@ -1,5 +1,5 @@
 import React from "react";
-// import Navigation from "./components/Navigation";
+import Navigation from "./components/Navigation";
 import ArtGallery from "./components/ArtGallery";
 import Cards from "./components/Cards";
 
@@ -7,17 +7,16 @@ import StartUsingAi from "./components/start-using-ai";
 import DiscordLanding from "./components/discord-landing";
 import Header from "./components/Header";
 import Footer from "../Core/Footer";
-// import Commingsoon from "./components/Commingsoon";
+import Commingsoon from "./components/Commingsoon";
 import { PartnersSection } from "./components/partners-section";
 import { Testimonials } from "./components/Testimonials";
-import NAV_LAND from "./components/NAV_LAND";
 
 const Main = () => {
   return (
     <div className="bg-black relative">
       {/* Navigation (Fixed on top with highest z-index) */}
-      <div className="fixed top-0 left-0 right-0 z-[100] flex justify-center ">
-        <NAV_LAND />
+      <div className="fixed top-0 left-0 right-0 z-[100] flex justify-center">
+        <Navigation />
       </div>
 
       {/* Main Content with Increasing z-index Order */}
@@ -39,9 +38,9 @@ const Main = () => {
         <DiscordLanding />
       </div>
 
-      {/* <div className="relative z-[50]">
+      <div className="relative z-[50]">
         <Commingsoon />
-      </div> */}
+      </div>
 
       <div className="relative z-[60]">
         <Testimonials />

@@ -1,3 +1,4 @@
+
 // Authentication Routes
 export const AUTH_ROUTES = {
   SIGN_IN: '/view/signin',
@@ -30,7 +31,8 @@ export const NAV_ROUTES = {
   CONTACT: '/view/contactus',
   SUPPORT: '/view/support',
   ABOUT: '/about',
-  BOOKMARK:'/view/Bookmark'
+  BOOKMARK:'/view/Bookmark',
+  LANDING:'/view/Main',
 
 } as const;
 
@@ -67,7 +69,7 @@ export const FOOTER_NAV_LINKS = {
 
 // Social Media Links
 export const SOCIAL_LINKS = {
-  GITHUB: '#',
+  X: '#',
   INSTAGRAM: '#',
   YOUTUBE: '#',
   BLOG: '#',

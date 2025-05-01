@@ -1,15 +1,21 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Particles from "@tsparticles/react";
+import { loadSlim } from "@tsparticles/slim";
+import { getImageUrl } from "@/routes/imageroute";
+import { initParticlesEngine } from "@tsparticles/react";
+
 
 const HoverEffectText = ({ text1, text2, imageSrc }: { text1: string; text2: string; imageSrc: string }) => {
   const [isHovered, setIsHovered] = useState(false);
-  const imageWidth = 384; 
-  const hoverGap = imageWidth / 2 - 200; 
+  const imageWidth = 384;
+  const hoverGap = imageWidth / 2 - 200;
 
   return (
-    <div className="flex items-center cursor-pointer relative space-x-[10px]"
+    <div
+      className="flex items-center cursor-pointer relative space-x-[10px]"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -57,12 +63,50 @@ const HoverEffectText = ({ text1, text2, imageSrc }: { text1: string; text2: str
 };
 
 const Commingsoon = () => {
+  useEffect(() => {
+    initParticlesEngine(async (engine) => {
+      await loadSlim(engine);
+    });
+  }, []);
+
   return (
-    <div className="h-screen flex flex-col items-center justify-center space-y-300 bg-black text-white text-[130px] font-semibold">
-      <HoverEffectText text1="Real" text2="Gen" imageSrc="/Landingpage/commingsoon/hover-1.png" />
-      <HoverEffectText text1="Text to" text2="Video" imageSrc="/Landingpage/commingsoon/hover-1.png" />
-      <HoverEffectText text1="3D" text2="Creations" imageSrc="/Landingpage/commingsoon/hover-3.png" />
-      <HoverEffectText text1="Sketch to" text2="Image" imageSrc="/Landingpage/commingsoon/hover-4.png" />
+    <div className="relative h-screen flex flex-col items-center justify-center text-white font-semibold bg-gradient-to-br from-[#050505] via-[#0f0f25] to-[#121212] overflow-hidden">
+
+      {/* Dark Overlay */}
+      <div className="absolute inset-0 bg-black/60 z-0 pointer-events-none" />
+
+
+
+      {/* Particles */}
+      <Particles
+        id="tsparticles"
+        options={{
+          fullScreen: { enable: false },
+          background: { color: { value: "transparent" } },
+          particles: {
+            color: { value: "#ffffff" },
+            number: { value: 50 },
+            size: { value: 2 },
+            move: { enable: true, speed: 0.3 },
+            opacity: { value: 0.2 },
+          },
+        }}
+        className="absolute inset-0 z-0"
+      />
+
+      {/* Text Content */}
+      <div className="z-10 flex flex-col items-center justify-center space-y-20 text-center text-6xl md:text-[130px]">
+        <HoverEffectText text1="Real" text2="Gen" imageSrc={getImageUrl("landingpage", "realtimegen")} />
+        <HoverEffectText text1="Text to" text2="Video" imageSrc={getImageUrl("landingpage", "realtimegen")} />
+        <HoverEffectText text1="3D" text2="Creations" imageSrc={getImageUrl("landingpage", "realtimegen")} />
+        <HoverEffectText text1="Sketch to" text2="Image" imageSrc={getImageUrl("landingpage", "sketchtoimage")} />
+      </div>
+
+      {/* Top Fade */}
+      <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-black via-transparent to-transparent z-20" />
+
+      {/* Bottom Fade */}
+      <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-black via-transparent to-transparent z-20" />
     </div>
   );
 };
