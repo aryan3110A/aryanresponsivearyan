@@ -6,6 +6,8 @@ import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserCheck } from "@fortawesome/free-solid-svg-icons";
 import { getImageUrl } from "@/routes/imageroute";
+import { useRouter } from "next/navigation";
+import { NAV_ROUTES } from "@/routes/routes";
 
 interface SettingsProps {
   isOpen: boolean;
@@ -15,6 +17,7 @@ interface SettingsProps {
 }
 
 type Tab = "Profile" | "Account management";
+
 
 const SettingNavigation: React.FC<SettingsProps> = ({
   isOpen,
@@ -29,6 +32,7 @@ const SettingNavigation: React.FC<SettingsProps> = ({
   const [showAgeError, setShowAgeError] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [isMobileOrTablet, setIsMobileOrTablet] = useState(false);
+const router=useRouter();
 
   // Check for mobile or tablet viewport
   useEffect(() => {
@@ -80,7 +84,10 @@ const SettingNavigation: React.FC<SettingsProps> = ({
     width: "calc(100vw - 250px)"
   };
 
+
+
   return (
+    
     <div
       className="font-poppins fixed top-0 right-0 h-full bg-[#111111] border-l border-gray-800 z-50 transform transition-all duration-300 ease-in-out overflow-y-auto"
       style={mobileStyles}
@@ -296,7 +303,8 @@ ${isValid && isAgeConfirmed ? "hover:bg-black hover:border-gray-700" : ""}`}
                   </button>
                 </div>
 
-                <button className=" md:hidden ml-1 text-sm mobile:flex items-center gap-2 bg-gradient-to-b from-[#5AD7FF] to-[#656BF5] px-4 py-2 rounded-full text-white mt-2">
+                <button onClick={() => router.push(NAV_ROUTES.PRICING)}
+                 className=" md:hidden ml-1 text-sm mobile:flex items-center gap-2 bg-gradient-to-b from-[#5AD7FF] to-[#656BF5] px-4 py-2 rounded-full text-white mt-2">
                     <Image
                       src={getImageUrl('core','diamond')}
                       alt="Upgrade"

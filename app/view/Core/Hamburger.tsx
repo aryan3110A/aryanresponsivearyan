@@ -273,7 +273,8 @@ export default function Hamburger({ isOpen, onClose }: { isOpen: boolean; onClos
               </div>
 
               {/* Upgrade Button Overlapping */}
-              <button className="flex bg-gradient-to-b from-[#5AD7FF] to-[#656BF5] text-[0.72rem] px-3 py-[1vh] md:py-[1.2vh] rounded-full hover:bg-blue-600 transition-colors -ml-[12%] md:-ml-[24%] gap-1">
+              <button onClick={() => router.push(NAV_ROUTES.PRICING)} 
+              className="flex bg-gradient-to-b from-[#5AD7FF] to-[#656BF5] text-[0.72rem] px-3 py-[1vh] md:py-[1.2vh] rounded-full hover:bg-blue-600 transition-colors -ml-[12%] md:-ml-[24%] gap-1">
                 <Image src={getImageUrl("core", "diamond") || "/placeholder.svg"} alt="User" width={16} height={16} className="" /> Upgrade
               </button>
             </div>
