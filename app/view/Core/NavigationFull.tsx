@@ -8,12 +8,7 @@ import { useRouter } from "next/navigation";
 import IMAGE from "next/image";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "@/database/firebase";
-import {
-  APP_ROUTES,
-  NAV_ROUTES,
-  
-  FEATURE_ROUTES,
-} from "@/routes/routes";
+import { APP_ROUTES, NAV_ROUTES, FEATURE_ROUTES } from "@/routes/routes";
 import { getImageUrl } from "@/routes/imageroute";
 
 interface DropdownItem {
@@ -88,7 +83,10 @@ export default function NavigationFull() {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (headerRef.current && !headerRef.current.contains(event.target as Node)) {
+      if (
+        headerRef.current &&
+        !headerRef.current.contains(event.target as Node)
+      ) {
         setActiveDropdown(null);
         setIsUserDropdownOpen(false);
       }
@@ -102,15 +100,17 @@ export default function NavigationFull() {
   useEffect(() => {
     const needsUsername = localStorage.getItem("needsUsername");
     if (needsUsername === "true") {
-      setShowUsernamePrompt(true);  // this controls your prompt modal
+      setShowUsernamePrompt(true); // this controls your prompt modal
       localStorage.removeItem("needsUsername");
     }
   }, []);
-  
-  
 
   const featuresDropdownItems: DropdownItem[] = [
-    { title: "Text to image", src: FEATURE_ROUTES.IMAGE_GENERATION, coming: false },
+    {
+      title: "Text to image",
+      src: FEATURE_ROUTES.IMAGE_GENERATION,
+      coming: false,
+    },
     { title: "Text to 3D", src: APP_ROUTES.HOME, coming: true },
     { title: "Text to Video", src: APP_ROUTES.HOME, coming: true },
     { title: "Sketch to Image", src: APP_ROUTES.HOME, coming: true },
@@ -138,38 +138,72 @@ export default function NavigationFull() {
       >
         <div className="flex items-center justify-start pl-[2vw] py-[1vh]">
           <div className="flex items-center ">
-            <button onClick={() => setIsNavOpen(true)} className="p-2 rounded-lg" aria-label="Open menu">
+            <button
+              onClick={() => setIsNavOpen(true)}
+              className="p-2 rounded-lg"
+              aria-label="Open menu"
+            >
               <Menu className="w-7 h-7" />
             </button>
             <div className="flex">
-              <IMAGE src={getImageUrl("core", "logo")} width={32} height={20} alt="logo" onClick={() => router.push("/")} />
+              <IMAGE
+                src={getImageUrl("core", "logo")}
+                width={32}
+                height={20}
+                alt="logo"
+                onClick={() => router.push("/")}
+              />
             </div>
             <div className="text-center justify-center text-2xl font-bold ml-1 ">
-            WildMind
+              WildMind
             </div>
           </div>
 
           <nav className="hidden md:flex lg:flex items-center justify-center gap-[4vw] font-poppins sm:pl-[18vw] md:pl-[21vw] lg:pl-[25vw]">
             <div className="relative">
-              <button onClick={() => toggleDropdown("features")} className="flex items-center hover:text-[#dbdbdb]">
+              <button
+                onClick={() => toggleDropdown("features")}
+                className="flex items-center hover:text-[#dbdbdb]"
+              >
                 <span>Features</span>
-                <ChevronDown className={`ml-1 w-6 h-6 ${activeDropdown === "features" ? "rotate-180" : ""}`} />
+                <ChevronDown
+                  className={`ml-1 w-6 h-6 ${
+                    activeDropdown === "features" ? "rotate-180" : ""
+                  }`}
+                />
               </button>
             </div>
 
             <div className="relative">
-              <button onClick={() => toggleDropdown("templates")} className="flex items-center hover:text-[#dbdbdb]">
+              <button
+                onClick={() => toggleDropdown("templates")}
+                className="flex items-center hover:text-[#dbdbdb]"
+              >
                 <span>Templates</span>
-                <ChevronDown className={`ml-1 w-6 h-6 ${activeDropdown === "templates" ? "rotate-180" : ""}`} />
+                <ChevronDown
+                  className={`ml-1 w-6 h-6 ${
+                    activeDropdown === "templates" ? "rotate-180" : ""
+                  }`}
+                />
               </button>
             </div>
 
-            <Link href={NAV_ROUTES.PRICING} className="hover:text-[#dbdbdb]">Pricing</Link>
-            <Link href={NAV_ROUTES.ART_STATION} className="hover:text-[#dbdbdb]">Art Station</Link>
+            <Link href={NAV_ROUTES.PRICING} className="hover:text-[#dbdbdb]">
+              Pricing
+            </Link>
+            <Link
+              href={NAV_ROUTES.ART_STATION}
+              className="hover:text-[#dbdbdb]"
+            >
+              Art Station
+            </Link>
           </nav>
 
           <div className="fixed right-[4vw]">
-            <button className="p-2" onClick={() => setIsUserDropdownOpen(!isUserDropdownOpen)}>
+            <button
+              className="p-2"
+              onClick={() => setIsUserDropdownOpen(!isUserDropdownOpen)}
+            >
               <User className="w-6 h-6" />
             </button>
 
@@ -177,11 +211,24 @@ export default function NavigationFull() {
               <div className="absolute -ml-[20vw] md:-ml-[3vw] mt-[1.3vh] w-[8vw] min-w-[150px] bg-black/40 backdrop-blur-3xl rounded-md shadow-lg z-30 animate-dropdown">
                 <div className="py-2 flex flex-col">
                   <div className="px-4 py-2 text-white flex flex-col items-start">
-                    <span className="text-sm font-semibold">{username || "Guest"}</span>
+                    <span className="text-sm font-semibold">
+                      {username || "Guest"}
+                    </span>
                     <span className="text-xs text-gray-400">{userEmail}</span>
                   </div>
-                  <button onClick={handleLogout} className="px-4 py-2 text-white hover:text-blue-400 flex items-center text-xs md:text-[1rem]">
-                    <svg className="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <button
+                    onClick={handleLogout}
+                    className="px-4 py-2 text-white hover:text-blue-400 flex items-center text-xs md:text-[1rem]"
+                  >
+                    <svg
+                      className="w-4 h-4 mr-2"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
                       <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
                       <polyline points="16 17 21 12 16 7" />
                       <line x1="21" y1="12" x2="9" y2="12" />
@@ -195,18 +242,30 @@ export default function NavigationFull() {
         </div>
 
         {activeDropdown && (
-          <div className="left-0 right-0 overflow-hidden transition-all duration-1000 z-10" style={{ ...backgroundStyle, maxHeight: activeDropdown ? "50vh" : "0", opacity: animating ? 0 : 1 }}>
+          <div
+            className="left-0 right-0 overflow-hidden transition-all duration-1000 z-10"
+            style={{
+              ...backgroundStyle,
+              maxHeight: activeDropdown ? "50vh" : "0",
+              opacity: animating ? 0 : 1,
+            }}
+          >
             <div className="container py-2">
-              <div className="flex flex-col sm:ml-[31.4vw] md:ml-[36.5vw] lg:ml-[37.3vw]">
+              <div className="flex flex-col sm:ml-[31.4vw] md:ml-[36vw] lg:ml-[37.3vw]">
                 <h3 className="text-lg font-bold mb-[2vh]">CREATE</h3>
                 <div className="flex flex-col space-y-[1.5vh]">
-                  {(activeDropdown === "features" ? featuresDropdownItems : templatesDropdownItems).map((item, index) => (
+                  {(activeDropdown === "features"
+                    ? featuresDropdownItems
+                    : templatesDropdownItems
+                  ).map((item, index) => (
                     <Link
                       href={`/${item.src.toLowerCase().replace(/\s+/g, "-")}`}
                       key={index}
                       className="block py-0 rounded-md transition-all duration-300 hover:text-[#dbdbdb]"
                     >
-                      <span>{item.title} {item.coming && "(coming soon)"}</span>
+                      <span>
+                        {item.title} {item.coming && "(coming soon)"}
+                      </span>
                     </Link>
                   ))}
                 </div>
