@@ -117,10 +117,10 @@ export default function NavigationFull() {
     { title: "Real Time Genration", src: APP_ROUTES.HOME, coming: true },
   ];
 
-  const templatesDropdownItems: DropdownItem[] = [
-    { title: "Image Generation", src: APP_ROUTES.HOME, coming: false },
-    { title: "Video Generation", src: APP_ROUTES.HOME, coming: true },
-  ];
+  // const templatesDropdownItems: DropdownItem[] = [
+  //   { title: "Image Generation", src: APP_ROUTES.HOME, coming: false },
+  //   { title: "Video Generation", src: APP_ROUTES.HOME, coming: true },
+  // ];
 
   const backgroundStyle = {
     backgroundSize: "cover",
@@ -174,19 +174,9 @@ export default function NavigationFull() {
               </button>
             </div>
 
-            <div className="relative">
-              <button
-                onClick={() => toggleDropdown("templates")}
-                className="flex items-center hover:text-[#dbdbdb]"
-              >
-                <span>Templates</span>
-                <ChevronDown
-                  className={`ml-1 w-6 h-6 ${
-                    activeDropdown === "templates" ? "rotate-180" : ""
-                  }`}
-                />
-              </button>
-            </div>
+            <Link href={NAV_ROUTES.TEMPLATES} className="hover:text-[#dbdbdb]">
+              Templates
+            </Link>
 
             <Link href={NAV_ROUTES.PRICING} className="hover:text-[#dbdbdb]">
               Pricing
@@ -208,7 +198,7 @@ export default function NavigationFull() {
             </button>
 
             {isUserDropdownOpen && (
-              <div className="absolute -ml-[31vw] md:-ml-[6vw] mt-[1.3vh] w-auto min-w-[150px] bg-black/80 backdrop-blur-3xl rounded-md shadow-lg z-30 animate-dropdown">
+              <div className="absolute -ml-[31vw]  sm-laptop:-ml-[12vw] md-laptop:-ml-[10vw]  lg:-ml-[6vw] mt-[1.3vh] w-auto min-w-[150px] bg-black/80 backdrop-blur-3xl rounded-md shadow-lg z-30 animate-dropdown">
                 <div className="py-2 flex flex-col">
                   <div className="px-4 py-2 text-white flex flex-col items-start">
                     <span className="text-xs md:text-sm font-semibold">
@@ -256,7 +246,7 @@ export default function NavigationFull() {
                 <div className="flex flex-col space-y-[1.5vh]">
                   {(activeDropdown === "features"
                     ? featuresDropdownItems
-                    : templatesDropdownItems
+                    : featuresDropdownItems
                   ).map((item, index) => (
                     <Link
                       href={`/${item.src.toLowerCase().replace(/\s+/g, "-")}`}
