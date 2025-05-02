@@ -36,7 +36,7 @@ export default function StartUsingAi() {
         </div>
 
         {/* Desktop Image */}
-        <div className="absolute right-0 bottom-0 h-[484px] w-[410px] mb:hidden">
+        <div className="absolute right-0 bottom-0 h-[484px] w-[410px] hidden md:block">
           <Image
             src={getImageUrl("landingpage", "usingai")}
             alt="Creative AI Visual"
@@ -52,7 +52,7 @@ export default function StartUsingAi() {
             alt="Creative AI Visual"
             width={500}
             height={500}
-            className="w-[400px] h-[400px]"
+            className="w-[500px] h-[500px]"
           />
         </div>
       </div>
