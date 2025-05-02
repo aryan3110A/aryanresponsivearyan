@@ -109,7 +109,7 @@ const NAV_LAND = () => {
       {/* Desktop Navigation */}
       <div
         className={`fixed top-5 left-1/2 -translate-x-1/2 z-[1000] items-center justify-between p-2 rounded-[50px] 
-        border-[1px] border-white/20 w-[90vw] md:w-[45vw] lg:w-[45vw] text-white
+        border-[1px] border-white/20 w-[90vw] sm-laptop:w-[55vw] md:w-[45vw] lg:w-[45vw] text-white
         ${
           scrolled ? "backdrop-blur-xl bg-black/30 shadow-lg" : "backdrop-blur-xl bg-black/10 shadow-lg"
         } transition-all duration-300 hidden md:flex`}
@@ -176,7 +176,7 @@ const NAV_LAND = () => {
         </div>
         <div>
           <span
-            className="px-3 py-1 hover:bg-gradient-to-l hover:bg-clip-text cursor-pointer hover:text-[#dbdbdb]"
+            className="px-3 py-1 hover:bg-gradient-to-l hover:bg-clip-text cursor-pointer hover:text-[#dbdbdb] flex-nowrap"
             onClick={() => router.push(NAV_ROUTES.ART_STATION)}
           >
             Art Station
@@ -186,7 +186,7 @@ const NAV_LAND = () => {
         {/* Get Started Button */}
         <div>
           <button
-            className="hidden md:block  relative bg-black/20 border border-white/20 rounded-full px-5 py-2 text-base font-medium border-t-[#acacac] border-b-[#6A0DAD] hover:border-t-[#6A0DAD] hover:border-b-[#acacac] 
+            className="hidden md:block md:flex-nowrap  relative bg-black/20 border border-white/20 rounded-full px-5 py-2 text-base font-medium border-t-[#acacac] border-b-[#6A0DAD] hover:border-t-[#6A0DAD] hover:border-b-[#acacac] 
                       text-transparent bg-clip-text bg-gradient-to-r from-[#5AD7FF] to-[#656BF5] shadow-[inset_0px_0px_8px_rgba(255,255,255,0.2)] 
                       transition-all duration-500 ease-in-out hover:text-white"
             onClick={handleGetStarted}

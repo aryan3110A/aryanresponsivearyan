@@ -17,7 +17,7 @@ const SlideImage = () => {
     <div className="text-white flex w-full overflow-hidden relative mt-14 mb:items-center mb:gap-2 mb:mt-8">
 
   {/* Left Side - Text Animation */}
-  <div className="flex flex-col gap-12 mt-14 w-1/3 overflow-hidden mb:gap-1 mb:w-full mb:mt-0">
+  <div className="flex flex-col gap-12 mt-14 w-[38vw] overflow-hidden mb:gap-1 mb:w-full mb:mt-0">
     {textRows.map((row, index) => (
       <motion.div
         key={index}
@@ -47,7 +47,7 @@ const SlideImage = () => {
   </div>
 
   {/* Center Logo */}
-  <div className="w-1/3 flex justify-center mb:w-full mb:justify-center mb:items-center">
+  <div className="w-1/4 flex items-center justify-center mb:w-full mb:justify-center mb:items-center">
     <img
       src="/Core/logomain.png"
       alt="new"

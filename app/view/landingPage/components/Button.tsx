@@ -15,19 +15,20 @@ const Button = () => {
         mb:border-t-[#acacac] mb:border-b-[#6A0DAD] mb:hover:border-t-[#6A0DAD] mb:hover:border-b-[#acacac] 
         mb:text-transparent mb:bg-clip-text mb:bg-gradient-to-r mb:from-[#5AD7FF] mb:to-[#656BF5] 
         mb:shadow-[inset_0px_0px_8px_rgba(255,255,255,0.2)] mb:transition-all mb:duration-500 mb:ease-in-out 
-        mb:hover:text-white mb:w-[133px] mb:h-[40px]"
+        mb:hover:text-white mb:w-[133px] mb:h-[40px] "
         onClick={() => router.push(APP_ROUTES.SIGNUP)}
       >
         {/* Mobile Text */}
-        <span className="mb:text-[12px] mb:font-normal md:hidden">Get Started</span>
-
+        <span className="mb:text-[12px]  mb:font-normal md:hidden">Get Started</span>
+        
         {/* Desktop Image */}
+        
         <Image
           src="/Landingpage/Header/Group.png"
           alt="Group Icon"
           width={24}
           height={24}
-          className="absolute left-6 transition-all duration-500 ease-in-out group-hover:left-1/2 group-hover:-translate-x-1/2 hidden md:block z-10"
+          className="absolute left-6 transition-all duration-500 ease-in-out group-hover:left-1/2 group-hover:-translate-x-1/2 hidden md:block z-10 "
         />
 
         {/* Desktop Text */}
