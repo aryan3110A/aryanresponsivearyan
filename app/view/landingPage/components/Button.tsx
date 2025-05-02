@@ -10,6 +10,9 @@ const Button = () => {
   return (
     <div className="flex justify-center mt-20">
       <button
+        // style={{
+        //   boxShadow: '10px 0px 100px 20px rgba(255, 255, 255, 0.35)',
+        // }}
         className="group bg-blue-600 text-white flex w-[200px] md:w-[260px] h-10 justify-center items-center gap-3 rounded-full relative overflow-hidden 
         mb:bg-black/20 mb:border mb:border-white/20 mb:rounded-full mb:px-5 mb:py-2 mb:text-base mb:font-medium 
         mb:border-t-[#acacac] mb:border-b-[#6A0DAD] mb:hover:border-t-[#6A0DAD] mb:hover:border-b-[#acacac] 
@@ -32,7 +35,8 @@ const Button = () => {
         />
 
         {/* Desktop Text */}
-        <span className="text-[16px] transition-opacity duration-500 ease-in-out group-hover:opacity-0 ml-8 hidden md:block z-10">
+        <span className="text-[16px] transition-opacity duration-500 ease-in-out group-hover:opacity-0 ml-8 hidden md:block z-10" 
+        >
           Start creating now!
         </span>
       </button>

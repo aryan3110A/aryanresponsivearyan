@@ -48,12 +48,17 @@ const SlideImage = () => {
 
   {/* Center Logo */}
   <div className="w-1/4 flex items-center justify-center mb:w-full mb:justify-center mb:items-center">
-    <img
-      src="/Core/logomain.png"
-      alt="new"
-      className="relative z-10 w-auto mb:h-[111px] mb:w-[111px]"
-    />
-  </div>
+  <img
+    src="/Core/logomain.png"
+    alt="new"
+    className="relative z-10 w-auto mb:h-[111px] mb:w-[111px] rounded-full"
+    // style={{
+    //   boxShadow: '0 14px 60px rgba(255, 255, 255, 0.35)',
+    // }}
+  />
+</div>
+
+
 
   {/* Right Side - Image Animation */}
   <div className="w-[40vw] overflow-hidden flex items-center justify-center mb:w-full mb:h-[150px]">
