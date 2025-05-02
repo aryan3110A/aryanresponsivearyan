@@ -55,7 +55,7 @@ const ArtGallery = () => {
           {[...galleryImages, ...galleryImages].map((image, index) => (
             <div
               key={`image-${index}`}
-              className="flex-shrink-0 relative w-[200px] h-[450px] sm:w-[250px] sm:h-[500px] md:w-[400px] md:h-[750px] lg:w-[600px] lg:h-[1050px]"
+              className="flex-shrink-0 relative w-[200px] h-[450px] sm:w-[250px] sm:h-[500px] md:w-[400px] md:h-[550px] lg:w-[600px] lg:h-[1050px]"
             >
               <Image
                 src={image.src}
