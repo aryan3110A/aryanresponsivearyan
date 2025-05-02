@@ -44,7 +44,7 @@ const ArtGallery = () => {
       </div>
 
       {/* Infinite Scrolling Gallery */}
-      <div className="w-full  md:my-10 overflow-hidden relative z-10 -mt-40 md:-mt-[40rem] md:-mb-[40rem] lg:-mt-[1025px] lg:-mb-[1260px] ">
+      <div className="w-full  md:my-10 overflow-hidden relative z-10 -mt-40 md:-mt-[44rem] md:-mb-[40rem] lg:-mt-[1025px] lg:-mb-[1260px] ">
         <div
           className="flex gap-1 md:gap-4 animate-scroll"
           style={{
@@ -55,7 +55,7 @@ const ArtGallery = () => {
           {[...galleryImages, ...galleryImages].map((image, index) => (
             <div
               key={`image-${index}`}
-              className="flex-shrink-0 relative w-[200px] h-[450px] sm:w-[250px] sm:h-[500px] md:w-[400px] md:h-[550px] lg:w-[600px] lg:h-[1050px]"
+              className="flex-shrink-0 relative w-[200px] h-[450px] sm:w-[250px] sm:h-[500px] md:w-[400px] md:h-[600px] lg:w-[600px] lg:h-[1050px]"
             >
               <Image
                 src={image.src}
@@ -69,7 +69,7 @@ const ArtGallery = () => {
       </div>
 
       {/* Bottom Decorative Image */}
-      <div className="w-full h-auto z-30 -mb-0 -mt-80 md:-mb-[370px] md:-mt-[340px] lg:-mb-[500px] lg:-mt-[340px]">
+      <div className="w-full h-auto z-30 -mb-0 -mt-80 md:-mb-[370px] md:-mt-[380px] lg:-mb-[500px] lg:-mt-[340px]">
         <Image
           src="/Landingpage/ArtGallery/bottomimage.png"
           alt="Bottom Decorative Path"
