@@ -5,6 +5,7 @@ import { Settings } from "lucide-react"
 import Image from "next/image"
 import NavigationFull from "../Core/NavigationFull"
 import Footer from "../Core/Footer"
+import SelectionModel from "../imagegeneration/selectionmodel/app-container"
 
 // Sample data for the templates
 const templates = [
@@ -39,6 +40,9 @@ const templates = [
 
 export default function TextGenerationTemplate() {
   // State to store the current prompt in the input field
+
+  const [showSelectionModel, setShowSelectionModel] = useState(false);
+
   const [inputPrompt, setInputPrompt] = useState("")
 
   // Function to handle template selection
@@ -49,6 +53,13 @@ export default function TextGenerationTemplate() {
   return (<>
     <div className="pb-10 w-full min-h-screen bg-gradient-to-b from-black via-black to-black text-white relative overflow-hidden">
       <NavigationFull />
+      {showSelectionModel && (
+        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex">
+          <div className="absolute left-0 top-0 h-full w-[380px]">
+            <SelectionModel onClose={() => setShowSelectionModel(false)} />
+          </div>
+        </div>
+      )}
       {/* Main content container */}
       <div className="w-full max-w-[100%] mx-auto pt-[10vh] px-[5vw]">
         {/* Header section with background image and input */}
@@ -97,14 +108,19 @@ export default function TextGenerationTemplate() {
           
 
           {/* Settings Button */}
-          <button className="hidden md:block bg-[#262626] hover:bg-black/70 transition-colors backdrop-blur-md rounded-full p-[2vh]  items-center justify-center">
+          <button 
+                  onClick={() => setShowSelectionModel(true)}
+
+          className="hidden md:block bg-[#262626] hover:bg-black/70 transition-colors backdrop-blur-md rounded-full p-[2vh]  items-center justify-center">
             <Settings className="w-[4vh] h-[4vh]" />
           </button>
         </div>
 
         <div className="md:hidden lg:hidden mt-[7vh] ml-[140px] flex items-center gap-0">
         {/* Settings Button */}
-          <button className="bg-[#262626] hover:bg-black/70 transition-colors backdrop-blur-md  rounded-xl p-2 flex items-center justify-center my-auto mx-auto">
+          <button 
+                            onClick={() => setShowSelectionModel(true)}
+                            className="bg-[#262626] hover:bg-black/70 transition-colors backdrop-blur-md  rounded-xl p-2 flex items-center justify-center my-auto mx-auto">
             <Settings className="my-auto mx-auto w-7 h-7 text-white" />
           </button>
 

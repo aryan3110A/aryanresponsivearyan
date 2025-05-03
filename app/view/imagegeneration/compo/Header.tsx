@@ -35,7 +35,7 @@ export default function HomePage() {
   <div className="absolute inset-0 bg-black bg-opacity-50" />
   <div className="relative z-10 text-center px-4">
     <h1 className="text-4xl md:text-5xl font-bold text-white mb:text-xl">
-      Introducing <span className="text-blue-500">Text to Video</span>
+      Introducing <span className="text-blue-500">Text to Image</span>
     </h1>
   </div>
 </section>
