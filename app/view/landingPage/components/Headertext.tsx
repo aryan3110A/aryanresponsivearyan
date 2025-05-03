@@ -18,7 +18,8 @@ export function HeroHighlightDemo() {
           duration: 0.5,
            ease: [0.4, 0.0, 0.2, 1],
         }}
-        className="text-[1.5rem] px-4 md:text-3xl lg:text-4xl font-bold md:font-extrabold text-neutral-700 dark:text-white max-w-6xl leading-relaxed lg:leading-snug text-center  mt-14 mb:-mt-20 "
+        className="text-[1.5rem] px-4 md:text-3xl lg:text-4xl font-bold md:font-extrabold text-neutral-700 dark:text-white max-w-6xl leading-relaxed lg:leading-snug text-center md:mt-24  "
+        
       >
         From your vision to Stunning Creations    {" "} <br/> 
         <Highlight className="text-black dark:text-white"> 

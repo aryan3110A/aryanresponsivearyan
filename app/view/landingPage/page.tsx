@@ -21,7 +21,7 @@ const Main = () => {
       </div>
 
       {/* Main Content with Increasing z-index Order */}
-      <div className="pt-20 relative">
+      <div className="pt-0  relative">
         <div className="relative z-[30] mb:z-[10]">
           <Header />
         </div>

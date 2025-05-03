@@ -21,7 +21,7 @@ export default function StylePalettes() {
   ];
 
   return (
-    <div className="relative w-[180px]">
+    <div className="relative w-[180px] mb:w-[150px]">
       <h3 className="text-white text-sm font-medium mb-2">Style Palettes</h3>
       <div
         className="flex justify-between items-center bg-[#050505] rounded-md p-2 w-[180px] h-[32px] cursor-pointer"
@@ -35,8 +35,8 @@ export default function StylePalettes() {
           {options.map((option, index) => (
             <div
               key={index}
-              className={`p-2 cursor-pointer text-white text-sm transition-colors duration-200
-                ${selectedOption === option ? "bg-[#4a90e2]" : "hover:bg-white hover:text-black"}`}
+              className={`p-2 cursor-pointer text-white text-sm transition-colors duration-200  mb:p-2 mb:cursor-pointer mb:text-white mb:text-sm mb:transition-colors mb:duration-200 
+                ${selectedOption === option ? "bg-[#4a90e2]" : "hover:bg-white hover:text-black mb:hover:bg-white mb:hover:text-black"}`}
               onClick={() => {
                 setSelectedOption(option);
                 setIsOpen(false);

@@ -47,14 +47,15 @@ export default function StartUsingAi() {
 
         {/* Mobile Image */}
         <div className="hidden mb:block w-full px-6 mt-6">
-          <Image
-            src={getImageUrl("landingpage", "usingai")}
-            alt="Creative AI Visual"
-            width={500}
-            height={500}
-            className="w-[500px] h-[500px]"
-          />
-        </div>
+  <Image
+    src={getImageUrl("landingpage", "usingai")}
+    alt="Creative AI Visual"
+    width={1600} 
+    height={800}
+    className="w-full h-auto"
+  />
+</div>
+
       </div>
 
       {/* Newsletter Section */}

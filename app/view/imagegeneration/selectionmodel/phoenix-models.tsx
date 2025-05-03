@@ -1,5 +1,5 @@
 import Image from "next/image"
-import MySvg from "@/public/ImageGeneate/phnx.svg" // Adjust path based on your folder structure
+import MySvg from "@/public/ImageGeneate/phnx.svg"
 
 interface ModelCard {
   id: string
@@ -7,7 +7,13 @@ interface ModelCard {
   description: string
 }
 
-export default function Models() {
+export default function Models({
+  setSelectedModel,
+  toggleModels,
+}: {
+  setSelectedModel: (model: string) => void
+  toggleModels: () => void
+}) {
   const models: ModelCard[] = [
     {
       id: "1",
@@ -17,50 +23,41 @@ export default function Models() {
     {
       id: "2",
       title: "Flux.1 Dev",
-      description:
-        "Flux.1 Dev, a powerful 12B parameter flow transformer model from the FLUX series. This model delivers high-quality image generation with exceptional detail and efficiency.",
+      description: "Flux.1 Dev, a powerful 12B parameter flow transformer model from the FLUX series. This model delivers high-quality image generation with exceptional detail and efficiency.",
     },
     {
       id: "3",
       title: "Google's Imagen",
-      description:
-        "Google’s Imagen - generating images with even better detail, richer lightingand fewer distracting artifacts than our previous models.",
+      description: "Google’s Imagen - generating images with even better detail, richer lighting and fewer distracting artifacts than our previous models.",
     },
     {
       id: "4",
       title: "Stable Diffusion 3.5 Medium",
-      description:
-        "Stable Diffusion 3.5 Medium With 2.5B parameters and enhanced MMDiT-X architecture, this model runs efficiently on consumer hardware, balancing quality and customization while generating images from 0.25 to 2 MP.",
+      description: "Stable Diffusion 3.5 Medium With 2.5B parameters and enhanced MMDiT-X architecture, this model runs efficiently on consumer hardware, balancing quality and customization while generating images from 0.25 to 2 MP.",
     },
     {
       id: "5",
       title: "MidJourney + Flux Dev + LoRA",
-      description:
-        "A powerful fusion of MidJourney’s artistic capabilities, Flux-Dev’s efficiency, and LoRA fine-tuning, enabling highly customized, stylistic, and efficient AI-generated imagery.",
+      description: "A powerful fusion of MidJourney’s artistic capabilities, Flux-Dev’s efficiency, and LoRA fine-tuning, enabling highly customized, stylistic, and efficient AI-generated imagery.",
     },
     {
       id: "6",
       title: "Stable Diffusion XL",
-      description:
-        "Get involved with the fastest growing open software project. Download and join other developers in creating incredible applications with Stable Diffusion XL as a foundation model.",
+      description: "Get involved with the fastest growing open software project. Download and join other developers in creating incredible applications with Stable Diffusion XL as a foundation model.",
     },
-   
   ]
 
   return (
     <div className="bg-[#0F0F0F] min-h-screen w-full flex justify-center">
-      <div className="bg-[#171717]  rounded-xl shadow-lg w-full max-w-6xl relative">
-        {/* Sticky Header */}
-        <div className="sticky top-0 w-full bg-[#292929] p-7 z-10">
-          <h1 className=" font-poppins text-[22px] font-semibold text-transparent bg-clip-text bg-gradient-to-b from-[#5AD7FF] via-[#5AD7FF] to-[#656BF5]">
+      <div className="bg-[#171717] rounded-xl shadow-lg w-full max-w-6xl relative">
+        <div className="sticky top-0 w-full bg-[#292929] p-7 z-10 mb:bg-black">
+          <h1 className="font-poppins text-[22px] font-semibold text-transparent bg-clip-text bg-gradient-to-b from-[#5AD7FF] via-[#5AD7FF] to-[#656BF5] mb:bg-black">
             Models and Presets
           </h1>
         </div>
-
-        {/* Grid Layout with Auto Responsive Columns */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-4 w-full p-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-4 w-full p-6 mb:grid-cols-2">
           {models.map((model) => (
-            <ModelCard key={model.id} model={model} />
+            <ModelCard key={model.id} model={model} setSelectedModel={setSelectedModel} toggleModels={toggleModels} />
           ))}
         </div>
       </div>
@@ -68,12 +65,24 @@ export default function Models() {
   )
 }
 
-// Card Component
-function ModelCard({ model }: { model: ModelCard }) {
+function ModelCard({
+  model,
+  setSelectedModel,
+  toggleModels,
+}: {
+  model: ModelCard
+  setSelectedModel: (model: string) => void
+  toggleModels: () => void
+}) {
   return (
-    <div className="rounded-xl overflow-hidden transition-transform hover:scale-105 bg-[#1E1E1E] shadow-md group w-full h-[185px]">
+    <div
+      className="rounded-xl overflow-hidden transition-transform hover:scale-105 bg-[#1E1E1E] shadow-md group w-full h-[185px] mb:bg-black mb:h-[150px] cursor-pointer"
+      onClick={() => {
+        setSelectedModel(model.title)
+        toggleModels()
+      }}
+    >
       <div className="relative w-full h-full flex items-center justify-center rounded-xl overflow-hidden">
-        {/* Use Local SVG */}
         <Image
           src={MySvg || "/placeholder.svg"}
           alt={`${model.title} Thumbnail`}
@@ -81,20 +90,14 @@ function ModelCard({ model }: { model: ModelCard }) {
           width={198}
           height={185}
         />
-
-        {/* Title Overlay at Bottom */}
         <div className="absolute bottom-0 w-full h-[40px] bg-gradient-to-t from-[#292929] to-[#292929]/50 flex items-center justify-center">
           <p className="text-white font-semibold text-[12px] text-left px-2 truncate font-poppins">{model.title}</p>
         </div>
-
-        {/* Description Overlay on Hover */}
-        {/* Description Overlay on Hover */}
         <div className="absolute bottom-0 w-full h-0 bg-black/90 flex items-start opacity-0 group-hover:opacity-100 group-hover:h-full transition-all duration-300 overflow-hidden">
           <div className="p-3 text-white text-left w-full font-poppins">
             <p className="text-xs">{model.description}</p>
           </div>
         </div>
-
       </div>
     </div>
   )

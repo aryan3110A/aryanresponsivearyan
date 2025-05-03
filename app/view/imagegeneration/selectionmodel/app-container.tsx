@@ -16,20 +16,17 @@ interface SelectionModelProps {
 }
 
 export default function SelectionModel({ onClose }: SelectionModelProps) {
-  // State to track if the models panel is open
   const [isModelsOpen, setIsModelsOpen] = useState(false)
-  
-  // Refs for click-outside detection
+  const [selectedModel, setSelectedModel] = useState("Flux 1.0")
+
   const sidebarRef = useRef<HTMLDivElement>(null)
   const presetRef = useRef<HTMLDivElement>(null)
   const appContainerRef = useRef<HTMLDivElement>(null)
-  
-  // Function to toggle the models panel
+
   const toggleModels = () => {
     setIsModelsOpen(!isModelsOpen)
   }
 
-  // Close SelectionModel when clicking outside its container
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -49,16 +46,13 @@ export default function SelectionModel({ onClose }: SelectionModelProps) {
   return (
     <div 
       ref={appContainerRef}
-      className="absolute left-0 top-0 w-[380px] h-screen overflow-hidden z-50"
+      className="absolute left-0 top-0 w-[380px] h-screen overflow-hidden z-50 mb:w-[300px]"
     >
       <div className="absolute inset-0 h-full bg-gradient-to-b from-gray-100 to-gray-200 rounded-lg"></div>
       <div className="relative w-full h-full flex flex-col bg-[#121212] p-4">
-        {/* Close button */}
         <button 
           onClick={() => {
-            if (onClose) {
-              onClose();
-            }
+            if (onClose) onClose();
           }} 
           className="self-end text-white mb-4"
         >
@@ -66,7 +60,7 @@ export default function SelectionModel({ onClose }: SelectionModelProps) {
         </button>
         <Logo />
         <div className="mt-4" ref={presetRef}>
-          <ModelPreset isOpen={isModelsOpen} toggle={toggleModels} />
+          <ModelPreset isOpen={isModelsOpen} toggle={toggleModels} selectedModel={selectedModel} />
         </div>
         <div className="mt-6">
           <StylePalettes />
@@ -77,12 +71,11 @@ export default function SelectionModel({ onClose }: SelectionModelProps) {
         <div className="mt-6">
           <NumberOfImages />
         </div>
-        <div className="mt-8 flex justify-start">
+        <div className="mt-8 flex justify-start mb:justify-end">
           <SaveButton />
         </div>
       </div>
 
-      {/* Models Panel with Animation */}
       <AnimatePresence>
         {isModelsOpen && (
           <motion.div
@@ -91,10 +84,10 @@ export default function SelectionModel({ onClose }: SelectionModelProps) {
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: "-100%", opacity: 0 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="fixed top-0 left-[380px] w-[724px] h-screen overflow-auto"
+            className="fixed top-0 left-[380px] w-[724px] h-screen overflow-auto mb:left-0 mb:w-[350px]"
           > 
             <div>
-              <Models />
+              <Models setSelectedModel={setSelectedModel} toggleModels={toggleModels} />
             </div>
           </motion.div>
         )}

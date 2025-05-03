@@ -5,12 +5,12 @@ import { ChevronRight } from "lucide-react"
 interface ModelPresetProps {
   isOpen: boolean;
   toggle: () => void;
+  selectedModel: string;
 }
 
-export default function ModelPreset({ isOpen, toggle }: ModelPresetProps) {
-  // Handle click to toggle the panel
+export default function ModelPreset({ isOpen, toggle, selectedModel }: ModelPresetProps) {
   const handleClick = (e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent event from bubbling up
+    e.stopPropagation();
     toggle();
   };
 
@@ -19,21 +19,16 @@ export default function ModelPreset({ isOpen, toggle }: ModelPresetProps) {
       className="relative rounded-lg overflow-hidden cursor-pointer w-[362px] h-[99px] flex items-center"
       onClick={handleClick}
       style={{
-        backgroundImage: `url('/Rectangle39.png')`, // Ensure correct path
+        backgroundImage: `url('/Rectangle39.png')`,
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
     >
       <div className="flex items-center justify-center relative">
-        {/* Dark Overlay */}
-        <div className="bg-[#292929]/95 w-[337px] h-[80px] flex flex-col justify-center px-4 rounded-[7px]">
-          {/* Title (aligned to left by default) */}
-          <p className="text-[20px] text-[#4B91F1] font-semibold ">Models/Preset</p>
-          {/* Subtitle (aligned to left by default) */}
-          <p className="text-white text-[16px]">Flux 1.0</p>
+        <div className="bg-[#292929]/95 w-[337px] h-[80px] flex flex-col justify-center px-4 rounded-[7px] mb:w-[250px]">
+          <p className="text-[20px] text-[#4B91F1] font-semibold">Models/Preset</p>
+          <p className="text-white text-[16px]">{selectedModel}</p>
         </div>
-
-        {/* Arrow Icon (centered with absolute positioning) */}
         <ChevronRight
           className={`absolute right-10 text-white transition-transform ${isOpen ? 'rotate-90' : ''}`} 
         />

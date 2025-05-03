@@ -18,30 +18,16 @@ const Header = () => {
   
 
   return (
-    <div className="relative h-screen bg-gradient-to-br from-[#050505] via-[#0a0a1f] to-[#0c0c0c] overflow-hidden flex flex-col justify-center items-center 
-    mb:h-auto mb:min-h-[100vh] mb:px-2 mb:items-center mb:justify-center mb:flex-col">
+    <div  className="relative h-screen  overflow-hidden flex flex-col justify-center items-center 
+    mb:h-auto mb:min-h-[100vh] mb:px-2 mb:items-center mb:justify-center mb:flex-col"
+     >
 
 
-      {/* Particles Background */}
-      {/* <Particles
-        id="tsparticles"
-        options={{
-          fullScreen: { enable: false },
-          background: { color: { value: 'transparent' } },
-          particles: {
-            color: { value: '#ffffff' },
-            number: { value: 60 },
-            size: { value: 1.5 },
-            move: { enable: true, speed: 0.25 },
-            opacity: { value: 0.2 },
-            links: { enable: true, color: "#ffffff", opacity: 0.03 },
-          },
-        }}
-        className="absolute inset-0 z-0"
-      /> */}
+  
 
       {/* Main Content */}
-      <div className="z-20 w-full h-full flex flex-col justify-between items-center px-0 md:pt-20 lg:pt-4 mb-28">
+      <div className="z-20 w-full h-full flex flex-col justify-between items-center px-0 md:pt-20 lg:pt-4 mb-28"
+      >
         <HeroHighlightDemo />
         
         <SlideImage />

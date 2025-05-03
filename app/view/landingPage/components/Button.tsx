@@ -8,7 +8,7 @@ const Button = () => {
   const router = useRouter();
 
   return (
-    <div className="flex justify-center mt-20">
+    <div className="md:hidden flex justify-center mt-20">
       <button
         // style={{
         //   boxShadow: '10px 0px 100px 20px rgba(255, 255, 255, 0.35)',
@@ -35,7 +35,7 @@ const Button = () => {
         />
 
         {/* Desktop Text */}
-        <span className="text-[16px] transition-opacity duration-500 ease-in-out group-hover:opacity-0 ml-8 hidden md:block z-10" 
+        <span className="text-[16px] transition-opacity duration-500 ease-in-out group-hover:opacity-0 ml-8 hidden md:hidden z-10" 
         >
           Start creating now!
         </span>

@@ -8,7 +8,7 @@ export default function AspectRatio() {
   return (
     <div>
       <h3 className="text-white text-lg font-medium mb-3">Aspect ratio</h3>
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 gap-3 mb:gap-6">
         {/* Individual Aspect Ratio Buttons */}
         <div
           className={`w-[109px] h-[43px] border rounded-lg flex items-center justify-center gap-2 cursor-pointer transition-all
