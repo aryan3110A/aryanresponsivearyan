@@ -154,21 +154,7 @@ const ContactSection = () => {
     }
   }
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const form = document.querySelector('form[name="submit-to-google-sheet"]') as HTMLFormElement | null
-      // document.documentElement.style.overflow = "hidden"; // Hide scrolling
-
-      if (form) {
-        form.addEventListener("submit", (e) => {
-          e.preventDefault()
-          fetch(scriptURL, { method: "POST", body: new FormData(form) })
-            .then((response) => console.log("Success!", response))
-            .catch((error) => console.error("Error!", error.message))
-        })
-      }
-    }
-  }, [])
+  
 
   const [formErrors, setFormErrors] = useState<{
     email?: string
@@ -180,7 +166,7 @@ const ContactSection = () => {
       <NavigationFull />
       <div className="min-h-screen bg-gradient-to-br from-black to-black pt-16">
         {/* Main Contact Section */}
-        <div className="flex flex-col md:flex-row justify-evenly px-4">
+        <div className="flex flex-col md:flex-row justify-evenly px-4 md:pt-12">
           {/* Left Section */}
           <div className="text-white mt-10 md:mt-28 self-start mb-8 md:mb-0 text-center md:text-left">
             <h2 className="text-white text-xl md:text-2xl mb-2">Need immediate assistance?</h2>
@@ -198,7 +184,7 @@ const ContactSection = () => {
           {/* Right Section - Contact Form */}
           <div
             className={`backdrop-blur-3xl bg-gradient-to-br from-[#262B30] via-[#3B4C5E] to-[#262B30] 
-            rounded-2xl md:rounded-[3rem] p-6 md:p-14 shadow-[0_0_100px_40px_rgba(35,46,50,0.8)] md:shadow-[0_0_300px_80px_rgba(35,46,50,0.8)] 
+            rounded-2xl md:rounded-[3rem] p-6 md:p-14 md:mt-6 shadow-[0_0_100px_40px_rgba(35,46,50,0.8)] md:shadow-[0_0_300px_80px_rgba(35,46,50,0.8)] 
             w-full md:w-[36rem] ${isDropdownOpen ? "h-[100%]" : "h-[95%]"}`}
           >
             <h3 className="text-white text-xl md:text-2xl lg:text-3xl font-bold mb-1">Contact Form</h3>
@@ -409,7 +395,7 @@ const ContactSection = () => {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className={`w-28 h-10 md:h-12 bg-gradient-to-r from-[#5AD7FF] to-[#656BF5] 
+                  className={`w-auto h-10 md:h-12 bg-gradient-to-r from-[#5AD7FF] to-[#656BF5] 
                   text-white rounded-full py-2 px-6 transition-all 
                   hover:opacity-100 hover:shadow-[0_0_10px_5px_rgba(101,107,245,0.8)]
                   ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""}`}
@@ -422,18 +408,20 @@ const ContactSection = () => {
         </div>
 
         {/* Rating Section */}
-        <div
-          className="relative mt-20 md:mt-40 text-center text-white w-full"
-          style={{
-            backgroundImage: `url(${typeof window !== "undefined" ? getImageUrl("contactus", "bg_rating") : ""})`,
-            backgroundSize: "cover", // Changed to cover for better mobile display
-            backgroundRepeat: "no-repeat",
-            backgroundPosition: "center",
-            width: "100%",
-            height: "60vh", // Reduced height for mobile
-            maxHeight: "100vh", // Max height for larger screens
-          }}
-        >
+        <div 
+  className="relative mt-20 md:mt-40 text-center text-white w-full"
+  style={{
+    backgroundImage: `url(${getImageUrl("contactus", "bg_rating")})`,
+    backgroundSize: "cover",
+    backgroundRepeat: "no-repeat",
+    backgroundPosition: "center",
+    width: "100%",
+    height: "70vh",
+    maxHeight: "100vh",
+  }}
+>
+
+
           {/* Content Wrapper */}
           <div className="relative z-10 flex flex-col items-center justify-center h-full">
             {/* Glowing Effect for Icon */}
