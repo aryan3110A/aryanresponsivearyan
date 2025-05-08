@@ -49,7 +49,7 @@ const Input: React.FC<InputProps> = ({ onImageGenerated }) => {
           onImageGenerated(data.image_url);
         }
       } else {
-        throw new Error("No image URL in response");
+        throw new Error("No image URL in response.");
       }
     } catch (error) {
       console.error("Request failed:", error);
