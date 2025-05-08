@@ -1,5 +1,5 @@
 import React from "react";
-import Home from "./view/home/[username]/page";
+// import Home from "./view/home/[username]/page";
 
 import "./globals.css";
 // import Main from "./view/landingPage/page";
@@ -12,8 +12,8 @@ import Main from "./view/landingPage/page";
 const Page: React.FC = () => {
   return (
     <>
-    {/* <Main /> */}
-    <Home />
+    <Main />
+    {/* <Home /> */}
     {/* <ContactSection /> */}
     </>
   );

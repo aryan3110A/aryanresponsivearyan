@@ -255,11 +255,11 @@ const Navigation = () => {
 
         {/* User Dropdown */}
         {isUserDropdownOpen && (
-          <div className="absolute right-6 top-16 w-[120px] bg-black/90 backdrop-blur-xl rounded-md shadow-lg z-30 animate-in fade-in slide-in-from-top-5 duration-300">
+          <div className="absolute right-6 top-16 min-w-[150px] bg-black/90 backdrop-blur-xl rounded-md shadow-lg z-30 animate-in fade-in slide-in-from-top-5 duration-300">
             <div className="py-2 flex flex-col">
               <div className="px-4 py-2 text-white flex flex-col items-start">
                 <span className="text-xs font-semibold">{username || "Guest"}</span>
-                <span className="text-xs text-gray-400">{userEmail || "Not signed in"}</span>
+                <span className="text-[0.5rem] md:text-xs text-gray-400">{userEmail || "Not signed in"}</span>
               </div>
               <button onClick={handleLogout} className="px-4 py-2 text-sm text-white hover:text-blue-400 flex items-center">
                 <LogOut className="w-4 h-4 mr-2" />
