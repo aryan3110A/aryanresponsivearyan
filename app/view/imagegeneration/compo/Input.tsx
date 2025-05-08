@@ -10,33 +10,52 @@ interface InputProps {
 
 const Input: React.FC<InputProps> = ({ onImageGenerated }) => {
   const [text, setText] = useState("");
-  const [imageUrl, setImageUrl] = useState("");
   const [showSelectionModel, setShowSelectionModel] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleGenerate = async () => {
-    if (!text) return alert("Please enter a prompt!");
+    if (!text) {
+      setError("Please enter a prompt!");
+      return;
+    }
+    
+    setIsLoading(true);
+    setError(null);
 
     try {
-      const response = await fetch("http://localhost:5001/generate", {
+      // Use the ngrok URL directly
+      const endpoint = "https://48ef-2402-a00-402-4c59-b8af-3e22-61cb-8f95.ngrok-free.app/generate";
+      
+      console.log(`Attempting to connect to: ${endpoint}`);
+      const response = await fetch(endpoint, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Accept": "application/json",
         },
         body: JSON.stringify({ text }),
       });
 
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+      }
+
       const data = await response.json();
 
-      if (response.ok) {
-        setImageUrl(data.image_url);
+      if (data.image_url) {
         if (onImageGenerated) {
           onImageGenerated(data.image_url);
         }
       } else {
-        console.error("Error:", data.error);
+        throw new Error("No image URL in response");
       }
     } catch (error) {
       console.error("Request failed:", error);
+      setError(error instanceof Error ? error.message : "Failed to generate image. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -58,16 +77,30 @@ const Input: React.FC<InputProps> = ({ onImageGenerated }) => {
           className="w-full pr-[4rem] pl-4 py-2 rounded-full bg-gray-800 text-white outline-none h-16 mb:h-12"
           placeholder="Type a prompt..."
           value={text}
-          onChange={(e) => setText(e.target.value)}
+          onChange={(e) => {
+            setText(e.target.value);
+            setError(null);
+          }}
+          disabled={isLoading}
         />
+  
+        {/* Error message */}
+        {error && (
+          <p className="text-red-500 text-sm mt-2 text-center">{error}</p>
+        )}
   
         {/* Desktop generate button (absolute inside input box) */}
         <button
           onClick={handleGenerate}
-          className="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center px-4 lg:px-6 h-[2.5rem] lg:h-[3rem] rounded-full font-medium text-white transition-colors bg-gradient-to-b from-[#5AD7FF] to-[#656BF5] mb:hidden"
+          disabled={isLoading}
+          className={`absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center px-4 lg:px-6 h-[2.5rem] lg:h-[3rem] rounded-full font-medium text-white transition-colors bg-gradient-to-b from-[#5AD7FF] to-[#656BF5] mb:hidden ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
         >
-          <Image src="/ImageGeneate/Group.svg" alt="Generate" width={24} height={24} className="mr-2" />
-          Generate
+          {isLoading ? (
+            <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+          ) : (
+            <Image src="/ImageGeneate/Group.svg" alt="Generate" width={24} height={24} className="mr-2" />
+          )}
+          {isLoading ? 'Generating...' : 'Generate'}
         </button>
       </div>
   
@@ -79,36 +112,38 @@ const Input: React.FC<InputProps> = ({ onImageGenerated }) => {
         <Image src="/ImageGeneate/setting.svg" width={36} height={36} alt="Settings" />
       </button>
   
-    {/* Mobile layout ONLY */}
-    <div className="hidden mb:flex mb:flex-row mb:justify-between mb:items-center mb:gap-4 mb:mt-3 mb:w-[90vw]">
-    {/* Settings Button */}
-    <button
-        onClick={() => setShowSelectionModel(true)}
-        className="w-9 h-9 flex items-center justify-center rounded-full bg-[#272626]"
-    >
-        <Image src="/ImageGeneate/setting.svg" width={18} height={18} alt="Settings" />
-    </button>
+      {/* Mobile layout ONLY */}
+      <div className="hidden mb:flex mb:flex-row mb:justify-between mb:items-center mb:gap-4 mb:mt-3 mb:w-[90vw]">
+        {/* Settings Button */}
+        <button
+          onClick={() => setShowSelectionModel(true)}
+          className="w-9 h-9 flex items-center justify-center rounded-full bg-[#272626]"
+        >
+          <Image src="/ImageGeneate/setting.svg" width={18} height={18} alt="Settings" />
+        </button>
 
-    {/* Generate Button with more height */}
-    <button
-        onClick={handleGenerate}
-        className="flex items-center justify-center gap-1 px-4 py-[6px] rounded-full text-white text-sm font-medium bg-gradient-to-b from-[#5AD7FF] to-[#656BF5]"
-    >
-        <span>Generate</span>
-        <Image src="/ImageGeneate/coins.png" alt="coin" width={18} height={18} />
-        <span className="ml-[2px] font-semibold">40</span>
-    </button>
-    </div>
-
-      {/* Generated image preview */}
-      {imageUrl && (
-        <div className="mt-6 mb:w-[90vw]">
-          <Image src={imageUrl} alt="Generated" width={800} height={600} className="w-auto h-auto" />
-        </div>
-      )}
+        {/* Generate Button with more height */}
+        <button
+          onClick={handleGenerate}
+          disabled={isLoading}
+          className={`flex items-center justify-center gap-1 px-4 py-[6px] rounded-full text-white text-sm font-medium bg-gradient-to-b from-[#5AD7FF] to-[#656BF5] ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+        >
+          {isLoading ? (
+            <>
+              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+              <span>Generating...</span>
+            </>
+          ) : (
+            <>
+              <span>Generate</span>
+              <Image src="/ImageGeneate/coins.png" alt="coin" width={18} height={18} />
+              <span className="ml-[2px] font-semibold">40</span>
+            </>
+          )}
+        </button>
+      </div>
     </div>
   );
-  
 };
 
 export default Input;
