@@ -532,7 +532,7 @@ const ContactSection = () => {
         </div>
 
         {/* Bottom Border */}
-        <div className="border-t border-[#FFFFFF52] w-[90%] md:w-[87%] lg:w-[93%] mx-auto"></div>
+        <div className="border-t border-[#FFFFFF52] w-[90%] md:w-[90%] lg:w-[93%] mx-auto"></div>
       </div>
       <Footer />
     </>
