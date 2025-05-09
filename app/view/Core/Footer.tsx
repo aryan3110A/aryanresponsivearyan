@@ -287,7 +287,7 @@ const Footer: React.FC = () => {
                   ? "gap-4 justify-center"
                   : isTablet
                   ? "gap-6 justify-center md:ml-auto"
-                  : "sm:gap-4 sm-laptop:gap-[1.75rem] md-laptop:gap-[2.1rem] lg:gap-[4rem] justify-center sm-laptop:ml-[35%] md-laptop:ml-[30.5%] lg:ml-[34%]"
+                  : "sm:gap-4 sm-laptop:gap-[1.75rem] md-laptop:gap-[2.1rem] lg:gap-[4rem] justify-center sm-laptop:ml-[35%] md-laptop:ml-[28.5%] lg:ml-[34%]"
               }`}
             >
               {legalLinks.map((link) => (
@@ -297,7 +297,7 @@ const Footer: React.FC = () => {
                   className=" text-xs sm-laptop:text-xs md-laptop:text-sm lg:text-sm text-[#616161] hover:text-white transition-colors"
                 >
                   {link.name}
-                </Link>
+                </Link> 
               ))}
             </div>
           </div>
