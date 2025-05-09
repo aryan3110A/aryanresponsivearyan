@@ -132,7 +132,7 @@ const Footer: React.FC = () => {
           className={`${isMobile ? "hidden" : "flex"} ${
             isTablet
               ? "gap-12"
-              : "sm:gap-[7.5rem] md:gap-[8.5rem] lg:gap-[13.3rem]"
+              : "sm:gap-[7.5rem] md-laptop:gap-[8.5rem] lg:gap-[13.3rem]"
           } mb-0`}
         >
           {/* Logo and Description */}
@@ -287,14 +287,14 @@ const Footer: React.FC = () => {
                   ? "gap-4 justify-center"
                   : isTablet
                   ? "gap-6 justify-center md:ml-auto"
-                  : "sm:gap-4 sm-laptop:gap-[1.75rem] md:gap-[2.5rem] lg:gap-[4rem] justify-center sm-laptop:ml-[35%] md:ml-[29.5%] lg:ml-[34%]"
+                  : "sm:gap-4 sm-laptop:gap-[1.75rem] md-laptop:gap-[2.5rem] lg:gap-[4rem] justify-center sm-laptop:ml-[35%] md-laptop:ml-[32.5%] lg:ml-[34%]"
               }`}
             >
               {legalLinks.map((link) => (
                 <Link
                   key={link.name}
                   href={link.href}
-                  className=" text-xs sm-laptop:text-xs md:text-sm lg:text-sm text-[#616161] hover:text-white transition-colors"
+                  className=" text-xs sm-laptop:text-xs md-laptop:text-sm lg:text-sm text-[#616161] hover:text-white transition-colors"
                 >
                   {link.name}
                 </Link>
