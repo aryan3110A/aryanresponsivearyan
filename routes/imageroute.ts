@@ -44,7 +44,12 @@ export const imageRoutes: FolderImageRoutes = {
         remix2:'https://firebasestorage.googleapis.com/v0/b/wild-mind-ai.firebasestorage.app/o/public%2Fartstation%2Fremix1.png?alt=media&token=08a34931-9e9b-40d8-baf0-7d2c0ce22b90'
     },
     home:{
-        
+        fluxshanell:'https://firebasestorage.googleapis.com/v0/b/wild-mind-ai.firebasestorage.app/o/public%2Fhome%2Fshanell.png?alt=media&token=575796b0-209b-4975-b3b8-55f0a9673ee4',
+        fluxdev:'https://firebasestorage.googleapis.com/v0/b/wild-mind-ai.firebasestorage.app/o/public%2Fhome%2Fdev.png?alt=media&token=ef4c49d1-9ee0-43f6-81b1-19a64b84d211',
+        imagin:'https://firebasestorage.googleapis.com/v0/b/wild-mind-ai.firebasestorage.app/o/public%2Fhome%2Fimagin.png?alt=media&token=477b2629-3cc7-4a3b-8a61-379f3032a970',
+        large:'https://firebasestorage.googleapis.com/v0/b/wild-mind-ai.firebasestorage.app/o/public%2Fhome%2Flarge.png?alt=media&token=4fcf1814-35b6-40bd-9c18-16a5657bdfaf',
+        medium:'https://firebasestorage.googleapis.com/v0/b/wild-mind-ai.firebasestorage.app/o/public%2Fhome%2Fmedium.png?alt=media&token=0974c5d4-a7b1-44d0-88ee-3439c28f59ef',
+        xl:'https://firebasestorage.googleapis.com/v0/b/wild-mind-ai.firebasestorage.app/o/public%2Fhome%2Fxl.png?alt=media&token=4c14f209-cdfe-4ab5-91f1-9a12c9131685',
     },
     blog:{
 

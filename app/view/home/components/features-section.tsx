@@ -11,7 +11,7 @@ export default function FeaturesSection() {
   return (
     <section className="mb-24">
       <div className="flex items-center gap-4 mb-8">
-      <button className="ml-20 w-[169px] h-[43px] bg-gradient-to-r from-[#5AD7FF] via-[#5AD7FF] to-[#656BF5] text-black text-[30px] font-bold rounded-[10px] flex items-center justify-center">
+      <button className="ml-20 w-[169px] h-[43px] bg-slate-400 text-black text-[30px] font-bold rounded-[10px] flex items-center justify-center">
   Features
 </button>
 
