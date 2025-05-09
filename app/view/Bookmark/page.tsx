@@ -7,6 +7,7 @@ import NavigationFull from "../Core/NavigationFull"
 import { BookmarkedImage, bookmarkStore, groupBookmarksByDate } from "../../utils/bookmarkUtils"
 import { useRouter } from "next/navigation"
 import { NAV_ROUTES } from "@/routes/routes"
+import ProtectedRoute from "@/app/utils/ProtectedRoute"
 
 
 export default function Bookmark() {
@@ -35,6 +36,7 @@ export default function Bookmark() {
   
   return (
     <>
+    <ProtectedRoute>
 
     <NavigationFull />
     <div className="min-h-screen bg-black text-white p-4 md:p-6">
@@ -94,6 +96,7 @@ export default function Bookmark() {
         </div>
       </div>
     </div>
+    </ProtectedRoute>
     </>
   )
 }

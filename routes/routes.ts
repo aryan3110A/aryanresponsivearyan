@@ -10,7 +10,6 @@ export const AUTH_ROUTES = {
 export const APP_ROUTES = {
   HOME: '/view/home',
   LANDING: '/',
-  SIGNIN:'/view/signin',
   SIGNUP:'/view/signup'
 } as const;
 

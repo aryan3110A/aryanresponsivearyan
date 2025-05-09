@@ -7,6 +7,7 @@ import Image from "next/image"
 import Footer from "../Core/Footer"
 import { getImageUrl } from "@/routes/imageroute"
 import NavigationFull from "../Core/NavigationFull"
+import ProtectedRoute from "@/app/utils/ProtectedRoute"
 
 const scriptURL =
   "https://script.google.com/macros/s/AKfycbz0dKO8m-4_vrGpnaPI4zP01OkoN5uXxo1DrJ9jY_oz5tsoNUYvtxxNKgvdYMiZUGsWBw/exec"
@@ -188,6 +189,7 @@ const ContactSection = () => {
 
   return (
     <>
+    <ProtectedRoute>
       <NavigationFull />
       <div className="min-h-screen bg-gradient-to-br from-black to-black pt-16">
         {/* Main Contact Section */}
@@ -560,6 +562,7 @@ const ContactSection = () => {
         <div className="border-t border-[#FFFFFF52] w-[90%] md:w-[90%] lg:w-[93%] mx-auto"></div>
       </div>
       <Footer />
+      </ProtectedRoute>
     </>
   )
 }

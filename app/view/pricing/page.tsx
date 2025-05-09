@@ -7,6 +7,7 @@ import { Check } from "lucide-react"
 import Image from "next/image"
 import Footer from "../Core/Footer"
 import NavigationFull from "../Core/NavigationFull"
+import ProtectedRoute from "@/app/utils/ProtectedRoute"
 
 type BillingPeriod = "monthly" | "yearly"
 
@@ -208,7 +209,9 @@ export default function SubscriptionToggle() {
   }
 
   return (
+
     <>
+    <ProtectedRoute>
       <NavigationFull />
 
       <div className="min-h-screen relative text-white p-4 md:p-10 flex flex-col items-center justify-center overflow-x-hidden overflow-y-auto">
@@ -413,6 +416,7 @@ export default function SubscriptionToggle() {
         </div>
       </div>
       <Footer />
+      </ProtectedRoute>
     </>
   )
 }

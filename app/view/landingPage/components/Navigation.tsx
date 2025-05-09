@@ -8,6 +8,8 @@ import { auth, db } from "@/database/firebase"
 import { doc, getDoc } from "firebase/firestore"
 import { APP_ROUTES, NAV_ROUTES, FEATURE_ROUTES } from "../../../../routes/routes"
 import { getImageUrl } from "@/routes/imageroute";
+import ProtectedRoute from "@/app/utils/ProtectedRoute"
+
 
 const Navigation = () => {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
@@ -157,6 +159,7 @@ const Navigation = () => {
         </div>
 
         <div className="relative">
+          
           <span
             onClick={() => toggleDropdown("templates")}
             className="cursor-pointer hover:text-[#dbdbdb] bg-transparent px-3 py-1 flex items-center gap-1 
@@ -171,6 +174,7 @@ const Navigation = () => {
               className="ml-1"
             />
           </span>
+          
           {activeDropdown === "templates" && (
             <ul className="absolute left-1/2 -translate-x-1/2 mt-4 w-80 bg-black text-white rounded-lg border border-[#5f5e5e] shadow-[6px_6px_10px_rgba(0,0,0,0.6)] p-3 flex flex-col items-center overflow-hidden whitespace-nowrap">
               <li className="w-full px-3 py-2 cursor-pointer text-center hover:text-[#dbdbdb] hover:bg-gradient-to-l hover:bg-clip-text">
@@ -347,6 +351,7 @@ const Navigation = () => {
                 </div>
 
                 {/* Pricing */}
+                <ProtectedRoute>
                 <div
                   className="py-2 text-lg text-white border-b border-gray-800 pb-3 cursor-pointer"
                   onClick={() => {
@@ -356,6 +361,7 @@ const Navigation = () => {
                 >
                   Pricing
                 </div>
+                </ProtectedRoute>
 
                 {/* Art Station */}
                 <div
