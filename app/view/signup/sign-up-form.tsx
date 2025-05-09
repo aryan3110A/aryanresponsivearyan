@@ -8,6 +8,7 @@ import { auth, db } from "../../../database/firebase"
 import { doc, setDoc, getDoc } from "firebase/firestore"
 import { v4 as uuidv4 } from "uuid"
 import Image from "next/image"
+import { getImageUrl } from "@/routes/imageroute"
 
 export default function SignInForm() {
   const router = useRouter()
@@ -165,7 +166,7 @@ export default function SignInForm() {
     <div className="min-h-screen p-6 bg-[#171717] text-white flex items-center justify-center">
       <div className="w-full p-6 space-y-6 space-x-4 bg-[#171717] rounded-xl shadow-md">
         <div className="flex items-center justify-center mb-4">
-          <Image src="/core/logomain.png" alt="WildMind Logo" width={48} height={48} className="w-12 h-12" />
+          <Image src={getImageUrl('core','logo')} alt="WildMind Logo" width={48} height={48} className="w-12 h-12" />
           <h1 className="font-bold text-[25px]">WildMind</h1>
         </div>
         <div className="flex items-center justify-center mb-4">
@@ -194,21 +195,21 @@ export default function SignInForm() {
                 onClick={handleGoogleLogin}
                 className="w-[292.58px] h-[44px] max-w-full bg-[#26272C] text-white font-extralight pl-4 hover:bg-[#444D57] flex items-center justify-start gap-2 rounded-[8px]"
               >
-                <Image src="/core/google.svg" alt="Google" width={20} height={20} className="w-5 h-5" />
+                <Image src={getImageUrl('svgs','google')} alt="Google" width={20} height={20} className="w-5 h-5" />
                 <span>Google</span>
               </button>
               <button
                 onClick={() => {}}
                 className="w-[292.58px] h-[44px] bg-[#26272C] text-white font-extralight py-2 hover:bg-[#444D57] flex items-center justify-start pl-4 gap-2 rounded-[8px]"
               >
-                <Image src="/core/apple.svg" alt="Apple" width={20} height={20} className="w-5 h-5" />
+                <Image src={getImageUrl('svgs','apple')} alt="Apple" width={20} height={20} className="w-5 h-5" />
                 <span>Apple</span>
               </button>
               <button
                 onClick={() => {}}
                 className="w-[292.58px] h-[44px] bg-[#26272C] text-white py-2 font-extralight hover:bg-[#444D57] flex items-center justify-start pl-4 gap-2 rounded-[8px]"
               >
-                <Image src="/core/microsoft.svg" alt="Microsoft" width={20} height={20} className="w-5 h-5" />
+                <Image src={getImageUrl('svgs','microsoft')} alt="Microsoft" width={20} height={20} className="w-5 h-5" />
                 <span>Microsoft</span>
               </button>
             </div>
