@@ -152,7 +152,7 @@ export default function StartUsingAi() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className={`px-6 py-3 w-[90vw] ml-1 md:w-[8rem] lg:w-[10rem] rounded-full font-medium text-white transition-colors 
+                  className={`px-6 py-3 w-[90vw] ml-1 md:w-auto lg:w-[10rem] rounded-full font-medium text-white transition-colors 
                     bg-gradient-to-b from-[#5AD7FF] to-[#656BF5] 
                     hover:bg-white hover:text-black hover:from-white hover:to-white
                     ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""}`}
@@ -164,7 +164,7 @@ export default function StartUsingAi() {
           </div>
 
           {/* Message Display */}
-          <div className="flex justify-center md:justify-end md:mr-[13.2rem] text-xs md:text-sm sm:mr-[7rem] lg:mr-[3.4rem] mt-2">
+          <div className="flex justify-center md:justify-end md:mr-[8.2rem] text-xs md:text-sm sm:mr-[7rem] lg:mr-[3.4rem] mt-2">
             {newsletterMessage && <div className="bg-green-500/0 text-green-500 text-center">{newsletterMessage}</div>}
             {newsletterError && (
               <div className="md:-mr-[3rem] lg:mr-[4.5rem] bg-green-500/0 text-red-500 text-center">

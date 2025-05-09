@@ -278,7 +278,7 @@ const Footer: React.FC = () => {
               isMobile ? "flex-col space-y-4" : "flex-col md:flex-row"
             } justify-start items-center`}
           >
-            <p className="text-sm md:text-[0.875rem] lg:text-[0.875rem] text-[#616161] mb-4 md:mb-0 text-center">
+            <p className="text-sm sm-laptop:text-xs md:text-[0.875rem] lg:text-[0.875rem] text-[#616161] mb-4 md:mb-0 text-center">
               Copyright © 2025 WildMind Pvt Ltd. All rights reserved.
             </p>
             <div
@@ -287,14 +287,14 @@ const Footer: React.FC = () => {
                   ? "gap-4 justify-center"
                   : isTablet
                   ? "gap-6 justify-center md:ml-auto"
-                  : "sm:gap-4 md:gap-[2.5rem] lg:gap-[4rem] justify-center md:ml-[29.5%] lg:ml-[34%]"
+                  : "sm:gap-4 sm-laptop:gap-[1.75rem] md:gap-[2.5rem] lg:gap-[4rem] justify-center sm-laptop:ml-[35%] md:ml-[29.5%] lg:ml-[34%]"
               }`}
             >
               {legalLinks.map((link) => (
                 <Link
                   key={link.name}
                   href={link.href}
-                  className="text-xs md:text-sm lg:text-sm text-[#616161] hover:text-white transition-colors"
+                  className=" text-xs sm-laptop:text-xs md:text-sm lg:text-sm text-[#616161] hover:text-white transition-colors"
                 >
                   {link.name}
                 </Link>
