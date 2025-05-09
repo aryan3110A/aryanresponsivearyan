@@ -351,7 +351,7 @@ const Navigation = () => {
                 </div>
 
                 {/* Pricing */}
-                <ProtectedRoute>
+                
                 <div
                   className="py-2 text-lg text-white border-b border-gray-800 pb-3 cursor-pointer"
                   onClick={() => {
@@ -361,7 +361,7 @@ const Navigation = () => {
                 >
                   Pricing
                 </div>
-                </ProtectedRoute>
+                
 
                 {/* Art Station */}
                 <div
