@@ -1,6 +1,5 @@
 "use client"
 
-import { useState, useEffect } from "react"
 import Image from "next/image"
 import { getImageUrl } from "@/routes/imageroute"
 import SignInForm from "./sign-up-form"
