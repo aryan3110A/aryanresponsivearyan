@@ -278,7 +278,7 @@ const Footer: React.FC = () => {
               isMobile ? "flex-col space-y-4" : "flex-col md:flex-row"
             } justify-start items-center`}
           >
-            <p className="text-sm sm-laptop:text-xs md:text-[0.875rem] lg:text-[0.875rem] text-[#616161] mb-4 md:mb-0 text-center">
+            <p className="text-sm sm-laptop:text-xs md-laptop:text-sm lg:text-[0.875rem] text-[#616161] mb-4 md:mb-0 text-center">
               Copyright © 2025 WildMind Pvt Ltd. All rights reserved.
             </p>
             <div
@@ -287,7 +287,7 @@ const Footer: React.FC = () => {
                   ? "gap-4 justify-center"
                   : isTablet
                   ? "gap-6 justify-center md:ml-auto"
-                  : "sm:gap-4 sm-laptop:gap-[1.75rem] md-laptop:gap-[2.5rem] lg:gap-[4rem] justify-center sm-laptop:ml-[35%] md-laptop:ml-[32.5%] lg:ml-[34%]"
+                  : "sm:gap-4 sm-laptop:gap-[1.75rem] md-laptop:gap-[2.1rem] lg:gap-[4rem] justify-center sm-laptop:ml-[35%] md-laptop:ml-[30.5%] lg:ml-[34%]"
               }`}
             >
               {legalLinks.map((link) => (
