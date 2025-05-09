@@ -1,7 +1,8 @@
 "use client"
 import { useRouter } from "next/navigation";
-import Image from "next/image"
+// import Image from "next/image"
 import FeaturesCard from "./features-card";
+import { FEATURE_ROUTES } from "@/routes/routes";
 
 export default function FeaturesSection() {
    const route = useRouter();
@@ -18,12 +19,12 @@ export default function FeaturesSection() {
       </div>
 
       <div className="flex flex-wrap gap-10 justify-center">
-        <FeaturesCard imageSrc="/home/imagegeneration.png" label="run"   />
-        <FeaturesCard imageSrc="/home/videogeneratiin.png" label="coming"   />
-        <FeaturesCard imageSrc="/home/musicgeneration.png" label="coming"    />
-        <FeaturesCard imageSrc="/home/3d.png" label="coming"    />
-        <FeaturesCard imageSrc="/home/media.png" label="coming"    />
-        <FeaturesCard imageSrc="/home/story.png" label="coming"    />
+        <FeaturesCard onClick={() =>route.push(FEATURE_ROUTES.IMAGE_GENERATION)} imageSrc="/home/imagegeneration.png" label="run"   />
+        <FeaturesCard onClick={() =>{}} imageSrc="/home/videogeneratiin.png" label="coming"   />
+        <FeaturesCard onClick={() =>{}}  imageSrc="/home/musicgeneration.png" label="coming"    />
+        <FeaturesCard onClick={() =>{}} imageSrc="/home/3d.png" label="coming"    />
+        <FeaturesCard onClick={() =>{}} imageSrc="/home/media.png" label="coming"    />
+        <FeaturesCard onClick={() =>{}} imageSrc="/home/story.png" label="coming"    />
       </div>
     </section>
   )
