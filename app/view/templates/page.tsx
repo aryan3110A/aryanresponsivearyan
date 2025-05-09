@@ -7,7 +7,7 @@ import NavigationFull from "../Core/NavigationFull"
 import Footer from "../Core/Footer"
 import SelectionModel from "../imagegeneration/selectionmodel/app-container"
 import ProtectedRoute from "@/app/utils/ProtectedRoute"
-import { APP_ROUTES, NAV_ROUTES, FEATURE_ROUTES } from "../../../routes/routes"
+// import { APP_ROUTES, NAV_ROUTES, FEATURE_ROUTES } from "../../../routes/routes"
 
 // Sample data for the templates
 const templates = [

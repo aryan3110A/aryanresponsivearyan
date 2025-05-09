@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/database/firebase"; // ✅ adjust path if different
-import { APP_ROUTES, NAV_ROUTES, FEATURE_ROUTES } from "../../routes/routes"
+import { APP_ROUTES } from "../../routes/routes"
 export default function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [authenticated, setAuthenticated] = useState(false);
