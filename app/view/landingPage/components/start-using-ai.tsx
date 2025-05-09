@@ -35,8 +35,14 @@ export default function StartUsingAi() {
 
     try {
       const formData = new FormData();
-      formData.append("NewsLetterEmail", newsletterEmail);
+      formData.append("NewsletterEmail", newsletterEmail)
+      formData.append("FormType", "Newsletter")
 
+      console.log("Submitting newsletter with data:", {
+        Email: newsletterEmail,
+        FormType: "Newsletter",
+      })
+      
       const response = await fetch(scriptURL, {
         method: "POST",
         body: formData,
