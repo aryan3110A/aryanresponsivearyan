@@ -36,7 +36,7 @@ interface SocialLink {
 }
 
 const sidebarItems: NavItem[] = [
-  { label: "Home", href: "/", icon: <Home className="w-6 h-6" /> },
+  { label: "Home", href: "/view/home/${userSlug}", icon: <Home className="w-6 h-6" /> },
   // { label: "Apps", href: "/apps", icon: <Grid className="w-5 h-5" /> },
   // { label: "Models", href: "/models", icon: <Boxes className="w-5 h-5" /> },
   {

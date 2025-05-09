@@ -5,6 +5,7 @@ import Header from './compo/Header';
 import Input from './compo/Input'; 
 import ImagePreview from './compo/ImagePreview'; 
 import NavigationFull from '../Core/NavigationFull'; 
+import ProtectedRoute from '@/app/utils/ProtectedRoute';
 
 const ImageGenMain = () => {
     const [images, setImages] = useState<string[]>([]);
@@ -13,7 +14,9 @@ const ImageGenMain = () => {
         setImages((prevImages) => [...prevImages, imageUrl]); // Store multiple images
     };
 
-    return (<>
+    return (
+    <>
+    <ProtectedRoute>
         <div className='bg-black min-h-screen flex relative'>
             {/* Main Content */}
             <div className="flex-1">
@@ -23,6 +26,7 @@ const ImageGenMain = () => {
                 <ImagePreview images={images} />
             </div>
         </div>
+        </ProtectedRoute>
         </>
     );
 };

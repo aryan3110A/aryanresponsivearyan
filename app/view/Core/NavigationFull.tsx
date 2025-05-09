@@ -133,7 +133,7 @@ export default function NavigationFull() {
     <div className="bg-[#000000] text-white">
       <header
         ref={headerRef}
-        className="fixed top-0 left-0 right-0 z-20 bg-black/30 backdrop-blur-3xl shadow-lg"
+        className="fixed top-0 left-0 right-0 z-50 bg-black/30 backdrop-blur-3xl shadow-lg"
         style={backgroundStyle}
       >
         <div className="flex items-center justify-start pl-[2vw] py-[1vh]">
@@ -179,7 +179,7 @@ export default function NavigationFull() {
             </button>
 
             {isUserDropdownOpen && (
-              <div className="absolute right-0  sm-laptop:-ml-[15vw] md-laptop:-ml-[11vw]  lg:-ml-[6vw] mt-[1.3vh] w-auto min-w-[150px] md:min-w-[250px] bg-black/80 backdrop-blur-3xl rounded-md shadow-lg z-30 animate-dropdown">
+              <div className="absolute right-0  sm-laptop:-ml-[15vw] md-laptop:-ml-[11vw]  lg:-ml-[6vw] mt-[1.3vh] w-auto min-w-[150px] md:min-w-[250px] bg-black/80 backdrop-blur-3xl rounded-md shadow-lg z-50 animate-dropdown">
                 <div className="py-2 flex flex-col">
                   <div className="px-4 py-2 text-white flex flex-col items-start">
                     <span className="text-xs md:text-sm font-semibold">{username || "Guest"}</span>
@@ -212,7 +212,7 @@ export default function NavigationFull() {
 
         {activeDropdown && (
           <div
-            className="left-0 right-0 overflow-hidden transition-all duration-1000 z-10"
+            className="left-0 right-0 overflow-hidden transition-all duration-1000 z-50"
             style={{
               ...backgroundStyle,
               maxHeight: activeDropdown ? "50vh" : "0",
@@ -228,7 +228,7 @@ export default function NavigationFull() {
                       key={index}
                       onClick={() => handleFeatureClick(item.src, item.coming)}
                       className={`block py-0 rounded-md transition-all duration-300 ${
-                        item.coming ? "text-gray-500" : "hover:text-[#dbdbdb] cursor-pointer"
+                        item.coming ? "text-white" : "hover:text-[#dbdbdb] cursor-pointer"
                       }`}
                     >
                       <span>

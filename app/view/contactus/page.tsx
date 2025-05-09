@@ -7,6 +7,7 @@ import Image from "next/image"
 import Footer from "../Core/Footer"
 import { getImageUrl } from "@/routes/imageroute"
 import NavigationFull from "../Core/NavigationFull"
+import ProtectedRoute from "@/app/utils/ProtectedRoute"
 
 const scriptURL =
   "https://script.google.com/macros/s/AKfycbz0dKO8m-4_vrGpnaPI4zP01OkoN5uXxo1DrJ9jY_oz5tsoNUYvtxxNKgvdYMiZUGsWBw/exec"
@@ -87,8 +88,29 @@ const ContactSection = () => {
       form.append("Name", formData.fullName)
       form.append("Email", formData.email)
       form.append("Phone", formData.phone)
-      form.append("Option", formData.option)
+      form.append(
+        "Option",
+        formData.option === "option1"
+          ? "General Inquiry"
+          : formData.option === "option2"
+            ? "Support Request"
+            : formData.option === "option3"
+              ? "Feature Suggestion"
+              : formData.option === "option4"
+                ? "Business Collaboration"
+                : "",
+      )
       form.append("Message", formData.message)
+      form.append("FormType", "Contact")
+
+      console.log("Submitting contact form with data:", {
+        Name: formData.fullName,
+        Email: formData.email,
+        Phone: formData.phone,
+        Option: formData.option,
+        Message: formData.message,
+        FormType: "Contact",
+      })
 
       const response = await fetch(scriptURL, {
         method: "POST",
@@ -133,7 +155,13 @@ const ContactSection = () => {
 
     try {
       const formData = new FormData()
-      formData.append("NewsLetterEmail", newsletterEmail)
+      formData.append("NewsletterEmail", newsletterEmail)
+      formData.append("FormType", "Newsletter")
+
+      console.log("Submitting newsletter with data:", {
+        Email: newsletterEmail,
+        FormType: "Newsletter",
+      })
 
       const response = await fetch(scriptURL, {
         method: "POST",
@@ -154,8 +182,6 @@ const ContactSection = () => {
     }
   }
 
-  
-
   const [formErrors, setFormErrors] = useState<{
     email?: string
     phone?: string
@@ -163,6 +189,7 @@ const ContactSection = () => {
 
   return (
     <>
+    <ProtectedRoute>
       <NavigationFull />
       <div className="min-h-screen bg-gradient-to-br from-black to-black pt-16">
         {/* Main Contact Section */}
@@ -194,6 +221,7 @@ const ContactSection = () => {
             </p>
 
             <form ref={formRef} onSubmit={handleContactSubmit} className="space-y-2" name="submit-to-google-sheet">
+              <input type="hidden" name="FormType" value="Contact" />
               {successMessage && (
                 <div className="bg-green-500/10 border border-green-500 text-green-500 p-3 rounded-md mb-4">
                   {successMessage}
@@ -408,20 +436,18 @@ const ContactSection = () => {
         </div>
 
         {/* Rating Section */}
-        <div 
-  className="relative mt-20 md:mt-40 text-center text-white w-full"
-  style={{
-    backgroundImage: `url(${getImageUrl("contactus", "bg_rating")})`,
-    backgroundSize: "cover",
-    backgroundRepeat: "no-repeat",
-    backgroundPosition: "center",
-    width: "100%",
-    height: "70vh",
-    maxHeight: "100vh",
-  }}
->
-
-
+        <div
+          className="relative mt-20 md:mt-40 text-center text-white w-full"
+          style={{
+            backgroundImage: `url(${getImageUrl("contactus", "bg_rating")})`,
+            backgroundSize: "cover",
+            backgroundRepeat: "no-repeat",
+            backgroundPosition: "center",
+            width: "100%",
+            height: "70vh",
+            maxHeight: "100vh",
+          }}
+        >
           {/* Content Wrapper */}
           <div className="relative z-10 flex flex-col items-center justify-center h-full">
             {/* Glowing Effect for Icon */}
@@ -481,6 +507,7 @@ const ContactSection = () => {
                 className="flex flex-col md:flex-row gap-4 md:gap-12 lg:gap-14 w-full max-w-2xl"
                 name="submit-to-google-sheet"
               >
+                <input type="hidden" name="FormType" value="Newsletter" />
                 <div className="flex-grow relative w-full md:w-[22rem] lg:w-[28rem]">
                   <input
                     type="email"
@@ -535,6 +562,7 @@ const ContactSection = () => {
         <div className="border-t border-[#FFFFFF52] w-[90%] md:w-[90%] lg:w-[93%] mx-auto"></div>
       </div>
       <Footer />
+      </ProtectedRoute>
     </>
   )
 }

@@ -1,9 +1,8 @@
 "use client"
 
-import { useState } from "react"
 import Image from "next/image"
 import { Play } from "lucide-react"
-import ImageModal from "./image-modal"
+// import ImageModal from "./image-modal"
 
 interface ImageCardProps {
   title: string
@@ -11,11 +10,6 @@ interface ImageCardProps {
 }
 
 export default function ImageCard({ title, image }: ImageCardProps) {
-  const [isModalOpen, setIsModalOpen] = useState(false)
-
-  const openModal = () => setIsModalOpen(true)
-  const closeModal = () => setIsModalOpen(false)
-
   return (
     <>
       <div
@@ -25,7 +19,6 @@ export default function ImageCard({ title, image }: ImageCardProps) {
           border-b-4 border-b-[#B1B1B1]
           cursor-pointer
         "
-        onClick={openModal}
       >
         {/* Image container */}
         <div className="relative w-full h-full overflow-hidden">
@@ -66,7 +59,7 @@ export default function ImageCard({ title, image }: ImageCardProps) {
         </div>
       </div>
 
-      <ImageModal isOpen={isModalOpen} onClose={closeModal} image={{ title, image }} />
+      {/* <ImageModal isOpen={isModalOpen} onClose={closeModal} image={{ title, image }} /> */}
     </>
   )
 }

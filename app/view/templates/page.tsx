@@ -6,6 +6,8 @@ import Image from "next/image"
 import NavigationFull from "../Core/NavigationFull"
 import Footer from "../Core/Footer"
 import SelectionModel from "../imagegeneration/selectionmodel/app-container"
+import ProtectedRoute from "@/app/utils/ProtectedRoute"
+// import { APP_ROUTES, NAV_ROUTES, FEATURE_ROUTES } from "../../../routes/routes"
 
 // Sample data for the templates
 const templates = [
@@ -183,6 +185,7 @@ interface TemplateCardProps {
 
 function TemplateCard({ template, onSelect }: TemplateCardProps) {
   return (
+    <ProtectedRoute>
     <div
       className="bg-black/30 backdrop-blur-md rounded-[0.5vw] overflow-hidden border border-[#969696] relative cursor-pointer hover:border-[#4FD4E6] transition-colors"
       onClick={() => onSelect(template.prompt)}
@@ -250,6 +253,7 @@ function TemplateCard({ template, onSelect }: TemplateCardProps) {
       </div>
       
     </div>
+    </ProtectedRoute>
   
    
   )

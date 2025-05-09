@@ -1,19 +1,13 @@
 "use client"
 
-import { useState, useEffect } from "react"
 import Image from "next/image"
 import { getImageUrl } from "@/routes/imageroute"
 import SignInForm from "./sign-up-form"
 
 export default function SignUp() {
-  const [imageSrc, setImageSrc] = useState("/placeholder.svg?height=800&width=600")
+  // const [imageSrc, setImageSrc] = useState("/placeholder.svg?height=800&width=600")
 
-  useEffect(() => {
-    // Only run on the client side
-    if (typeof window !== "undefined") {
-      setImageSrc(getImageUrl("sign", "signup"))
-    }
-  }, [])
+  
 
   return (
     <main className="flex min-h-screen bg-background overflow-hidden">
@@ -25,7 +19,7 @@ export default function SignUp() {
       {/* Right Side - Image */}
       <div className="lg:block flex-1 relative">
         <div className="absolute inset-0 border-black border-4">
-          <Image src={imageSrc || "/placeholder.svg"} alt="Artistic warriors" fill className="object-cover" priority />
+          <Image src={getImageUrl('sign','signup')} alt="Artistic warriors" fill className="object-cover" priority />
         </div>
       </div>
     </main>
