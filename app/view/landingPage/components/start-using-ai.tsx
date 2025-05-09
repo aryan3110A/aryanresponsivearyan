@@ -67,7 +67,7 @@ export default function StartUsingAi() {
     <div>
       {/* Hero Section */}
       <div
-        className="relative w-full h-[500px] overflow-hidden flex items-center mb:flex-col mb:h-auto mb:-mt-10 mb:pb-6"
+        className="relative w-full h-[500px] flex items-center mb:flex-col mb:h-auto mb:-mt-10 mb:pb-6"
         style={{
           background: `linear-gradient(to bottom, 
             rgba(0, 0, 0, 1) 20%, 
@@ -93,12 +93,12 @@ export default function StartUsingAi() {
         </div>
 
         {/* Desktop Image */}
-        <div className="absolute right-0 bottom-0 h-[484px] w-[410px] hidden md:block">
+        <div className="absolute right-0 bottom-0 h-[484px] w-[610px] hidden md:block">
           <Image
             src={getImageUrl("landingpage", "usingai") || "/placeholder.svg"}
             alt="Creative AI Visual"
             fill
-            className="object-contain object-right"
+            className="object-contain object-right h-52 w-10"
           />
         </div>
 
@@ -114,7 +114,7 @@ export default function StartUsingAi() {
         </div>
       </div>
 
-      {/* Newsletter Section */}
+
       {/* Newsletter Section */}
       <div className="w-full md:w-[86%] lg:w-[95%] bg-black  md:py-12 mt-10 md:mt-10 lg:mt-10 md:mb-0 lg:mb-4 px-4 md:ml-16 lg:-ml-28">
         <div className="max-w-[1440px] mx-auto flex flex-col md:flex-row justify-between items-center gap-6 lg:gap-16">
