@@ -66,7 +66,7 @@ export default function ImageCard({ title, image }: ImageCardProps) {
         </div>
       </div>
 
-      <ImageModal isOpen={isModalOpen} onClose={closeModal} image={{ title, image }} />
+      {/* <ImageModal isOpen={isModalOpen} onClose={closeModal} image={{ title, image }} /> */}
     </>
   )
 }
