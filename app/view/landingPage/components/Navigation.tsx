@@ -8,7 +8,7 @@ import { auth, db } from "@/database/firebase"
 import { doc, getDoc } from "firebase/firestore"
 import { APP_ROUTES, NAV_ROUTES, FEATURE_ROUTES } from "../../../../routes/routes"
 import { getImageUrl } from "@/routes/imageroute";
-import ProtectedRoute from "@/app/utils/ProtectedRoute"
+// import ProtectedRoute from "@/app/utils/ProtectedRoute"
 
 
 const Navigation = () => {
