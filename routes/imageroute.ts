@@ -56,7 +56,6 @@ export const imageRoutes: FolderImageRoutes = {
         google:'https://firebasestorage.googleapis.com/v0/b/wild-mind-ai.firebasestorage.app/o/public%2Fcore%2Fgoogle.svg?alt=media&token=5fb13362-b31d-4791-89d2-1a596d07ed17',
         apple:'https://firebasestorage.googleapis.com/v0/b/wild-mind-ai.firebasestorage.app/o/public%2Fcore%2Fapple.svg?alt=media&token=c7fb97bb-0278-4b5d-9e86-a68977d0cb7d',
         microsoft:'https://firebasestorage.googleapis.com/v0/b/wild-mind-ai.firebasestorage.app/o/public%2Fcore%2Fmicrosoft.svg?alt=media&token=88336993-efca-4fc2-89d4-338ba028a6f5',
-
     },
     plans:{
 

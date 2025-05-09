@@ -25,7 +25,7 @@ export default function SignUp() {
       {/* Right Side - Image */}
       <div className="lg:block flex-1 relative">
         <div className="absolute inset-0 border-black border-4">
-          <Image src={imageSrc || "/placeholder.svg"} alt="Artistic warriors" fill className="object-cover" priority />
+          <Image src={getImageUrl('sign','signup')} alt="Artistic warriors" fill className="object-cover" priority />
         </div>
       </div>
     </main>
