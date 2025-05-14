@@ -17,7 +17,7 @@ return (
   <div className="relative w-full h-full overflow-hidden">
 
     {/* Background SVG that sits behind everything */}
-<div className="absolute top-12 md:top-0 left-0 w-full  md:h-[50vh] z-0 pointer-events-none mb:translate-y-[20px] translate-y-[50px] opacity-50">
+<div className="absolute top-12 md:top-0 left-0 w-full  md:h-[50vh] z-0 pointer-events-none mb:translate-y-[20px] translate-y-[50px] opacity-50 ">
       <img 
         src="/Core/line.svg" 
         alt="Background Lines"
@@ -65,7 +65,7 @@ return (
       </div>
 
       {/* Right Side - Image Animation */}
-      <div className="w-[40vw] overflow-hidden flex items-center justify-center mb:w-full mb:h-[150px]">
+      <div className="w-[40vw] overflow-hidden flex items-center justify-center mb:w-full mb:h-[150px] ">
         <div className="w-full overflow-hidden relative">
           <motion.div
             className="flex min-w-max"

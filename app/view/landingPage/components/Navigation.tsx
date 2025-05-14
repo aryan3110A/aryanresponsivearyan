@@ -211,7 +211,7 @@ const Navigation = () => {
 
       {/* Mobile Navigation */}
       <div className="fixed top-0 left-0 w-full z-[1000] md:hidden">
-        <div className="flex items-center justify-between p-4 bg-black/80 backdrop-blur-xl">
+        <div className="flex items-center justify-between px-4 py-2 bg-black/30 backdrop-blur-xl">
           {/* Menu Button */}
           <div className="flex">
 
@@ -250,7 +250,7 @@ const Navigation = () => {
 
         {/* User Dropdown */}
         {isUserDropdownOpen && (
-          <div className="absolute right-6 top-16 min-w-[150px] bg-black/90 backdrop-blur-xl rounded-md shadow-lg z-30 animate-in fade-in slide-in-from-top-5 duration-300">
+          <div className="absolute right-6 top-12 min-w-[150px] bg-black/90 backdrop-blur-xl rounded-md shadow-lg z-30 animate-in fade-in slide-in-from-top-5 duration-300">
             <div className="py-2 flex flex-col">
               <div className="px-4 py-2 text-white flex flex-col items-start">
                 <span className="text-xs font-semibold">{username || "Guest"}</span>

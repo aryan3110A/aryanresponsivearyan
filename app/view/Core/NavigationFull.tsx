@@ -133,13 +133,13 @@ export default function NavigationFull() {
     <div className="bg-[#000000] text-white">
       <header
         ref={headerRef}
-        className="fixed top-0 left-0 right-0 z-50 bg-black/30 backdrop-blur-3xl shadow-lg"
+        className="fixed top-0 left-0 right-0 z-50 bg-black/30 backdrop-blur-3xl shadow-lg "
         style={backgroundStyle}
       >
-        <div className="flex items-center justify-start pl-[2vw] py-[1vh]">
+        <div className="flex items-center justify-start pl-[2vw] py-[0.5vh] md:py-[1vh]">
           <div className="flex items-center ">
             <button onClick={() => setIsNavOpen(true)} className="p-2 rounded-lg" aria-label="Open menu">
-              <Menu className="w-7 h-7" />
+              <Menu className="md:w-7 md:h-7" />
             </button>
             <div className="flex cursor-pointer">
               <IMAGE
@@ -150,7 +150,7 @@ export default function NavigationFull() {
                 onClick={() => router.push("/")}
               />
             </div>
-            <div className="text-center justify-center text-2xl font-bold ml-1 ">WildMind</div>
+            <div className="text-center justify-center text-xl md:text-2xl font-bold ml-1 ">WildMind</div>
           </div>
 
           <nav className="hidden md:flex lg:flex items-center justify-center gap-[4vw] font-poppins sm:pl-[18vw] md:pl-[21vw] lg:pl-[25vw]">

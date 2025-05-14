@@ -198,7 +198,7 @@ const NAV_LAND = () => {
 
       {/* Mobile Navigation */}
       <div className="hidden fixed top-0 left-0 w-full z-[1000] mb:block md:hidden">
-        <div className="flex items-center justify-between p-4 bg-black/80 backdrop-blur-xl">
+        <div className="flex items-center justify-between px-4 py-2 bg-black/30 backdrop-blur-xl">
           {/* Menu Button */}
           <div className="flex">
 
