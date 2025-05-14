@@ -192,15 +192,15 @@ export default function Hamburger({ isOpen, onClose }: { isOpen: boolean; onClos
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <div className="h-full flex flex-col overflow-hidden font-poppins">
+        <div className="h-full flex flex-col overflow-hidden font-poppins pt-4">
           <div
             ref={scrollRef}
             className="flex-1 overflow-y-auto overflow-x-hidden p-4 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent"
           >
             {/* Close */}
             {showCloseButton && (
-              <button onClick={onClose} className="absolute top-4 right-4 mt-[8%] rounded-lg">
-                <X className="w-10 h-10" />
+              <button onClick={onClose} className="absolute top-4 right-4 mt-[18%] rounded-lg">
+                <X className="w-8 h-8" />
               </button>
             )}
 

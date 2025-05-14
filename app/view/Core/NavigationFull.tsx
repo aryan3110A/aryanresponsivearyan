@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import { Menu, User, ChevronDown } from "lucide-react"
+import {  User, ChevronDown } from "lucide-react"
 import Link from "next/link"
 import Hamburger from "./Hamburger"
 import { useRouter } from "next/navigation"
@@ -138,8 +138,22 @@ export default function NavigationFull() {
       >
         <div className="flex items-center justify-start pl-[2vw] py-[0.5vh] md:py-[1vh]">
           <div className="flex items-center ">
-            <button onClick={() => setIsNavOpen(true)} className="p-2 rounded-lg" aria-label="Open menu">
-              <Menu className="md:w-7 md:h-7" />
+            <button onClick={() => setIsNavOpen(true)} className="py-2 rounded-lg pl-3 pr-1" aria-label="Open menu">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
             </button>
             <div className="flex cursor-pointer">
               <IMAGE
@@ -150,7 +164,7 @@ export default function NavigationFull() {
                 onClick={() => router.push("/")}
               />
             </div>
-            <div className="text-center justify-center text-xl md:text-2xl font-bold ml-1 ">WildMind</div>
+            <div className="text-center justify-center text-xl md:text-2xl font-bold ml-0 ">WildMind</div>
           </div>
 
           <nav className="hidden md:flex lg:flex items-center justify-center gap-[4vw] font-poppins sm:pl-[18vw] md:pl-[21vw] lg:pl-[25vw]">
