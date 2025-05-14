@@ -12,10 +12,12 @@ const ScrollableContainer = forwardRef<HTMLDivElement, ScrollableContainerProps>
   const isDragging = useRef(false)
   const startX = useRef(0)
   const scrollLeft = useRef(0)
+  const touchStartX = useRef(0)
 
   useEffect(() => {
     const container = containerRef.current
 
+    // Mouse events for desktop
     const handleMouseDown = (e: MouseEvent) => {
       isDragging.current = true
       startX.current = e.pageX - (container?.offsetLeft || 0)
@@ -37,14 +39,33 @@ const ScrollableContainer = forwardRef<HTMLDivElement, ScrollableContainerProps>
       }
     }
 
+    // Touch events for mobile
+    const handleTouchStart = (e: TouchEvent) => {
+      touchStartX.current = e.touches[0].clientX
+      scrollLeft.current = container?.scrollLeft || 0
+    }
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (!container) return
+      const touchCurrentX = e.touches[0].clientX
+      const walk = touchStartX.current - touchCurrentX
+      container.scrollLeft = scrollLeft.current + walk
+    }
+
     container?.addEventListener("mousedown", handleMouseDown)
     window.addEventListener("mouseup", handleMouseUp)
     window.addEventListener("mousemove", handleMouseMove)
+
+    container?.addEventListener("touchstart", handleTouchStart)
+    container?.addEventListener("touchmove", handleTouchMove)
 
     return () => {
       container?.removeEventListener("mousedown", handleMouseDown)
       window.removeEventListener("mouseup", handleMouseUp)
       window.removeEventListener("mousemove", handleMouseMove)
+
+      container?.removeEventListener("touchstart", handleTouchStart)
+      container?.removeEventListener("touchmove", handleTouchMove)
     }
   }, [])
 
@@ -58,8 +79,12 @@ const ScrollableContainer = forwardRef<HTMLDivElement, ScrollableContainerProps>
           ref.current = node
         }
       }}
-      className="flex overflow-x-auto scrollbar-hide cursor-grab"
-      style={{ scrollBehavior: "smooth" }}
+      className="flex overflow-x-auto scrollbar-hide cursor-grab pb-2 -mx-4 px-4"
+      style={{
+        scrollBehavior: "smooth",
+        WebkitOverflowScrolling: "touch",
+        scrollSnapType: "x mandatory",
+      }}
     >
       <div className="flex gap-4 sm:gap-6 pb-4">{children}</div>
     </div>
@@ -69,4 +94,3 @@ const ScrollableContainer = forwardRef<HTMLDivElement, ScrollableContainerProps>
 ScrollableContainer.displayName = "ScrollableContainer"
 
 export default ScrollableContainer
-

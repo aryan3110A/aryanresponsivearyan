@@ -14,8 +14,8 @@ export default function ImageCard({ title, image }: ImageCardProps) {
     <>
       <div
         className="
-          rounded-[45px] overflow-hidden
-          w-[354px] h-[488px] aspect-[3/4] mx-auto transition-all duration-100
+          rounded-[24px] md:rounded-[45px] overflow-hidden
+          w-[240px] h-[300px] md:w-[354px] md:h-[488px] aspect-[3/4] mx-1 md:mx-auto transition-all duration-100
           border-b-4 border-b-[#B1B1B1]
           cursor-pointer
         "
@@ -27,7 +27,7 @@ export default function ImageCard({ title, image }: ImageCardProps) {
             alt={title}
             fill
             className="object-cover"
-            sizes="(max-width: 280px) 100vw, 280px"
+            sizes="(max-width: 768px) 280px, 354px"
           />
 
           {/* Gradient overlay */}
@@ -35,7 +35,7 @@ export default function ImageCard({ title, image }: ImageCardProps) {
 
           {/* Title */}
           <div className="absolute top-4 left-4">
-            <h3 className="text-white font-semibold text-lg">{title}</h3>
+            <h3 className="text-white font-semibold text-sm md:text-lg">{title}</h3>
           </div>
 
           {/* Run button */}
@@ -43,9 +43,9 @@ export default function ImageCard({ title, image }: ImageCardProps) {
             <button
               className="
                 bg-[#357AFF] hover:bg-[#252525] text-white 
-                rounded-[10px] flex items-center px-5 py-2 
-                text-sm font-medium transition-all duration-300
-                shadow-md w-[83px] h-[34px]
+                rounded-[10px] flex items-center px-4 md:px-5 py-1.5 md:py-2 
+                text-xs md:text-sm font-medium transition-all duration-300
+                shadow-md w-[70px] md:w-[83px] h-[30px] md:h-[34px]
               "
               onClick={(e) => {
                 e.stopPropagation()
@@ -63,4 +63,3 @@ export default function ImageCard({ title, image }: ImageCardProps) {
     </>
   )
 }
-
