@@ -72,7 +72,7 @@ export default function ImageCreationSection() {
       <div className="relative">
         <ScrollableContainer>
           {images.map((image) => (
-            <div key={image.id} className="snap-center w-[240px] min-w-[360px] md:min-w-auto">
+            <div key={image.id} className="snap-center w-[240px] md:min-w-[360px] md:min-w-auto">
               <ImageCard title={image.title} image={image.image} />
             </div>
           ))}

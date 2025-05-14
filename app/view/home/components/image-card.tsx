@@ -13,7 +13,7 @@ export default function ImageCard({ title, image }: ImageCardProps) {
   return (
     <>
       <div
-        className="
+        className=" snap-start
           rounded-[24px] md:rounded-[45px] overflow-hidden
           w-[240px] h-[300px] md:w-[354px] md:h-[488px] aspect-[3/4] mx-1 md:mx-auto transition-all duration-100
           border-b-4 border-b-[#B1B1B1]
@@ -21,7 +21,7 @@ export default function ImageCard({ title, image }: ImageCardProps) {
         "
       >
         {/* Image container */}
-        <div className="relative w-full h-full overflow-hidden">
+        <div className="snap-start relative w-full h-full overflow-hidden">
           <Image
             src={image || "/home/placeholder.svg"}
             alt={title}

@@ -33,7 +33,7 @@ const ScrollableContainer = forwardRef<HTMLDivElement, ScrollableContainerProps>
     const handleMouseMove = (e: MouseEvent) => {
       if (!isDragging.current) return
       const x = e.pageX - (container?.offsetLeft || 0)
-      const walk = (x - startX.current) * 2
+      const walk = (x - startX.current) * 1
       if (container) {
         container.scrollLeft = scrollLeft.current - walk
       }
@@ -48,7 +48,8 @@ const ScrollableContainer = forwardRef<HTMLDivElement, ScrollableContainerProps>
     const handleTouchMove = (e: TouchEvent) => {
       if (!container) return
       const touchCurrentX = e.touches[0].clientX
-      const walk = touchStartX.current - touchCurrentX
+      const walk = (touchStartX.current - touchCurrentX) * 0.8 // smoother swipe feel
+
       container.scrollLeft = scrollLeft.current + walk
     }
 
@@ -86,7 +87,8 @@ const ScrollableContainer = forwardRef<HTMLDivElement, ScrollableContainerProps>
         scrollSnapType: "x mandatory",
       }}
     >
-      <div className="flex gap-4 sm:gap-6 pb-4">{children}</div>
+      <div className="flex gap-4 sm:gap-6 pb-4 snap-x snap-mandatory">{children}</div>
+
     </div>
   )
 })
