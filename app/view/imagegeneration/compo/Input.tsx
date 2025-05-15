@@ -25,7 +25,7 @@ const Input: React.FC<InputProps> = ({ onImageGenerated }) => {
 
     try {
       // Use the ngrok URL directly
-      const endpoint = "https://48ef-2402-a00-402-4c59-b8af-3e22-61cb-8f95.ngrok-free.app/generate";
+      const endpoint = "https://76ef-2402-a00-402-4c59-a0eb-e1f8-9fb1-2227.ngrok-free.app/generate";
       
       console.log(`Attempting to connect to: ${endpoint}`);
       const response = await fetch(endpoint, {

@@ -263,21 +263,33 @@ export default function Hamburger({ isOpen, onClose }: { isOpen: boolean; onClos
               )}
             </div>
 
-            <div className="flex items-center mt-[6%] bg-gray-900/50 rounded-lg pl-[16%] lg:gap-0 md:gap-6">
-              {/* "20" Div */}
-              <div className="items gap-0">
-                <div className="flex rounded-full py-[0.9vh] md:py-[1vh] pl-2 w-[24vw] md:w-[6vw] border-2 gap-1 border-[#484848] bg-black text-white text-xs">
-                  <Image src={getImageUrl("core", "coins") || "/placeholder.svg"} alt="User" width={20} height={20} className="" />
-                  <div className="flex items-center gap-3"></div> 20
+              <div className="flex items-center  bg-gray rounded-lg px-4 ml-auto md:ml-7 py-1 w-full max-w-[220px] md:max-w-[300px] mt-4">
+                            {/* "20" Coin Badge */}
+                <div className="flex items-center gap-1 border-2 border-[#484848] bg-black text-white rounded-full px-2 pr-6 py-1 text-xs">
+                  <Image
+                    src={getImageUrl("core", "coins") || "/placeholder.svg"}
+                    alt="coins"
+                    width={20}
+                    height={20}
+                  />
+                  <span>20</span>
                 </div>
+
+                {/* Upgrade Button */}
+                <button
+                  onClick={() => router.push(NAV_ROUTES.PRICING)}
+                  className="flex items-center bg-gradient-to-b from-[#5AD7FF] to-[#656BF5] text-white text-xs px-3 py-[0.3rem] rounded-full gap-1 whitespace-nowrap -ml-5"
+                >
+                  <Image
+                    src={getImageUrl("core", "diamond") || "/placeholder.svg"}
+                    alt="diamond"
+                    width={16}
+                    height={14}
+                  />
+                  Upgrade
+                </button>
               </div>
 
-              {/* Upgrade Button Overlapping */}
-              <button onClick={() => router.push(NAV_ROUTES.PRICING)} 
-              className="flex bg-gradient-to-b from-[#5AD7FF] to-[#656BF5] text-[0.72rem] px-3 py-[1vh] md:py-[1.2vh] rounded-full hover:bg-blue-600 transition-colors -ml-[12%] md:-ml-[24%] gap-1">
-                <Image src={getImageUrl("core", "diamond") || "/placeholder.svg"} alt="User" width={16} height={16} className="" /> Upgrade
-              </button>
-            </div>
 
 
              {/* Current Plan Text */}
@@ -338,11 +350,11 @@ export default function Hamburger({ isOpen, onClose }: { isOpen: boolean; onClos
             </div>
 
             {/* WildMind Footer - Fixed at bottom */}
-          <div className="bg-[#171717] p-[2%] font-poppins border-t border-gray-800 pt-10">
+          <div className="bg-[#171717] p-[0%] font-poppins border-t border-gray-800 pt-4 w-[100vw] -ml-[6%] mt-auto"></div>
             <div className="flex flex-col items-start">
               {/* Logo */}
-              <div className="flex items-center gap-[6%] pb-4 justify-center pl-[2vw]">
-                <Image src={getImageUrl("core", "logo") || "/placeholder.svg"} alt="WildMind Logo" width={32} height={32} className="" />
+              <div className="flex items-center gap-[3%] pb-4 justify-center pl-[0vw]">
+                <Image src={getImageUrl("core", "logo") || "/placeholder.svg"} alt="WildMind Logo" width={36} height={36} className="" />
                 <span className="text-white font-bold text-3xl">WildMind</span>
               </div>
 
@@ -365,7 +377,7 @@ export default function Hamburger({ isOpen, onClose }: { isOpen: boolean; onClos
               </div>
 
               {/* Social Icons */}
-              <div className="flex justify-center w-full gap-4">
+              <div className="flex justify-center w-full gap-4 -ml-1">
                 {socialLinks.map((social, index) => (
                   <div key={index} className="relative group">
                     {/* Social Icon */}
@@ -382,7 +394,7 @@ export default function Hamburger({ isOpen, onClose }: { isOpen: boolean; onClos
                 ))}
               </div>
             </div>
-          </div>
+          
 
 
           </div>
