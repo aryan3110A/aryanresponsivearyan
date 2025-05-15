@@ -4,7 +4,7 @@ import Image from "next/image";
 const ImagePreview = ({ images = [] }: { images?: string[] }) => {
   if (!images || images.length === 0) {
     return (
-      <p className="text-white text-center mt-9">No images generated yet.</p>
+      <p className="text-white text-xs  md:text-lg text-center mt-9">No images generated yet.</p>
     );
   }
 

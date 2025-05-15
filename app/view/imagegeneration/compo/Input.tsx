@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import SelectionModel from "../selectionmodel/app-container";
 import { getTokens, deductTokens } from "@/app/utils/tokenManager";
+import { getImageUrl } from "@/routes/imageroute";
 
 interface InputProps {
   onImageGenerated?: (imageUrl: string) => void;
@@ -89,7 +90,7 @@ const Input: React.FC<InputProps> = ({ onImageGenerated }) => {
       <div className="relative w-[60vw] mb:w-[90vw]">
         <input
           type="text"
-          className="w-full pr-[4rem] pl-4 py-2 rounded-full bg-gray-800 text-white outline-none h-16 mb:h-12"
+          className="w-full pr-[1rem] md:pr-[11rem] pl-4  py-2 rounded-full bg-gray-800 text-white outline-none h-16 mb:h-12"
           placeholder="Type a prompt..."
           value={text}
           onChange={(e) => {
@@ -101,7 +102,7 @@ const Input: React.FC<InputProps> = ({ onImageGenerated }) => {
   
         {/* Error message */}
         {error && (
-          <p className="text-red-500 text-sm mt-2 text-center">{error}</p>
+          <p className="text-red-500 text-xs md:text-sm mt-2 text-center">{error}</p>
         )}
   
         {/* Desktop generate button (absolute inside input box) */}
@@ -128,7 +129,7 @@ const Input: React.FC<InputProps> = ({ onImageGenerated }) => {
       </button>
   
       {/* Mobile layout ONLY */}
-      <div className="hidden mb:flex mb:flex-row mb:justify-between mb:items-center mb:gap-4 mb:mt-3 mb:w-[90vw]">
+      <div className="hidden mb:flex mb:flex-row mb:justify-between mb:items-center mb:gap-4 mb:-mt-2 mb:w-[87vw]">
         {/* Settings Button */}
         <button
           onClick={() => setShowSelectionModel(true)}
@@ -151,8 +152,14 @@ const Input: React.FC<InputProps> = ({ onImageGenerated }) => {
           ) : (
             <>
               <span>Generate</span>
-              <Image src="/ImageGeneate/coins.png" alt="coin" width={18} height={18} />
-              <span className="ml-[2px] font-semibold">40</span>
+              <Image
+                    src={getImageUrl("core", "coins") || "/placeholder.svg"}
+                    alt="coins"
+                    width={20}
+                    height={20}
+                    className="brightness-0 invert"
+                  />              
+                <span className="ml-[2px] font-poppins">40</span>
             </>
           )}
         </button>

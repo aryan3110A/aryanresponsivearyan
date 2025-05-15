@@ -133,12 +133,15 @@ export default function NavigationFull() {
     <div className="bg-[#000000] text-white">
       <header
         ref={headerRef}
-        className="fixed top-0 left-0 right-0 z-50 bg-black/30 backdrop-blur-3xl shadow-lg "
+        className="fixed top-0 left-0 right-0 z-50 bg-black/30 backdrop-blur-xl shadow-lg "
         style={backgroundStyle}
       >
         <div className="flex items-center justify-start pl-[2vw] py-[0.5vh] md:py-[1vh]">
           <div className="flex items-center ">
-            <button onClick={() => setIsNavOpen(true)} className="py-2 rounded-lg pl-3 pr-1" aria-label="Open menu">
+            <button onClick={() => {
+              setIsNavOpen(true);
+              setIsUserDropdownOpen(false);
+            }} className="py-2 rounded-lg pl-3 pr-1" aria-label="Open menu">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"
@@ -193,7 +196,7 @@ export default function NavigationFull() {
             </button>
 
             {isUserDropdownOpen && (
-              <div className="absolute right-0  sm-laptop:-ml-[15vw] md-laptop:-ml-[11vw]  lg:-ml-[6vw] mt-[1.3vh] w-auto min-w-[150px] md:min-w-[250px] bg-black/80 backdrop-blur-3xl rounded-md shadow-lg z-50 animate-dropdown">
+              <div className="absolute right-0  sm-laptop:-ml-[15vw] md-laptop:-ml-[11vw]  lg:-ml-[6vw] mt-[0.5vh] md:mt-[1.2vh] w-auto min-w-[150px] md:min-w-[250px] bg-black/70 backdrop-blur-3xl rounded-md shadow-lg z-50 animate-dropdown">
                 <div className="py-2 flex flex-col">
                   <div className="px-4 py-2 text-white flex flex-col items-start">
                     <span className="text-xs md:text-sm font-semibold">{username || "Guest"}</span>
@@ -234,7 +237,7 @@ export default function NavigationFull() {
             }}
           >
             <div className="container py-2">
-              <div className="flex flex-col sm:ml-[31.4vw] md:ml-[36vw] lg:ml-[38vw]">
+              <div className="flex flex-col sm:ml-[31.4vw] md:ml-[36vw] lg:ml-[37vw]">
                 <h3 className="text-lg font-bold mb-[2vh]">CREATE</h3>
                 <div className="flex flex-col space-y-[1.5vh]">
                   {featuresDropdownItems.map((item, index) => (
