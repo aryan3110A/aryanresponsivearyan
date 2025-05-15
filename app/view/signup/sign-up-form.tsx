@@ -9,6 +9,7 @@ import { doc, setDoc, getDoc } from "firebase/firestore"
 import { v4 as uuidv4 } from "uuid"
 import Image from "next/image"
 import { getImageUrl } from "@/routes/imageroute"
+import { initializeTokens } from "@/app/utils/tokenManager"
 
 export default function SignInForm() {
   const router = useRouter()
@@ -138,6 +139,9 @@ export default function SignInForm() {
 
       localStorage.setItem("username", realUsername)
       localStorage.setItem("slug", slug)
+      
+      // Initialize tokens for new user
+      initializeTokens()
 
       router.push(`/view/home/${slug}`)
     }

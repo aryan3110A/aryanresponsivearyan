@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import SelectionModel from "../selectionmodel/app-container";
+import { getTokens, deductTokens } from "@/app/utils/tokenManager";
 
 interface InputProps {
   onImageGenerated?: (imageUrl: string) => void;
@@ -13,10 +14,20 @@ const Input: React.FC<InputProps> = ({ onImageGenerated }) => {
   const [showSelectionModel, setShowSelectionModel] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [availableTokens, setAvailableTokens] = useState(getTokens());
+
+  useEffect(() => {
+    setAvailableTokens(getTokens());
+  }, []);
 
   const handleGenerate = async () => {
     if (!text) {
       setError("Please enter a prompt!");
+      return;
+    }
+
+    if (availableTokens < 40) {
+      setError("Not enough tokens! Please upgrade your plan.");
       return;
     }
     
@@ -45,8 +56,12 @@ const Input: React.FC<InputProps> = ({ onImageGenerated }) => {
       const data = await response.json();
 
       if (data.image_url) {
-        if (onImageGenerated) {
-          onImageGenerated(data.image_url);
+        // Only deduct tokens if image generation was successful
+        if (deductTokens()) {
+          setAvailableTokens(getTokens());
+          if (onImageGenerated) {
+            onImageGenerated(data.image_url);
+          }
         }
       } else {
         throw new Error("No image URL in response");

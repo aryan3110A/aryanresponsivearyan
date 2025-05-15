@@ -2,65 +2,53 @@
 
 import type React from "react";
 import { useState, useEffect } from "react";
-import Image from "next/image";
+// import Image from "next/image"; // Removed unused import
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserCheck } from "@fortawesome/free-solid-svg-icons";
-import { getImageUrl } from "@/routes/imageroute";
 import { useRouter } from "next/navigation";
 import { NAV_ROUTES } from "@/routes/routes";
+import { useTokenUpdate } from "@/app/utils/tokenManager";
+import Image from "next/image";
+import { getImageUrl } from "@/routes/imageroute";
 
 interface SettingsProps {
   isOpen: boolean;
   onClose: () => void;
-  hamburgerOpen: boolean;
-  profiles: { name: string; credits: number; isActive?: boolean }[];
 }
 
 type Tab = "Profile" | "Account management";
 
-
-const SettingNavigation: React.FC<SettingsProps> = ({
-  isOpen,
-  onClose,
-  hamburgerOpen,
-}) => {
+export default function SettingNavigation({ isOpen, onClose }: SettingsProps) {
   const [activeTab, setActiveTab] = useState<Tab>("Profile");
   const [username, setUsername] = useState("");
-  const isValid = /^[A-Za-z][A-Za-z0-9_@#$%^&+=!?.-]{2,}$/.test(username);
+  const availableTokens = useTokenUpdate();
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [isMobileOrTablet, setIsMobileOrTablet] = useState(false);
   const [showUsernameError, setShowUsernameError] = useState(false);
   const [isAgeConfirmed, setIsAgeConfirmed] = useState(false);
   const [showAgeError, setShowAgeError] = useState(false);
-  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-  const [isMobileOrTablet, setIsMobileOrTablet] = useState(false);
-const router=useRouter();
+  const [email, setEmail] = useState("");
+  const router = useRouter();
+
+  const isValid = /^[A-Za-z][A-Za-z0-9_@#$%^&+=!?.-]{2,}$/.test(username);
 
   // Check for mobile or tablet viewport
   useEffect(() => {
-    const checkDevice = () => {
-      setIsMobileOrTablet(window.innerWidth < 1080); // Based on your sm-laptop breakpoint
+    const checkViewport = () => {
+      setIsMobileOrTablet(window.innerWidth <= 1024);
     };
-    
-    checkDevice();
-    window.addEventListener('resize', checkDevice);
-    return () => window.removeEventListener('resize', checkDevice);
+    checkViewport();
+    window.addEventListener("resize", checkViewport);
+    return () => window.removeEventListener("resize", checkViewport);
   }, []);
 
-  // Close settings when hamburger closes
-  useEffect(() => {
-    if (!hamburgerOpen && isOpen) {
-      onClose();
-    }
-  }, [hamburgerOpen, isOpen, onClose]);
-
-  const [email, setEmail] = useState("");
   useEffect(() => {
     const storedUsername = localStorage.getItem("username");
     const storedEmail = localStorage.getItem("otpUser");
-  
     if (storedUsername) setUsername(storedUsername);
     if (storedEmail) setEmail(storedEmail);
   }, []);
-  
+
   // Hide success message after 3 seconds
   useEffect(() => {
     if (showSuccessMessage) {
@@ -84,10 +72,7 @@ const router=useRouter();
     width: "calc(100vw - 250px)"
   };
 
-
-
   return (
-    
     <div
       className="font-poppins fixed top-0 right-0 h-full bg-[#111111] border-l border-gray-800 z-50 transform transition-all duration-300 ease-in-out overflow-y-auto"
       style={mobileStyles}
@@ -113,7 +98,7 @@ const router=useRouter();
           </div>
 
           {/* Tab navigation */}
-          <div className="mb-2   md:mb-8">
+          <div className="mb-2 md:mb-8">
             <div className="flex space-x-10 border-b border-gray-800 pb-3">
               <button
                 onClick={() => setActiveTab("Profile")}
@@ -127,7 +112,7 @@ const router=useRouter();
               </button>
               <button
                 onClick={() => setActiveTab("Account management")}
-                className={`text-lg  ${
+                className={`text-lg ${
                   activeTab === "Account management"
                     ? "text-white border-b-2 border-blue-500"
                     : "text-gray-400"
@@ -156,7 +141,7 @@ const router=useRouter();
 
               <div className="mb-6">
                 <h3 className="text-md md:text-lg mb-1">Your username</h3>
-                <p className="text-[#757575]  mb-1 md:mb-2 text-sm md:text-md">
+                <p className="text-[#757575] mb-1 md:mb-2 text-sm md:text-md">
                   Automatically saves as you change it to a valid username.
                 </p>
                 <div className="relative">
@@ -166,13 +151,12 @@ const router=useRouter();
                   <input
                     type="text"
                     placeholder="Username"
-                    
                     value={username}
                     onChange={(e) => {
                       setUsername(e.target.value);
                       if (showUsernameError) setShowUsernameError(false);
                     }}
-                    className={`${isMobileOrTablet ? 'w-full' : 'w-[40vw]'} bg-[#111111] border border-gray-700 rounded-lg p-2 md:p-3 pl-8 md:pl-8  text-gray-300 focus:outline-none`}
+                    className={`${isMobileOrTablet ? 'w-full' : 'w-[40vw]'} bg-[#111111] border border-gray-700 rounded-lg p-2 md:p-3 pl-8 md:pl-8 text-gray-300 focus:outline-none`}
                   />
                 </div>
                 {showUsernameError && (
@@ -209,7 +193,6 @@ const router=useRouter();
                   </div>
                 </label>
               </div>
-              {/* Moved error message below the toggle div */}
               {showAgeError && (
                 <p className="text-xs md:text-md text-red-500 mt-2 ml-2">
                   You must confirm you are over 18 to save changes.
@@ -219,7 +202,6 @@ const router=useRouter();
               <button
                 onClick={() => {
                   let hasError = false;
-
                   if (!isValid) {
                     setShowUsernameError(true);
                     hasError = true;
@@ -228,13 +210,8 @@ const router=useRouter();
                     setShowAgeError(true);
                     hasError = true;
                   }
-
-                  // Only proceed if both conditions are met
                   if (!hasError) {
-                    // Save to local storage
                     localStorage.setItem("username", username);
-                    console.log("Changes saved successfully");
-                    // Show success message
                     setShowSuccessMessage(true);
                   }
                 }}
@@ -246,19 +223,9 @@ ${
 }
 ${isValid && isAgeConfirmed ? "hover:bg-black hover:border-gray-700" : ""}`}
               >
-                <FontAwesomeIcon
-                  icon={faUserCheck}
-                  className={`w-5 h-5 transition-all ${
-                    isValid && isAgeConfirmed
-                      ? "text-blue-500"
-                      : "text-[#757575]"
-                  } group-hover:text-blue-500`}
-                />
-                <span className="transition-all group-hover:text-blue-500">
-                  Save Changes
-                </span>
+                <FontAwesomeIcon icon={faUserCheck} className="w-4 h-4" />
+                Save Changes
               </button>
-              {/* Success message */}
               {showSuccessMessage && (
                 <div className="bg-green-900/3 text-green-400 py-2 mt-2">
                   Changes saved successfully!
@@ -282,35 +249,36 @@ ${isValid && isAgeConfirmed ? "hover:bg-black hover:border-gray-700" : ""}`}
                      <div className="h-6 md:h-8 w-[2px] md:text-md mt-0 md:mt-1 bg-gray-500"></div>
                     
                     <div className={`flex items-center px-4 py-3 rounded-lg text-xs md:text-[0.9rem] ${isMobileOrTablet ? 'mt-0' : ''}`}>
-                      <Image
-                        src={getImageUrl('core','coins')}
-                        alt="Credits"
-                        width={16}
-                        height={16}
-                        className="mr-2"  
-                      />
-                      Available credits: 20
+                      <span className="mr-2"><Image
+                    src={getImageUrl("core", "coins") || "/placeholder.svg"}
+                    alt="coins"
+                    width={20}
+                    height={20}
+                  /></span>
+                      Available credits: {availableTokens}
                     </div>
                   </div>
-                  <button className="mobile:hidden  md:flex items-center gap-2 bg-gradient-to-b from-[#5AD7FF] to-[#656BF5] px-6 py-3 rounded-full text-white">
+                  <button className="mobile:hidden  md:flex items-center gap-2 bg-gradient-to-b from-[#5AD7FF] to-[#656BF5] px-6 py-3 rounded-full text-white" onClick={() => router.push(NAV_ROUTES.PRICING)}>
+                    <span className="mr-2">
                     <Image
-                      src={getImageUrl('core','diamond')}
-                      alt="Upgrade"
-                      width={16}
-                      height={16}
-                    />
+                    src={getImageUrl("core", "diamond") || "/placeholder.svg"}
+                    alt="diamond"
+                    width={16}
+                    height={14}
+                  />
+                    </span>
                     Upgrade
                   </button>
                 </div>
 
                 <button onClick={() => router.push(NAV_ROUTES.PRICING)}
-                 className=" md:hidden ml-1 text-sm mobile:flex items-center gap-2 bg-gradient-to-b from-[#5AD7FF] to-[#656BF5] px-4 py-2 rounded-full text-white mt-2">
-                    <Image
-                      src={getImageUrl('core','diamond')}
-                      alt="Upgrade"
-                      width={16}
-                      height={16}
-                    />
+                 className=" md:hidden ml-1 text-sm mobile:flex items-center gap-0 bg-gradient-to-b from-[#5AD7FF] to-[#656BF5] px-4 py-2 rounded-full text-white mt-2">
+                    <span className="mr-2"><Image
+                    src={getImageUrl("core", "diamond") || "/placeholder.svg"}
+                    alt="diamond"
+                    width={16}
+                    height={14}
+                  /></span>
                     Upgrade
                   </button>
 
@@ -346,6 +314,4 @@ ${isValid && isAgeConfirmed ? "hover:bg-black hover:border-gray-700" : ""}`}
       </div>
     </div>
   );
-};
-
-export default SettingNavigation;
+}

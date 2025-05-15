@@ -17,6 +17,7 @@ import {
 } from "@tabler/icons-react";
 import Link from "next/link";
 import { NAV_ROUTES } from "@/routes/routes";
+import { useTokenUpdate } from "@/app/utils/tokenManager";
 
 // Removed unused interface NavbarProps
 
@@ -107,6 +108,7 @@ export default function Hamburger({ isOpen, onClose }: { isOpen: boolean; onClos
   // Removed unused state variable activeItem
   
   const [username, setUsername] = useState("");
+  const availableTokens = useTokenUpdate();
   const scrollRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
@@ -208,10 +210,10 @@ export default function Hamburger({ isOpen, onClose }: { isOpen: boolean; onClos
             <div className="relative mt-[30%]">
               <button
                 onClick={() => setIsProfileOpen(!isProfileOpen)}
-                className="w-full flex items-center justify-between p-3 rounded-lg bg-[#252525] hover:bg-gray-800 transition-colors"
+                className="w-full flex items-center justify-between px-3 py-3 rounded-lg bg-[#252525] hover:bg-gray-800 transition-colors"
               >
                 <div className="flex items-center gap-3 ml-[2%]">
-                  <Image src={getImageUrl("core", "profile") || "/placeholder.svg"} alt="User" width={32} height={32} className="rounded-full object-cover" />
+                  <Image src={getImageUrl("core", "profile") || "/placeholder.svg"} alt="User" width={28} height={28} className="rounded-full object-cover" />
                   <span>Profile</span>
                 </div>
                 <ChevronDown className={`w-6 h-6 transition-transform ${isProfileOpen ? "rotate-180" : ""}`} />
@@ -225,8 +227,8 @@ export default function Hamburger({ isOpen, onClose }: { isOpen: boolean; onClos
                       <Image
                         src={getImageUrl("core", "profile") || "/placeholder.svg"}
                         alt="User"
-                        width={32}
-                        height={32}
+                        width={28}
+                        height={28}
                         className="rounded-full object-cover"
                       />
                       <div className="flex-1">
@@ -236,7 +238,7 @@ export default function Hamburger({ isOpen, onClose }: { isOpen: boolean; onClos
                         </div>
                         <div className="flex items-center gap-1 text-sm text-gray-400">
                           <Image src={getImageUrl("core", "coins") || "/placeholder.svg"} alt="coins" width={16} height={16} />
-                          <div className="bg-gray-800 rounded px-1 text-xs">20</div>
+                          <div className="bg-gray-800 rounded px-1 text-xs">{availableTokens}</div>
                         </div>
                       </div>
                     </div>
@@ -263,7 +265,7 @@ export default function Hamburger({ isOpen, onClose }: { isOpen: boolean; onClos
               )}
             </div>
 
-              <div className="flex items-center  bg-gray rounded-lg px-4 ml-auto md:ml-7 py-1 w-full max-w-[220px] md:max-w-[300px] mt-4">
+              <div className="flex items-center  bg-gray rounded-lg px-4 ml-auto md:ml-7 py-1 w-full max-w-[220px] md:max-w-[300px] mt-2">
                             {/* "20" Coin Badge */}
                 <div className="flex items-center gap-1 border-2 border-[#484848] bg-black text-white rounded-full px-2 pr-6 py-1 text-xs">
                   <Image
@@ -272,7 +274,7 @@ export default function Hamburger({ isOpen, onClose }: { isOpen: boolean; onClos
                     width={20}
                     height={20}
                   />
-                  <span>20</span>
+                  <span>{availableTokens}</span>
                 </div>
 
                 {/* Upgrade Button */}
@@ -403,8 +405,6 @@ export default function Hamburger({ isOpen, onClose }: { isOpen: boolean; onClos
           <SettingNavigation
             isOpen={isSettingsOpen}
             onClose={handleSettingsClose}
-            hamburgerOpen={isOpen}
-            profiles={[{ name: username, credits: 20, isActive: true }]}
           />
         </div>
       </nav>
