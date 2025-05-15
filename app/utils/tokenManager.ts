@@ -7,15 +7,18 @@ const TOKENS_PER_GENERATION = 40;
 // Create a custom event for token updates
 const TOKEN_UPDATE_EVENT = 'tokenUpdate';
 
+const isBrowser = typeof window !== 'undefined';
+
 export const getTokens = (): number => {
+  if (!isBrowser) return DEFAULT_TOKENS;
   const tokens = localStorage.getItem('userTokens');
   return tokens ? parseInt(tokens) : DEFAULT_TOKENS;
 };
 
 export const setTokens = (tokens: number): void => {
+  if (!isBrowser) return;
   localStorage.setItem('userTokens', tokens.toString());
   // Dispatch event when tokens are updated
-  
   window.dispatchEvent(new CustomEvent(TOKEN_UPDATE_EVENT, { detail: tokens }));
 };
 
@@ -34,6 +37,7 @@ export const addTokens = (amount: number): void => {
 };
 
 export const initializeTokens = (): void => {
+  if (!isBrowser) return;
   if (!localStorage.getItem('userTokens')) {
     setTokens(DEFAULT_TOKENS);
   }
@@ -44,6 +48,7 @@ export const useTokenUpdate = () => {
   const [tokens, setTokens] = useState(getTokens());
 
   useEffect(() => {
+    if (!isBrowser) return;
     const handleTokenUpdate = (event: CustomEvent) => {
       setTokens(event.detail);
     };
