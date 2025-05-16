@@ -6,6 +6,7 @@ import Input from './compo/Input';
 import ImagePreview from './compo/ImagePreview'; 
 import NavigationFull from '../Core/NavigationFull'; 
 import ProtectedRoute from '@/app/utils/ProtectedRoute';
+import Footer from '../Core/Footer';
 
 const ImageGenMain = () => {
     const [images, setImages] = useState<string[]>([]);
@@ -26,7 +27,9 @@ const ImageGenMain = () => {
                 <ImagePreview images={images} />
             </div>
         </div>
+        <Footer />
         </ProtectedRoute>
+        
         </>
     );
 };

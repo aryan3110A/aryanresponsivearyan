@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 // Token management utility
 const DEFAULT_TOKENS = 1600;
 const OLD_DEFAULT_TOKENS = 160;
-const TOKENS_PER_GENERATION = 40;
+const TOKENS_PER_GENERATION = 20;
 
 // Create a custom event for token updates
 const TOKEN_UPDATE_EVENT = 'tokenUpdate';
