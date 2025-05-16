@@ -14,10 +14,10 @@ const SlideImage = () => {
   ];
 
 return (
-  <div className="relative w-full h-full overflow-hidden">
+  <div className="relative w-full h-full overflow-hidden md:pt-0 lg:pt-4">
 
     {/* Background SVG that sits behind everything */}
-<div className="absolute top-12 md:top-0 left-0 w-full  md:h-[50vh] z-0 pointer-events-none mb:translate-y-[20px] translate-y-[50px] opacity-50 ">
+<div className="absolute top-12 md:top-0 lg:top-0 left-0 w-full  md:h-[50vh] z-0 pointer-events-none mb:translate-y-[20px] translate-y-[50px] opacity-50 ">
       <img 
         src="/Core/line.svg" 
         alt="Background Lines"
@@ -54,12 +54,12 @@ return (
       <div className="w-1/4 flex items-center justify-center relative mb:w-full mb:justify-center mb:items-center">
         <div 
           className="absolute z-0 w-[400px] h-[400px] md:w-[600px] md:h-[600px] rounded-full bg-white opacity-10 blur-3xl mb:opacity-5 mb:h-[111px] mb:w-[111px] mb:blur-xl mb:bg-white"
-          style={{ boxShadow: '0 0 80px 40px rgba(255, 255, 255, 0.6)' }}
+          style={{ boxShadow: '80 0 80px 40px rgba(255, 255, 255, 0.6)' }}
         />
         <img
           src="/Core/logosquare.png"
           alt="Logo"
-          className="relative z-10 h-[350px] w-[400px] mb:h-[111px] mb:w-[111px]"
+          className="relative z-10 h-[380px] w-[400px] mb:h-[111px] mb:w-[111px]"
           style={{ filter: 'drop-shadow(0 0 10px rgba(255, 255, 255, 0.8))' }}
         />
       </div>

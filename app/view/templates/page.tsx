@@ -86,10 +86,10 @@ export default function TextGenerationTemplate() {
           </div>
         </div>
 
-        <div className="absolute font-poppins mt-0 md:-mt-[9vh] lg:-mt-[9vh] px-[30%] lg:px-0 md:px-0 md:left-[50%] transform -translate-x-[50%] w-[60%] max-w-[800px] flex items-center gap-[1vw] z-10">
+        <div className="absolute font-poppins mt-0 md:-mt-[8vh] lg:-mt-[8vh] px-[30%] lg:px-0 md:px-0 md:left-[45%] lg:left-[42%] transform -translate-x-[50%] w-[60%] max-w-[800px] flex items-center gap-[1vw] z-10">
           {/* Input Wrapper */}
           <div
-            className="hidden mobile:block relative flex-1 rounded-full md:rounded-full lg:rounded-full"
+            className="hidden mb:block mobile:block relative flex-1 rounded-full md:rounded-full lg:rounded-full"
             style={{
               boxShadow: "",
             }}
@@ -97,13 +97,13 @@ export default function TextGenerationTemplate() {
             <input
               type="text"
               placeholder="Type a prompt..."
-              className="w-[90vw]  md:w-full bg-[#262626] text-white rounded-2xl my-auto px-10 md:rounded-full h-[6vh] md:h-[8vh] md:py-[1.5vh] md:px-[2vw] outline-none border-none backdrop-blur-md placeholder-gray-500"
+              className="w-[90vw]  md:w-[60vw] bg-[#262626] text-white rounded-2xl my-auto px-4 md:rounded-full h-[6vh] md:h-[6vh] md:py-[1.5vh] md:px-[1vw] md:pr-[11rem]  lg:pr-[11rem]  outline-none border-none backdrop-blur-md placeholder-gray-500"
               value={inputPrompt}
               onChange={(e) => setInputPrompt(e.target.value)}
             />
 
             {/* Generate Button (Inside Input) */}
-            <button className=" hidden md:block absolute right-2 top-1/2 transform -translate-y-1/2 bg-gradient-to-b from-[#5AD7FF] to-[#656BF5] transition-all rounded-full py-[1.5vh] px-[3vw]  items-center gap-[0.5vw]">
+            <button className=" hidden md:block absolute right-2 top-1/2 transform -translate-y-1/2 bg-gradient-to-b from-[#5AD7FF] to-[#656BF5] transition-all rounded-full py-[0.9vh] px-[1.8vw]  items-center gap-[0.5vw]">
               <span className="text-xl">Generate</span>
             </button>
           </div>
@@ -113,28 +113,29 @@ export default function TextGenerationTemplate() {
           <button 
                   onClick={() => setShowSelectionModel(true)}
 
-          className="hidden md:block bg-[#262626] hover:bg-black/70 transition-colors backdrop-blur-md rounded-full p-[2vh]  items-center justify-center">
-            <Settings className="w-[4vh] h-[4vh]" />
+          className="hidden md:block bg-[#262626] hover:bg-black/70 transition-colors backdrop-blur-md rounded-full p-[1.5vh]  items-center justify-center">
+            <Settings className="w-[3vh] h-[3vh]" />
           </button>
         </div>
 
-        <div className="md:hidden lg:hidden mt-[7vh] ml-[140px] flex items-center gap-0">
+        <div className="md:hidden lg:hidden mt-[7vh]  flex  gap-0 ">
         {/* Settings Button */}
           <button 
                             onClick={() => setShowSelectionModel(true)}
-                            className="bg-[#262626] hover:bg-black/70 transition-colors backdrop-blur-md  rounded-xl p-2 flex items-center justify-center my-auto mx-auto">
-            <Settings className="my-auto mx-auto w-7 h-7 text-white" />
+                            className="bg-[#262626] hover:bg-black/70 transition-colors backdrop-blur-md  rounded-xl p-2 flex items-center justify-center my-auto ml-auto">
+            <Settings className="my-auto  w-7 h-7 text-white" />
           </button>
 
         {/* Generate Button */}
-        <button className="bg-gradient-to-b from-[#5AD7FF]  to-[#656BF5] transition-all rounded-xl my-auto py-3 mx-auto px-2 text-white font-medium text-sm flex items-center gap-1">
+        <button className="bg-gradient-to-b from-[#5AD7FF]  to-[#656BF5] transition-all rounded-xl my-auto py-3  px-2 text-white font-medium text-sm flex items-center gap-1">
           <span>Generate</span>
           <Image
             src="/navigationSetting/coins.png"
             width={20}
             height={20}
             alt="credits"
-            className="inline-block"
+            className="inline-block brightness-0 invert"
+
           />
           <span>40</span>
             </button>

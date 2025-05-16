@@ -272,7 +272,8 @@ const Footer: React.FC = () => {
         )}
 
         {/* Bottom Section - Fixed for responsiveness */}
-        <div className="border-t border-[#FFFFFF52] pt-4 mt-2">
+        <div className="border-t border-[#FFFFFF52] pt-4 mt-2 ">
+          
           <div
             className={`flex ${
               isMobile ? "flex-col space-y-4" : "flex-col md:flex-row"

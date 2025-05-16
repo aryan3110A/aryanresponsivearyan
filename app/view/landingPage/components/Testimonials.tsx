@@ -4,21 +4,21 @@ import { getImageUrl } from "@/routes/imageroute";
 const testimonials = [
   {
     quote:
-      "Sarvam AI has completely transformed my creative process! The speed and precision of its text-to-image generation are unmatched. I can bring my ideas to life faster than ever, and the results are simply stunning. A game-changer for designers like me!",
+      "WildMind AI has completely transformed my creative process! The speed and precision of its text-to-image generation are unmatched. I can bring my ideas to life faster than ever, and the results are simply stunning. A game-changer for designers like me!",
     user: "Emily Johnson",
     role: "Digital Artist",
     image: getImageUrl("landingpage", "saying1"),
   },
   {
     quote:
-      "I've used many AI tools, but nothing comes close to the versatility and power of Sarvam AI. From generating unique game assets to conceptualizing entire environments, this platform saves me hours of work while delivering incredible quality. Highly recommend it!",
+      "I've used many AI tools, but nothing comes close to the versatility and power of WildMind AI. From generating unique game assets to conceptualizing entire environments, this platform saves me hours of work while delivering incredible quality. Highly recommend it!",
     user: "Mark Thompson",
     role: "Game Developer",
     image: getImageUrl("landingpage", "saying2"),
   },
   {
     quote:
-      "Sarvam AI brings imagination to reality with effortless creativity. Its powerful features helped me create dynamic visuals for multiple branding projects, impressing my clients every time. The user-friendly interface and performance are top-notch!",
+      "WildMind AI brings imagination to reality with effortless creativity. Its powerful features helped me create dynamic visuals for multiple branding projects, impressing my clients every time. The user-friendly interface and performance are top-notch!",
     user: "Sophia Patel",
     role: "Branding Consultant",
     image: getImageUrl("landingpage", "saying3"),
@@ -33,7 +33,7 @@ export function Testimonials() {
         {/* Title Section */}
         <div className="mb-12 text-center">
           <h1 className="mb-4 text-5xl font-bold text-white mb:text-[24px]">
-            See What the World Is Saying About Sarvam AI.
+            See What the World Is Saying About WildMind AI.
           </h1>
           <p className="mx-auto max-w-4xl text-lg text-white mb:text-[12px] mb:px-4">
             The success of our AI goes beyond the tech itself—it&apos;s powered by a vast, interconnected
