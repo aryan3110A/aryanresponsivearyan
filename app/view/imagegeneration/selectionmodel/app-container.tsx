@@ -13,11 +13,22 @@ import Logo from "./logo"
 
 interface SelectionModelProps {
   onClose?: () => void;
+  onSave?: (settings: {
+    model: string;
+    tokenCost: number;
+    style: string | null;
+    aspectRatio: string;
+    numberOfImages: number;
+  }) => void;
 }
 
-export default function SelectionModel({ onClose }: SelectionModelProps) {
+export default function SelectionModel({ onClose, onSave }: SelectionModelProps) {
   const [isModelsOpen, setIsModelsOpen] = useState(false)
   const [selectedModel, setSelectedModel] = useState("Flux 1.0")
+  const [selectedTokenCost, setSelectedTokenCost] = useState(20)
+  const [selectedStyle, setSelectedStyle] = useState<string | null>(null)
+  const [selectedAspectRatio, setSelectedAspectRatio] = useState("1:1")
+  const [selectedNumberOfImages, setSelectedNumberOfImages] = useState(1)
 
   const sidebarRef = useRef<HTMLDivElement>(null)
   const presetRef = useRef<HTMLDivElement>(null)
@@ -25,6 +36,26 @@ export default function SelectionModel({ onClose }: SelectionModelProps) {
 
   const toggleModels = () => {
     setIsModelsOpen(!isModelsOpen)
+  }
+
+  const handleModelSelect = (model: string, tokenCost: number) => {
+    setSelectedModel(model)
+    setSelectedTokenCost(tokenCost)
+  }
+
+  const handleSave = () => {
+    if (onSave) {
+      onSave({
+        model: selectedModel,
+        tokenCost: selectedTokenCost,
+        style: selectedStyle,
+        aspectRatio: selectedAspectRatio,
+        numberOfImages: selectedNumberOfImages
+      })
+    }
+    if (onClose) {
+      onClose()
+    }
   }
 
   useEffect(() => {
@@ -63,16 +94,16 @@ export default function SelectionModel({ onClose }: SelectionModelProps) {
           <ModelPreset isOpen={isModelsOpen} toggle={toggleModels} selectedModel={selectedModel} />
         </div>
         <div className="mt-6">
-          <StylePalettes />
+          <StylePalettes onStyleSelect={setSelectedStyle} selectedStyle={selectedStyle} />
         </div>
         <div className="mt-6">
-          <AspectRatio />
+          <AspectRatio onAspectRatioSelect={setSelectedAspectRatio} selectedAspectRatio={selectedAspectRatio} />
         </div>
         <div className="mt-6">
-          <NumberOfImages />
+          <NumberOfImages onNumberOfImagesSelect={setSelectedNumberOfImages} selectedNumberOfImages={selectedNumberOfImages} />
         </div>
         <div className="mt-8 flex justify-start mb:justify-end">
-          <SaveButton />
+          <SaveButton onClick={handleSave} />
         </div>
       </div>
 
@@ -87,7 +118,7 @@ export default function SelectionModel({ onClose }: SelectionModelProps) {
             className="fixed top-0 left-[380px] w-[724px] h-screen overflow-auto mb:left-0 mb:w-[350px]"
           > 
             <div>
-              <Models setSelectedModel={setSelectedModel} toggleModels={toggleModels} />
+              <Models setSelectedModel={handleModelSelect} toggleModels={toggleModels} />
             </div>
           </motion.div>
         )}

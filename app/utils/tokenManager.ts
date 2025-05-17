@@ -3,18 +3,17 @@ import { useState, useEffect } from 'react';
 // Token management utility
 const DEFAULT_TOKENS = 1600;
 const OLD_DEFAULT_TOKENS = 160;
-const TOKENS_PER_GENERATION = 20;
 
 // Create a custom event for token updates
 const TOKEN_UPDATE_EVENT = 'tokenUpdate';
 
 const isBrowser = typeof window !== 'undefined';
 
-export const getTokens = (): number => {
+export function getTokens(): number {
   if (!isBrowser) return DEFAULT_TOKENS;
   const tokens = localStorage.getItem('userTokens');
   return tokens ? parseInt(tokens) : DEFAULT_TOKENS;
-};
+}
 
 export const setTokens = (tokens: number): void => {
   if (!isBrowser) return;
@@ -23,19 +22,19 @@ export const setTokens = (tokens: number): void => {
   window.dispatchEvent(new CustomEvent(TOKEN_UPDATE_EVENT, { detail: tokens }));
 };
 
-export const deductTokens = (): boolean => {
+export function deductTokens(amount: number): boolean {
   const currentTokens = getTokens();
-  if (currentTokens >= TOKENS_PER_GENERATION) {
-    setTokens(currentTokens - TOKENS_PER_GENERATION);
+  if (currentTokens >= amount) {
+    setTokens(currentTokens - amount);
     return true;
   }
   return false;
-};
+}
 
-export const addTokens = (amount: number): void => {
+export function addTokens(amount: number): void {
   const currentTokens = getTokens();
   setTokens(currentTokens + amount);
-};
+}
 
 export const initializeTokens = (): void => {
   if (!isBrowser) return;

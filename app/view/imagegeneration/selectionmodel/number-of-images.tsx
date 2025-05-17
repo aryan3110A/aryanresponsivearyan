@@ -3,10 +3,22 @@
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 
-export default function NumberOfImages() {
-  const [selectedNumber, setSelectedNumber] = useState<number | null>(null);
+interface NumberOfImagesProps {
+  onNumberOfImagesSelect?: (number: number) => void;
+  selectedNumberOfImages?: number;
+}
+
+export default function NumberOfImages({ onNumberOfImagesSelect, selectedNumberOfImages = 1 }: NumberOfImagesProps) {
+  const [selectedNumber, setSelectedNumber] = useState<number>(selectedNumberOfImages);
   const [isHovered, setIsHovered] = useState<number | null>(null);
   const numbers = [1, 2, 3, 4];
+
+  const handleSelect = (number: number) => {
+    setSelectedNumber(number);
+    if (onNumberOfImagesSelect) {
+      onNumberOfImagesSelect(number);
+    }
+  };
 
   return (
     <div>
@@ -26,7 +38,7 @@ export default function NumberOfImages() {
                   ? "border-[2px] border-transparent bg-transparent text-white hover:[border-image:linear-gradient(0deg,#5AD7FF_0%,#656BF5_97%)_1]"
                   : ""
               }`}
-            onClick={() => setSelectedNumber(number)}
+            onClick={() => handleSelect(number)}
             onMouseEnter={() => setIsHovered(number)}
             onMouseLeave={() => setIsHovered(null)}
           >

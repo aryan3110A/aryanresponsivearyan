@@ -3,9 +3,15 @@
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 
-export default function StylePalettes() {
+export default function StylePalettes({
+  onStyleSelect,
+  selectedStyle,
+}: {
+  onStyleSelect?: (style: string) => void;
+  selectedStyle?: string | null;
+}) {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const [selectedOption, setSelectedOption] = useState<string | null>(selectedStyle ?? null);
 
   const options = [
     "3D Render",
@@ -19,6 +25,14 @@ export default function StylePalettes() {
     "Portrait",
     "Pro B&W photography",
   ];
+
+  const handleStyleSelect = (option: string) => {
+    setSelectedOption(option);
+    setIsOpen(false);
+    if (onStyleSelect) {
+      onStyleSelect(option);
+    }
+  };
 
   return (
     <div className="relative w-[180px] mb:w-[150px]">
@@ -37,10 +51,7 @@ export default function StylePalettes() {
               key={index}
               className={`p-2 cursor-pointer text-white text-sm transition-colors duration-200  mb:p-2 mb:cursor-pointer mb:text-white mb:text-sm mb:transition-colors mb:duration-200 
                 ${selectedOption === option ? "bg-[#4a90e2]" : "hover:bg-white hover:text-black mb:hover:bg-white mb:hover:text-black"}`}
-              onClick={() => {
-                setSelectedOption(option);
-                setIsOpen(false);
-              }}
+              onClick={() => handleStyleSelect(option)}
             >
               {option}
             </div>

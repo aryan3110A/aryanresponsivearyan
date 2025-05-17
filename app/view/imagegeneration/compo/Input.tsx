@@ -10,16 +10,36 @@ interface InputProps {
   onImageGenerated?: (imageUrl: string) => void;
 }
 
+interface GenerationSettings {
+  model: string;
+  tokenCost: number;
+  style: string | null;
+  aspectRatio: string;
+  numberOfImages: number;
+}
+
 const Input: React.FC<InputProps> = ({ onImageGenerated }) => {
   const [text, setText] = useState("");
   const [showSelectionModel, setShowSelectionModel] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [availableTokens, setAvailableTokens] = useState(getTokens());
+  const [settings, setSettings] = useState<GenerationSettings>({
+    model: "Flux 1.0",
+    tokenCost: 20,
+    style: null,
+    aspectRatio: "1:1",
+    numberOfImages: 1
+  });
 
   useEffect(() => {
     setAvailableTokens(getTokens());
   }, []);
+
+  const handleSettingsSave = (newSettings: GenerationSettings) => {
+    setSettings(newSettings);
+    setShowSelectionModel(false);
+  };
 
   const handleGenerate = async () => {
     if (!text) {
@@ -27,8 +47,9 @@ const Input: React.FC<InputProps> = ({ onImageGenerated }) => {
       return;
     }
 
-    if (availableTokens < 40) {
-      setError("Not enough tokens! Please upgrade your plan.");
+    const totalTokenCost = settings.tokenCost * settings.numberOfImages;
+    if (availableTokens < totalTokenCost) {
+      setError(`Not enough tokens! You need ${totalTokenCost} tokens for this generation.`);
       return;
     }
     
@@ -39,6 +60,12 @@ const Input: React.FC<InputProps> = ({ onImageGenerated }) => {
       // Use the ngrok URL directly
       const endpoint = "https://bf99-2402-a00-402-4c59-351e-1aff-fa56-2d3a.ngrok-free.app/generate";
       
+      // Prepare the prompt with style if selected
+      let finalPrompt = text;
+      if (settings.style) {
+        finalPrompt = `${text}, ${settings.style} style`;
+      }
+      
       console.log(`Attempting to connect to: ${endpoint}`);
       const response = await fetch(endpoint, {
         method: "POST",
@@ -46,7 +73,12 @@ const Input: React.FC<InputProps> = ({ onImageGenerated }) => {
           "Content-Type": "application/json",
           "Accept": "application/json",
         },
-        body: JSON.stringify({ text }),
+        body: JSON.stringify({ 
+          text: finalPrompt,
+          model: settings.model,
+          aspect_ratio: settings.aspectRatio,
+          num_images: settings.numberOfImages
+        }),
       });
 
       if (!response.ok) {
@@ -57,8 +89,9 @@ const Input: React.FC<InputProps> = ({ onImageGenerated }) => {
       const data = await response.json();
 
       if (data.image_url) {
-        // Only deduct tokens if image generation was successful
-        if (deductTokens()) {
+        // Deduct tokens based on the number of images generated
+        const tokensDeducted = deductTokens(totalTokenCost);
+        if (tokensDeducted) {
           setAvailableTokens(getTokens());
           if (onImageGenerated) {
             onImageGenerated(data.image_url);
@@ -70,9 +103,8 @@ const Input: React.FC<InputProps> = ({ onImageGenerated }) => {
     } catch (error) {
       console.error("Request failed:", error);
       setError(error instanceof Error ? error.message : "Failed to generate image. Please try again.");
-    } finally {
-      setIsLoading(false);
     }
+    setIsLoading(false);
   };
 
   return (
@@ -81,7 +113,10 @@ const Input: React.FC<InputProps> = ({ onImageGenerated }) => {
       {showSelectionModel && (
         <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex">
           <div className="absolute left-0 top-0 h-full w-[380px]">
-            <SelectionModel onClose={() => setShowSelectionModel(false)} />
+            <SelectionModel 
+              onClose={() => setShowSelectionModel(false)} 
+              onSave={handleSettingsSave}
+            />
           </div>
         </div>
       )}
@@ -120,7 +155,6 @@ const Input: React.FC<InputProps> = ({ onImageGenerated }) => {
         </button>
       </div>
   
-      {/* Desktop settings button (inline) */}
       <button
         onClick={() => setShowSelectionModel(true)}
         className="bg-[#272626] rounded-full cursor-pointer ml-4 p-3 mb:hidden"
@@ -153,13 +187,13 @@ const Input: React.FC<InputProps> = ({ onImageGenerated }) => {
             <>
               <span>Generate</span>
               <Image
-                    src={getImageUrl("core", "coins") || "/placeholder.svg"}
-                    alt="coins"
-                    width={20}
-                    height={20}
-                    className="brightness-0 invert"
-                  />              
-                <span className="ml-[2px] font-poppins">40</span>
+                src={getImageUrl("core", "coins") || "/placeholder.svg"}
+                alt="coins"
+                width={20}
+                height={20}
+                className="brightness-0 invert"
+              />              
+              <span className="ml-[2px] font-poppins">{settings.tokenCost * settings.numberOfImages}</span>
             </>
           )}
         </button>
