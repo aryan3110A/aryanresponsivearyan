@@ -167,7 +167,7 @@ export default function NavigationFull() {
                 onClick={() => router.push("/")}
               />
             </div>
-            <div className="text-center justify-center text-xl md:text-2xl font-bold ml-0 ">WildMind</div>
+            <div className="text-center justify-center text-xl md:text-2xl font-poppins ml-0 ">WildMind</div>
           </div>
 
           <nav className="hidden md:flex lg:flex items-center justify-center gap-[4vw] font-poppins sm:pl-[18vw] md:pl-[21vw] lg:pl-[25vw]">
