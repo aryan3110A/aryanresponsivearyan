@@ -58,7 +58,7 @@ const Input: React.FC<InputProps> = ({ onImageGenerated }) => {
 
     try {
       // Use the ngrok URL directly
-      const endpoint = "https://bf99-2402-a00-402-4c59-351e-1aff-fa56-2d3a.ngrok-free.app/generate";
+      const endpoint = "https://cf16-2402-a00-402-4c59-a0eb-e1f8-9fb1-2227.ngrok-free.app/generate";
       
       // Prepare the prompt with style if selected
       let finalPrompt = text;
