@@ -170,7 +170,7 @@ export default function NavigationFull() {
             <div className="text-center justify-center text-xl md:text-2xl font-poppins ml-0 ">WildMind</div>
           </div>
 
-          <nav className="hidden md:flex lg:flex items-center justify-center gap-[4vw] font-poppins sm:pl-[18vw] md:pl-[21vw] lg:pl-[27vw]">
+          <nav className="hidden md:flex lg:flex items-center justify-center gap-[4vw] font-poppins sm:pl-[18vw] md:pl-[21vw] lg:pl-[26vw]">
             <div className="relative">
               <button onClick={() => toggleDropdown("features")} className="flex items-center hover:text-[#dbdbdb]">
                 <span>Features</span>
