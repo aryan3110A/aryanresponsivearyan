@@ -170,7 +170,7 @@ export default function NavigationFull() {
             <div className="text-center justify-center text-xl md:text-2xl font-poppins ml-0 ">WildMind</div>
           </div>
 
-          <nav className="hidden md:flex lg:flex items-center justify-center gap-[4vw] font-poppins sm:pl-[18vw] md:pl-[21vw] lg:pl-[25vw]">
+          <nav className="hidden md:flex lg:flex items-center justify-center gap-[4vw] font-poppins sm:pl-[18vw] md:pl-[21vw] lg:pl-[27vw]">
             <div className="relative">
               <button onClick={() => toggleDropdown("features")} className="flex items-center hover:text-[#dbdbdb]">
                 <span>Features</span>
@@ -237,7 +237,7 @@ export default function NavigationFull() {
             }}
           >
             <div className="container py-2">
-              <div className="flex flex-col sm:ml-[31.4vw] md:ml-[36vw] lg:ml-[37vw]">
+              <div className="flex flex-col sm:ml-[31.4vw] md:ml-[36vw] lg:ml-[37.7vw]">
                 <h3 className="text-lg font-bold mb-[2vh]">CREATE</h3>
                 <div className="flex flex-col space-y-[1.5vh]">
                   {featuresDropdownItems.map((item, index) => (
