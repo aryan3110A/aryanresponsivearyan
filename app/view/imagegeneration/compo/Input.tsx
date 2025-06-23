@@ -41,71 +41,62 @@ const Input: React.FC<InputProps> = ({ onImageGenerated }) => {
     setShowSelectionModel(false);
   };
 
-  const handleGenerate = async () => {
-    if (!text) {
-      setError("Please enter a prompt!");
-      return;
+const handleGenerate = async () => {
+  if (!text) {
+    setError("Please enter a prompt!");
+    return;
+  }
+
+  const totalTokenCost = settings.tokenCost * settings.numberOfImages;
+  if (availableTokens < totalTokenCost) {
+    setError(`Not enough tokens! You need ${totalTokenCost} tokens for this generation.`);
+    return;
+  }
+
+  setIsLoading(true);
+  setError(null);
+
+  try {
+    const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_URL}/generate`;
+
+    let finalPrompt = text;
+    if (settings.style) {
+      finalPrompt = `${text}, ${settings.style} style`;
     }
 
-    const totalTokenCost = settings.tokenCost * settings.numberOfImages;
-    if (availableTokens < totalTokenCost) {
-      setError(`Not enough tokens! You need ${totalTokenCost} tokens for this generation.`);
-      return;
+    const response = await fetch(endpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "x-api-key": "wildmind_5879fcd4a8b94743b3a7c8c1a1b4"
+      },
+      body: JSON.stringify({ prompt: finalPrompt }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.detail || `HTTP error! status: ${response.status}`);
     }
-    
-    setIsLoading(true);
-    setError(null);
 
-    try {
-      // Use the ngrok URL directly
-      const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_URL}/generate`;
-      
-      // Prepare the prompt with style if selected
-      let finalPrompt = text;
-      if (settings.style) {
-        finalPrompt = `${text}, ${settings.style} style`;
+    const data = await response.json();
+
+    if (data.image_url) {
+      const tokensDeducted = deductTokens(totalTokenCost);
+      if (tokensDeducted) {
+        setAvailableTokens(getTokens());
+        onImageGenerated?.(data.image_url);
       }
-      
-      console.log(`Attempting to connect to: ${endpoint}`);
-      const response = await fetch(endpoint, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json",
-        },
-        body: JSON.stringify({ 
-          text: finalPrompt,
-          model: settings.model,
-          aspect_ratio: settings.aspectRatio,
-          num_images: settings.numberOfImages
-        }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-
-      if (data.image_url) {
-        // Deduct tokens based on the number of images generated
-        const tokensDeducted = deductTokens(totalTokenCost);
-        if (tokensDeducted) {
-          setAvailableTokens(getTokens());
-          if (onImageGenerated) {
-            onImageGenerated(data.image_url);
-          }
-        }
-      } else {
-        throw new Error("No image URL in response");
-      }
-    } catch (error) {
-      console.error("Request failed:", error);
-      setError(error instanceof Error ? error.message : "Failed to generate image. Please try again.");
+    } else {
+      throw new Error("No image URL in response");
     }
-    setIsLoading(false);
-  };
+  } catch (error) {
+    console.error("Request failed:", error);
+    setError(error instanceof Error ? error.message : "Failed to generate image. Please try again.");
+  }
+  setIsLoading(false);
+};
+
 
   return (
     <div className="text-white flex items-center relative justify-center -mt-16 mb:flex-col mb:gap-4 mb:mt-6">
