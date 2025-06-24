@@ -57,11 +57,10 @@ const handleGenerate = async () => {
   setError(null);
 
   try {
-    let baseUrl = "/api";
+    let endpoint = "/api/generate";
     if (settings.model === "Stable Diffusion 3.5 Medium") {
-      baseUrl = "/api/medium";
+      endpoint = "/api/medium";
     }
-    const endpoint = `${baseUrl}/generate`;
 
     let finalPrompt = text;
     if (settings.style) {
