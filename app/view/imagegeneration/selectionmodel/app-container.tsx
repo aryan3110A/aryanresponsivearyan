@@ -24,8 +24,8 @@ interface SelectionModelProps {
 
 export default function SelectionModel({ onClose, onSave }: SelectionModelProps) {
   const [isModelsOpen, setIsModelsOpen] = useState(false)
-  const [selectedModel, setSelectedModel] = useState("Flux 1.0")
-  const [selectedTokenCost, setSelectedTokenCost] = useState(20)
+  const [selectedModel, setSelectedModel] = useState("Stable Diffusion 3.5 Large")
+  const [selectedTokenCost, setSelectedTokenCost] = useState(22)
   const [selectedStyle, setSelectedStyle] = useState<string | null>(null)
   const [selectedAspectRatio, setSelectedAspectRatio] = useState("1:1")
   const [selectedNumberOfImages, setSelectedNumberOfImages] = useState(1)
