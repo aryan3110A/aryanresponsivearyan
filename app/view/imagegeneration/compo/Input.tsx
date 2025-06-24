@@ -57,7 +57,7 @@ const handleGenerate = async () => {
   setError(null);
 
   try {
-    const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_URL}/flux`;
+    const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_URL}/flux/generate`;
 
     let finalPrompt = text;
     if (settings.style) {
