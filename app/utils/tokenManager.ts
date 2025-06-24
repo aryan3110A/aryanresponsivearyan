@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 
 // Token management utility
-const DEFAULT_TOKENS = 1600;
+const DEFAULT_TOKENS = 16000; // changed from 1600 to 16000
 const OLD_DEFAULT_TOKENS = 160;
 
 // Create a custom event for token updates
@@ -72,4 +72,4 @@ export const useTokenUpdate = () => {
   }, []);
 
   return tokens;
-}; 
+};
