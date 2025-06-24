@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 
 // Token management utility
 const DEFAULT_TOKENS = 16000; // changed from 1600 to 16000
-const OLD_DEFAULT_TOKENS = 160;
 
 // Create a custom event for token updates
 const TOKEN_UPDATE_EVENT = 'tokenUpdate';
@@ -39,13 +38,9 @@ export function addTokens(amount: number): void {
 export const initializeTokens = (): void => {
   if (!isBrowser) return;
   const currentTokens = getTokens();
-  const hasMigrated = localStorage.getItem('hasMigratedToNewTokens');
-  
-  // Check if user has old token amount (0, 40, 80, 120, or 160)
-  const isOldTokenAmount = currentTokens <= OLD_DEFAULT_TOKENS && currentTokens % 40 === 0;
-  
-  // Only set to 1600 if user hasn't migrated yet and has old token amount
-  if (!hasMigrated && isOldTokenAmount) {
+
+  // If tokens are less than DEFAULT_TOKENS, set to DEFAULT_TOKENS and mark as migrated
+  if (currentTokens < DEFAULT_TOKENS) {
     setTokens(DEFAULT_TOKENS);
     localStorage.setItem('hasMigratedToNewTokens', 'true');
   }
