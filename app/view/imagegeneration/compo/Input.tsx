@@ -25,8 +25,8 @@ const Input: React.FC<InputProps> = ({ onImageGenerated }) => {
   const [error, setError] = useState<string | null>(null);
   const [availableTokens, setAvailableTokens] = useState(getTokens());
   const [settings, setSettings] = useState<GenerationSettings>({
-    model: "Stable Diffusion 3.5 Large",
-    tokenCost: 22,
+    model: "Flux 1.0",
+    tokenCost: 20,
     style: null,
     aspectRatio: "1:1",
     numberOfImages: 1
@@ -57,10 +57,7 @@ const handleGenerate = async () => {
   setError(null);
 
   try {
-    let endpoint = "/api/generate";
-    if (settings.model === "Stable Diffusion 3.5 Medium") {
-      endpoint = "/api/medium";
-    }
+    const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_URL}/generate`;
 
     let finalPrompt = text;
     if (settings.style) {

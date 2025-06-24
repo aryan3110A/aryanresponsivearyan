@@ -52,12 +52,6 @@ export default function Models({
       description: "Get involved with the fastest growing open software project. Download and join other developers in creating incredible applications with Stable Diffusion XL as a foundation model.",
       tokenCost: 18
     },
-    {
-      id: "7",
-      title: "Stable Diffusion 3.5 Large",
-      description: "The largest model in the Stable Diffusion 3.5 series, delivering the highest quality image generation for demanding creative applications.",
-      tokenCost: 22
-    },
   ]
 
   return (
