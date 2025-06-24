@@ -25,8 +25,8 @@ const Input: React.FC<InputProps> = ({ onImageGenerated }) => {
   const [error, setError] = useState<string | null>(null);
   const [availableTokens, setAvailableTokens] = useState(getTokens());
   const [settings, setSettings] = useState<GenerationSettings>({
-    model: "Flux 1.0",
-    tokenCost: 20,
+    model: "Stable Diffusion 3.5 Large",
+    tokenCost: 22,
     style: null,
     aspectRatio: "1:1",
     numberOfImages: 1
@@ -57,7 +57,11 @@ const handleGenerate = async () => {
   setError(null);
 
   try {
-    const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_URL}/generate`;
+    let baseUrl = "https://api.wildmindai.com";
+    if (settings.model === "Stable Diffusion 3.5 Medium") {
+      baseUrl = "https://api.wildmindai.com/medium";
+    }
+    const endpoint = `${baseUrl}/generate`;
 
     let finalPrompt = text;
     if (settings.style) {
