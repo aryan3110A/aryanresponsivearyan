@@ -57,9 +57,9 @@ const handleGenerate = async () => {
   setError(null);
 
   try {
-    let baseUrl = "https://api.wildmindai.com";
+    let baseUrl = "/api";
     if (settings.model === "Stable Diffusion 3.5 Medium") {
-      baseUrl = "https://api.wildmindai.com/medium";
+      baseUrl = "/api/medium";
     }
     const endpoint = `${baseUrl}/generate`;
 
