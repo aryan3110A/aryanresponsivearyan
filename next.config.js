@@ -1,9 +1,24 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['firebasestorage.googleapis.com', 'placehold.co','api.wildmindai.com','api.wildmindai.com/medium'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'api.wildmindai.com',
+        pathname: '/images/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'firebasestorage.googleapis.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'placehold.co',
+        pathname: '/**',
+      },
+    ],
   },
-  
-}
+};
 
-module.exports = nextConfig 
+module.exports = nextConfig;
