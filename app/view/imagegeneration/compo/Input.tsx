@@ -24,11 +24,11 @@ interface GenerationSettings {
 /* ------------------------------------------------------------------ */
 const ENDPOINT: Record<string, string> = {
   "Stable Diffusion 3.5 Large":  "https://api.wildmindai.com/generate",   // route is already "generate"
-  "Stable Diffusion 3.5 Medium": "https://api.wildmindai.com/medium/",
-  "Flux.1 Dev":                  "https://api.wildmindai.com/fluxdev/",
-  "Stable Turbo":                "https://api.wildmindai.com/turbo/",
-  "Flux.1 Schnell":              "https://api.wildmindai.com/fluxschnell/",
-  "Stable XL":                   "https://api.wildmindai.com/xl/",
+  "Stable Diffusion 3.5 Medium": "https://api.wildmindai.com/medium",
+  "Flux.1 Dev":                  "https://api.wildmindai.com/fluxdev",
+  "Stable Turbo":                "https://api.wildmindai.com/turbo",
+  "Flux.1 Schnell":              "https://api.wildmindai.com/fluxschnell",
+  "Stable XL":                   "https://api.wildmindai.com/xl",
 };
 
 const Input: React.FC<InputProps> = ({ onImageGenerated }) => {
