@@ -42,7 +42,7 @@ export default function Models({
     },
     {
       id: "5",
-      title: "MidJourney + Flux Dev + LoRA",
+      title: "Flux.1 Schnell",
       description: "A powerful fusion of MidJourney's artistic capabilities, Flux-Dev's efficiency, and LoRA fine-tuning, enabling highly customized, stylistic, and efficient AI-generated imagery.",
       tokenCost: 30
     },
