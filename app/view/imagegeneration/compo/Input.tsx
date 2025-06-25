@@ -57,11 +57,11 @@ const handleGenerate = async () => {
   setError(null);
 
   try {
-    let endpoint = "https://api.wildmindai.com/flux";
+    let endpoint = "https://api.wildmindai.com/generate";
     if (settings.model === "Stable Diffusion 3.5 Medium") {
       endpoint = "https://api.wildmindai.com/medium";
     } else if (settings.model === "Flux.1 Dev") {
-      endpoint = "https://api.wildmindai.com/flux";
+      endpoint = "https://api.wildmindai.com/flux/generate";
     }
 
     let finalPrompt = text;
