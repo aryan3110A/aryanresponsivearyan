@@ -30,7 +30,7 @@ export default function Models({
     },
     {
       id: "3",
-      title: "Google's Imagen",
+      title: "Stable Diffusion 3.5 Large",
       description: "Google's Imagen - generating images with even better detail, richer lighting and fewer distracting artifacts than our previous models.",
       tokenCost: 25
     },
