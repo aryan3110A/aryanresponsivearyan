@@ -67,7 +67,7 @@ const handleGenerate = async () => {
     } else if (settings.model === "Flux.1 Schnell") {
       endpoint = "https://api.wildmindai.com/fluxschnell";
     } else if (settings.model === "Stable XL") {
-      endpoint = "https://api.wildmindai.com/XL";
+      endpoint = "https://api.wildmindai.com/xl";
     }
 
     let finalPrompt = text;
