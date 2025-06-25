@@ -7,7 +7,7 @@ import { getTokens, deductTokens } from "@/app/utils/tokenManager";
 import { getImageUrl } from "@/routes/imageroute";
 
 interface InputProps {
-  onImageGenerated?: (imageUrl: string) => void;
+  onImageGenerated?: (url: string) => void;
 }
 
 interface GenerationSettings {
@@ -18,184 +18,173 @@ interface GenerationSettings {
   numberOfImages: number;
 }
 
+/* ------------------------------------------------------------------ */
+/* 1. ONE canonical place that maps model ➜ backend URL               */
+/*    – every entry *ends with a slash* so no redirect ever happens   */
+/* ------------------------------------------------------------------ */
+const ENDPOINT: Record<string, string> = {
+  "Stable Diffusion 3.5 Large":  "https://api.wildmindai.com/generate",   // route is already “/generate”
+  "Stable Diffusion 3.5 Medium": "https://api.wildmindai.com/medium/",
+  "Flux.1 Dev":                  "https://api.wildmindai.com/fluxdev/",
+  "Stable Turbo":                "https://api.wildmindai.com/turbo/",
+  "Flux.1 Schnell":              "https://api.wildmindai.com/fluxschnell/",
+  "Stable XL":                   "https://api.wildmindai.com/xl/",
+};
+
 const Input: React.FC<InputProps> = ({ onImageGenerated }) => {
-  const [text, setText] = useState("");
-  const [showSelectionModel, setShowSelectionModel] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [availableTokens, setAvailableTokens] = useState(getTokens());
-  const [settings, setSettings] = useState<GenerationSettings>({
+  /* ------------------------- state setup ------------------------- */
+  const [text, setText]                 = useState("");
+  const [showSelection, setShowSelect]  = useState(false);
+  const [isLoading, setLoading]         = useState(false);
+  const [error, setError]               = useState<string | null>(null);
+  const [availableTokens, setTokens]    = useState(getTokens());
+  const [settings, setSettings]         = useState<GenerationSettings>({
     model: "Stable Diffusion 3.5 Large",
     tokenCost: 22,
     style: null,
     aspectRatio: "1:1",
-    numberOfImages: 1
+    numberOfImages: 1,
   });
 
-  useEffect(() => {
-    setAvailableTokens(getTokens());
-  }, []);
+  useEffect(() => setTokens(getTokens()), []);
 
-  const handleSettingsSave = (newSettings: GenerationSettings) => {
-    setSettings(newSettings);
-    setShowSelectionModel(false);
+  const handleSettingsSave = (cfg: GenerationSettings) => {
+    setSettings(cfg);
+    setShowSelect(false);
   };
 
-const handleGenerate = async () => {
-  if (!text) {
-    setError("Please enter a prompt!");
-    return;
-  }
+  /* ------------------------- main action ------------------------- */
+  const handleGenerate = async () => {
+    if (!text.trim())      return setError("Please enter a prompt!");
+    const totalCost = settings.tokenCost * settings.numberOfImages;
+    if (availableTokens < totalCost)
+      return setError(`Not enough tokens – need ${totalCost}.`);
 
-  const totalTokenCost = settings.tokenCost * settings.numberOfImages;
-  if (availableTokens < totalTokenCost) {
-    setError(`Not enough tokens! You need ${totalTokenCost} tokens for this generation.`);
-    return;
-  }
+    const endpoint = ENDPOINT[settings.model];
+    if (!endpoint) return setError("Unknown model endpoint!");
 
-  setIsLoading(true);
-  setError(null);
+    setLoading(true); setError(null);
+    try {
+      const finalPrompt =
+        settings.style ? `${text}, ${settings.style} style` : text;
 
-  try {
-    let endpoint = "https://api.wildmindai.com/generate";
-    if (settings.model === "Stable Diffusion 3.5 Medium") {
-      endpoint = "https://api.wildmindai.com/medium";
-    } else if (settings.model === "Flux.1 Dev") {
-      endpoint = "https://api.wildmindai.com/fluxdev";
-    } else if (settings.model === "Stable Turbo") {
-      endpoint = "https://api.wildmindai.com/turbo";
-    } else if (settings.model === "Flux.1 Schnell") {
-      endpoint = "https://api.wildmindai.com/fluxschnell";
-    } else if (settings.model === "Stable XL") {
-      endpoint = "https://api.wildmindai.com/xl";
-    }
+      const res = await fetch(endpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": "wildmind_5879fcd4a8b94743b3a7c8c1a1b4",
+        },
+        body: JSON.stringify({ prompt: finalPrompt }),
+      });
 
-    let finalPrompt = text;
-    if (settings.style) {
-      finalPrompt = `${text}, ${settings.style} style`;
-    }
-
-    const response = await fetch(endpoint, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Accept": "application/json",
-        "x-api-key": "wildmind_5879fcd4a8b94743b3a7c8c1a1b4"
-      },
-      body: JSON.stringify({ prompt: finalPrompt }),
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.detail || `HTTP error! status: ${response.status}`);
-    }
-
-    const data = await response.json();
-
-    if (data.image_url) {
-      const tokensDeducted = deductTokens(totalTokenCost);
-      if (tokensDeducted) {
-        setAvailableTokens(getTokens());
-        onImageGenerated?.(data.image_url);
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.detail || `HTTP ${res.status}`);
       }
-    } else {
-      throw new Error("No image URL in response");
+
+      const { image_url } = await res.json();
+      if (!image_url) throw new Error("No image URL in response");
+
+      if (deductTokens(totalCost)) {
+        setTokens(getTokens());
+        onImageGenerated?.(image_url);
+      }
+    } catch (e: any) {
+      console.error("Request failed:", e);
+      setError(e.message || "Generation failed – try again.");
     }
-  } catch (error) {
-    console.error("Request failed:", error);
-    setError(error instanceof Error ? error.message : "Failed to generate image. Please try again.");
-  }
-  setIsLoading(false);
-};
+    setLoading(false);
+  };
 
-
+  /* ------------------------- UI ------------------------- */
   return (
-    <div className="text-white flex items-center relative justify-center -mt-16 mb:flex-col mb:gap-4 mb:mt-6">
-      {/* Settings panel overlay */}
-      {showSelectionModel && (
+    <div className="text-white flex items-center justify-center relative -mt-16 mb:flex-col mb:gap-4 mb:mt-6">
+      {/* Settings fly-out */}
+      {showSelection && (
         <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex">
           <div className="absolute left-0 top-0 h-full w-[380px]">
-            <SelectionModel 
-              onClose={() => setShowSelectionModel(false)} 
+            <SelectionModel
+              onClose={() => setShowSelect(false)}
               onSave={handleSettingsSave}
             />
           </div>
         </div>
       )}
-  
-      {/* Input box */}
+
+      {/* Prompt input */}
       <div className="relative w-[60vw] mb:w-[90vw]">
         <input
-          type="text"
-          className="w-full pr-[1rem] md:pr-[11rem] pl-4  py-2 rounded-full bg-gray-800 text-white outline-none h-16 mb:h-12"
-          placeholder="Type a prompt..."
           value={text}
-          onChange={(e) => {
-            setText(e.target.value);
-            setError(null);
-          }}
+          onChange={(e) => { setText(e.target.value); setError(null); }}
           disabled={isLoading}
+          placeholder="Type a prompt..."
+          className="w-full h-16 mb:h-12 px-4 pr-[11rem] rounded-full bg-gray-800 text-white outline-none"
         />
-  
-        {/* Error message */}
+
         {error && (
           <p className="text-red-500 text-xs md:text-sm mt-2 text-center">{error}</p>
         )}
-  
-        {/* Desktop generate button (absolute inside input box) */}
+
+        {/* Generate (desktop) */}
         <button
           onClick={handleGenerate}
           disabled={isLoading}
-          className={`absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center px-4 lg:px-6 h-[2.5rem] lg:h-[3rem] rounded-full font-medium text-white transition-colors bg-gradient-to-b from-[#5AD7FF] to-[#656BF5] mb:hidden ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+          className={`absolute right-2 top-1/2 -translate-y-1/2 flex items-center px-4 lg:px-6 h-[2.5rem] lg:h-[3rem] rounded-full font-medium text-white bg-gradient-to-b from-[#5AD7FF] to-[#656BF5] transition-colors ${isLoading && "opacity-50 cursor-not-allowed"} mb:hidden`}
         >
           {isLoading ? (
-            <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+            <>
+              <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+              Generating…
+            </>
           ) : (
-            <Image src="/ImageGeneate/Group.svg" alt="Generate" width={24} height={24} className="mr-2" />
+            <>
+              <Image src="/ImageGeneate/Group.svg" alt="" width={24} height={24} className="mr-2" />
+              Generate
+            </>
           )}
-          {isLoading ? 'Generating...' : 'Generate'}
         </button>
       </div>
-  
+
+      {/* Settings button (desktop) */}
       <button
-        onClick={() => setShowSelectionModel(true)}
-        className="bg-[#272626] rounded-full cursor-pointer ml-4 p-3 mb:hidden"
+        onClick={() => setShowSelect(true)}
+        className="bg-[#272626] rounded-full p-3 ml-4 mb:hidden"
       >
         <Image src="/ImageGeneate/setting.svg" width={36} height={36} alt="Settings" />
       </button>
-  
-      {/* Mobile layout ONLY */}
-      <div className="hidden mb:flex mb:flex-row mb:justify-between mb:items-center mb:gap-4 mb:-mt-2 mb:w-[87vw]">
-        {/* Settings Button */}
+
+      {/* Mobile bar */}
+      <div className="hidden mb:flex mb:items-center mb:justify-between mb:gap-4 mb:w-[87vw] mb:-mt-2">
         <button
-          onClick={() => setShowSelectionModel(true)}
+          onClick={() => setShowSelect(true)}
           className="w-9 h-9 flex items-center justify-center rounded-full bg-[#272626]"
         >
           <Image src="/ImageGeneate/setting.svg" width={18} height={18} alt="Settings" />
         </button>
 
-        {/* Generate Button with more height */}
         <button
           onClick={handleGenerate}
           disabled={isLoading}
-          className={`flex items-center justify-center gap-1 px-4 py-[6px] rounded-full text-white text-sm font-medium bg-gradient-to-b from-[#5AD7FF] to-[#656BF5] ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+          className={`flex items-center gap-1 px-4 py-[6px] rounded-full text-white text-sm font-medium bg-gradient-to-b from-[#5AD7FF] to-[#656BF5] ${isLoading && "opacity-50 cursor-not-allowed"}`}
         >
           {isLoading ? (
             <>
-              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-              <span>Generating...</span>
+              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              Generating…
             </>
           ) : (
             <>
-              <span>Generate</span>
+              Generate
               <Image
                 src={getImageUrl("core", "coins") || "/placeholder.svg"}
-                alt="coins"
+                alt=""
                 width={20}
                 height={20}
                 className="brightness-0 invert"
-              />              
-              <span className="ml-[2px] font-poppins">{settings.tokenCost * settings.numberOfImages}</span>
+              />
+              <span className="ml-[2px] font-poppins">
+                {settings.tokenCost * settings.numberOfImages}
+              </span>
             </>
           )}
         </button>
