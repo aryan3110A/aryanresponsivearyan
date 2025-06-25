@@ -48,7 +48,7 @@ export default function Models({
     },
     {
       id: "6",
-      title: "Stable Diffusion XL",
+      title: "Stable Turbo",
       description: "Get involved with the fastest growing open software project. Download and join other developers in creating incredible applications with Stable Diffusion XL as a foundation model.",
       tokenCost: 18
     },

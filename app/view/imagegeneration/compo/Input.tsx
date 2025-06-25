@@ -62,8 +62,8 @@ const handleGenerate = async () => {
       endpoint = "https://api.wildmindai.com/medium";
     } else if (settings.model === "Flux.1 Dev") {
       endpoint = "https://api.wildmindai.com/fluxdev";
-    } else if (settings.model === "Stable Diffusion XL") {
-      endpoint = "https://api.wildmindai.com/xl";
+    } else if (settings.model === "Stable Turbo") {
+      endpoint = "https://api.wildmindai.com/turbo";
     } else if (settings.model === "Flux.1 Schnell") {
       endpoint = "https://api.wildmindai.com/fluxschnell";
     }
