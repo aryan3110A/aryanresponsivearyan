@@ -23,7 +23,7 @@ interface GenerationSettings {
 /*    – every entry *ends with a slash* so no redirect ever happens   */
 /* ------------------------------------------------------------------ */
 const ENDPOINT: Record<string, string> = {
-  "Stable Diffusion 3.5 Large":  "https://api.wildmindai.com/generate",   // route is already “/generate”
+  "Stable Diffusion 3.5 Large":  "https://api.wildmindai.com/generate",   // route is already "generate"
   "Stable Diffusion 3.5 Medium": "https://api.wildmindai.com/medium/",
   "Flux.1 Dev":                  "https://api.wildmindai.com/fluxdev/",
   "Stable Turbo":                "https://api.wildmindai.com/turbo/",
@@ -89,9 +89,13 @@ const Input: React.FC<InputProps> = ({ onImageGenerated }) => {
         setTokens(getTokens());
         onImageGenerated?.(image_url);
       }
-    } catch (e: any) {
+    } catch (e: unknown) {
       console.error("Request failed:", e);
-      setError(e.message || "Generation failed – try again.");
+      if (e instanceof Error) {
+        setError(e.message || "Generation failed – try again.");
+      } else {
+        setError(String(e) || "Generation failed – try again.");
+      }
     }
     setLoading(false);
   };
