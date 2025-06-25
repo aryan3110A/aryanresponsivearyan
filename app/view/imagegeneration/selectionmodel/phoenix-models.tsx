@@ -18,7 +18,7 @@ export default function Models({
   const models: ModelCard[] = [
     {
       id: "1",
-      title: "Phoenix",
+      title: "Stable XL",
       description: "Unique turnkey solution for video analytics, optimized for real-time performance on off-the-grid Edge AI devices and green computing.",
       tokenCost: 20
     },
