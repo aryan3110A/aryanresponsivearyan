@@ -16,12 +16,9 @@ interface GenerationSettings {
   style: string | null;
   aspectRatio: string;
   numberOfImages: number;
+  quality: string;
 }
 
-/* ------------------------------------------------------------------ */
-/* 1. ONE canonical place that maps model ➜ backend URL               */
-/*    – every entry *ends with a slash* so no redirect ever happens   */
-/* ------------------------------------------------------------------ */
 const API_BASE = process.env.NEXT_PUBLIC_BACKEND_URL;
 const ENDPOINT: Record<string, string> = {
   "Stable Diffusion 3.5 Large":  `${API_BASE}/generate`,
@@ -30,6 +27,44 @@ const ENDPOINT: Record<string, string> = {
   "Stable Turbo":                `${API_BASE}/turbo`,
   "Flux.1 Schnell":              `${API_BASE}/fluxschnell`,
   "Stable XL":                   `${API_BASE}/xl`,
+};
+
+const RESOLUTION_MAP: Record<string, Record<string, [number, number]>> = {
+  "1:1": {
+    SD: [512, 512],
+    HD: [768, 768],
+    FullHD: [1024, 1024],
+    "2K": [2048, 2048],
+    "4K": [4096, 4096],
+  },
+  "16:9": {
+    SD: [640, 360],
+    HD: [1280, 720],
+    FullHD: [1920, 1080],
+    "2K": [2560, 1440],
+    "4K": [3840, 2160],
+  },
+  "9:16": {
+    SD: [360, 640],
+    HD: [720, 1280],
+    FullHD: [1080, 1920],
+    "2K": [1440, 2560],
+    "4K": [2160, 3840],
+  },
+  "3:4": {
+    SD: [384, 512],
+    HD: [576, 768],
+    FullHD: [768, 1024],
+    "2K": [1536, 2048],
+    "4K": [3072, 4096],
+  },
+  "4:3": {
+    SD: [512, 384],
+    HD: [768, 576],
+    FullHD: [1024, 768],
+    "2K": [2048, 1536],
+    "4K": [4096, 3072],
+  },
 };
 
 const Input: React.FC<InputProps> = ({ onImageGenerated }) => {
@@ -45,6 +80,7 @@ const Input: React.FC<InputProps> = ({ onImageGenerated }) => {
     style: null,
     aspectRatio: "1:1",
     numberOfImages: 1,
+    quality: "HD",
   });
 
   useEffect(() => setTokens(getTokens()), []);
@@ -66,16 +102,19 @@ const Input: React.FC<InputProps> = ({ onImageGenerated }) => {
 
     setLoading(true); setError(null);
     try {
+      const { aspectRatio, quality } = settings;
+      const [width, height] = RESOLUTION_MAP[aspectRatio]?.[quality] || [768, 768];
+
       const finalPrompt =
         settings.style ? `${text}, ${settings.style} style` : text;
 
       const res = await fetch(endpoint, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
           "x-api-key": "wildmind_5879fcd4a8b94743b3a7c8c1a1b4",
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ prompt: finalPrompt }),
+        body: JSON.stringify({ prompt: finalPrompt, width, height }),
       });
 
       if (!res.ok) {

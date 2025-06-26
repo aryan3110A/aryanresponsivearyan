@@ -22,7 +22,7 @@ export default function NumberOfImages({ onNumberOfImagesSelect, selectedNumberO
 
   return (
     <div>
-      <h3 className="text-white text-lg font-medium mb-3">Number of image</h3>
+      <h3 className="text-white text-lg font-medium mb-0">Number of image</h3>
       <div className="flex items-center gap-x-3">
         {numbers.map((number) => (
           <div

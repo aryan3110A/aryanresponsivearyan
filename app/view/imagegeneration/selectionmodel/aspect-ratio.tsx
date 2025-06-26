@@ -19,11 +19,11 @@ export default function AspectRatio({ onAspectRatioSelect, selectedAspectRatio =
 
   return (
     <div>
-      <h3 className="text-white text-lg font-medium mb-3">Aspect ratio</h3>
-      <div className="grid grid-cols-2 gap-3 mb:gap-6">
+      <h3 className="text-white text-lg font-medium mb-0">Aspect ratio</h3>
+      <div className="grid grid-cols-2 gap-3  mb:gap-6">
         {/* Individual Aspect Ratio Buttons */}
         <div
-          className={`w-[109px] h-[43px] border rounded-lg flex items-center justify-center gap-2 cursor-pointer transition-all
+          className={`w-[109px] h-[43px] border rounded-lg flex items-center justify-center gap-2 cursor-pointer transition-all 
             ${
               selectedRatio === "16:9"
                 ? "border-[#4a90e2] text-[#4a90e2]"
@@ -49,7 +49,7 @@ export default function AspectRatio({ onAspectRatioSelect, selectedAspectRatio =
         </div>
 
         <div
-          className={`w-[109px] h-[43px] border rounded-lg flex items-center justify-center gap-2 cursor-pointer transition-all
+          className={`w-[109px] h-[43px] border rounded-lg flex items-center justify-center gap-2 cursor-pointer transition-all mb:-mt-4
             ${
               selectedRatio === "1:1"
                 ? "border-[#4a90e2] text-[#4a90e2]"
@@ -62,7 +62,7 @@ export default function AspectRatio({ onAspectRatioSelect, selectedAspectRatio =
         </div>
 
         <div
-          className={`w-[109px] h-[43px] border rounded-lg flex items-center justify-center gap-2 cursor-pointer transition-all
+          className={`w-[109px] h-[43px] border rounded-lg flex items-center justify-center gap-2 cursor-pointer transition-all mb:-mt-4
             ${
               selectedRatio === "4:3"
                 ? "border-[#4a90e2] text-[#4a90e2]"

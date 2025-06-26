@@ -10,6 +10,7 @@ import NumberOfImages from "./number-of-images"
 import SaveButton from "./save-button"
 import Models from "./phoenix-models"
 import Logo from "./logo"
+import Quality from "./quality"
 
 interface SelectionModelProps {
   onClose?: () => void;
@@ -19,6 +20,7 @@ interface SelectionModelProps {
     style: string | null;
     aspectRatio: string;
     numberOfImages: number;
+    quality: string;
   }) => void;
 }
 
@@ -29,6 +31,7 @@ export default function SelectionModel({ onClose, onSave }: SelectionModelProps)
   const [selectedStyle, setSelectedStyle] = useState<string | null>(null)
   const [selectedAspectRatio, setSelectedAspectRatio] = useState("1:1")
   const [selectedNumberOfImages, setSelectedNumberOfImages] = useState(1)
+  const [selectedQuality, setSelectedQuality] = useState("HD")
 
   const sidebarRef = useRef<HTMLDivElement>(null)
   const presetRef = useRef<HTMLDivElement>(null)
@@ -50,7 +53,8 @@ export default function SelectionModel({ onClose, onSave }: SelectionModelProps)
         tokenCost: selectedTokenCost,
         style: selectedStyle,
         aspectRatio: selectedAspectRatio,
-        numberOfImages: selectedNumberOfImages
+        numberOfImages: selectedNumberOfImages,
+        quality: selectedQuality,
       })
     }
     if (onClose) {
@@ -95,6 +99,9 @@ export default function SelectionModel({ onClose, onSave }: SelectionModelProps)
         </div>
         <div className="mt-6">
           <StylePalettes onStyleSelect={setSelectedStyle} selectedStyle={selectedStyle} />
+        </div>
+        <div className="mt-6">
+          <Quality onQualitySelect={setSelectedQuality} selectedQuality={selectedQuality} />
         </div>
         <div className="mt-6">
           <AspectRatio onAspectRatioSelect={setSelectedAspectRatio} selectedAspectRatio={selectedAspectRatio} />
