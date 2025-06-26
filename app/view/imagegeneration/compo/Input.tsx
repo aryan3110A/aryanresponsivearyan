@@ -22,13 +22,14 @@ interface GenerationSettings {
 /* 1. ONE canonical place that maps model ➜ backend URL               */
 /*    – every entry *ends with a slash* so no redirect ever happens   */
 /* ------------------------------------------------------------------ */
+const API_BASE = process.env.NEXT_PUBLIC_BACKEND_URL;
 const ENDPOINT: Record<string, string> = {
-  "Stable Diffusion 3.5 Large":  "https://api.wildmindai.com/generate",   // route is already "generate"
-  "Stable Diffusion 3.5 Medium": "https://api.wildmindai.com/medium",
-  "Flux.1 Dev":                  "https://api.wildmindai.com/fluxdev",
-  "Stable Turbo":                "https://api.wildmindai.com/turbo",
-  "Flux.1 Schnell":              "https://api.wildmindai.com/fluxschnell",
-  "Stable XL":                   "https://api.wildmindai.com/xl",
+  "Stable Diffusion 3.5 Large":  `${API_BASE}/generate`,
+  "Stable Diffusion 3.5 Medium": `${API_BASE}/medium`,
+  "Flux.1 Dev":                  `${API_BASE}/fluxdev`,
+  "Stable Turbo":                `${API_BASE}/turbo`,
+  "Flux.1 Schnell":              `${API_BASE}/fluxschnell`,
+  "Stable XL":                   `${API_BASE}/xl`,
 };
 
 const Input: React.FC<InputProps> = ({ onImageGenerated }) => {
