@@ -170,7 +170,12 @@ export default function Hamburger({ isOpen, onClose }: { isOpen: boolean; onClos
   const handleLogout = async () => {
     try {
       await signOut(auth);
-      localStorage.clear();
+      
+      // Preserve user tokens by only removing auth-related items
+      localStorage.removeItem("otpUser");
+      localStorage.removeItem("username");
+      localStorage.removeItem("slug");
+      
       router.push("/");
     } catch (err) {
       console.error("Logout failed:", err);

@@ -1,22 +1,36 @@
 import { useState, useEffect } from 'react';
 
 // Token management utility
-const DEFAULT_TOKENS = 16000; // changed from 1600 to 16000
+const DEFAULT_TOKENS = 16000;
 
 // Create a custom event for token updates
 const TOKEN_UPDATE_EVENT = 'tokenUpdate';
 
 const isBrowser = typeof window !== 'undefined';
 
+// Get user email for user-specific token storage
+const getUserEmail = (): string | null => {
+  if (!isBrowser) return null;
+  return localStorage.getItem('otpUser') || localStorage.getItem('userEmail');
+};
+
+// Create user-specific token key
+const getTokenKey = (): string => {
+  const userEmail = getUserEmail();
+  return userEmail ? `userTokens_${userEmail}` : 'userTokens_anonymous';
+};
+
 export function getTokens(): number {
   if (!isBrowser) return DEFAULT_TOKENS;
-  const tokens = localStorage.getItem('userTokens');
+  const tokenKey = getTokenKey();
+  const tokens = localStorage.getItem(tokenKey);
   return tokens ? parseInt(tokens) : DEFAULT_TOKENS;
 }
 
 export const setTokens = (tokens: number): void => {
   if (!isBrowser) return;
-  localStorage.setItem('userTokens', tokens.toString());
+  const tokenKey = getTokenKey();
+  localStorage.setItem(tokenKey, tokens.toString());
   // Dispatch event when tokens are updated
   window.dispatchEvent(new CustomEvent(TOKEN_UPDATE_EVENT, { detail: tokens }));
 };
@@ -37,12 +51,11 @@ export function addTokens(amount: number): void {
 
 export const initializeTokens = (): void => {
   if (!isBrowser) return;
-  const currentTokens = getTokens();
-
-  // If tokens are less than DEFAULT_TOKENS, set to DEFAULT_TOKENS and mark as migrated
-  if (currentTokens < DEFAULT_TOKENS) {
+  const tokenKey = getTokenKey();
+  
+  // Only initialize if no tokens exist for this user
+  if (!localStorage.getItem(tokenKey)) {
     setTokens(DEFAULT_TOKENS);
-    localStorage.setItem('hasMigratedToNewTokens', 'true');
   }
 };
 
@@ -53,7 +66,7 @@ export const useTokenUpdate = () => {
   useEffect(() => {
     if (!isBrowser) return;
     
-    // Initialize tokens on component mount
+    // Initialize tokens on component mount only if they don't exist
     initializeTokens();
     
     const handleTokenUpdate = (event: CustomEvent) => {

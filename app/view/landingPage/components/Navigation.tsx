@@ -96,8 +96,12 @@ const Navigation = () => {
     try {
       await signOut(auth)
     } catch {}
+    
+    // Preserve user tokens by only removing auth-related items
     localStorage.removeItem("otpUser")
     localStorage.removeItem("username")
+    localStorage.removeItem("slug")
+    
     setUserEmail("")
     setUsername("")
     setIsLoggedIn(false)
