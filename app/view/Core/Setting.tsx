@@ -81,7 +81,7 @@ export default function SettingNavigation({ isOpen, onClose }: SettingsProps) {
       {isMobileOrTablet && (
         <button 
           onClick={onClose}
-          className="absolute top-4 right-4 text-white p-2"
+          className="absolute top-12 right-4 text-white p-2"
         >
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -91,7 +91,7 @@ export default function SettingNavigation({ isOpen, onClose }: SettingsProps) {
       )}
 
       {/* Content area */}
-      <div className={`pl-2 pr-4 md:p-8 overflow-y-auto h-full ${isMobileOrTablet ? 'pt-2' : ''}`}>
+      <div className={`pl-2 pr-4 md:p-8 overflow-y-auto h-full ${isMobileOrTablet ? 'pt-6' : ''}`}>
         <div className={`${isMobileOrTablet ? 'max-w-full' : 'max-w-3xl'} ml-2`}>
           <div className="text-[1.5rem] md:text-[3.5rem] font-bold bg-gradient-to-b from-[#5AD7FF] to-[#656BF5] bg-clip-text text-transparent mt-[4vh] mb-0 md:mb-8">
             Settings
