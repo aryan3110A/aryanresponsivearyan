@@ -122,7 +122,7 @@ const Input: React.FC<InputProps> = ({ onImageGenerated }) => {
           onChange={(e) => { setText(e.target.value); setError(null); }}
           disabled={isLoading}
           placeholder="Type a prompt..."
-          className="w-full h-16 mb:h-12 px-4 pr-[11rem] rounded-full bg-gray-800 text-white outline-none"
+          className="w-full h-16 mb:h-12 px-4 mb:pr-[1rem] pr-[11rem] rounded-full bg-gray-800 text-white outline-none"
         />
 
         {error && (
