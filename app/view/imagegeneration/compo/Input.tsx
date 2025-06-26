@@ -103,7 +103,10 @@ const Input: React.FC<InputProps> = ({ onImageGenerated }) => {
     setLoading(true); setError(null);
     try {
       const { aspectRatio, quality } = settings;
-      const [width, height] = RESOLUTION_MAP[aspectRatio]?.[quality] || [768, 768];
+      let [width, height] = RESOLUTION_MAP[aspectRatio]?.[quality] || [768, 768];
+      // Ensure width and height are divisible by 16
+      width = width - (width % 16);
+      height = height - (height % 16);
 
       const finalPrompt =
         settings.style ? `${text}, ${settings.style} style` : text;

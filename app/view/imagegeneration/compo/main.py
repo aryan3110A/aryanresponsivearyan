@@ -67,6 +67,9 @@ class PromptIn(BaseModel):
 
 # ─────────────────── Helper: render on one GPU ─────────────────
 def _render_on(gpu: int, prompt: str, steps: int, scale: float, fname: str, width: int, height: int):
+    # Ensure width and height are divisible by 16
+    width = width - (width % 16)
+    height = height - (height % 16)
     torch.cuda.set_device(gpu)
     pipe = pipes[gpu]
     img  = pipe(prompt, num_inference_steps=steps,
