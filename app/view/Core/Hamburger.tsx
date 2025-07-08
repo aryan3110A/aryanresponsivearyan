@@ -165,7 +165,7 @@ export default function Hamburger({ isOpen, onClose }: { isOpen: boolean; onClos
       >
 
         
-        <div className="h-full flex flex-col font-poppins bg-[#101011]">
+        <div className="h-full flex flex-col font-poppins bg-[#101011] overflow-y-auto">
           {/* Header with Close Button */}
           <div className="flex justify-end p-4 bg-[#101011]">
             <button onClick={onClose} className="p-2 hover:bg-gray-800 rounded-lg transition-colors">
