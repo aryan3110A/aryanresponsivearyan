@@ -231,12 +231,12 @@ export default function NavigationFull() {
               </button>
 
               {isUserDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-80 bg-white/10 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/10 z-50 animate-in slide-in-from-top-2 duration-200">
+                <div className="absolute right-0 mt-2 w-auto md:w-80 bg-white/30 md:bg-white/10 backdrop-blur-xl rounded-2xl shadow-3xl border border-white/20 z-50 animate-in slide-in-from-top-2 duration-200">
                   {/* Profile Header */}
-                  <div className="p-6">
-                    <div className="flex items-center gap-4 mb-6">
+                  <div className="p-2 py-4 md:p-6">
+                    <div className="flex items-center gap-2 md:gap-4 mb-2 md:mb-6">
                       {/* Profile Photo */}
-                      <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-600 flex-shrink-0">
+                      <div className="w-6 h-6 md:w-10 md:h-10 rounded-full overflow-hidden bg-gray-600 flex-shrink-0">
                         <Image
                           src={getImageUrl("core", "profile") || "/placeholder.svg"}
                           alt="Profile"
@@ -247,43 +247,43 @@ export default function NavigationFull() {
                       </div>
                       {/* User Info */}
                       <div className="flex-1">
-                        <h2 className="text-sm font-semibold text-white ">{username || "aryan"}</h2>
-                        <p className="text-sm text-gray-400">{userEmail || "aryan@gmail.com"}</p>
+                        <h2 className="text-xs md:text-sm font-semibold text-white ">{username || "aryan"}</h2>
+                        <p className="text-xs md:text-xs text-gray-400">{userEmail || "aryan@gmail.com"}</p>
                       </div>
                     </div>
 
                     {/* Divider */}
-                    <div className="border-t border-white/10 mb-4"></div>
+                    <div className="border-t border-white/10 mb-2 md:mb-4"></div>
 
                     {/* Action Buttons */}
                     <div className="space-y-2">
                       {/* Settings Button */}
                       <button
                         onClick={handleSettings}
-                        className="w-full flex items-center gap-2 p-2 pl-4 bg-[#3A3A3A] hover:bg-[#4A4A4A] rounded-lg transition-colors duration-200"
+                        className="w-full flex items-center gap-2 py-3 md:p-2  pl-4 bg-[#3A3A3A] hover:bg-[#4A4A4A] rounded-lg transition-colors duration-200"
                       >
                         <Settings className="w-5 h-5 text-white" />
-                        <span className="text-lg font-normal font-sm text-white">Setting</span>
+                        <span className="text-sm md:text-lg font-normal font-sm text-white">Setting</span>
                       </button>
 
                       {/* Upgrade Plan Button */}
                       <button
                         onClick={handleUpgradePlan}
-                        className="w-full flex items-center gap-2 p-2 pl-4 bg-gradient-to-r from-[#6C3BFF] to-[#412399] hover:from-[#5A2FE6] hover:to-[#3A1F8A] rounded-lg transition-all duration-200"
+                        className="w-full flex items-center gap-2 py-3 md:p-2 pl-4 bg-gradient-to-r from-[#6C3BFF] to-[#412399] hover:from-[#5A2FE6] hover:to-[#3A1F8A] rounded-lg transition-all duration-200"
                       >
                         <Image
                           src={getImageUrl("core", "diamond") || "/placeholder.svg"}
                           alt="Diamond"
-                          width={20}
-                          height={20}
+                          width={16}
+                          height={16}
                           className=""
                         />
-                        <span className="text-lg font-normal font-sm text-white">Upgrade Your Plan</span>
+                        <span className="text-sm md:text-lg font-normal font-sm text-white">Upgrade Your Plan</span>
                       </button>
                     </div>
 
                     {/* Divider */}
-                    <div className="border-t border-white/10   my-4"></div>
+                    <div className="border-t border-white/10  my-3 md:my-4"></div>
 
                     {/* Logout Button */}
                     <button
@@ -293,8 +293,8 @@ export default function NavigationFull() {
                       }}
                       className="w-full flex items-center gap-2 p-2 justify-center bg-gradient-to-r from-[#DC2626] to-[#B91C1C] hover:from-[#EF4444] hover:to-[#DC2626] rounded-lg transition-all duration-200"
                     >
-                      <LogOut className="w-6 h-6 text-white" />
-                      <span className="text-lg font-medium text-white">Log Out</span>
+                      <LogOut className="w-4 h-4 md:w-6 md:h-6 text-white" />
+                      <span className="text-sm md:text-lg font-medium text-white">Log Out</span>
                     </button>
                   </div>
                 </div>

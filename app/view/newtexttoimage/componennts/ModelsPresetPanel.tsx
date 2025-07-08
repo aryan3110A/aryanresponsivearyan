@@ -13,12 +13,12 @@ interface ModelsPresetPanelProps {
 
 // Define a type for model
 type Model = {
-  id: string;
-  title: string;
-  shortName: string;
-  description: string;
-  tokenCost: number;
-};
+  id: string
+  title: string
+  shortName: string
+  description: string
+  tokenCost: number
+}
 
 const models = [
   {
@@ -97,34 +97,62 @@ export default function ModelsPresetPanel({ isOpen, onClose, selectedModel, onMo
     <AnimatePresence>
       {isOpen && (
         <>
-          {/* Backdrop */}
-          <div className="fixed inset-0 bg-transparent backdrop-blur-sm z-40" onClick={onClose} />
+          {/* Desktop Layout - Side Panel */}
+          <div className="hidden md:block">
+            {/* Backdrop */}
+            <div className="fixed inset-0 bg-transparent backdrop-blur-sm z-40" onClick={onClose} />
 
-          {/* Models Panel positioned next to settings panel */}
-          <motion.div
-            ref={panelRef}
-            initial={{ x: "-100%", opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            exit={{ x: "-100%", opacity: 0 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="fixed top-0 left-[560px] w-[500px] lg:w-[600px] h-screen bg-transparent  backdrop-blur-xl z-50 overflow-hidden"
-          >
-            <div className="h-full flex flex-col">
-              {/* Header */}
-              <div className="bg-white/10 p-6 border-b border-gray-600 ">
-                <div className="flex items-center justify-between">
-                  <h1 className="text-[#5AD7FF] text-xl font-semibold ">Models and Presets</h1>
-                  <button onClick={onClose} className="p-2 hover:bg-gray-700 rounded-lg transition-colors">
-                    <X className="w-5 h-5 text-white" />
-                  </button>
+            {/* Models Panel positioned next to settings panel */}
+            <motion.div
+              ref={panelRef}
+              initial={{ x: "-100%", opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: "-100%", opacity: 0 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              className="fixed top-0 left-[560px] w-[500px] lg:w-[600px] h-screen bg-transparent backdrop-blur-xl z-50 overflow-hidden"
+            >
+              <div className="h-full flex flex-col">
+                {/* Header */}
+                <div className="bg-white/10 p-6 border-b border-gray-600">
+                  <div className="flex items-center justify-between">
+                    <h1 className="text-[#5AD7FF] text-xl font-semibold">Models and Presets</h1>
+                    <button onClick={onClose} className="p-2 hover:bg-gray-700 rounded-lg transition-colors">
+                      <X className="w-5 h-5 text-white" />
+                    </button>
+                  </div>
+                </div>
+
+                {/* Models Grid */}
+                <div className="flex-1 p-6 overflow-y-auto">
+                  <div className="grid grid-cols-3 gap-4">
+                    {models.map((model) => (
+                      <DesktopModelCard
+                        key={model.id}
+                        model={model}
+                        isSelected={selectedModel === model.title}
+                        onSelect={handleModelSelect}
+                      />
+                    ))}
+                  </div>
                 </div>
               </div>
+            </motion.div>
+          </div>
 
-              {/* Models Grid */}
-              <div className="flex-1 p-6 overflow-y-auto">
-                <div className="grid grid-cols-3 gap-4">
-                  {models.map((model) => (
-                    <ModelCard
+          {/* Mobile/Tablet Layout - Dropdown within Settings Panel */}
+          <div className="md:hidden">
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              className="overflow-hidden"
+            >
+              <div className="py-4 px-2 space-y-4">
+                {/* Models Grid - 2x2 for mobile */}
+                <div className="grid grid-cols-2 gap-3">
+                  {models.slice(0, 4).map((model) => (
+                    <MobileModelCard
                       key={model.id}
                       model={model}
                       isSelected={selectedModel === model.title}
@@ -132,16 +160,31 @@ export default function ModelsPresetPanel({ isOpen, onClose, selectedModel, onMo
                     />
                   ))}
                 </div>
+
+                {/* Show more models if needed */}
+                {models.length > 4 && (
+                  <div className="grid grid-cols-2 gap-3">
+                    {models.slice(4).map((model) => (
+                      <MobileModelCard
+                        key={model.id}
+                        model={model}
+                        isSelected={selectedModel === model.title}
+                        onSelect={handleModelSelect}
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
-            </div>
-          </motion.div>
+            </motion.div>
+          </div>
         </>
       )}
     </AnimatePresence>
   )
 }
 
-function ModelCard({
+// Desktop Model Card Component
+function DesktopModelCard({
   model,
   isSelected,
   onSelect,
@@ -167,17 +210,51 @@ function ModelCard({
           <p className="text-white text-xs font-medium text-center truncate">{model.title}</p>
         </div>
 
-        {/* Selection Checkmark */}
-        {/* {isSelected && (
-          <div className="absolute top-2 right-2 w-6 h-6 bg-[#5AD7FF] rounded-full flex items-center justify-center">
-            <span className="text-white text-xs font-bold">✓</span>
-          </div>
-        )} */}
-
         {/* Hover Overlay with Description */}
         <div className="absolute inset-0 bg-black/90 opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-center justify-center p-3">
           <p className="text-white text-xs text-center leading-relaxed">{model.description}</p>
         </div>
+      </div>
+    </div>
+  )
+}
+
+// Mobile Model Card Component
+function MobileModelCard({
+  model,
+  isSelected,
+  onSelect,
+}: {
+  model: Model
+  isSelected: boolean
+  onSelect: (model: string) => void
+}) {
+  return (
+    <div
+      className={`relative rounded-xl overflow-hidden cursor-pointer transition-all duration-200 ${
+        isSelected ? "ring-2 ring-[#5AD7FF]" : ""
+      }`}
+      onClick={() => onSelect(model.title)}
+    >
+      {/* Card Background with Gradient */}
+      <div className="w-full aspect-square bg-gradient-to-br from-purple-600 via-blue-600 to-cyan-600 flex flex-col items-center justify-center relative p-4">
+        {/* Artistic Background Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-br from-orange-500/20 via-purple-600/40 to-blue-600/60"></div>
+
+        {/* Content */}
+        <div className="relative z-10 flex flex-col items-center justify-end h-full">
+          {/* Model Name */}
+          <div className="text-center">
+            <p className="text-white text-sm font-bold">{model.title}</p>
+          </div>
+        </div>
+
+        {/* Selection Indicator */}
+        {isSelected && (
+          <div className="absolute top-2 right-2 w-5 h-5 bg-[#5AD7FF] rounded-full flex items-center justify-center">
+            <span className="text-white text-xs font-bold">✓</span>
+          </div>
+        )}
       </div>
     </div>
   )

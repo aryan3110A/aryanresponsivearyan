@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { X } from "lucide-react"
+import { X, ChevronDown } from "lucide-react"
 import ModelsPresetPanel from "./ModelsPresetPanel"
 import StylePalettes from "./StylePalettes"
 import AspectRatio from "./AspectRatio"
@@ -40,7 +40,7 @@ export default function SettingsPanel({
   const [isModelsOpen, setIsModelsOpen] = useState(false)
 
   const toggleModels = () => {
-    setIsModelsOpen(!isModelsOpen)
+    setIsModelsOpen((prev) => !prev);
   }
 
   const handleModelSelect = (model: string) => {
@@ -94,7 +94,7 @@ export default function SettingsPanel({
             <div>
               <button
                 onClick={toggleModels}
-                className=" px-10 w-full py-8 bg-gradient-to-r from-gray-800 to-gray-700 rounded-lg p-4 border border-white/10 cursor-pointer hover:from-gray-700 hover:to-gray-600 transition-all mb-6 text-left relative overflow-hidden"
+                className="px-6 md:px-10 w-full py-6 md:py-8 bg-gradient-to-r from-gray-800 to-gray-700 rounded-lg border border-white/10 cursor-pointer hover:from-gray-700 hover:to-gray-600 transition-all mb-4 text-left relative overflow-hidden"
                 style={{
                   backgroundImage: "url('/placeholder.svg?height=80&width=400')",
                   backgroundSize: "cover",
@@ -108,9 +108,23 @@ export default function SettingsPanel({
                       Model & <span className="text-[#6C3BFF]">Preset</span>
                     </h3>
                   </div>
-                  <span className="text-white text-3xl">›</span>
+                  <ChevronDown
+                    className={`text-white text-xl md:text-3xl transition-transform duration-300 ${
+                      isModelsOpen ? "rotate-180" : ""
+                    }`}
+                  />
                 </div>
               </button>
+
+              {/* Models Dropdown for Mobile/Tablet */}
+              <div className="md:hidden">
+                <ModelsPresetPanel
+                  isOpen={isModelsOpen}
+                  onClose={() => setIsModelsOpen(false)}
+                  selectedModel={selectedModel}
+                  onModelSelect={handleModelSelect}
+                />
+              </div>
             </div>
 
             {/* Style Palettes Section */}
@@ -142,26 +156,26 @@ export default function SettingsPanel({
                 Save
               </button>
               <div className="bg-white/10 backdrop-blur-3xl hover:bg-white/20 rounded-lg p-4 space-y-2 text-sm text-gray-300 mt-6">
-              <div>Model Selection : {selectedModel}</div>
-              <div>Style Palette : {selectedStyle || "Bokeh"}</div>
-              <div>Image Quality : {selectedQuality}</div>
-              <div>Frame Size : {selectedAspectRatio}</div>
-              <div>Number of Image : {numberOfImages}</div>
+                <div>Model Selection : {selectedModel}</div>
+                <div>Style Palette : {selectedStyle || "Bokeh"}</div>
+                <div>Image Quality : {selectedQuality}</div>
+                <div>Frame Size : {selectedAspectRatio}</div>
+                <div>Number of Image : {numberOfImages}</div>
+              </div>
             </div>
-            </div>
-
-            {/* Settings Summary */}
-            
           </div>
         </div>
       </div>
 
-      <ModelsPresetPanel
-        isOpen={isModelsOpen}
-        onClose={() => setIsModelsOpen(false)}
-        selectedModel={selectedModel}
-        onModelSelect={handleModelSelect}
-      />
+      {/* Desktop Models Panel */}
+      <div className="hidden md:block">
+        <ModelsPresetPanel
+          isOpen={isModelsOpen}
+          onClose={() => setIsModelsOpen(false)}
+          selectedModel={selectedModel}
+          onModelSelect={handleModelSelect}
+        />
+      </div>
     </>
   )
 }

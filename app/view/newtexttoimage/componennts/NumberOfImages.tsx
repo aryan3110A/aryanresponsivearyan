@@ -23,7 +23,7 @@ export default function NumberOfImages({
   const options = [1, 2, 3, 50]
 
   return (
-    <div>
+<div><div className="mx-2 md:mx-6 border-t border-white/15 mb-2 "></div>
       <h3 className="text-white text-lg font-medium mb-4 px-2 md:px-6">Number of Images</h3>
       <div className="grid grid-cols-4 gap-2 md:gap-4 px-2 md:px-6">
         {options.map((number) => (
