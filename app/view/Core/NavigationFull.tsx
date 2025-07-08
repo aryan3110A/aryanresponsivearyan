@@ -130,7 +130,7 @@ export default function NavigationFull() {
         className="fixed top-0 left-0 right-0 z-50 bg-transparent backdrop-blur-3xl shadow-lg"
         style={backgroundStyle}
       >
-        <div className="flex items-center justify-between px-4 lg:px-6 xl:px-8 py-2 lg:py-2">
+        <div className="flex items-center justify-between px-4 lg:px-6 xl:px-8 py-2 lg:py-2 ">
           {/* Left Section - Logo and Brand */}
           <div className="flex items-center space-x-2 lg:space-x-2">
             <button
@@ -172,7 +172,7 @@ export default function NavigationFull() {
           </div>
 
           {/* Center Section - Navigation */}
-          <nav className="hidden md:flex items-center space-x-6 md:space-x-20 ml-10 font-poppins">
+          <nav className="hidden md:flex items-center space-x-6 md:space-x-20 ml-10 font-poppins ">
             <div className="relative">
               <button
                 onClick={() => {
