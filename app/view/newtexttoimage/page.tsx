@@ -110,7 +110,7 @@ export default function NewText2Image() {
       <div className="relative z-10">
         <Header />
 
-        <main className="container mx-auto px-4 lg:px-8 xl:px-12 2xl:px-16">
+        <main className="container mx-auto  lg:px-8 xl:px-12 2xl:px-16">
           <InputSection
             prompt={prompt}
             setPrompt={setPrompt}

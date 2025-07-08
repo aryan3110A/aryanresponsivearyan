@@ -120,9 +120,9 @@ export default function InputSection({
   }
 
   return (
-    <div className="flex flex-col items-center space-y-6 mb:space-y-4 lg:space-y-12">
+    <div className="flex flex-col items-center w-full space-y-6 mb:space-y-4 lg:space-y-12">
       {/* Desktop Layout - Input with buttons inline */}
-      <div className="hidden xl:flex items-center gap-4 w-full max-w-7xl">
+      <div className="hidden xl:flex items-center gap-4 w-full max-w-7xl px-4">
         <div className="flex-1 relative">
           <div className="flex items-center bg-[#ffffff]/5 hover:bg-[#ffffff]/20 backdrop-blur-sm border border-[#8E8E8E] rounded-2xl lg:rounded-3xl p-4 transition-all duration-300 ease-in-out">
             <AttachmentsDropdown
@@ -161,11 +161,11 @@ export default function InputSection({
         </button>
       </div>
 
-      {/* Mobile & Tablet Layout - Input field separate from buttons */}
-      <div className="xl:hidden mobile:w-full max-w-[40rem] mobile:max-w-xl px-0 mobile:px-0">
-        {/* Input Field Only */}
-        <div className="w-[100%] mb-4">
-          <div className="flex items-center bg-[#ffffff]/5 hover:bg-[#ffffff]/20 backdrop-blur-sm border border-[#8E8E8E] rounded-2xl p-4 mobile:p-1 transition-all duration-300 ease-in-out">
+      {/* Mobile & Tablet Layout - Fully Responsive */}
+      <div className="xl:hidden w-full px-0 ">
+        {/* Input Field Only - Full Width Responsive */}
+        <div className="w-full mb-4">
+          <div className="flex items-center bg-[#ffffff]/5 hover:bg-[#ffffff]/20 backdrop-blur-sm border border-[#8E8E8E] rounded-xl sm:rounded-2xl p-2 xs:p-4 transition-all duration-300 ease-in-out">
             <AttachmentsDropdown
               onChooseFromLibrary={handleChooseFromLibrary}
               onUploadFromDevices={handleUploadFromDevices}
@@ -176,42 +176,42 @@ export default function InputSection({
               placeholder="Type a prompt..."
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
-              className="flex-1 bg-transparent text-white placeholder-white outline-none text-base mobile:text-sm ml-3"
+              className="flex-1 bg-transparent text-white placeholder-white outline-none text-sm xs:text-base sm:text-lg ml-2 mr-1 xs:ml-3"
               onKeyDown={(e) => e.key === "Enter" && onGenerate()}
             />
 
-            <button className="p-2 mobile:p-1.5 hover:bg-gray-700/50 rounded-lg transition-colors border border-white/10 ml-2">
+            <button className="p-2 md:p-1.5   hover:bg-gray-700/50 rounded-lg transition-colors border border-white/10 md:ml-2">
               <Image
                 src="/newt2image/enhancer.png"
                 alt="enhancer"
-                width={24}
-                height={24}
-                className="mobile:w-5 mobile:h-5"
+                width={20}
+                height={20}
+                className="w-4 h-4 xs:w-5 xs:h-5 sm:w-6 sm:h-6"
               />
             </button>
           </div>
         </div>
 
-        {/* Buttons Below Input */}
-        <div className="flex items-center gap-4 mobile:gap-3 justify-center">
+        {/* Buttons Below Input - Responsive Sizing */}
+        <div className="flex items-center gap-3 xs:gap-4 justify-end w-full">
           <button
             onClick={onGenerate}
             disabled={!prompt.trim() || isGenerating}
-            className="bg-gradient-to-b from-[#6C3BFF] to-[#412399] transition-colors text-white px-8 mobile:px-6 py-3 mobile:py-2.5 rounded-xl font-medium text-base mobile:text-sm flex-1 max-w-[200px]"
+            className="bg-gradient-to-b from-[#6C3BFF] to-[#412399] transition-colors text-white px-2  py-2.5 xs:py-3 rounded-lg xs:rounded-xl font-medium text-sm xs:text-base flex-1 max-w-[30%] "
           >
             {isGenerating ? "Generating..." : "Generate"}
           </button>
 
           <button
             onClick={onSettingsToggle}
-            className="p-3 mobile:p-2.5 bg-[#1F1F1F] backdrop-blur-sm rounded-xl hover:bg-gradient-to-b from-[#6C3BFF] to-[#412399] transition-colors border border-[#8E8E8E]"
+            className="p-2  bg-[#1F1F1F] backdrop-blur-sm rounded-lg xs:rounded-xl hover:bg-gradient-to-b from-[#6C3BFF] to-[#412399] transition-colors border border-[#8E8E8E] flex-shrink-0"
           >
             <Image
               src="/mockupgeneration/setting.png"
               alt="Settings"
-              width={28}
-              height={28}
-              className="mobile:w-6 mobile:h-6"
+              width={24}
+              height={24}
+              className="w-5 h-5 xs:w-6 xs:h-6 sm:w-7 sm:h-7"
             />
           </button>
         </div>
@@ -220,7 +220,7 @@ export default function InputSection({
       {/* Upload Component Modal */}
       {showUploadComponent && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-gray-900/95 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6 w-full max-w-md">
+          <div className="bg-gray-900/95 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6 w-full max-w-md mx-4">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-white font-medium text-lg">Upload Files</h3>
               <button
@@ -237,16 +237,16 @@ export default function InputSection({
 
       {/* Loading State */}
       {isGenerating && (
-        <div className="flex items-center justify-center py-12 lg:py-16">
-          <div className="animate-spin rounded-full h-12 w-12 lg:h-16 lg:w-16 border-b-2 border-white"></div>
+        <div className="flex items-center justify-center py-8 xs:py-12 lg:py-16">
+          <div className="animate-spin rounded-full h-8 w-8 xs:h-12 xs:w-12 lg:h-16 lg:w-16 border-b-2 border-white"></div>
         </div>
       )}
 
-      {/* Generated Images - Responsive Layout */}
+      {/* Generated Images - Fully Responsive Layout */}
       {generatedImages && generatedImages.length > 0 && (
-        <div className="w-full max-w-8xl mx-auto">
+        <div className="w-full">
           {/* Desktop Layout - Grid */}
-          <div className="hidden xl:block">
+          <div className="hidden xl:block max-w-8xl mx-auto px-4">
             <div className="flex items-center gap-2 mb-4 px-6">
               <div className="bg-white/10 rounded-lg p-2">
                 <Sparkles className="w-5 h-5 text-gray-400" />
@@ -316,21 +316,21 @@ export default function InputSection({
             </div>
           </div>
 
-          {/* Mobile & Tablet Layout - Horizontal Scrolling Row */}
+          {/* Mobile & Tablet Layout - Fully Responsive Horizontal Scrolling */}
           <div className="xl:hidden w-full">
-            {/* Prompt Display - Fixed above scrollable area */}
-            <div className="flex items-center gap-2 mb-4 px-4 mobile:px-2">
-              <div className="bg-white/10 rounded-lg p-2 mobile:p-1.5">
-                <Sparkles className="w-4 h-4 mobile:w-3 mobile:h-3 text-gray-400" />
+            {/* Prompt Display - Responsive Width */}
+            <div className="flex items-center gap-2 xs:gap-3 mb-3 xs:mb-4 px-3 xs:px-4 sm:px-6">
+              <div className="bg-white/10 rounded-lg p-1.5 xs:p-2 flex-shrink-0">
+                <Sparkles className="w-3 h-3 xs:w-4 xs:h-4 text-gray-400" />
               </div>
-              <span className="text-white text-sm mobile:text-xs font-medium line-clamp-2">{prompt}</span>
+              <span className="text-white text-xs xs:text-sm font-medium line-clamp-2 flex-1">{prompt}</span>
             </div>
 
-            {/* Horizontal Scrolling Images Container */}
-            <div className="relative">
+            {/* Horizontal Scrolling Images Container - Fully Responsive */}
+            <div className="relative w-full">
               <div
                 ref={scrollContainerRef}
-                className="flex gap-4 mobile:gap-3 overflow-x-auto scrollbar-hide px-4 mobile:px-2 pb-4"
+                className="flex gap-3 xs:gap-4 overflow-x-auto scrollbar-hide px-3 xs:px-4 sm:px-6 pb-4"
                 style={{
                   scrollSnapType: "x mandatory",
                   WebkitOverflowScrolling: "touch",
@@ -339,11 +339,11 @@ export default function InputSection({
                 {generatedImages.map((image, index) => (
                   <div
                     key={index}
-                    className="flex-shrink-0 w-80 mobile:w-72 tablet:w-80"
+                    className="flex-shrink-0 w-[calc(100vw-6rem)] xs:w-[calc(100vw-8rem)] sm:w-[calc(100vw-12rem)] md:w-[calc(50vw-4rem)] max-w-sm"
                     style={{ scrollSnapAlign: "start" }}
                   >
-                    {/* Image Container */}
-                    <div className="relative bg-transparent backdrop-blur-sm border border-gray-700/30 rounded-xl p-4 mobile:p-3 overflow-hidden">
+                    {/* Image Container - Responsive */}
+                    <div className="relative bg-transparent backdrop-blur-sm border border-gray-700/30 rounded-xl p-3 xs:p-4 overflow-hidden w-full">
                       <div className="relative w-full aspect-square bg-gray-900/50 rounded-xl overflow-hidden">
                         <div className="w-full aspect-square bg-transparent rounded-lg overflow-hidden border border-white/10">
                           <Image
@@ -355,28 +355,28 @@ export default function InputSection({
                           />
                         </div>
 
-                        {/* Mobile Action Buttons - Always Visible */}
+                        {/* Mobile Action Buttons - Responsive Sizing */}
                         <div className="absolute inset-0 bg-black/5">
                           {/* Info Button - Top Right */}
                           <button
                             onClick={() => handleInfo(image, index)}
-                            className="text-black font-semibold absolute top-3 mobile:top-2 right-3 mobile:right-2 w-8 h-8 mobile:w-6 mobile:h-6 bg-gradient-to-b from-[#00F0FF] to-[#009099] backdrop-blur-sm rounded-full hover:bg-white/30 transition-all duration-200 flex items-center justify-center text-sm mobile:text-xs"
+                            className="text-black font-semibold absolute top-2 xs:top-3 right-2 xs:right-3 w-6 h-6 xs:w-8 xs:h-8 bg-gradient-to-b from-[#00F0FF] to-[#009099] backdrop-blur-sm rounded-full hover:bg-white/30 transition-all duration-200 flex items-center justify-center text-xs xs:text-sm"
                           >
                             !
                           </button>
 
                           {/* Action Buttons - Bottom Left */}
-                          <div className="absolute bottom-3 mobile:bottom-2 left-3 mobile:left-2 flex items-center gap-2 mobile:gap-1.5">
+                          <div className="absolute bottom-2 xs:bottom-3 left-2 xs:left-3 flex items-center gap-1.5 xs:gap-2">
                             <button
                               onClick={() => handleDownload(image, index)}
-                              className="p-2 mobile:p-1.5 bg-gradient-to-b from-[#00F0FF] to-[#009099] backdrop-blur-sm rounded-lg hover:bg-[#5AD7FF]/30 transition-all duration-200"
+                              className="p-1.5 xs:p-2 bg-gradient-to-b from-[#00F0FF] to-[#009099] backdrop-blur-sm rounded-lg hover:bg-[#5AD7FF]/30 transition-all duration-200"
                             >
-                              <Download className="w-4 h-4 mobile:w-3 mobile:h-3 text-[#000]" />
+                              <Download className="w-3 h-3 xs:w-4 xs:h-4 text-[#000]" />
                             </button>
 
                             <button onClick={() => handleBookmark(index)}>
                               <Bookmark
-                                className={`w-5 h-5 mobile:w-4 mobile:h-4 transition-colors duration-200 ${
+                                className={`w-4 h-4 xs:w-5 xs:h-5 transition-colors duration-200 ${
                                   bookmarkedImages.has(index) ? "fill-[#a4c48c] text-[#a4c48c]" : "text-[#fff]"
                                 }`}
                               />
@@ -384,7 +384,7 @@ export default function InputSection({
 
                             <button onClick={() => handleLike(index)}>
                               <Heart
-                                className={`w-5 h-5 mobile:w-4 mobile:h-4 transition-colors duration-200 ${
+                                className={`w-4 h-4 xs:w-5 xs:h-5 transition-colors duration-200 ${
                                   likedImages.has(index) ? "fill-red-500 text-red-500" : "text-[#fff]"
                                 }`}
                               />
@@ -397,11 +397,11 @@ export default function InputSection({
                 ))}
               </div>
 
-              {/* Scroll Indicators (Optional) */}
+              {/* Scroll Indicators - Responsive */}
               {generatedImages.length > 1 && (
-                <div className="flex justify-center mt-4 gap-2">
+                <div className="flex justify-center mt-3 xs:mt-4 gap-1.5 xs:gap-2">
                   {generatedImages.map((_, index) => (
-                    <div key={index} className="w-2 h-2 mobile:w-1.5 mobile:h-1.5 rounded-full bg-gray-600" />
+                    <div key={index} className="w-1.5 h-1.5 xs:w-2 xs:h-2 rounded-full bg-gray-600" />
                   ))}
                 </div>
               )}
