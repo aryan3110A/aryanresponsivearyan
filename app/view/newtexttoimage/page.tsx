@@ -4,6 +4,7 @@ import { useState } from "react"
 import Header from "./componennts/Header"
 import InputSection from "./componennts/InputSection"
 import SettingsPanel from "./componennts/SettingsPanel"
+// import BackgroundShapes from "./componennts/BackgroundShapes"
 import NavigationFull from "../Core/NavigationFull"
 import Image from 'next/image'
 import Footer from "../Core/Footer"
@@ -98,55 +99,54 @@ export default function NewText2Image() {
 
   return (
     <>
-      <div className="min-h-screen bg-black text-white relative overflow-hidden">
-        {/* Background Image */}
-        <div className="absolute inset-0 w-full h-full z-0">
-          <Image 
-            src="/newt2image/bg.png" 
-            alt="background" 
-            width={1920} 
-            height={1080} 
-            className="w-full h-full md:-mt-48 object-cover md:object-contain" 
-          />
-        </div>
-        <NavigationFull />
-
-        <div className="relative z-10">
-          <Header />
-
-          <main className="container mx-auto px-4 lg:px-8 xl:px-12 2xl:px-16">
-            <InputSection
-              prompt={prompt}
-              setPrompt={setPrompt}
-              onGenerate={handleGenerate}
-              onSettingsToggle={handleSettingsToggle}
-              isGenerating={isGenerating}
-              generatedImages={generatedImages}
-              selectedModel={selectedModel}
-              selectedStyle={selectedStyle}
-              selectedQuality={selectedQuality}
-              selectedAspectRatio={selectedAspectRatio}
-              numberOfImages={numberOfImages}
-            />
-          </main>
-        </div>
-
-        <SettingsPanel
-          isOpen={isSettingsOpen}
-          onClose={() => setIsSettingsOpen(false)}
-          selectedModel={selectedModel}
-          setSelectedModel={setSelectedModel}
-          selectedStyle={selectedStyle}
-          setSelectedStyle={setSelectedStyle}
-          selectedAspectRatio={selectedAspectRatio}
-          setSelectedAspectRatio={setSelectedAspectRatio}
-          selectedQuality={selectedQuality}
-          setSelectedQuality={setSelectedQuality}
-          numberOfImages={numberOfImages}
-          setNumberOfImages={setNumberOfImages}
-        />
+    <div className="min-h-screen bg-black text-white relative overflow-hidden">
+      {/* Background Image */}
+      <div className="absolute inset-0 w-full h-full z-0">
+        <Image src="/newt2image/bg.png" alt="background" width={1920} height={1080} className="w-auto h-auto -mt-48  object-contain " />
       </div>
-      <Footer />
+      <NavigationFull />
+      {/* <BackgroundShapes /> */}
+
+      <div className="relative z-10">
+        <Header />
+
+        <main className="container mx-auto px-4 lg:px-8 xl:px-12 2xl:px-16">
+          <InputSection
+            prompt={prompt}
+            setPrompt={setPrompt}
+            onGenerate={handleGenerate}
+            onSettingsToggle={handleSettingsToggle}
+            isGenerating={isGenerating}
+            generatedImages={generatedImages}
+            selectedModel={selectedModel}
+            selectedStyle={selectedStyle}
+            selectedQuality={selectedQuality}
+            selectedAspectRatio={selectedAspectRatio}
+            numberOfImages={numberOfImages}
+          />
+        </main>
+
+        
+      </div>
+      
+
+      <SettingsPanel
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
+        selectedModel={selectedModel}
+        setSelectedModel={setSelectedModel}
+        selectedStyle={selectedStyle}
+        setSelectedStyle={setSelectedStyle}
+        selectedAspectRatio={selectedAspectRatio}
+        setSelectedAspectRatio={setSelectedAspectRatio}
+        selectedQuality={selectedQuality}
+        setSelectedQuality={setSelectedQuality}
+        numberOfImages={numberOfImages}
+        setNumberOfImages={setNumberOfImages}
+      />
+      
+    </div>
+    <Footer />
     </>
   )
 }
