@@ -232,14 +232,14 @@ function MobileModelCard({
   return (
     <div
       className={`relative rounded-xl overflow-hidden cursor-pointer transition-all duration-200 ${
-        isSelected ? "ring-2 ring-[#5AD7FF]" : ""
+        isSelected ? "ring-2 ring-[#412399]" : ""
       }`}
       onClick={() => onSelect(model.title)}
     >
       {/* Card Background with Gradient */}
-      <div className="w-full aspect-square bg-gradient-to-br from-purple-600 via-blue-600 to-cyan-600 flex flex-col items-center justify-center relative p-4">
+      <div className="w-full aspect-square bg-white/10 flex flex-col items-center justify-center relative p-4">
         {/* Artistic Background Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-orange-500/20 via-purple-600/40 to-blue-600/60"></div>
+        <div className="absolute inset-0 "></div>
 
         {/* Content */}
         <div className="relative z-10 flex flex-col items-center justify-end h-full">
@@ -250,11 +250,11 @@ function MobileModelCard({
         </div>
 
         {/* Selection Indicator */}
-        {isSelected && (
-          <div className="absolute top-2 right-2 w-5 h-5 bg-[#5AD7FF] rounded-full flex items-center justify-center">
-            <span className="text-white text-xs font-bold">✓</span>
+        {/* {isSelected && (
+          <div className="absolute top-2 right-2 w-5 h-5 bg-[#412399] rounded-full flex items-center justify-center">
+            <span className="text-white text-xs font-bold">.</span>
           </div>
-        )}
+        )} */}
       </div>
     </div>
   )
