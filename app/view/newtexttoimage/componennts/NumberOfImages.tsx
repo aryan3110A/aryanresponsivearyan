@@ -24,8 +24,8 @@ export default function NumberOfImages({
 
   return (
     <div>
-      <h3 className="text-white text-lg font-medium mb-4 pl-6">Number of Images</h3>
-      <div className="grid grid-cols-4 gap-4 px-6">
+      <h3 className="text-white text-lg font-medium mb-4 px-2 md:px-6">Number of Images</h3>
+      <div className="grid grid-cols-4 gap-2 md:gap-4 px-2 md:px-6">
         {options.map((number) => (
           <div
             key={number}

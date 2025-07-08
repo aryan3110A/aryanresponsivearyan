@@ -35,7 +35,7 @@ export default function StylePalettes({
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-4 px-6">
+      <div className="flex items-center justify-between mb-4 px-2 md:px-6">
         <h3 className="text-white text-lg md:text-xl font-medium">Style Palettes</h3>
         <button
           onClick={() => setIsOpen(!isOpen)}
@@ -46,7 +46,7 @@ export default function StylePalettes({
       </div>
       
       {isOpen && (
-        <div className="space-y-4 mb-4 px-6">
+        <div className="space-y-4 mb-4 px-2 md:px-6">
           {options.map((option, index) => (
             <button
               key={index}

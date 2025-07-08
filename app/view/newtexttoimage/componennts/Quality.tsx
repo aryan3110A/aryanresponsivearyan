@@ -25,8 +25,8 @@ export default function Quality({
   return (
 <div><div className="mx-6 border-t border-white/15 mb-2 ">
 
-</div>      <h3 className="text-white text-lg md:text-xl font-medium mb-4 pl-6">Image Quality</h3>
-      <div className="grid grid-cols-5 gap-4 px-6">
+</div>      <h3 className="text-white text-lg md:text-xl font-medium mb-4 px-2 md:px-6">Image Quality</h3>
+      <div className="grid grid-cols-5 gap-2  md:gap-4 px-2 md:px-6">
         {qualities.map((quality) => (
           <button
             key={quality}
@@ -37,7 +37,7 @@ export default function Quality({
             }`}
             onClick={() => handleSelect(quality)}
           >
-            <span className="text-sm font-medium">{quality}</span>
+            <span className="text-xs md:text-sm font-medium">{quality}</span>
           </button>
         ))}
       </div>

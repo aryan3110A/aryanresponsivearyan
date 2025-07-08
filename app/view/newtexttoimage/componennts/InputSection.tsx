@@ -180,13 +180,13 @@ export default function InputSection({
               onKeyDown={(e) => e.key === "Enter" && onGenerate()}
             />
 
-            <button className="p-2 md:p-1.5   hover:bg-gray-700/50 rounded-lg transition-colors border border-white/10 md:ml-2">
+            <button className="p-2 hover:bg-gray-700/50 rounded-lg transition-colors border border-white/10 md:ml-2">
               <Image
                 src="/newt2image/enhancer.png"
                 alt="enhancer"
                 width={20}
                 height={20}
-                className="w-4 h-4 xs:w-5 xs:h-5 sm:w-6 sm:h-6"
+                className="w-5 h-5 "
               />
             </button>
           </div>
@@ -197,7 +197,7 @@ export default function InputSection({
           <button
             onClick={onGenerate}
             disabled={!prompt.trim() || isGenerating}
-            className="bg-gradient-to-b from-[#6C3BFF] to-[#412399] transition-colors text-white px-2  py-2.5 xs:py-3 rounded-lg xs:rounded-xl font-medium text-sm xs:text-base flex-1 max-w-[30%] "
+            className="bg-gradient-to-b from-[#6C3BFF] to-[#412399] transition-colors text-white px-2  py-2.5 xs:py-3 rounded-lg xs:rounded-xl font-medium text-sm xs:text-base flex-1 max-w-[32%] "
           >
             {isGenerating ? "Generating..." : "Generate"}
           </button>

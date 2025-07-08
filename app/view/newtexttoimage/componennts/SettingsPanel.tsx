@@ -66,7 +66,7 @@ export default function SettingsPanel({
 
       {/* Settings Panel */}
       <div
-        className={`fixed top-0 left-0 h-full w-80 md:w-[560px] bg-transparent backdrop-blur-lg shadow-3xl transform transition-transform duration-300 ease-in-out z-50 ${
+        className={`fixed top-0 left-0 h-full w-[90%] md:w-[560px] bg-transparent backdrop-blur-lg shadow-3xl transform transition-transform duration-300 ease-in-out z-50 ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -134,7 +134,7 @@ export default function SettingsPanel({
             </div>
 
             {/* Save Button */}
-            <div className="mb-6 px-6">
+            <div className="mb-6 px-2 md:px-6">
               <button
                 onClick={handleSave}
                 className="w-full bg-gradient-to-r from-[#6C3BFF] to-[#412399] hover:from-[#5A2FE6] hover:to-[#3A1F8A] text-white py-4 rounded-lg font-medium text-lg transition-all"
