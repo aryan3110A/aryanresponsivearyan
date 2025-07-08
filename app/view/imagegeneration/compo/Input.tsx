@@ -7,7 +7,7 @@ import { getTokens, deductTokens } from "@/app/utils/tokenManager";
 import { getImageUrl } from "@/routes/imageroute";
 
 interface InputProps {
-  onImageGenerated?: (url: string) => void;
+  onImageGenerated?: (urls: string[]) => void;
 }
 
 interface GenerationSettings {
@@ -68,7 +68,6 @@ const RESOLUTION_MAP: Record<string, Record<string, [number, number]>> = {
 };
 
 const Input: React.FC<InputProps> = ({ onImageGenerated }) => {
-  /* ------------------------- state setup ------------------------- */
   const [text, setText]                 = useState("");
   const [showSelection, setShowSelect]  = useState(false);
   const [isLoading, setLoading]         = useState(false);
@@ -102,7 +101,7 @@ const Input: React.FC<InputProps> = ({ onImageGenerated }) => {
 
     setLoading(true); setError(null);
     try {
-      const { aspectRatio, quality } = settings;
+      const { aspectRatio, quality, numberOfImages } = settings;
       let [width, height] = RESOLUTION_MAP[aspectRatio]?.[quality] || [768, 768];
       // Ensure width and height are divisible by 16
       width = width - (width % 16);
@@ -117,7 +116,7 @@ const Input: React.FC<InputProps> = ({ onImageGenerated }) => {
           "x-api-key": "wildmind_5879fcd4a8b94743b3a7c8c1a1b4",
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ prompt: finalPrompt, width, height }),
+        body: JSON.stringify({ prompt: finalPrompt, width, height, num_images: numberOfImages }),
       });
 
       if (!res.ok) {
@@ -125,12 +124,14 @@ const Input: React.FC<InputProps> = ({ onImageGenerated }) => {
         throw new Error(err.detail || `HTTP ${res.status}`);
       }
 
-      const { image_url } = await res.json();
-      if (!image_url) throw new Error("No image URL in response");
+      const { image_urls } = await res.json();
+      if (!image_urls || image_urls.length === 0) {
+        throw new Error("No image URLs in response");
+      }
 
       if (deductTokens(totalCost)) {
         setTokens(getTokens());
-        onImageGenerated?.(image_url);
+        onImageGenerated?.(image_urls);
       }
     } catch (e: unknown) {
       console.error("Request failed:", e);

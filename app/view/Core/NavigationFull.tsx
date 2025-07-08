@@ -1,32 +1,34 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import {  User, ChevronDown } from "lucide-react"
+import { User, ChevronDown, Settings, LogOut } from "lucide-react"
 import Link from "next/link"
 import Hamburger from "./Hamburger"
 import { useRouter } from "next/navigation"
-import IMAGE from "next/image"
+import Image from "next/image"
 import { onAuthStateChanged, signOut } from "firebase/auth"
 import { auth } from "@/database/firebase"
-import { FEATURE_ROUTES, NAV_ROUTES } from "@/routes/routes"
+import { NAV_ROUTES } from "@/routes/routes"
 import { getImageUrl } from "@/routes/imageroute"
-
-interface DropdownItem {
-  title: string
-  src: string
-  coming: boolean
-}
+import ImageGeneration from "./feature-categories/ImageGeneration"
+import BrandingKit from "./feature-categories/BrandingKit"
+import VideoGeneration from "./feature-categories/VideoGeneration"
+import AudioGeneration from "./feature-categories/AudioGeneration"
+import FilmingTools from "./feature-categories/FilmingTools"
+import ThreeDDesign from "./feature-categories/ThreeDDesign"
+import { useTokenUpdate } from "@/app/utils/tokenManager"
 
 export default function NavigationFull() {
   const [isNavOpen, setIsNavOpen] = useState<boolean>(false)
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
-  const [animating] = useState<boolean>(false)
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState<boolean>(false)
   const [userEmail, setUserEmail] = useState<string>("")
   const [username, setUsername] = useState<string>("")
   const [showUsernamePrompt, setShowUsernamePrompt] = useState<boolean>(false)
+  const availableTokens = useTokenUpdate()
 
   const headerRef = useRef<HTMLElement>(null)
+  const dropdownRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
 
   useEffect(() => {
@@ -58,23 +60,31 @@ export default function NavigationFull() {
   const handleLogout = async () => {
     try {
       await signOut(auth)
-    } catch {}
-    
-    // Preserve user tokens by only removing auth-related items
+    } catch { }
+
     localStorage.removeItem("otpUser")
     localStorage.removeItem("username")
     localStorage.removeItem("slug")
-    
+
     setUserEmail("")
     setUsername("")
     router.push("/")
   }
 
-  const handleUsernameSubmit = () => {
-    if (username.trim()) {
-      localStorage.setItem("username", username)
-      setShowUsernamePrompt(false)
-    }
+  const handleLogoutFromPrompt = () => {
+    handleLogout()
+    setShowUsernamePrompt(false)
+  }
+
+  const handleSettings = () => {
+    console.log("Settings clicked")
+    // Implement settings functionality
+    setIsUserDropdownOpen(false)
+  }
+
+  const handleUpgradePlan = () => {
+    router.push(NAV_ROUTES.PRICING)
+    setIsUserDropdownOpen(false)
   }
 
   const toggleDropdown = (dropdown: string): void => {
@@ -82,14 +92,6 @@ export default function NavigationFull() {
       setActiveDropdown(null)
     } else {
       setActiveDropdown(dropdown)
-    }
-  }
-
-  // Handle navigation to feature routes
-  const handleFeatureClick = (route: string, coming: boolean) => {
-    if (!coming) {
-      router.push(route)
-      setActiveDropdown(null)
     }
   }
 
@@ -109,22 +111,10 @@ export default function NavigationFull() {
   useEffect(() => {
     const needsUsername = localStorage.getItem("needsUsername")
     if (needsUsername === "true") {
-      setShowUsernamePrompt(true) // this controls your prompt modal
+      setShowUsernamePrompt(true)
       localStorage.removeItem("needsUsername")
     }
   }, [])
-
-  const featuresDropdownItems: DropdownItem[] = [
-    {
-      title: "Text to image",
-      src: FEATURE_ROUTES.IMAGE_GENERATION,
-      coming: false, // Changed to false since it's available
-    },
-    { title: "Text to 3D", src: FEATURE_ROUTES.VIDEO_GENERATION, coming: true },
-    { title: "Text to Video", src: FEATURE_ROUTES.VIDEO_GENERATION, coming: true },
-    { title: "Sketch to Image", src: FEATURE_ROUTES.SKETCH_TO_IMAGE, coming: true },
-    { title: "Real Time Generation", src: FEATURE_ROUTES.REAL_TIME_GENERATION, coming: true },
-  ]
 
   const backgroundStyle = {
     backgroundSize: "cover",
@@ -137,126 +127,208 @@ export default function NavigationFull() {
     <div className="bg-[#000000] text-white">
       <header
         ref={headerRef}
-        className="fixed top-0 left-0 right-0 z-50 bg-black/30 backdrop-blur-xl shadow-lg "
+        className="fixed top-0 left-0 right-0 z-50 bg-transparent backdrop-blur-3xl shadow-lg"
         style={backgroundStyle}
       >
-        <div className="flex items-center justify-start pl-[2vw] py-[0.5vh] md:py-[1vh]">
-          <div className="flex items-center ">
-            <button onClick={() => {
-              setIsNavOpen(true);
-              setIsUserDropdownOpen(false);
-            }} className="py-2 rounded-lg pl-3 pr-1" aria-label="Open menu">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+        <div className="flex items-center justify-between px-4 lg:px-6 xl:px-8 py-2 lg:py-2">
+          {/* Left Section - Logo and Brand */}
+          <div className="flex items-center space-x-2 lg:space-x-2">
+            <button
+              onClick={() => {
+                setIsNavOpen((prev) => !prev)
+                setIsUserDropdownOpen(false)
+                setActiveDropdown(null)
+              }}
+              className="p-2 rounded-lg duration-200"
+              aria-label="Open menu"
             >
-              <line x1="3" y1="12" x2="21" y2="12"></line>
-              <line x1="3" y1="6" x2="21" y2="6"></line>
-              <line x1="3" y1="18" x2="21" y2="18"></line>
-            </svg>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="lg:w-6 lg:h-6"
+              >
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+              </svg>
             </button>
-            <div className="flex cursor-pointer">
-              <IMAGE
-                src={getImageUrl("core", "logo")}
-                width={32}
-                height={20}
+
+            <div className="flex items-center space-x-2 cursor-pointer" onClick={() => router.push("/")}>
+              <Image
+                src={getImageUrl("core", "logo") || "/placeholder.svg"}
+                width={28}
+                height={28}
                 alt="logo"
-                onClick={() => router.push("/")}
+                className="lg:w-10 lg:h-10"
               />
             </div>
-            <div className="text-center justify-center text-xl md:text-2xl font-poppins ml-0 ">WildMind</div>
           </div>
 
-          <nav className="hidden md:flex lg:flex items-center justify-center gap-[4vw] font-poppins sm:pl-[18vw] md:pl-[21vw] lg:pl-[26vw]">
+          {/* Center Section - Navigation */}
+          <nav className="hidden md:flex items-center space-x-6 md:space-x-20 ml-10 font-poppins">
             <div className="relative">
-              <button onClick={() => toggleDropdown("features")} className="flex items-center hover:text-[#dbdbdb]">
-                <span>Features</span>
-                <ChevronDown className={`ml-1 w-6 h-6 ${activeDropdown === "features" ? "rotate-180" : ""}`} />
+              <button
+                onClick={() => {
+                  toggleDropdown("features")
+                  setIsNavOpen(false)
+                }}
+                className="flex items-center space-x-1 hover:text-gray-300 transition-colors duration-200 py-2"
+              >
+                <span className="text-sm xl:text-base">Features</span>
+                <ChevronDown
+                  className={`w-4 h-4 transition-transform duration-300 ${activeDropdown === "features" ? "rotate-180" : ""
+                    }`}
+                />
               </button>
             </div>
 
-            <Link href={NAV_ROUTES.TEMPLATES} className="hover:text-[#dbdbdb]">
+            <Link
+              href={NAV_ROUTES.TEMPLATES}
+              className="hover:text-gray-300 transition-colors duration-200 text-sm xl:text-base py-2"
+            >
               Templates
             </Link>
 
-            <Link href={NAV_ROUTES.PRICING} className="hover:text-[#dbdbdb]">
+            <Link
+              href={NAV_ROUTES.PRICING}
+              className="hover:text-gray-300 transition-colors duration-200 text-sm xl:text-base py-2"
+            >
               Pricing
             </Link>
-            <Link href={NAV_ROUTES.ART_STATION} className="hover:text-[#dbdbdb]">
+
+            <Link
+              href={NAV_ROUTES.ART_STATION}
+              className="hover:text-gray-300 transition-colors duration-200 text-sm xl:text-base py-2"
+            >
               Art Station
             </Link>
           </nav>
 
-          <div className="fixed right-[4vw]">
-            <button className="p-2" onClick={() => setIsUserDropdownOpen(!isUserDropdownOpen)}>
-              <User className="w-6 h-6" />
-            </button>
+          {/* Right Section - Tokens and User */}
+          <div className="flex items-center space-x-3 lg:space-x-4">
+            {/* Token Display */}
+            <div className="flex items-center space-x-0 bg-gradient-to-b from-[#6C3BFF] to-[#412399] backdrop-blur-sm border-none rounded-lg px-3 py-1.5 lg:px-4 lg:py-1.5">
+              <Image src="/core/newToken.png" alt="" width={20} height={20} className="mr-2" />
+              <span className="text-xs lg:text-sm font-normal text-blue-100">
+                <span>{availableTokens}</span>
+              </span>
+            </div>
 
-            {isUserDropdownOpen && (
-              <div className="absolute right-0  sm-laptop:-ml-[15vw] md-laptop:-ml-[11vw]  lg:-ml-[6vw] mt-[0.5vh] md:mt-[1.2vh] w-auto min-w-[150px] md:min-w-[250px] bg-black/70 backdrop-blur-3xl rounded-md shadow-lg z-50 animate-dropdown">
-                <div className="py-2 flex flex-col">
-                  <div className="px-4 py-2 text-white flex flex-col items-start">
-                    <span className="text-xs md:text-sm font-semibold">{username || "Guest"}</span>
-                    <span className="text-[0.5rem] md:text-xs text-gray-400">{userEmail || "Not signed in"}</span>
-                  </div>
-                  <button
-                    onClick={handleLogout}
-                    className="px-4 py-2 text-white hover:text-blue-400 flex items-center text-xs md:text-[1rem]"
-                  >
-                    <svg
-                      className="w-4 h-4 mr-2"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
+            {/* User Profile */}
+            <div className="relative">
+              <button
+                className="p-2 rounded-full hover:bg-gray-800/50 transition-colors duration-200 border border-[#6A6A6A] hover:bg-gradient-to-b from-[#6C3BFF] to-[#412399] hover:ease-in-out"
+                onClick={() => setIsUserDropdownOpen(!isUserDropdownOpen)}
+              >
+                <User className="w-5 h-5 lg:w-5 lg:h-5" />
+              </button>
+
+              {isUserDropdownOpen && (
+                <div className="absolute right-0 mt-2 w-80 bg-white/10 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/10 z-50 animate-in slide-in-from-top-2 duration-200">
+                  {/* Profile Header */}
+                  <div className="p-6">
+                    <div className="flex items-center gap-4 mb-6">
+                      {/* Profile Photo */}
+                      <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-600 flex-shrink-0">
+                        <Image
+                          src={getImageUrl("core", "profile") || "/placeholder.svg"}
+                          alt="Profile"
+                          width={48}
+                          height={48}
+                          className="w-auto h-auto object-cover"
+                        />
+                      </div>
+                      {/* User Info */}
+                      <div className="flex-1">
+                        <h2 className="text-sm font-semibold text-white ">{username || "aryan"}</h2>
+                        <p className="text-sm text-gray-400">{userEmail || "aryan@gmail.com"}</p>
+                      </div>
+                    </div>
+
+                    {/* Divider */}
+                    <div className="border-t border-white/10 mb-4"></div>
+
+                    {/* Action Buttons */}
+                    <div className="space-y-2">
+                      {/* Settings Button */}
+                      <button
+                        onClick={handleSettings}
+                        className="w-full flex items-center gap-2 p-2 pl-4 bg-[#3A3A3A] hover:bg-[#4A4A4A] rounded-lg transition-colors duration-200"
+                      >
+                        <Settings className="w-5 h-5 text-white" />
+                        <span className="text-lg font-normal font-sm text-white">Setting</span>
+                      </button>
+
+                      {/* Upgrade Plan Button */}
+                      <button
+                        onClick={handleUpgradePlan}
+                        className="w-full flex items-center gap-2 p-2 pl-4 bg-gradient-to-r from-[#6C3BFF] to-[#412399] hover:from-[#5A2FE6] hover:to-[#3A1F8A] rounded-lg transition-all duration-200"
+                      >
+                        <Image
+                          src={getImageUrl("core", "diamond") || "/placeholder.svg"}
+                          alt="Diamond"
+                          width={20}
+                          height={20}
+                          className=""
+                        />
+                        <span className="text-lg font-normal font-sm text-white">Upgrade Your Plan</span>
+                      </button>
+                    </div>
+
+                    {/* Divider */}
+                    <div className="border-t border-white/10   my-4"></div>
+
+                    {/* Logout Button */}
+                    <button
+                      onClick={() => {
+                        handleLogout()
+                        setIsUserDropdownOpen(false)
+                      }}
+                      className="w-full flex items-center gap-2 p-2 justify-center bg-gradient-to-r from-[#DC2626] to-[#B91C1C] hover:from-[#EF4444] hover:to-[#DC2626] rounded-lg transition-all duration-200"
                     >
-                      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                      <polyline points="16 17 21 12 16 7" />
-                      <line x1="21" y1="12" x2="9" y2="12" />
-                    </svg>
-                    Logout
-                  </button>
+                      <LogOut className="w-6 h-6 text-white" />
+                      <span className="text-lg font-medium text-white">Log Out</span>
+                    </button>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
 
-        {activeDropdown && (
+        {/* Enhanced Features Dropdown */}
+        {activeDropdown === "features" && (
           <div
-            className="left-0 right-0 overflow-hidden transition-all duration-1000 z-50"
-            style={{
-              ...backgroundStyle,
-              maxHeight: activeDropdown ? "50vh" : "0",
-              opacity: animating ? 0 : 1,
-            }}
+            ref={dropdownRef}
+            className="absolute left-0 right-0 top-full z-50 bg-black/95 backdrop-blur-xl shadow-lg border-t border-gray-800/50 animate-in slide-in-from-top-2 duration-300"
+            style={backgroundStyle}
           >
-            <div className="container py-2">
-              <div className="flex flex-col sm:ml-[31.4vw] md:ml-[36vw] lg:ml-[37.7vw]">
-                <h3 className="text-lg font-bold mb-[2vh]">CREATE</h3>
-                <div className="flex flex-col space-y-[1.5vh]">
-                  {featuresDropdownItems.map((item, index) => (
-                    <div
-                      key={index}
-                      onClick={() => handleFeatureClick(item.src, item.coming)}
-                      className={`block py-0 rounded-md transition-all duration-300 ${
-                        item.coming ? "text-white" : "hover:text-[#dbdbdb] cursor-pointer"
-                      }`}
-                    >
-                      <span>
-                        {item.title} {item.coming && "(Coming Soon)"}
-                      </span>
-                    </div>
-                  ))}
+            <div className="container mx-auto px-8 md:px-6 xl:px-8 py-6 lg:py-8">
+              <div className="grid grid-cols-1 md:grid-cols-6 lg:grid-cols-6 xl:grid-cols-6 gap-6 lg:gap-8 max-w-auto mx-auto font-poppins">
+                <div className="col-span-1">
+                  <ImageGeneration />
+                </div>
+                <div className="col-span-1">
+                  <BrandingKit />
+                </div>
+                <div className="col-span-1">
+                  <VideoGeneration />
+                </div>
+                <div className="col-span-1">
+                  <AudioGeneration />
+                </div>
+                <div className="col-span-1">
+                  <FilmingTools />
+                </div>
+                <div className="col-span-1">
+                  <ThreeDDesign />
                 </div>
               </div>
             </div>
@@ -266,20 +338,68 @@ export default function NavigationFull() {
 
       <Hamburger isOpen={isNavOpen} onClose={() => setIsNavOpen(false)} />
 
+      {/* Updated User Profile Modal */}
       {showUsernamePrompt && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-md flex items-center justify-center z-50 ">
-          <div className="bg-[#1e1e1e] p-6 rounded-lg shadow-lg text-white">
-            <h2 className="text-lg mb-2">Create Your Username</h2>
-            <input
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="bg-gray-700 p-2 rounded w-full mb-4"
-              placeholder="Enter a username"
-            />
-            <button onClick={handleUsernameSubmit} className="w-full bg-blue-600 hover:bg-blue-700 py-2 rounded">
-              Save Username
-            </button>
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center z-50 p-4">
+          <div className="bg-[#2A2A2A] backdrop-blur-xl rounded-2xl shadow-2xl border border-gray-700/50 text-white w-full max-w-sm">
+            {/* Profile Header */}
+            <div className="p-6">
+              <div className="flex items-center gap-4 mb-6">
+                {/* Profile Photo */}
+                <div className="w-16 h-16 rounded-full overflow-hidden bg-gray-600 flex-shrink-0">
+                  <Image
+                    src={getImageUrl("core", "profile") || "/placeholder.svg"}
+                    alt="Profile"
+                    width={64}
+                    height={64}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                {/* User Info */}
+                <div className="flex-1">
+                  <h2 className="text-xl font-semibold text-white mb-1">{username || "Annette Black"}</h2>
+                  <p className="text-sm text-gray-400">{userEmail || "Annette.Black@example.com"}</p>
+                </div>
+              </div>
+
+              {/* Divider */}
+              <div className="border-t border-gray-600 mb-6"></div>
+
+              {/* Action Buttons */}
+              <div className="space-y-4">
+                {/* Settings Button */}
+                <button
+                  onClick={handleSettings}
+                  className="w-full flex items-center gap-4 p-4 bg-[#3A3A3A] hover:bg-[#4A4A4A] rounded-xl transition-colors duration-200"
+                >
+                  <Settings className="w-6 h-6 text-white" />
+                  <span className="text-lg font-medium text-white">Setting</span>
+                </button>
+
+                {/* Upgrade Plan Button */}
+                <button
+                  onClick={handleUpgradePlan}
+                  className="w-full flex items-center gap-4 p-4 bg-gradient-to-r from-[#6C3BFF] to-[#412399] hover:from-[#5A2FE6] hover:to-[#3A1F8A] rounded-xl transition-all duration-200"
+                >
+                  <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M6 3h2l.4 2H19a1 1 0 0 1 .98 1.2l-1 5A1 1 0 0 1 18 12H9.4l.6 3H18v2H8a1 1 0 0 1-.98-1.2L9.8 5H6V3zm2.5 7h8.1l.5-2.5H8.1L8.5 10z" />
+                  </svg>
+                  <span className="text-lg font-medium text-white">Upgrade Your Plan</span>
+                </button>
+              </div>
+
+              {/* Divider */}
+              <div className="border-t border-gray-600 my-6"></div>
+
+              {/* Logout Button */}
+              <button
+                onClick={handleLogoutFromPrompt}
+                className="w-full flex items-center gap-4 p-4 bg-gradient-to-r from-[#DC2626] to-[#B91C1C] hover:from-[#EF4444] hover:to-[#DC2626] rounded-xl transition-all duration-200"
+              >
+                <LogOut className="w-6 h-6 text-white" />
+                <span className="text-lg font-medium text-white">Log Out</span>
+              </button>
+            </div>
           </div>
         </div>
       )}

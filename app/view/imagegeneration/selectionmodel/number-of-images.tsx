@@ -11,7 +11,7 @@ interface NumberOfImagesProps {
 export default function NumberOfImages({ onNumberOfImagesSelect, selectedNumberOfImages = 1 }: NumberOfImagesProps) {
   const [selectedNumber, setSelectedNumber] = useState<number>(selectedNumberOfImages);
   const [isHovered, setIsHovered] = useState<number | null>(null);
-  const numbers = [1, 2, 3, 4];
+  const numbers = [1, 2, 3, 10];
 
   const handleSelect = (number: number) => {
     setSelectedNumber(number);

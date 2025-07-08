@@ -68,7 +68,7 @@ export default function SettingNavigation({ isOpen, onClose }: SettingsProps) {
     height: "100%",
     zIndex: "100"
   } : {
-    left: "280px",
+    left: "320px",
     width: "calc(100vw - 250px)"
   };
 

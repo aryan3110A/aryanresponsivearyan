@@ -11,8 +11,8 @@ import Footer from '../Core/Footer';
 const ImageGenMain = () => {
     const [images, setImages] = useState<string[]>([]);
 
-    const handleImageGenerated = (imageUrl: string) => {
-        setImages((prevImages) => [...prevImages, imageUrl]); // Store multiple images
+    const handleImageGenerated = (imageUrls: string[]) => {
+        setImages(imageUrls); // Replace previous images with the new set
     };
 
     return (
