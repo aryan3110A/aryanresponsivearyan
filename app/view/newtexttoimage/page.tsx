@@ -102,7 +102,7 @@ export default function NewText2Image() {
     <div className="min-h-screen bg-black text-white relative overflow-hidden">
       {/* Background Image */}
       <div className="absolute inset-0 w-full h-full z-0">
-        <Image src="/newt2image/bg.png" alt="background" width={1920} height={1080} className="w-auto h-auto -mt-48  object-contain " />
+        <Image src="/newt2image/bg.png" alt="background" width={1920} height={1080} className="w-auto h-auto  md:-mt-48  object-contain " />
       </div>
       <NavigationFull />
       {/* <BackgroundShapes /> */}
