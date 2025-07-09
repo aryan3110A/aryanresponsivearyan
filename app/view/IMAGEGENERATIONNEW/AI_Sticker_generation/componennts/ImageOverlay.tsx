@@ -111,7 +111,7 @@ export default function ImageOverlay({
           </button>
           {/* Left Side - Image */}
           <div className="flex-1 flex items-center justify-center">
-            <div className="relative w-full h-full md:max-w-2xl lg:max-w-3xl max-h-full">
+            <div className="relative w-full h-full md:max-w-2xl  max-h-full">
               <Image
                 src={imageUrl || "/placeholder.svg"}
                 alt="Generated image"

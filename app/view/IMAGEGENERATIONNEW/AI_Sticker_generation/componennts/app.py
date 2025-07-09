@@ -46,14 +46,14 @@ app.mount("/images", StaticFiles(directory=OUT_DIR), name="images")
 
 class PromptIn(BaseModel):
     prompt: str
-    steps: int = 20
+    steps: int = 50
     scale: float = 5.5
     width: int = 768
     height: int = 768
     num_images: int = 1
 
 # ─────────────────── Helper: render on the GPU ─────────────────
-def _render_on_gpu(prompt: str, steps: int, scale: float, width: int, height: int) -> str:
+def _render_on_gpu(prompt: str , steps: int, scale: float, width: int, height: int) -> str:
     # Ensure width and height are divisible by 16
     width = width - (width % 16)
     height = height - (height % 16)
