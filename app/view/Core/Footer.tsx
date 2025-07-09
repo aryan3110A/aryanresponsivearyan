@@ -150,7 +150,7 @@ const Footer: React.FC = () => {
 
               {/* Brand Name */}
               <h1 className="text-4xl md:text-5xl lg:text-5xl font-bold">
-                <span className="bg-gradient-to-r from-[#5AD7FF] to-[#656BF5] bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-[#6C3BFF] to-[#412399] bg-clip-text text-transparent">
                   WildMind
                 </span>
               </h1>
@@ -189,7 +189,7 @@ const Footer: React.FC = () => {
                 isTablet ? "" : "md:-ml-5"
               }`}
             >
-              <h2 className="font-semibold text-white md:text-lg lg:text-xl mb-4">
+              <h2 className="font-semibold text-[#00F0FF] md:text-lg lg:text-xl mb-4 ">
                 {category}
               </h2>
               <ul className="space-y-2">
@@ -222,7 +222,7 @@ const Footer: React.FC = () => {
                 ></Image>
               </div>
               <h1 className="text-3xl font-bold mb-2">
-                <span className="bg-gradient-to-r from-[#5AD7FF] to-[#656BF5] bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-[#6C3BFF] to-[#412399] bg-clip-text text-transparent">
                   WildMind
                 </span>
               </h1>
@@ -236,7 +236,7 @@ const Footer: React.FC = () => {
             <div className="grid grid-cols-1 gap-x-4 gap-y-4">
               {Object.entries(navigationLinks).map(([category, links], idx) => (
                 <div key={idx} className={idx === 1 ? "col-span-1 mt-2" : ""}>
-                  <h2 className="font-semibold text-white text-base mb-3">
+                  <h2 className="font-semibold text-[#00F0FF] text-base mb-3">
                     {category}
                   </h2>
                   <ul className="space-y-2">
