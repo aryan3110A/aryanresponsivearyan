@@ -5,9 +5,9 @@ import Header from "./componennts/Header"
 import InputSection from "./componennts/InputSection"
 import SettingsPanel from "./componennts/SettingsPanel"
 // import BackgroundShapes from "./componennts/BackgroundShapes"
-import NavigationFull from "../Core/NavigationFull"
 import Image from 'next/image'
-import Footer from "../Core/Footer"
+import NavigationFull from "../../Core/NavigationFull"
+import Footer from "../../Core/Footer"
 
 export default function NewText2Image() {
   const [prompt, setPrompt] = useState("")

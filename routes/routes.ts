@@ -21,6 +21,10 @@ export const FEATURE_ROUTES = {
   REAL_TIME_GENERATION: '/view/real-time-generation',
 } as const;
 
+export const IMAGEGENERATION   = {
+  IMAGE_GENERATION: '/view/IMAGEGENERATIONNEW/newtexttoimage',
+  STICKER_GENERATION: '/view/IMAGEGENERATIONNEW/AI_Sticker_generation',
+} as const;
 // Navigation Routes
 export const NAV_ROUTES = {
   TEMPLATES: '/view/templates',
@@ -98,4 +102,5 @@ export const ROUTES = {
   ...FEATURE_ROUTES,
   ...NAV_ROUTES,
   ...LEGAL_ROUTES,
+  ...IMAGEGENERATION,
 } as const; 

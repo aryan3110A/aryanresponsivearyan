@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { IMAGEGENERATION } from "@/routes/routes"
 
 interface FeatureItem {
   title: string
@@ -8,9 +9,9 @@ interface FeatureItem {
 }
 
 const imageGenerationFeatures: FeatureItem[] = [
-  { title: "Text to Image", href: "/view/imagegeneration", icon: "🎨" },
-  { title: "Image to Image", href: "/features/image-to-image", icon: "🖼️" },
-  { title: "AI Sticker Generation", href: "/features/ai-sticker", icon: "🏷️" },
+  { title: "Text to Image", href: IMAGEGENERATION.IMAGE_GENERATION, icon: "🎨" },
+  { title: "Image to Image", href: IMAGEGENERATION.STICKER_GENERATION, icon: "🖼️" },
+  { title: "AI Sticker Generation", href: IMAGEGENERATION.STICKER_GENERATION, icon: "🏷️" },
   { title: "Character Generation", href: "/features/character-generation", icon: "👤" },
   { title: "Live Portrait", href: "/features/live-portrait", icon: "📸" },
   { title: "Character Swap", href: "/features/character-swap", icon: "🔄" },
