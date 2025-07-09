@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import FeaturesCard from "./features-card";
 import ScrollableContainer from "./scrollable-container";
-import { FEATURE_ROUTES } from "@/routes/routes";
+import { IMAGEGENERATION } from "@/routes/routes";
 
 export default function FeaturesSection() {
   const route = useRouter();
@@ -30,13 +30,13 @@ export default function FeaturesSection() {
       id: 1,
       imageSrc: "/home/imagegeneration.png",
       label: "run" as const,
-      onClick: () => route.push(FEATURE_ROUTES.IMAGE_GENERATION),
+      onClick: () => route.push(IMAGEGENERATION.IMAGE_GENERATION),
     },
     {
       id: 2,
       imageSrc: "/home/videogeneratiin.png",
-      label: "coming" as const,
-      onClick: () => {},
+      label: "run" as const,
+      onClick: () => route.push(IMAGEGENERATION.STICKER_GENERATION),
     },
     {
       id: 3,
