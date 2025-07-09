@@ -3,7 +3,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react'
 export default function Header() {
   return (
     <header className="text-center pt-2 lg:py-12 xl:py-16">
-      <div className="flex items-center justify-center gap-4 md:gap-60 mb-6 lg:mb-8 mt-[6rem] md:mt-[10rem]">
+      <div className="flex items-center justify-center gap-4 md:gap-60 mb-6 lg:mb-8 mt-[6rem] md:mt-[4rem] lg:mt-[10rem]">
         
         <button className="hidden md:block p-3 md:p-4 bg-[#221F26]/50 hover:bg-gray-700/50 rounded-xl transition-colors">
           <ChevronLeft className="w-10 h-10 md:w-14 md:h-14" />

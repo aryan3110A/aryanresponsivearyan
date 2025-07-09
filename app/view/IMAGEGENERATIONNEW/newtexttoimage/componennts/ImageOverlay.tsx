@@ -133,8 +133,8 @@ export default function ImageOverlay({
           {/* Right Side - Info Panel */}
           <div className="w-80 md:w-80 lg:w-96 bg-white/15 flex flex-col md:mr-6 lg:mr-10 rounded-xl">
             {/* Header with Remix and Action Buttons */}
-            <div className="px-6 pt-6">
-              <div className="flex items-center justify-between mb-4">
+            <div className="px-6 pt-6 md:pt-4 ">
+              <div className="flex items-center justify-between mb-4 md:mb-2">
                 {/* Remix Button */}
                 <button
                   onClick={handleRemix}
@@ -170,7 +170,7 @@ export default function ImageOverlay({
 
             {/* Prompt Section */}
             <div className="px-6">
-              <div className="flex items-center bg-white/10 rounded-md px-3 py-2 justify-between w-full">
+              <div className="flex items-center bg-white/10 rounded-md px-3 py-2 md:py-1 lg:py-2 justify-between w-full">
                 <p className="text-white md:text-xs lg:text-sm leading-relaxed truncate">Prompt: {prompt}</p>
                 <button
                   onClick={handleCopyPrompt}
@@ -182,8 +182,8 @@ export default function ImageOverlay({
             </div>
 
             {/* Settings Summary - Styled like SettingsPanel */}
-            <div className="px-6 py-4 flex-1 overflow-y-auto">
-              <div className="bg-white/5 backdrop-blur-3xl hover:bg-white/20 rounded-lg p-4 space-y-3 md:text-xs lg:text-sm text-gray-300 transition-colors">
+            <div className="px-6 md:pt-2 lg:pt-4 pb-2 flex-1 ">
+              <div className="bg-white/5 backdrop-blur-3xl hover:bg-white/20 rounded-lg p-4 space-y-1 lg:space-y-3  md:text-xs lg:text-sm text-gray-300 transition-colors">
                 <div className="flex justify-between">
                   <span className="text-white">Model Selection: {modelSelection}</span>
                 </div>
@@ -203,7 +203,7 @@ export default function ImageOverlay({
             </div>
 
             {/* Original Image Section */}
-            <div className="px-8 pb-10">
+            <div className="px-8 mb-10">
               <button
                 onClick={() => setIsOriginalImageOpen(!isOriginalImageOpen)}
                 className="w-full flex items-center justify-between text-white text-sm mb-4 hover:text-gray-300 transition-colors"
@@ -215,7 +215,7 @@ export default function ImageOverlay({
               </button>
 
               {isOriginalImageOpen && (
-                <div className="w-full aspect-square bg-trasnparent rounded-lg overflow-hidden border border-white/10">
+                <div className="w-full h-[30vh] aspect-square bg-trasnparent rounded-lg overflow-hidden border border-white/10">
                   <Image
                     src={imageUrl || "/placeholder.svg"}
                     alt="Original image"

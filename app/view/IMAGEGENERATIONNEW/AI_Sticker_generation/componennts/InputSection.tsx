@@ -118,7 +118,7 @@ export default function InputSection({
   return (
     <div className="flex flex-col items-center w-full space-y-6 mb:space-y-4 lg:space-y-12">
       {/* Desktop Layout - Input with buttons inline */}
-      <div className="hidden xl:flex items-center gap-4 w-full max-w-7xl px-4">
+      <div className="hidden xl:flex items-center gap-4 w-full md:max-w-6xl lg:max-w-7xl px-4">
         <div className="flex-1 relative">
           <div className="flex items-center bg-[#ffffff]/5 hover:bg-[#ffffff]/20 backdrop-blur-sm border border-[#8E8E8E] rounded-2xl lg:rounded-3xl p-4 transition-all duration-300 ease-in-out">
             <AttachmentsDropdown
