@@ -133,7 +133,7 @@ export default function ImageOverlay({
           {/* Right Side - Info Panel */}
           <div className="w-80 md:w-80 lg:w-96 bg-white/15 flex flex-col md:mr-6 lg:mr-10 rounded-xl">
             {/* Header with Remix and Action Buttons */}
-            <div className="px-6 pt-6 md:pt-4 ">
+            <div className="px-6 lg:pt-6 md:pt-4 ">
               <div className="flex items-center justify-between mb-4 md:mb-2">
                 {/* Remix Button */}
                 <button
@@ -203,7 +203,7 @@ export default function ImageOverlay({
             </div>
 
             {/* Original Image Section */}
-            <div className="px-8 mb-10">
+            <div className="px-8 lg:mb-12 md:mb-28">
               <button
                 onClick={() => setIsOriginalImageOpen(!isOriginalImageOpen)}
                 className="w-full flex items-center justify-between text-white text-sm mb-4 hover:text-gray-300 transition-colors"
@@ -215,7 +215,7 @@ export default function ImageOverlay({
               </button>
 
               {isOriginalImageOpen && (
-                <div className="w-full h-[30vh] aspect-square bg-trasnparent rounded-lg overflow-hidden border border-white/10">
+                <div className="w-full aspect-square bg-trasnparent rounded-lg overflow-hidden border border-white/10">
                   <Image
                     src={imageUrl || "/placeholder.svg"}
                     alt="Original image"
