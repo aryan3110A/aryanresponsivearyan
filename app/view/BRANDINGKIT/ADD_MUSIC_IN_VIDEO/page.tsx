@@ -17,7 +17,7 @@ export default function AddMusicInVideo() {
   const [isGenerating, setIsGenerating] = useState(false)
 
   // Demo overlay state
-  const [showDemoOverlay, setShowDemoOverlay] = useState(true)
+  const [showDemoOverlay, setShowDemoOverlay] = useState(false)
 
   const handleGenerate = async () => {
     if (!prompt.trim()) return
