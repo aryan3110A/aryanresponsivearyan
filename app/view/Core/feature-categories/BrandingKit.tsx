@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { BRANDINGKIT } from "@/routes/routes"
 
 interface FeatureItem {
   title: string
@@ -8,8 +9,8 @@ interface FeatureItem {
 }
 
 const brandingFeatures: FeatureItem[] = [
-  { title: "Logo Generation", href: "/features/logo-generation", icon: "🏢" },
-  { title: "Product Generation", href: "/features/product-generation", icon: "📦" },
+  { title: "Logo Generation", href: BRANDINGKIT.PRODUCT_GENERATION, icon: "🏢" },
+  { title: "Product Generation", href: BRANDINGKIT.PRODUCT_GENERATION, icon: "📦" },
   { title: "Image to Video Edit", href: "/features/image-to-video-edit", icon: "✂️" },
   { title: "Add Music in Image", href: "/features/add-music-image", icon: "🎵" },
   { title: "Add Music in Video", href: "/features/add-music-video", icon: "🎶" },

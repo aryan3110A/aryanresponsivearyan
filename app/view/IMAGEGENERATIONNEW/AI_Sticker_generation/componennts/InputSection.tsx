@@ -4,7 +4,7 @@ import Image from "next/image"
 import { useState, useRef } from "react"
 import AttachmentsDropdown from "./AttachmentsDropdown"
 import UploadComponent from "./UploadComponent"
-import { Download, Bookmark, Heart, Sparkles } from "lucide-react"
+import { Download, Bookmark, Heart, Sparkles, Settings } from "lucide-react"
 import ImageOverlay from "./ImageOverlay"
 
 interface InputSectionProps {
@@ -151,9 +151,13 @@ export default function InputSection({
 
         <button
           onClick={onSettingsToggle}
-          className="p-3 bg-[#1F1F1F] backdrop-blur-sm rounded-2xl hover:bg-gradient-to-b from-[#6C3BFF] to-[#412399] transition-colors border border-[#8E8E8E]"
+          className="p-4 bg-[#1F1F1F] backdrop-blur-sm rounded-2xl hover:bg-gradient-to-b from-[#6C3BFF] to-[#412399] transition-colors border border-[#8E8E8E]"
         >
-          <Image src="/mockupgeneration/setting.png" alt="Settings" width={32} height={32} className="w-12 h-12" />
+          {/* 
+           */}
+           <Settings 
+           className="h-12 w-12"/>
+
         </button>
       </div>
 

@@ -1,6 +1,6 @@
 "use client"
 
-import { X } from "lucide-react"
+import {  X } from "lucide-react"
 import StickerType from "./StickerType"
 import NumberOfImages from "./NumberOfImages"
 

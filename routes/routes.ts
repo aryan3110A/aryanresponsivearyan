@@ -25,6 +25,10 @@ export const IMAGEGENERATION   = {
   IMAGE_GENERATION: '/view/IMAGEGENERATIONNEW/newtexttoimage',
   STICKER_GENERATION: '/view/IMAGEGENERATIONNEW/AI_Sticker_generation',
 } as const;
+
+export const BRANDINGKIT   = {
+  PRODUCT_GENERATION: '/view/BRANDINGKIT/PRODUCT_GENERATION',
+} as const;
 // Navigation Routes
 export const NAV_ROUTES = {
   TEMPLATES: '/view/templates',
@@ -103,4 +107,5 @@ export const ROUTES = {
   ...NAV_ROUTES,
   ...LEGAL_ROUTES,
   ...IMAGEGENERATION,
+  ...BRANDINGKIT,
 } as const; 

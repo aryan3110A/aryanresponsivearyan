@@ -46,7 +46,7 @@ app.mount("/images", StaticFiles(directory=OUT_DIR), name="images")
 
 class PromptIn(BaseModel):
     prompt: str
-    steps: int = 50
+    steps: int = 20
     scale: float = 5.5
     width: int = 768
     height: int = 768
