@@ -3,12 +3,11 @@
 import React from 'react'
 import DropDownSelection from './Generationpage/ui/DropDownSelection'
 
-const handleStyleSelect = (selected: string) => {
-  // handle the selected style here
-  console.log(selected);
-};
-
 const TestingUi = () => {
+  const handleStyleSelect = (selected: string) => {
+    // handle the selected style here
+    console.log(selected);
+  };
   return (
     <div>
         <DropDownSelection

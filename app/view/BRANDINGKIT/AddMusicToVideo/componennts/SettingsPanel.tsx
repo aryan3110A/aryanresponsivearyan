@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import MusicTypeSelector from "./MusicOptionCard"
 import MusicOptionCard from "./MusicOptionCard"
 import AdvanceSettingPanel from "./AdvanceSettingPanel"
 import Image from "next/image"
@@ -30,9 +29,11 @@ export default function SettingsPanel(props: SettingsPanelProps) {
     console.log("handle Event 2")
   }
 
-  const [showSummary, setShowSummary] = useState(false);
   const [photoReal, setPhotoReal] = useState(false);
-  const [negativePrompt, setNegativePrompt] = useState("");
+  const [negativePrompt, setNegativePrompt] = useState(false);
+  const [transparency, setTransparency] = useState(false);
+  const [tiling, setTiling] = useState(false);
+  const [fixedSeed, setFixedSeed] = useState(false);
 
   return (
     <>
@@ -78,6 +79,12 @@ export default function SettingsPanel(props: SettingsPanelProps) {
   setPhotoReal={setPhotoReal}
   negativePrompt={negativePrompt}
   setNegativePrompt={setNegativePrompt}
+  transparency={transparency}
+  setTransparency={setTransparency}
+  tiling={tiling}
+  setTiling={setTiling}
+  fixedSeed={fixedSeed}
+  setFixedSeed={setFixedSeed}
 />
              </div>
            
@@ -85,7 +92,7 @@ export default function SettingsPanel(props: SettingsPanelProps) {
           <div>
           <div className="mb-6 px-2 md:px-6">
               <button className="w-full flex items-center justify-center gap-2 py-4 rounded-lg bg-gradient-to-r from-[#6C3BFF] to-[#412399] hover:from-[#5A2FE6] hover:to-[#3A1F8A] text-white font-semibold text-lg transition-all"
-                onClick={() => setShowSummary(true)}>
+                onClick={() => {}}>
                 Save
                 <span className="flex items-center ml-2 text-base font-medium">
                   (
