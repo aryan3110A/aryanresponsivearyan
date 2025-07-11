@@ -2,11 +2,7 @@
 
 import { useState } from "react"
 import { X, ChevronDown } from "lucide-react"
-import ModelsPresetPanel from "./ModelsPresetPanel"
-import StylePalettes from "./StylePalettes"
-import AspectRatio from "./AspectRatio"
-import Quality from "./Quality"
-import NumberOfImages from "./NumberOfImages"
+import { ModelsPresetPanel, AspectRatio, Quality, NumberSelector, OptionSelector } from "../../UI"
 
 interface SettingsPanelProps {
   isOpen: boolean
@@ -129,7 +125,31 @@ export default function SettingsPanel({
 
             {/* Style Palettes Section */}
             <div className="mb-6">
-              <StylePalettes onStyleSelect={setSelectedStyle} selectedStyle={selectedStyle} />
+              <OptionSelector
+                onOptionSelect={setSelectedStyle}
+                selectedOption={selectedStyle}
+                title="Style Palettes"
+                options={[
+                  "Realistic",
+                  "Anime",
+                  "Cartoon",
+                  "Digital Art",
+                  "Oil Painting",
+                  "Watercolor",
+                  "Sketch",
+                  "Pop Art",
+                  "Abstract",
+                  "Minimalist",
+                  "Vintage",
+                  "Cyberpunk",
+                  "Fantasy",
+                  "Sci-Fi",
+                  "Gothic",
+                  "Impressionist"
+                ]}
+                defaultOpen={true}
+                showBorderTop={true}
+              />
             </div>
 
             {/* Quality Section */}
@@ -144,7 +164,12 @@ export default function SettingsPanel({
 
             {/* Number of Images Section */}
             <div className="mb-6">
-              <NumberOfImages onNumberSelect={setNumberOfImages} selectedNumber={numberOfImages} />
+              <NumberSelector
+                onNumberSelect={setNumberOfImages}
+                selectedNumber={numberOfImages}
+                title="Number of Images"
+                showBorderTop={true}
+              />
             </div>
 
             {/* Save Button */}

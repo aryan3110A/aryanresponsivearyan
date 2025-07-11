@@ -2,10 +2,8 @@
 
 import Image from "next/image"
 import { useState, useRef } from "react"
-import AttachmentsDropdown from "./AttachmentsDropdown"
-import UploadComponent from "./UploadComponent"
+import { AttachmentsDropdown, UploadComponent, ImageOverlay } from "../../UI"
 import { Download, Bookmark, Heart, Sparkles } from "lucide-react"
-import ImageOverlay from "./ImageOverlay"
 
 interface InputSectionProps {
   prompt: string
@@ -417,12 +415,12 @@ export default function InputSection({
           onClose={closeImageOverlay}
           imageUrl={selectedImageForOverlay.url}
           prompt={prompt}
-          model={selectedModel}
           modelSelection={selectedModel}
           stylePalette={selectedStyle || ""}
           imageQuality={selectedQuality}
           frameSize={selectedAspectRatio}
-          numberOfImages={numberOfImages}
+          numberOfItems={numberOfImages}
+          itemLabel="Images"
         />
       )}
 

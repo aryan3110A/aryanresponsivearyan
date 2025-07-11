@@ -3,10 +3,9 @@
 import { useState } from "react"
 import { ChevronDown,  ExternalLink } from "lucide-react"
 import ModelsPresetPanel from "./ModelsPresetPanel"
-import AspectRatio from "./AspectRatio"
+import { AspectRatio, NumberSelector } from "../../UI"
 import SelectBackground from "./SelectBackground"
 import Image from "next/image"
-import NumberOfImages from "./NumberOfImages"
 import CameraAngle from "./camera_angle"
 
 interface SettingsPanelProps {
@@ -158,7 +157,11 @@ export default function SettingsPanel(props: SettingsPanelProps) {
               </div>
             </div>
             {/* Number of Images Section */}
-            <NumberOfImages onNumberSelect={props.setNumberOfImages} selectedNumber={props.numberOfImages} />
+            <NumberSelector
+              onNumberSelect={props.setNumberOfImages}
+              selectedNumber={props.numberOfImages}
+              title="Number of Images"
+            />
             {/* Font Select Section */}
             <div className="mb-6">
               <div className="flex items-center justify-between mb-2 px-2 md:px-6 cursor-pointer" onClick={() => setIsFontOpen((v) => !v)}>

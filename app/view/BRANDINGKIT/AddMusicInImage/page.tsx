@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import Header from "./componennts/Header"
+import { Header } from "../UI"
 import InputSection from "./componennts/InputSection"
 import SettingsPanel from "./componennts/SettingsPanel"
 // import BackgroundShapes from "./componennts/BackgroundShapes"
@@ -108,7 +108,7 @@ export default function AddMusicToImage() {
       {/* <BackgroundShapes /> */}
 
       <div className="relative z-10">
-        <Header />
+        <Header title="Add Music In Image" />
 
         <main className="container mx-auto  lg:px-8 xl:px-12 2xl:px-16">
           

@@ -3,9 +3,8 @@
 import Image from "next/image"
 import { useState, useRef } from "react"
 import AttachmentsDropdown from "./AttachmentsDropdown"
-import UploadComponent from "./UploadComponent"
+import { UploadComponent, ImageOverlay } from "../../UI"
 import { Download, Bookmark, Heart, Sparkles } from "lucide-react"
-import ImageOverlay from "./ImageOverlay"
 
 interface InputSectionProps {
   prompt: string
@@ -413,6 +412,11 @@ export default function InputSection({
           prompt={prompt}
           model={model}
           musicType={musicType}
+          modelSelection={model}
+          stylePalette=""
+          imageQuality=""
+          frameSize=""
+          numberOfItems={1}
         />
       )}
 

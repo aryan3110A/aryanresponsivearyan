@@ -1,8 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import Image from "next/image"
-import NumberOfLogo from "./NumberOfLogo" // renamed component
+import { NumberSelector } from "../../UI"
 import LogoStyle from "./logoStyle"
 import FontSelect from "./FontSelect"
 import SelectColor from "./SelectColor"
@@ -14,6 +13,8 @@ import PrivateMode from "./PrivateMode"
 import AddToCollection from "./AddToCollection"
 import ResetToDefaults from "./ResetToDefaults"
 import SelectBackground from "./SelectBackground"
+import SummarySection from "./SummarySection"
+import SaveButton from "./SaveButton"
 
 interface SettingsPanelProps {
   isOpen: boolean
@@ -121,7 +122,11 @@ export default function SettingsPanel(props: SettingsPanelProps) {
             `}</style>
             {/* Number of Logo Section */}
             <div className="mb-6">
-              <NumberOfLogo onNumberSelect={setNumberOfLogo} selectedNumber={numberOfLogo} />
+              <NumberSelector
+                onNumberSelect={setNumberOfLogo}
+                selectedNumber={numberOfLogo}
+                title="Number of Logos"
+              />
             </div>
             {/* Save File Type Section */}
             <div className="mb-6">
@@ -191,47 +196,16 @@ export default function SettingsPanel(props: SettingsPanelProps) {
             {/* Reset to Defaults Button */}
             <ResetToDefaults onReset={handleReset} />
 
-            {/* Save Button */}
-            <div className="mb-6 px-2 md:px-6">
-              <button className="w-full flex items-center justify-center gap-2 py-4 rounded-lg bg-gradient-to-r from-[#6C3BFF] to-[#412399] hover:from-[#5A2FE6] hover:to-[#3A1F8A] text-white font-semibold text-lg transition-all"
-                onClick={() => setShowSummary(true)}>
-                Save
-                <span className="flex items-center ml-2 text-base font-medium">
-                  (
-                  <Image src="/BRANDINGKIT/PRODUCTGENERATION/coins.svg" alt="Tokens" width={24} height={24} className="mx-1" />
-                  100
-                  )
-                </span>
-              </button>
-            </div>
-
             {/* Summary Section */}
-            <div className="bg-white/10 backdrop-blur-3xl rounded-lg p-4 space-y-2 text-sm text-gray-300 mt-2 mb-6 mx-2 md:mx-6">
-              <div className="flex justify-between">
-                <span className="font-normal text-gray-300">Model Selection :</span>
-                <span className="text-white">{showSummary ? props.selectedModel : ''}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="font-normal text-gray-300">Number of Logo :</span>
-                <span className="text-white">{showSummary ? selectedBackground : ''}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="font-normal text-gray-300">Logo Type :</span>
-                <span className="text-gray-300">{showSummary ? props.selectedAspectRatio : ''}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="font-normal text-gray-300">Font Select :</span>
-                <span className="text-gray-300">{showSummary ? selectedFont : ''}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="font-normal text-gray-300">Color Select :</span>
-                <span className="text-gray-300">{showSummary ? selectedFont : ''}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="font-normal text-gray-300">Background Select :</span>
-                <span className="text-gray-300">{showSummary ? selectedFont : ''}</span>
-              </div>
-            </div>
+            <SummarySection
+              showSummary={showSummary}
+              selectedModel={props.selectedModel}
+              selectedBackground={selectedBackground}
+              selectedAspectRatio={props.selectedAspectRatio}
+              selectedFont={selectedFont}
+            />
+            {/* Save Button */}
+            <SaveButton onClick={() => setShowSummary(true)} showSummary={showSummary} />
 
             {/* Model & Preset Button */}
             <div className="mb-6 px-2 md:px-6">

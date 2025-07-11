@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { ChevronDown,  ExternalLink } from "lucide-react"
 import ModelsPresetPanel from "./ModelsPresetPanel"
-import AspectRatio from "./AspectRatio"
+import { AspectRatio } from "../../UI"
 import SelectBackground from "./SelectBackground"
 import Image from "next/image"
 

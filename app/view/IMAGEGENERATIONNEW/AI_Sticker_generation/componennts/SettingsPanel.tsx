@@ -1,8 +1,7 @@
 "use client"
 
 import {  X } from "lucide-react"
-import StickerType from "./StickerType"
-import NumberOfImages from "./NumberOfImages"
+import { NumberSelector, OptionSelector } from "../../UI"
 
 interface SettingsPanelProps {
   isOpen: boolean
@@ -64,13 +63,41 @@ export default function SettingsPanel({
             
             
             <div className="mb-6">
-              <NumberOfImages onNumberSelect={setNumberOfStickers} selectedNumber={numberOfStickers} />
+              <NumberSelector
+                onNumberSelect={setNumberOfStickers}
+                selectedNumber={numberOfStickers}
+                title="Number of Stickers"
+              />
             </div>
             
             
             {/* Sticker Type Section */}
             <div className="mb-6">
-              <StickerType onStickerTypeSelect={setStickerType} selectedStickerType={stickerType} />
+              <OptionSelector
+                onOptionSelect={setStickerType}
+                selectedOption={stickerType}
+                title="Sticker Type"
+                options={[
+                  "Illustration",
+                  "Clipart",
+                  "Photo",
+                  "Ink Sketch",
+                  "Doodle",
+                  "Realistic",
+                  "Low Poly",
+                  "Pop Art",
+                  "3d",
+                  "Comics",
+                  "Drawing",
+                  "Oil Painting",
+                  "Cartoon",
+                  "Cyberpunk",
+                  "Psychedelic",
+                  "Digital"
+                ]}
+                defaultOpen={true}
+                showBorderTop={true}
+              />
             </div>
 
             
