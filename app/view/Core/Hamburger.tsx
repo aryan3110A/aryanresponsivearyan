@@ -5,9 +5,8 @@ import type React from "react"
 import Image from "next/image"
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { ChevronDown, X, Settings, LogOut, Home, FileText, Bookmark } from "lucide-react"
-import { auth } from "@/database/firebase"
-import { signOut } from "firebase/auth"
+import { X, Settings, Home, FileText, Bookmark, ChevronsDown } from "lucide-react"
+
 import { getImageUrl } from "@/routes/imageroute"
 import SettingNavigation from "./Setting"
 import { IconBrandBlogger, IconBrandX, IconBrandYoutube, IconBrandInstagram } from "@tabler/icons-react"
@@ -30,7 +29,9 @@ interface SocialLink {
 }
 
 const sidebarItems: NavItem[] = [
+  
   { label: "Home", href: "/view/home/${userSlug}", icon: <Home className="w-5 h-5" /> },
+  { label: "Features", href: "/view/home/${userSlug}", icon: <ChevronsDown className="w-5 h-5" /> },
   {
     label: "Templates",
     href: NAV_ROUTES.TEMPLATES,
@@ -96,9 +97,7 @@ const socialLinks: SocialLink[] = [
 ]
 
 export default function Hamburger({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
-  const [isProfileOpen, setIsProfileOpen] = useState(false)
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
-  const [username, setUsername] = useState("")
   const availableTokens = useTokenUpdate()
   // const scrollRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
@@ -128,24 +127,7 @@ export default function Hamburger({ isOpen, onClose }: { isOpen: boolean; onClos
     }
   }, [isOpen])
 
-  useEffect(() => {
-    const storedUsername = localStorage.getItem("username")
-    if (storedUsername) {
-      setUsername(storedUsername)
-    }
-  }, [])
 
-  const handleLogout = async () => {
-    try {
-      await signOut(auth)
-      localStorage.removeItem("otpUser")
-      localStorage.removeItem("username")
-      localStorage.removeItem("slug")
-      router.push("/")
-    } catch (err) {
-      console.error("Logout failed:", err)
-    }
-  }
 
   return (
     <>
@@ -167,84 +149,15 @@ export default function Hamburger({ isOpen, onClose }: { isOpen: boolean; onClos
         
         <div className="h-full flex flex-col font-poppins bg-[#101011] overflow-y-auto">
           {/* Header with Close Button */}
-          <div className="flex justify-end p-4 bg-[#101011]">
-            <button onClick={onClose} className="p-2 hover:bg-gray-800 rounded-lg transition-colors">
-              <X className="w-6 h-6 text-white" />
+          <div className="flex justify-end p-2 bg-[#101011] pt-14">
+            <button onClick={onClose} className="p-2  rounded-lg transition-colors">
+              <X className="w-10 h-10 text-white" />
             </button>
           </div>
 
-          <div className="flex-1 px-4 pb-4 space-y-4 bg-[#101011] ">
-            {/* Profile Section */}
-            <div className="relative">
-              <button
-                onClick={() => setIsProfileOpen(!isProfileOpen)}
-                className="w-full flex items-center justify-between p-4 rounded-lg bg-[#272727] hover:bg-[#333] transition-colors"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full  flex items-center justify-center">
-                    <Image
-                      src={getImageUrl("core", "profile") || "/placeholder.svg"}
-                      alt="Profile"
-                      width={24}
-                      height={24}
-                      className="rounded-full object-cover"
-                    />
-                  </div>
-                  <span className="text-white font-medium">Profile</span>
-                </div>
-                <ChevronDown
-                  className={`w-5 h-5 text-white transition-transform ${isProfileOpen ? "rotate-180" : ""}`}
-                />
-              </button>
+          <div className="-mt-2 flex-1 px-4 pb-4 space-y-2 bg-[#101011] ">
 
-              {isProfileOpen && (
-                <div className="absolute top-full left-0 w-full mt-2 bg-[#272727] rounded-lg border border-gray-700 shadow-xl z-50">
-                  <div className="p-3">
-                    <div className="flex items-center gap-3 p-3 rounded-xl bg-[#1e1e1e]">
-                      <Image
-                        src={getImageUrl("core", "profile") || "/placeholder.svg"}
-                        alt="User"
-                        width={32}
-                        height={32}
-                        className="rounded-full object-cover"
-                      />
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 text-sm text-white">
-                          <span>{username || "User"}</span>
-                          <div className="w-2 h-2 rounded-full bg-blue-500" />
-                        </div>
-                        <div className="flex items-center gap-1 text-sm text-gray-400">
-                          <Image
-                            src={getImageUrl("core", "coins") || "/placeholder.svg"}
-                            alt="coins"
-                            width={16}
-                            height={16}
-                          />
-                          <div className="bg-gray-800 rounded px-2 py-0.5 text-xs">{availableTokens}</div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="border-t border-gray-700 my-3" />
-                    <button
-                      onClick={handleSettingsClick}
-                      className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-gray-700 transition-colors text-white"
-                    >
-                      <Settings className="w-5 h-5" />
-                      <span className="text-sm">Settings</span>
-                    </button>
-                    <button
-                      onClick={handleLogout}
-                      className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-gray-700 transition-colors text-white"
-                    >
-                      <LogOut className="w-5 h-5" />
-                      <span className="text-sm">Logout</span>
-                    </button>
-                  </div>
-                </div>
-              )}
-                          <div className="border-b border-[#272727] w-[97%] mt-[5%] mx-auto"></div>
 
-            </div>
 
             {/* Token Display */}
             <div className="bg-[#272727] rounded-lg p-4">
@@ -279,7 +192,7 @@ export default function Hamburger({ isOpen, onClose }: { isOpen: boolean; onClos
                 <Link
                   key={item.label}
                   href={item.href}
-                  className="flex items-center gap-4 p-4 rounded-lg bg-[#2a2a2a] hover:bg-gradient-to-r hover:from-[#5AD7FF] hover:to-[#656BF5] transition-all duration-200 text-white"
+                  className="flex items-center gap-4 p-4 rounded-lg bg-[#2a2a2a] hover:bg-gradient-to-r hover:from-[#6C3BFF] hover:to-[#412399] transition-all duration-200 text-white"
                   onClick={() => {
                     onClose()
                     setIsSettingsOpen(false)
@@ -299,7 +212,7 @@ export default function Hamburger({ isOpen, onClose }: { isOpen: boolean; onClos
                 item.label === "Setting" ? (
                   <button
                     key={item.label}
-                    className="w-full flex items-center gap-4 p-4 rounded-lg bg-[#272727] hover:bg-gradient-to-r hover:from-[#5AD7FF] hover:to-[#656BF5] transition-all duration-200 text-white text-left"
+                    className="w-full flex items-center gap-4 p-4 rounded-lg bg-[#272727] hover:bg-gradient-to-r hover:from-[#6C3BFF] hover:to-[#412399] transition-all duration-200 text-white text-left"
                     onClick={() => {
                       handleSettingsClick()
                     }}
@@ -311,7 +224,7 @@ export default function Hamburger({ isOpen, onClose }: { isOpen: boolean; onClos
                   <Link
                     key={item.label}
                     href={item.href}
-                    className="flex items-center gap-4 p-4 rounded-lg bg-[#2a2a2a] hover:bg-gradient-to-r hover:from-[#5AD7FF] hover:to-[#656BF5] transition-all duration-200 text-white"
+                    className="flex items-center gap-4 p-4 rounded-lg bg-[#2a2a2a] hover:bg-gradient-to-r hover:from-[#6C3BFF] hover:to-[#412399] transition-all duration-200 text-white"
                     onClick={() => {
                       onClose()
                       setIsSettingsOpen(false)

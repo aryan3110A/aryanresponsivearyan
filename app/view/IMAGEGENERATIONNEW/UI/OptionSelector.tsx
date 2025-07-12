@@ -36,7 +36,7 @@ export default function OptionSelector({
 
   return (
     <div className={className}>
-      {showBorderTop && <div className="mx-2 md:mx-6 border-t border-white/15 mb-4"></div>}
+      {showBorderTop && <div className=""></div>}
       
       <div className="flex items-center justify-between mb-4 px-2 md:px-6">
         <h3 className="text-white text-lg md:text-xl font-medium">{title}</h3>

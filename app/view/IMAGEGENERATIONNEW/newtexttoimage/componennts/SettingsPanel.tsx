@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useRef } from "react"
 import { X, ChevronDown } from "lucide-react"
 import { ModelsPresetPanel, AspectRatio, Quality, NumberSelector, OptionSelector } from "../../UI"
 
@@ -34,13 +34,15 @@ export default function SettingsPanel({
   setNumberOfImages,
 }: SettingsPanelProps) {
   const [isModelsOpen, setIsModelsOpen] = useState(false)
+  const toggleButtonRef = useRef<HTMLButtonElement>(null)
 
   const toggleModels = () => {
-    setIsModelsOpen((prev) => !prev);
+    setIsModelsOpen((prev) => !prev)
   }
 
   const handleModelSelect = (model: string) => {
     setSelectedModel(model)
+    setIsModelsOpen(false) // Close the models panel after selection
   }
 
   const handleSave = () => {
@@ -87,8 +89,9 @@ export default function SettingsPanel({
             `}</style>
 
             {/* Model & Preset Section */}
-            <div>
+            <div className="relative">
               <button
+                ref={toggleButtonRef}
                 onClick={toggleModels}
                 className="px-6 md:px-10 w-full py-6 md:py-8 bg-gradient-to-r from-gray-800 to-gray-700 rounded-lg border border-white/10 cursor-pointer hover:from-gray-700 hover:to-gray-600 transition-all mb-4 text-left relative overflow-hidden"
                 style={{
@@ -119,6 +122,18 @@ export default function SettingsPanel({
                   onClose={() => setIsModelsOpen(false)}
                   selectedModel={selectedModel}
                   onModelSelect={handleModelSelect}
+                  excludeRef={toggleButtonRef}
+                />
+              </div>
+
+              {/* Models Dropdown for Desktop */}
+              <div className="hidden md:block">
+                <ModelsPresetPanel
+                  isOpen={isModelsOpen}
+                  onClose={() => setIsModelsOpen(false)}
+                  selectedModel={selectedModel}
+                  onModelSelect={handleModelSelect}
+                  excludeRef={toggleButtonRef}
                 />
               </div>
             </div>
@@ -180,27 +195,22 @@ export default function SettingsPanel({
               >
                 Save
               </button>
+              {/* Settings Summary */}
               <div className="bg-white/10 backdrop-blur-3xl hover:bg-white/20 rounded-lg p-4 space-y-2 text-sm text-gray-300 mt-6">
-                <div>Model Selection : {selectedModel}</div>
-                <div>Style Palette : {selectedStyle || "Bokeh"}</div>
-                <div>Image Quality : {selectedQuality}</div>
-                <div>Frame Size : {selectedAspectRatio}</div>
-                <div>Number of Image : {numberOfImages}</div>
+                <div className="text-white font-medium mb-3">Settings Summary</div>
+                <div>Model Selection : <span className="text-[#5AD7FF]">{selectedModel}</span></div>
+                <div>Style Palette : <span className="text-[#5AD7FF]">{selectedStyle || "Bokeh"}</span></div>
+                <div>Image Quality : <span className="text-[#5AD7FF]">{selectedQuality}</span></div>
+                <div>Frame Size : <span className="text-[#5AD7FF]">{selectedAspectRatio}</span></div>
+                <div>Number of Image : <span className="text-[#5AD7FF]">{numberOfImages}</span></div>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Desktop Models Panel */}
-      <div className="hidden md:block">
-        <ModelsPresetPanel
-          isOpen={isModelsOpen}
-          onClose={() => setIsModelsOpen(false)}
-          selectedModel={selectedModel}
-          onModelSelect={handleModelSelect}
-        />
-      </div>
+
+
     </>
   )
 }

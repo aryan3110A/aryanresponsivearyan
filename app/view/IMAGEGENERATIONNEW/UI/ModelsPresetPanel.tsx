@@ -2,83 +2,93 @@
 
 import { useEffect, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { X } from "lucide-react"
-
-interface Model {
-  id: string
-  title: string
-  shortName: string
-  description: string
-  tokenCost: number
-}
+import Image from "next/image"
 
 interface ModelsPresetPanelProps {
   isOpen: boolean
   onClose: () => void
   selectedModel: string
   onModelSelect: (model: string) => void
-  models?: Model[]
-  className?: string
+  excludeRef?: React.RefObject<HTMLButtonElement | null>
 }
 
-const defaultModels: Model[] = [
+// Define a type for model
+type Model = {
+  id: string
+  title: string
+  shortName: string
+  image: string
+  description: string
+  tokenCost: number
+}
+
+const models = [
   {
     id: "1",
     title: "Stable XL",
     shortName: "S",
-    description: "Unique turnkey solution for video analytics, optimized for real-time performance on off-the-grid Edge AI devices and green computing.",
+    image: "/placeholder.svg?height=60&width=60",
+    description:
+      "Unique turnkey solution for video analytics, optimized for real-time performance on off-the-grid Edge AI devices and green computing.",
     tokenCost: 20,
   },
   {
     id: "2",
     title: "Flux.1 Dev",
     shortName: "F",
-    description: "Flux.1 Dev, a powerful 12B parameter flow transformer model from the FLUX series. This model delivers high-quality image generation with exceptional detail and efficiency.",
+    image: "/placeholder.svg?height=60&width=60",
+    description:
+      "Flux.1 Dev, a powerful 12B parameter flow transformer model from the FLUX series. This model delivers high-quality image generation with exceptional detail and efficiency.",
     tokenCost: 20,
   },
   {
     id: "3",
     title: "Stable Diffusion 3.5 Large",
     shortName: "S",
-    description: "Google's Imagen - generating images with even better detail, richer lighting and fewer distracting artifacts than our previous models.",
+    image: "/placeholder.svg?height=60&width=60",
+    description:
+      "Google's Imagen - generating images with even better detail, richer lighting and fewer distracting artifacts than our previous models.",
     tokenCost: 25,
   },
   {
     id: "4",
     title: "Stable Diffusion 3.5 Medium",
     shortName: "S",
-    description: "Stable Diffusion 3.5 Medium With 2.5B parameters and enhanced MMDiT-X architecture, this model runs efficiently on consumer hardware, balancing quality and customization while generating images from 0.25 to 2 MP.",
+    image: "/placeholder.svg?height=60&width=60",
+    description:
+      "Stable Diffusion 3.5 Medium With 2.5B parameters and enhanced MMDiT-X architecture, this model runs efficiently on consumer hardware, balancing quality and customization while generating images from 0.25 to 2 MP.",
     tokenCost: 15,
   },
   {
     id: "5",
     title: "Flux.1 Schnell",
     shortName: "F",
-    description: "A powerful fusion of MidJourney's artistic capabilities, Flux-Dev's efficiency, and LoRA fine-tuning, enabling highly customized, stylistic, and efficient AI-generated imagery.",
+    image: "/placeholder.svg?height=60&width=60",
+    description:
+      "A powerful fusion of MidJourney's artistic capabilities, Flux-Dev's efficiency, and LoRA fine-tuning, enabling highly customized, stylistic, and efficient AI-generated imagery.",
     tokenCost: 30,
   },
   {
     id: "6",
     title: "Stable Turbo",
     shortName: "S",
-    description: "Get involved with the fastest growing open software project. Download and join other developers in creating incredible applications with Stable Diffusion XL as a foundation model.",
+    image: "/placeholder.svg?height=60&width=60",
+    description:
+      "Get involved with the fastest growing open software project. Download and join other developers in creating incredible applications with Stable Diffusion XL as a foundation model.",
     tokenCost: 18,
   },
 ]
 
-export default function ModelsPresetPanel({ 
-  isOpen, 
-  onClose, 
-  selectedModel, 
-  onModelSelect,
-  models = defaultModels,
-  className = ""
-}: ModelsPresetPanelProps) {
+export default function ModelsPresetPanel({ isOpen, onClose, selectedModel, onModelSelect, excludeRef }: ModelsPresetPanelProps) {
   const panelRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (panelRef.current && !panelRef.current.contains(event.target as Node)) {
+      const target = event.target as Node
+      const isClickInsidePanel = panelRef.current && panelRef.current.contains(target)
+      const isClickOnToggleButton = excludeRef?.current && excludeRef.current.contains(target)
+
+      if (!isClickInsidePanel && !isClickOnToggleButton) {
         onClose()
       }
     }
@@ -87,76 +97,140 @@ export default function ModelsPresetPanel({
       document.addEventListener("mousedown", handleClickOutside)
     }
 
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside)
-    }
-  }, [isOpen, onClose])
+    return () => document.removeEventListener("mousedown", handleClickOutside)
+  }, [isOpen, onClose, excludeRef])
+
+  const handleModelSelect = (model: string) => {
+    onModelSelect(model)
+    onClose()
+  }
+
+  
+  
 
   if (!isOpen) return null
 
   return (
     <AnimatePresence>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        className={`fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 ${className}`}
-      >
-        <motion.div
-          ref={panelRef}
-          initial={{ scale: 0.95, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          exit={{ scale: 0.95, opacity: 0 }}
-          className="bg-[#1A1A1A] rounded-2xl max-w-4xl w-full max-h-[80vh] overflow-hidden"
-        >
-          {/* Header */}
-          <div className="flex items-center justify-between p-6 border-b border-white/10">
-            <h2 className="text-white text-xl font-semibold">Select Model</h2>
-            <button
-              onClick={onClose}
-              className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+      {isOpen && (
+        <>
+          {/* Desktop Layout - Dropdown */}
+          <div className="hidden md:block">
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              className="overflow-hidden"
             >
-              <X className="w-5 h-5 text-gray-400" />
-            </button>
+              <div className="py-4 px-2 space-y-4">
+                {/* Models Grid - 4 columns for desktop */}
+                <div className="grid grid-cols-1 gap-3">
+                  {models.map((model) => (
+                    <MobileModelCard
+                      key={model.id}
+                      model={model}
+                      isSelected={selectedModel === model.title}
+                      onSelect={handleModelSelect}
+                    />
+                  ))}
+                </div>
+              </div>
+            </motion.div>
           </div>
 
-          {/* Models Grid */}
-          <div className="p-6 overflow-y-auto max-h-[60vh]">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {models.map((model) => (
-                <div
-                  key={model.id}
-                  onClick={() => {
-                    onModelSelect(model.title)
-                    onClose()
-                  }}
-                  className={`p-4 rounded-lg border cursor-pointer transition-all hover:border-[#6C3BFF] ${
-                    selectedModel === model.title
-                      ? "border-[#6C3BFF] bg-[#6C3BFF]/10"
-                      : "border-white/10 bg-white/5"
-                  }`}
-                >
-                  <div className="flex items-start gap-3">
-                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center text-white font-bold ${
-                      selectedModel === model.title ? "bg-[#6C3BFF]" : "bg-white/10"
-                    }`}>
-                      {model.shortName}
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="text-white font-medium mb-1">{model.title}</h3>
-                      <p className="text-gray-400 text-sm mb-2 line-clamp-2">{model.description}</p>
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs text-gray-500">Token Cost</span>
-                        <span className="text-sm text-[#6C3BFF] font-medium">{model.tokenCost}</span>
-                      </div>
-                    </div>
-                  </div>
+          {/* Mobile/Tablet Layout - Dropdown within Settings Panel */}
+          <div className="md:hidden">
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              className="overflow-hidden"
+            >
+              <div className="py-4 px-2 space-y-4">
+                {/* Models Grid - 2x2 for mobile */}
+                <div className="grid grid-cols-2 gap-3">
+                  {models.slice(0, 4).map((model) => (
+                    <MobileModelCard
+                      key={model.id}
+                      model={model}
+                      isSelected={selectedModel === model.title}
+                      onSelect={handleModelSelect}
+                    />
+                  ))}
                 </div>
-              ))}
-            </div>
+
+                {/* Show more models if needed */}
+                {models.length > 4 && (
+                  <div className="grid grid-cols-2 gap-3">
+                    {models.slice(4).map((model) => (
+                      <MobileModelCard
+                        key={model.id}
+                        model={model}
+                        isSelected={selectedModel === model.title}
+                        onSelect={handleModelSelect}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
+            </motion.div>
           </div>
-        </motion.div>
-      </motion.div>
+        </>
+      )}
     </AnimatePresence>
   )
 }
+
+
+
+// Mobile Model Card Component
+function MobileModelCard({
+  model,
+  isSelected,
+  onSelect,
+}: {
+  model: Model
+  isSelected: boolean
+  onSelect: (model: string) => void
+}) {
+  return (
+    <div
+      className={`relative rounded-xl overflow-hidden cursor-pointer transition-all duration-200 ${
+        isSelected ? "ring-2 ring-[#412399]" : ""
+      }`}
+      onClick={() => onSelect(model.title)}
+    >
+      {/* Card Background with Gradient */}
+      <div className="w-full h-auto md:h-[10vh] aspect-square bg-white/10 flex flex-col items-left justify-left relative p-4">
+        {/* Artistic Background Overlay */}
+        <div className="absolute inset-0 "></div>
+
+        {/* Content */}
+        <div className="relative z-10 flex flex-col items-left justify-end h-full">
+          {/* Model Name */}
+          <div className=" flex items-center gap-2 text-left md:text-left">
+            <Image 
+            src={""}
+            alt=""
+            height={10}
+            width={10}
+            className="w-10 h-10 object-cover rounded-full bg-black border border-white/10"
+            ></Image>
+            <p className="text-white text-sm font-bold">{model.title}</p>
+          </div>
+        </div>
+
+        {/* Selection Indicator */}
+        {/* {isSelected && (
+          <div className="absolute top-2 right-2 w-5 h-5 bg-[#412399] rounded-full flex items-center justify-center">
+            <span className="text-white text-xs font-bold">.</span>
+          </div>
+        )} */}
+      </div>
+    </div>
+  )
+}
+
+
