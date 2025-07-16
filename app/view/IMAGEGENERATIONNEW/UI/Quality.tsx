@@ -28,7 +28,7 @@ export default function Quality({
 
   return (
     <div className={className}>
-      <div className="mx-2 md:mx-6 border-t border-white/15 mb-2"></div>
+      <div className="mx-2 md:mx-6 border-t border-white/15 mb-6"></div>
       <h3 className="text-white text-lg md:text-xl font-medium mb-4 px-2 md:px-6">{title}</h3>
       <div className="grid grid-cols-5 gap-2 md:gap-4 px-2 md:px-6">
         {qualities.map((quality) => (

@@ -2,7 +2,8 @@
 
 import { useState, useRef } from "react"
 import { X, ChevronDown } from "lucide-react"
-import { ModelsPresetPanel, AspectRatio, Quality, NumberSelector, OptionSelector } from "../../UI"
+import { ModelsPresetPanel, AspectRatio, Quality, NumberSelector, OptionSelector, SelectColor, effects as Effects, lightning as Lightning, cameraAngles as CameraAngle, AdvanceSettingPanel, AddToCollection, PrivateMode, VisualIntensity
+} from "../../UI"
 
 interface SettingsPanelProps {
   isOpen: boolean
@@ -35,6 +36,25 @@ export default function SettingsPanel({
 }: SettingsPanelProps) {
   const [isModelsOpen, setIsModelsOpen] = useState(false)
   const toggleButtonRef = useRef<HTMLButtonElement>(null)
+
+  // Color, Effect, and Lightning state
+  const [selectedColor, setSelectedColor] = useState<string | null>(null)
+  const [customColor, setCustomColor] = useState<string>("")
+  const [selectedEffect, setSelectedEffect] = useState<string | null>(null)
+  const [customEffect, setCustomEffect] = useState<string>("")
+  const [selectedLightning, setSelectedLightning] = useState<string | null>(null)
+  const [customLightning, setCustomLightning] = useState<string>("")
+  const [selectedCameraAngle, setSelectedCameraAngle] = useState<string | null>(null)
+  const [photoReal, setPhotoReal] = useState(false);
+  const [negativePrompt, setNegativePrompt] = useState(false);
+  const [transparency, setTransparency] = useState(false);
+  const [tiling, setTiling] = useState(false);
+  const [fixedSeed, setFixedSeed] = useState(false);
+  const [collections, setCollections] = useState<string[]>([]);
+  const [isCollectionOpen, setIsCollectionOpen] = useState(false);
+  const [privateMode, setPrivateMode] = useState(false);
+  const [visualIntensity, setVisualIntensity] = useState<number>(1.0);
+  const [visualIntensityEnabled, setVisualIntensityEnabled] = useState<boolean>(false);
 
   const toggleModels = () => {
     setIsModelsOpen((prev) => !prev)
@@ -138,6 +158,14 @@ export default function SettingsPanel({
               </div>
             </div>
 
+            {/* Visual Intensity Section */}
+            <VisualIntensity
+              visualIntensity={visualIntensity}
+              setVisualIntensity={setVisualIntensity}
+              isEnabled={visualIntensityEnabled}
+              setIsEnabled={setVisualIntensityEnabled}
+            />
+
             {/* Style Palettes Section */}
             <div className="mb-6">
               <OptionSelector
@@ -166,7 +194,41 @@ export default function SettingsPanel({
                 showBorderTop={true}
               />
             </div>
+          
+            <div className="mb-6">
+              <Effects
+                onEffectSelect={setSelectedEffect}
+                selectedEffect={selectedEffect}
+                customEffect={customEffect}
+                setCustomEffect={setCustomEffect}
+              />
+            </div>
 
+            {/* select color */}
+            <div className="mb-6">
+              <SelectColor
+                onColorSelect={setSelectedColor}
+                selectedColor={selectedColor}
+                customColor={customColor}
+                setCustomColor={setCustomColor}
+              />
+            </div>
+
+            <div className="mb-6">
+              <Lightning
+                onLightningSelect={setSelectedLightning}
+                selectedLightning={selectedLightning}
+                customLightning={customLightning}
+                setCustomLightning={setCustomLightning}
+              />
+            </div>
+            <div className="mb-6">
+              <CameraAngle 
+                onCameraAngleSelect={setSelectedCameraAngle}
+                selectedCameraAngle={selectedCameraAngle}
+              />
+            </div>
+         
             {/* Quality Section */}
             <div className="mb-6">
               <Quality onQualitySelect={setSelectedQuality} selectedQuality={selectedQuality} />
@@ -186,7 +248,34 @@ export default function SettingsPanel({
                 showBorderTop={true}
               />
             </div>
-
+            <div className="mb-6">
+              <AddToCollection
+                collections={collections}
+                setCollections={setCollections}
+                isCollectionOpen={isCollectionOpen}
+                setIsCollectionOpen={setIsCollectionOpen}
+              />
+            </div>   
+            <div className="mb-6">
+              <PrivateMode
+                privateMode={privateMode}
+                setPrivateMode={setPrivateMode}
+              />
+            </div>
+            <div className="mb-6">
+              <AdvanceSettingPanel 
+                photoReal={photoReal}
+                setPhotoReal={setPhotoReal}
+                negativePrompt={negativePrompt}
+                setNegativePrompt={setNegativePrompt}
+                transparency={transparency}
+                setTransparency={setTransparency}
+                tiling={tiling}
+                setTiling={setTiling}
+                fixedSeed={fixedSeed}
+                setFixedSeed={setFixedSeed}
+              />  
+            </div>
             {/* Save Button */}
             <div className="mb-6 px-2 md:px-6">
               <button
@@ -199,7 +288,12 @@ export default function SettingsPanel({
               <div className="bg-white/10 backdrop-blur-3xl hover:bg-white/20 rounded-lg p-4 space-y-2 text-sm text-gray-300 mt-6">
                 <div className="text-white font-medium mb-3">Settings Summary</div>
                 <div>Model Selection : <span className="text-[#5AD7FF]">{selectedModel}</span></div>
+                <div>Visual Intensity : <span className="text-[#5AD7FF]">{visualIntensityEnabled ? visualIntensity.toFixed(1) : "Disabled"}</span></div>
                 <div>Style Palette : <span className="text-[#5AD7FF]">{selectedStyle || "Bokeh"}</span></div>
+                <div>Selected Color : <span className="text-[#5AD7FF]">{selectedColor || customColor || "None"}</span></div>
+                <div>Selected Effect : <span className="text-[#5AD7FF]">{selectedEffect || customEffect || "None"}</span></div>
+                <div>Selected Lightning : <span className="text-[#5AD7FF]">{selectedLightning || customLightning || "None"}</span></div>
+                <div>Camera Angle : <span className="text-[#5AD7FF]">{selectedCameraAngle || "None"}</span></div>
                 <div>Image Quality : <span className="text-[#5AD7FF]">{selectedQuality}</span></div>
                 <div>Frame Size : <span className="text-[#5AD7FF]">{selectedAspectRatio}</span></div>
                 <div>Number of Image : <span className="text-[#5AD7FF]">{numberOfImages}</span></div>
