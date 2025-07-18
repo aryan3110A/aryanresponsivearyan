@@ -16,6 +16,9 @@ export default function AISTICKERGEN() {
   const [isGenerating, setIsGenerating] = useState(false)
   const [stickerType, setStickerType] = useState<string | null>(null)
   const [numberOfStickers, setNumberOfStickers] = useState(1)
+  const [saveFileType, setSaveFileType] = useState<string | null>(null);
+  const [expression, setExpression] = useState<string | null>(null);
+  const [promptEnhance, setPromptEnhance] = useState<string>("Auto");
 
   const handleGenerate = async () => {
     if (!prompt.trim()) return
@@ -97,12 +100,19 @@ export default function AISTICKERGEN() {
       
 
       <SettingsPanel
+      
         isOpen={isSettingsOpen}
         onClose={() => setIsSettingsOpen(false)}
         stickerType={stickerType}
         setStickerType={setStickerType}
         numberOfStickers={numberOfStickers}
         setNumberOfStickers={setNumberOfStickers}
+        saveFileType={saveFileType}
+        setSaveFileType={setSaveFileType}
+        expression={expression}
+        setExpression={setExpression}
+        promptEnhance={promptEnhance}
+        setPromptEnhance={setPromptEnhance}
       />
       
     </div>

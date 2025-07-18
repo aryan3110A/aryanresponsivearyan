@@ -307,10 +307,9 @@ export default function NavigationFull() {
         {activeDropdown === "features" && (
           <div
             ref={dropdownRef}
-            className="absolute left-0 right-0 top-full z-50 bg-black/95 backdrop-blur-xl shadow-lg border-t border-gray-800/50 animate-in slide-in-from-top-2 duration-300"
-            style={backgroundStyle}
-          >
-            <div className="container mx-auto px-8 md:px-6 xl:px-8 py-6 lg:py-8">
+            className="absolute left-0 right-0 top-full z-50 bg-transparent backdrop-blur-lg shadow-3xl border-t border-gray-800/50 animate-in slide-in-from-top-2 duration-300"
+            style={backgroundStyle}          >
+            <div className="container mx-auto px-8 md:px-6 xl:px-8 py-6 lg:py-8 ">
               <div className="grid grid-cols-1 md:grid-cols-6 lg:grid-cols-6 xl:grid-cols-6 gap-6 lg:gap-8 max-w-auto mx-auto font-poppins">
                 <div className="col-span-1">
                   <ImageGeneration />

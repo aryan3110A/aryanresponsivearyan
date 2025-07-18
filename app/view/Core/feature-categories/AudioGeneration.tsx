@@ -17,7 +17,7 @@ const audioFeatures: FeatureItem[] = [
 
 export default function AudioGeneration() {
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 ">
       <h3 className="text-white font-semibold text-base lg:text-lg mb-4 font-poppins ">Audio generation</h3>
       <div className="space-y-3">
         {audioFeatures.map((feature, index) => (

@@ -2,8 +2,8 @@
 
 import { useState, useRef } from "react"
 import { X, ChevronDown } from "lucide-react"
-import { ModelsPresetPanel, AspectRatio, Quality, NumberSelector, OptionSelector, SelectColor, effects as Effects, lightning as Lightning, cameraAngles as CameraAngle, AdvanceSettingPanel, AddToCollection, PrivateMode, VisualIntensity
-} from "../../UI"
+import { ModelsPresetPanel, promptEnhancer as PromptEnhancer,  AspectRatio, Quality, NumberSelector, OptionSelector, SelectColor, effects as Effects, lightning as Lightning, cameraAngles as CameraAngle, AdvanceSettingPanel, AddToCollection, PrivateMode, VisualIntensity, SocialMedia
+, ResetToDefaults} from "../../UI"
 
 interface SettingsPanelProps {
   isOpen: boolean
@@ -55,6 +55,39 @@ export default function SettingsPanel({
   const [privateMode, setPrivateMode] = useState(false);
   const [visualIntensity, setVisualIntensity] = useState<number>(1.0);
   const [visualIntensityEnabled, setVisualIntensityEnabled] = useState<boolean>(false);
+  const [selectedSocialPlatform, setSelectedSocialPlatform] = useState<string | null>(null);
+  const [selectedSocialFormat, setSelectedSocialFormat] = useState<string | null>(null);
+  const [selectedContentType, setSelectedContentType] = useState<string | null>(null);
+
+  const [promptEnhance, setPromptEnhance] = useState("Auto");
+
+  const handleReset = () => {
+    setIsModelsOpen(false);
+    setSelectedColor(null);
+    setCustomColor("");
+    setSelectedEffect(null);
+    setCustomEffect("");
+    setSelectedLightning(null);
+    setCustomLightning("");
+    setSelectedCameraAngle(null);
+    setPhotoReal(false);
+    setNegativePrompt(false);
+    setTransparency(false);
+    setTiling(false);
+    setFixedSeed(false);
+    setCollections([]);
+    setIsCollectionOpen(false);
+    setPrivateMode(false);
+    setVisualIntensity(1.0);
+    setVisualIntensityEnabled(false);
+    setSelectedSocialPlatform(null);
+    setSelectedSocialFormat(null);
+    setSelectedContentType(null);
+    setSelectedStyle(null);
+    setSelectedAspectRatio("");
+    setSelectedQuality("");
+    setNumberOfImages(1);
+  };
 
   const toggleModels = () => {
     setIsModelsOpen((prev) => !prev)
@@ -164,6 +197,14 @@ export default function SettingsPanel({
               setVisualIntensity={setVisualIntensity}
               isEnabled={visualIntensityEnabled}
               setIsEnabled={setVisualIntensityEnabled}
+            />
+
+            {/* Social Media Frame Section */}
+            <SocialMedia
+              selectedPlatform={selectedSocialPlatform}
+              selectedFormat={selectedSocialFormat}
+              onPlatformSelect={setSelectedSocialPlatform}
+              onFormatSelect={setSelectedSocialFormat}
             />
 
             {/* Style Palettes Section */}
@@ -276,6 +317,18 @@ export default function SettingsPanel({
                 setFixedSeed={setFixedSeed}
               />  
             </div>
+
+            <div className="mb-6">
+              <ResetToDefaults onReset={handleReset} />
+            </div>
+
+            <div className="mb-6">
+              <PromptEnhancer
+                promptEnhance={promptEnhance}
+                setPromptEnhance={setPromptEnhance}
+              />
+            </div>
+
             {/* Save Button */}
             <div className="mb-6 px-2 md:px-6">
               <button
@@ -289,6 +342,9 @@ export default function SettingsPanel({
                 <div className="text-white font-medium mb-3">Settings Summary</div>
                 <div>Model Selection : <span className="text-[#5AD7FF]">{selectedModel}</span></div>
                 <div>Visual Intensity : <span className="text-[#5AD7FF]">{visualIntensityEnabled ? visualIntensity.toFixed(1) : "Disabled"}</span></div>
+                <div>Social Platform : <span className="text-[#5AD7FF]">{selectedSocialPlatform || "None"}</span></div>
+                <div>Social Format : <span className="text-[#5AD7FF]">{selectedSocialFormat || "None"}</span></div>
+                <div>Content Type : <span className="text-[#5AD7FF]">{selectedContentType || "None"}</span></div>
                 <div>Style Palette : <span className="text-[#5AD7FF]">{selectedStyle || "Bokeh"}</span></div>
                 <div>Selected Color : <span className="text-[#5AD7FF]">{selectedColor || customColor || "None"}</span></div>
                 <div>Selected Effect : <span className="text-[#5AD7FF]">{selectedEffect || customEffect || "None"}</span></div>

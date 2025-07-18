@@ -1,6 +1,8 @@
 "use client"
 
-import { useEffect, useRef } from "react"
+import type React from "react"
+
+import { useEffect, useRef, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import Image from "next/image"
 
@@ -27,16 +29,16 @@ const models = [
     id: "1",
     title: "Stable XL",
     shortName: "S",
-    image: "/placeholder.svg?height=60&width=60",
+    image: "/imagegenerationnew/models/model1.png",
     description:
-      "Unique turnkey solution for video analytics, optimized for real-time performance on off-the-grid Edge AI devices and green computing.",
+      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since",
     tokenCost: 20,
   },
   {
     id: "2",
     title: "Flux.1 Dev",
     shortName: "F",
-    image: "/placeholder.svg?height=60&width=60",
+    image: "/imagegenerationnew/models/model2.png",
     description:
       "Flux.1 Dev, a powerful 12B parameter flow transformer model from the FLUX series. This model delivers high-quality image generation with exceptional detail and efficiency.",
     tokenCost: 20,
@@ -45,7 +47,7 @@ const models = [
     id: "3",
     title: "Stable Diffusion 3.5 Large",
     shortName: "S",
-    image: "/placeholder.svg?height=60&width=60",
+    image: "/imagegenerationnew/models/model3.png",
     description:
       "Google's Imagen - generating images with even better detail, richer lighting and fewer distracting artifacts than our previous models.",
     tokenCost: 25,
@@ -54,7 +56,7 @@ const models = [
     id: "4",
     title: "Stable Diffusion 3.5 Medium",
     shortName: "S",
-    image: "/placeholder.svg?height=60&width=60",
+    image: "/imagegenerationnew/models/model4.png",
     description:
       "Stable Diffusion 3.5 Medium With 2.5B parameters and enhanced MMDiT-X architecture, this model runs efficiently on consumer hardware, balancing quality and customization while generating images from 0.25 to 2 MP.",
     tokenCost: 15,
@@ -63,7 +65,7 @@ const models = [
     id: "5",
     title: "Flux.1 Schnell",
     shortName: "F",
-    image: "/placeholder.svg?height=60&width=60",
+    image: "/imagegenerationnew/models/model5.png",
     description:
       "A powerful fusion of MidJourney's artistic capabilities, Flux-Dev's efficiency, and LoRA fine-tuning, enabling highly customized, stylistic, and efficient AI-generated imagery.",
     tokenCost: 30,
@@ -72,15 +74,22 @@ const models = [
     id: "6",
     title: "Stable Turbo",
     shortName: "S",
-    image: "/placeholder.svg?height=60&width=60",
+    image: "/imagegenerationnew/models/model6.png",
     description:
       "Get involved with the fastest growing open software project. Download and join other developers in creating incredible applications with Stable Diffusion XL as a foundation model.",
     tokenCost: 18,
   },
 ]
 
-export default function ModelsPresetPanel({ isOpen, onClose, selectedModel, onModelSelect, excludeRef }: ModelsPresetPanelProps) {
+export default function ModelsPresetPanel({
+  isOpen,
+  onClose,
+  selectedModel,
+  onModelSelect,
+  excludeRef,
+}: ModelsPresetPanelProps) {
   const panelRef = useRef<HTMLDivElement>(null)
+  const [hoveredModel, setHoveredModel] = useState<string | null>(null)
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -105,9 +114,6 @@ export default function ModelsPresetPanel({ isOpen, onClose, selectedModel, onMo
     onClose()
   }
 
-  
-  
-
   if (!isOpen) return null
 
   return (
@@ -123,15 +129,17 @@ export default function ModelsPresetPanel({ isOpen, onClose, selectedModel, onMo
               transition={{ duration: 0.3, ease: "easeInOut" }}
               className="overflow-hidden"
             >
-              <div className="py-4 px-2 space-y-4">
-                {/* Models Grid - 4 columns for desktop */}
-                <div className="grid grid-cols-1 gap-3">
+              <div className="py-4 px-2 space-y-2">
+                {/* Models List - Single column for desktop */}
+                <div className="space-y-2">
                   {models.map((model) => (
-                    <MobileModelCard
+                    <ModelCard
                       key={model.id}
                       model={model}
                       isSelected={selectedModel === model.title}
+                      isHovered={hoveredModel === model.id}
                       onSelect={handleModelSelect}
+                      onHover={setHoveredModel}
                     />
                   ))}
                 </div>
@@ -160,7 +168,6 @@ export default function ModelsPresetPanel({ isOpen, onClose, selectedModel, onMo
                     />
                   ))}
                 </div>
-
                 {/* Show more models if needed */}
                 {models.length > 4 && (
                   <div className="grid grid-cols-2 gap-3">
@@ -183,9 +190,71 @@ export default function ModelsPresetPanel({ isOpen, onClose, selectedModel, onMo
   )
 }
 
+// Desktop Model Card Component with Seamless Hover Description
+function ModelCard({
+  model,
+  isSelected,
+  isHovered,
+  onSelect,
+  onHover,
+}: {
+  model: Model
+  isSelected: boolean
+  isHovered: boolean
+  onSelect: (model: string) => void
+  onHover: (modelId: string | null) => void
+}) {
+  return (
+    <motion.div
+      className={`relative rounded-xl overflow-hidden cursor-pointer transition-all duration-300 ${
+        isSelected ? "" : ""
+      }`}
+      onClick={() => onSelect(model.title)}
+      onMouseEnter={() => onHover(model.id)}
+      onMouseLeave={() => onHover(null)}
+      layout
+    >
+      {/* Main Card Content - Matches the exact design from your image */}
+      <div className="bg-white/10 rounded-xl p-4">
+        <div className="flex items-start items-center gap-3">
+          {/* Model Icon */}
+          <div className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0">
+            <Image
+              src={model.image || "/placeholder.svg"}
+              alt={model.title}
+              width={48}
+              height={48}
+              className="w-full h-full object-cover"
+            />
+          </div>
 
+          {/* Content Area */}
+          <div className="flex-1 min-w-0">
+            {/* Model Name */}
+            <h3 className="text-white flex items-center  text-md font-poppins mb-1">{model.title}</h3>
 
-// Mobile Model Card Component
+            {/* Seamless Description - No borders, appears directly below name */}
+            <AnimatePresence>
+              {isHovered && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.3, ease: "easeInOut" }}
+                  className="overflow-hidden"
+                >
+                  <p className="text-white text-sm leading-relaxed">{model.description}</p>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  )
+}
+
+// Mobile Model Card Component (unchanged)
 function MobileModelCard({
   model,
   isSelected,
@@ -198,39 +267,27 @@ function MobileModelCard({
   return (
     <div
       className={`relative rounded-xl overflow-hidden cursor-pointer transition-all duration-200 ${
-        isSelected ? "ring-2 ring-[#412399]" : ""
+        isSelected ? "" : ""
       }`}
       onClick={() => onSelect(model.title)}
     >
-      {/* Card Background with Gradient */}
-      <div className="w-full h-auto md:h-[10vh] aspect-square bg-white/10 flex flex-col items-left justify-left relative p-4">
-        {/* Artistic Background Overlay */}
-        <div className="absolute inset-0 "></div>
-
+      {/* Card Background */}
+      <div className="w-full h-[8vh]  aspect-square bg-white/10 flex flex-col items-left justify-left relative py-4 pl-2">
         {/* Content */}
-        <div className="relative z-10 flex flex-col items-left justify-end h-full">
+        <div className="relative z-10 flex flex-col items-left justify-end h-auto">
           {/* Model Name */}
-          <div className=" flex items-center gap-2 text-left md:text-left">
-            <Image 
-            src={""}
-            alt=""
-            height={10}
-            width={10}
-            className="w-10 h-10 object-cover rounded-full bg-black border border-white/10"
-            ></Image>
-            <p className="text-white text-sm font-bold">{model.title}</p>
+          <div className="flex items-center gap-2 text-left md:text-left">
+            <Image
+              src={model.image || "/placeholder.svg"}
+              alt={model.title}
+              height={40}
+              width={40}
+              className="w-8 h-8 object-cover rounded-full bg-black border border-white/10"
+            />
+            <p className="text-white text-xs font-normal">{model.title}</p>
           </div>
         </div>
-
-        {/* Selection Indicator */}
-        {/* {isSelected && (
-          <div className="absolute top-2 right-2 w-5 h-5 bg-[#412399] rounded-full flex items-center justify-center">
-            <span className="text-white text-xs font-bold">.</span>
-          </div>
-        )} */}
       </div>
     </div>
   )
 }
-
-

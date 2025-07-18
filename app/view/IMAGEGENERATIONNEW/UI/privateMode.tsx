@@ -9,8 +9,8 @@ interface PrivateModeProps {
 
 export default function PrivateMode({ privateMode, setPrivateMode }: PrivateModeProps) {
   return (
-    
-    <div className="flex items-center justify-between px-2 md:px-6">
+    <div className="mx-2 md:mx-6 border-t border-white/15 mb-6">
+    <div className="flex items-center justify-between pt-6">
         
 
       <div className="flex items-center gap-2">
@@ -31,6 +31,6 @@ export default function PrivateMode({ privateMode, setPrivateMode }: PrivateMode
           />
         </button>
       </div>
-    </div>
+    </div></div>
   )
 } 
