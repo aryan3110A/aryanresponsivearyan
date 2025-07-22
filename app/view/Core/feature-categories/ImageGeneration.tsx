@@ -30,7 +30,7 @@ export default function ImageGeneration() {
           >
             {/* <div className="w-2 h-2  rounded-full flex items-center border bg-white border-gray-700 justify-center mr-3 group-hover:bg-gray-900 transition-colors duration-200">
             </div> */}
-            <span className="flex-1 font-poppins text-white/90 ml-10">{feature.title}</span>
+            <span className="flex-1 font-poppins md:text-md lg:text-lg text-white/90 ml-10 mb-2">{feature.title}</span>
             {feature.coming && <span className="text-xs text-yellow-400 ml-2">(Soon)</span>}
           </Link>
         ))}
