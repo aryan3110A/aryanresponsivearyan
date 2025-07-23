@@ -9,25 +9,23 @@ import Image from 'next/image'
 import NavigationFull from "../../Core/NavigationFull"
 import Footer from "../../Core/Footer"
 
-export default function NewText2Image() {
+export default function NewTextToVideo() {
   const [prompt, setPrompt] = useState("")
   const [generatedImages, setGeneratedImages] = useState<string[]>([])
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const [isGenerating, setIsGenerating] = useState(false)
   const [selectedModel, setSelectedModel] = useState("Stable Diffusion 3.5 Large")
-  const [selectedStyle, setSelectedStyle] = useState<string | null>(null)
   const [selectedAspectRatio, setSelectedAspectRatio] = useState("1:1")
   const [selectedQuality, setSelectedQuality] = useState("HD")
-  const [numberOfImages, setNumberOfImages] = useState(1)
 
   const handleGenerate = async () => {
     if (!prompt.trim()) return
 
     setIsGenerating(true)
-    
+
     try {
-      // Prepare the final prompt with style if selected
-      const finalPrompt = selectedStyle ? `${prompt}, ${selectedStyle} style` : prompt
+      // Use the prompt as is for video generation
+      const finalPrompt = prompt
       
       // Get resolution based on aspect ratio and quality
       const resolutionMap: Record<string, Record<string, [number, number]>> = {
@@ -62,8 +60,8 @@ export default function NewText2Image() {
       width = width - (width % 16)
       height = height - (height % 16)
 
-      // Call the API
-      const response = await fetch('/api/generate-image', {
+      // Call the API for video generation
+      const response = await fetch('/api/generate-video', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -72,22 +70,22 @@ export default function NewText2Image() {
           prompt: finalPrompt,
           width,
           height,
-          num_images: numberOfImages,
-          model: selectedModel,
+          num_videos: 1, // Default to 1 video
+          model: selectedModel, // Use selected model for video
         }),
       })
 
       if (!response.ok) {
-        throw new Error('Failed to generate images')
+        throw new Error('Failed to generate video')
       }
 
       const data = await response.json()
-      setGeneratedImages(data.image_urls || [])
+      setGeneratedImages(data.video_urls || [])
     } catch (error) {
-      console.error('Generation failed:', error)
-      // Fallback to placeholder images for demo
-      const placeholderImages = Array(numberOfImages).fill("/placeholder.svg?height=400&width=400")
-      setGeneratedImages(placeholderImages)
+      console.error('Video generation failed:', error)
+      // Fallback to placeholder video for demo
+      const placeholderVideo = ["/placeholder-video.mp4"]
+      setGeneratedImages(placeholderVideo)
     } finally {
       setIsGenerating(false)
     }
@@ -119,10 +117,10 @@ export default function NewText2Image() {
             isGenerating={isGenerating}
             generatedImages={generatedImages}
             selectedModel={selectedModel}
-            selectedStyle={selectedStyle}
+            selectedStyle={null}
             selectedQuality={selectedQuality}
             selectedAspectRatio={selectedAspectRatio}
-            numberOfImages={numberOfImages}
+            numberOfImages={1}
           />
         </main>
 
@@ -135,14 +133,10 @@ export default function NewText2Image() {
         onClose={() => setIsSettingsOpen(false)}
         selectedModel={selectedModel}
         setSelectedModel={setSelectedModel}
-        selectedStyle={selectedStyle}
-        setSelectedStyle={setSelectedStyle}
         selectedAspectRatio={selectedAspectRatio}
         setSelectedAspectRatio={setSelectedAspectRatio}
         selectedQuality={selectedQuality}
         setSelectedQuality={setSelectedQuality}
-        numberOfImages={numberOfImages}
-        setNumberOfImages={setNumberOfImages}
       />
       
     </div>

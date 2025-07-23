@@ -3,7 +3,7 @@
 import Image from "next/image"
 import { useState, useRef } from "react"
 import { AttachmentsDropdown, UploadComponent, ImageOverlay } from "../../UI"
-import { Download, Bookmark, Heart, Sparkles } from "lucide-react"
+import { Download, Bookmark, Heart, Sparkles, Play } from "lucide-react"
 
 interface InputSectionProps {
   prompt: string
@@ -42,8 +42,21 @@ export default function InputSection({
   } | null>(null)
   const scrollContainerRef = useRef<HTMLDivElement>(null)
 
+  // Helper function to check if the content is a video
+  const isVideo = (url: string) => {
+    const videoExtensions = ['.mp4', '.webm', '.ogg', '.mov', '.avi', '.mkv']
+    return videoExtensions.some(ext => url.toLowerCase().includes(ext)) || url.includes('video')
+  }
+
   const handleChooseFromLibrary = () => {
     console.log("Choose from library clicked")
+  }
+
+  const handleVideoPlay = (videoUrl: string, index: number) => {
+    // Handle video playback - you can customize this based on your needs
+    console.log("Playing video:", videoUrl, "at index:", index)
+    // You could open a video modal, navigate to a video player, etc.
+    setSelectedImageForOverlay({ url: videoUrl, index })
   }
 
   const handleUploadFromDevices = () => {
@@ -261,14 +274,26 @@ export default function InputSection({
                     onMouseEnter={() => setHoveredImageIndex(index)}
                     onMouseLeave={() => setHoveredImageIndex(null)}
                   >
-                    <div className="w-full aspect-square bg-transparent rounded-lg overflow-hidden border border-white/10">
+                    <div className="w-full aspect-square bg-transparent rounded-lg overflow-hidden border border-white/10 relative">
                       <Image
                         src={image || "/placeholder.svg"}
-                        alt={`Generated image ${index + 1}`}
+                        alt={`Generated ${isVideo(image) ? 'video' : 'image'} ${index + 1}`}
                         width={200}
                         height={200}
                         className="w-full h-full object-contain"
                       />
+
+                      {/* Play Button Overlay for Videos */}
+                      {isVideo(image) && (
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <button
+                            onClick={() => handleVideoPlay(image, index)}
+                            className="bg-black/60 backdrop-blur-sm rounded-full p-4 shadow-lg hover:bg-black/80 transition-all duration-200 hover:scale-110"
+                          >
+                            <Play className="w-8 h-8 text-white fill-white" />
+                          </button>
+                        </div>
+                      )}
                     </div>
 
                     <div
@@ -343,14 +368,26 @@ export default function InputSection({
                     {/* Image Container - Responsive */}
                     <div className="relative bg-transparent backdrop-blur-sm border border-gray-700/30 rounded-xl p-3 xs:p-4 overflow-hidden w-full">
                       <div className="relative w-full aspect-square bg-gray-900/50 rounded-xl overflow-hidden">
-                        <div className="w-full aspect-square bg-transparent rounded-lg overflow-hidden border border-white/10">
+                        <div className="w-full aspect-square bg-transparent rounded-lg overflow-hidden border border-white/10 relative">
                           <Image
                             src={image || "/placeholder.svg"}
-                            alt={`Generated image ${index + 1}`}
+                            alt={`Generated ${isVideo(image) ? 'video' : 'image'} ${index + 1}`}
                             width={400}
                             height={400}
                             className="w-full h-full object-contain"
                           />
+
+                          {/* Play Button Overlay for Videos - Mobile */}
+                          {isVideo(image) && (
+                            <div className="absolute inset-0 flex items-center justify-center">
+                              <button
+                                onClick={() => handleVideoPlay(image, index)}
+                                className="bg-black/60 backdrop-blur-sm rounded-full p-3 xs:p-4 shadow-lg hover:bg-black/80 transition-all duration-200 hover:scale-110"
+                              >
+                                <Play className="w-6 h-6 xs:w-8 xs:h-8 text-white fill-white" />
+                              </button>
+                            </div>
+                          )}
                         </div>
 
                         {/* Mobile Action Buttons - Responsive Sizing */}

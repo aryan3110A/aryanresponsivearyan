@@ -27,7 +27,7 @@ type Model = {
 const models = [
   {
     id: "1",
-    title: "Stable XL",
+    title: "Kling1.6",
     shortName: "S",
     image: "/imagegenerationnew/models/model1.png",
     description:
@@ -36,49 +36,49 @@ const models = [
   },
   {
     id: "2",
-    title: "Flux.1 Dev",
+    title: "MinMax",
     shortName: "F",
     image: "/imagegenerationnew/models/model2.png",
     description:
       "Flux.1 Dev, a powerful 12B parameter flow transformer model from the FLUX series. This model delivers high-quality image generation with exceptional detail and efficiency.",
     tokenCost: 20,
   },
-  {
-    id: "3",
-    title: "Stable Diffusion 3.5 Large",
-    shortName: "S",
-    image: "/imagegenerationnew/models/model3.png",
-    description:
-      "Google's Imagen - generating images with even better detail, richer lighting and fewer distracting artifacts than our previous models.",
-    tokenCost: 25,
-  },
-  {
-    id: "4",
-    title: "Stable Diffusion 3.5 Medium",
-    shortName: "S",
-    image: "/imagegenerationnew/models/model4.png",
-    description:
-      "Stable Diffusion 3.5 Medium With 2.5B parameters and enhanced MMDiT-X architecture, this model runs efficiently on consumer hardware, balancing quality and customization while generating images from 0.25 to 2 MP.",
-    tokenCost: 15,
-  },
-  {
-    id: "5",
-    title: "Flux.1 Schnell",
-    shortName: "F",
-    image: "/imagegenerationnew/models/model5.png",
-    description:
-      "A powerful fusion of MidJourney's artistic capabilities, Flux-Dev's efficiency, and LoRA fine-tuning, enabling highly customized, stylistic, and efficient AI-generated imagery.",
-    tokenCost: 30,
-  },
-  {
-    id: "6",
-    title: "Stable Turbo",
-    shortName: "S",
-    image: "/imagegenerationnew/models/model6.png",
-    description:
-      "Get involved with the fastest growing open software project. Download and join other developers in creating incredible applications with Stable Diffusion XL as a foundation model.",
-    tokenCost: 18,
-  },
+  // {
+  //   id: "3",
+  //   title: "Stable Diffusion 3.5 Large",
+  //   shortName: "S",
+  //   image: "/imagegenerationnew/models/model3.png",
+  //   description:
+  //     "Google's Imagen - generating images with even better detail, richer lighting and fewer distracting artifacts than our previous models.",
+  //   tokenCost: 25,
+  // },
+  // {
+  //   id: "4",
+  //   title: "Stable Diffusion 3.5 Medium",
+  //   shortName: "S",
+  //   image: "/imagegenerationnew/models/model4.png",
+  //   description:
+  //     "Stable Diffusion 3.5 Medium With 2.5B parameters and enhanced MMDiT-X architecture, this model runs efficiently on consumer hardware, balancing quality and customization while generating images from 0.25 to 2 MP.",
+  //   tokenCost: 15,
+  // },
+  // {
+  //   id: "5",
+  //   title: "Flux.1 Schnell",
+  //   shortName: "F",
+  //   image: "/imagegenerationnew/models/model5.png",
+  //   description:
+  //     "A powerful fusion of MidJourney's artistic capabilities, Flux-Dev's efficiency, and LoRA fine-tuning, enabling highly customized, stylistic, and efficient AI-generated imagery.",
+  //   tokenCost: 30,
+  // },
+  // {
+  //   id: "6",
+  //   title: "Stable Turbo",
+  //   shortName: "S",
+  //   image: "/imagegenerationnew/models/model6.png",
+  //   description:
+  //     "Get involved with the fastest growing open software project. Download and join other developers in creating incredible applications with Stable Diffusion XL as a foundation model.",
+  //   tokenCost: 18,
+  // },
 ]
 
 export default function ModelsPresetPanel({
