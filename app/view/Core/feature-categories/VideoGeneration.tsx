@@ -1,5 +1,6 @@
 import Link from "next/link"
 import Image from "next/image"
+import { VIDEOGENERATION } from "@/routes/routes"
 interface FeatureItem {
   title: string
   href: string
@@ -8,7 +9,7 @@ interface FeatureItem {
 }
 
 const videoFeatures: FeatureItem[] = [
-  { title: "Text to Video", href: "/features/text-to-video", icon: "🎬" },
+  { title: "Text to Video",  href: VIDEOGENERATION.VIDEO_GENERATION, icon: "🎬" },
   { title: "Image to Video", href: "/features/image-to-video", icon: "🎞️" },
   { title: "VFX AI", href: "/features/vfx-ai", icon: "✨" },
   { title: "Face Swap", href: "/features/face-swap", icon: "🔄" },
