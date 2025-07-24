@@ -44,8 +44,13 @@ export default function InputSection({
 
   // Helper function to check if the content is a video
   const isVideo = (url: string) => {
+    if (!url) return false
     const videoExtensions = ['.mp4', '.webm', '.ogg', '.mov', '.avi', '.mkv']
-    return videoExtensions.some(ext => url.toLowerCase().includes(ext)) || url.includes('video')
+    const lowerUrl = url.toLowerCase()
+    return videoExtensions.some(ext => lowerUrl.includes(ext)) ||
+           lowerUrl.includes('video') ||
+           lowerUrl.includes('/static/videos/') ||
+           lowerUrl.includes('minimax') // MiniMax video URLs
   }
 
   const handleChooseFromLibrary = () => {
@@ -68,13 +73,14 @@ export default function InputSection({
     console.log("Files selected:", files)
   }
 
-  const handleDownload = async (imageUrl: string, index: number) => {
+  const handleDownload = async (mediaUrl: string, index: number) => {
     try {
-      console.log(`Downloading image ${index + 1}...`)
+      const isVideoFile = isVideo(mediaUrl)
+      console.log(`Downloading ${isVideoFile ? 'video' : 'image'} ${index + 1}...`)
 
-      const response = await fetch(imageUrl)
+      const response = await fetch(mediaUrl)
       if (!response.ok) {
-        throw new Error("Failed to fetch image")
+        throw new Error(`Failed to fetch ${isVideoFile ? 'video' : 'image'}`)
       }
 
       const blob = await response.blob()
@@ -83,7 +89,8 @@ export default function InputSection({
       link.href = url
 
       const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, "-")
-      const filename = `generated-image-${index + 1}-${timestamp}.png`
+      const extension = isVideoFile ? 'mp4' : 'png'
+      const filename = `generated-${isVideoFile ? 'video' : 'image'}-${index + 1}-${timestamp}.${extension}`
       link.download = filename
 
       document.body.appendChild(link)
@@ -91,10 +98,10 @@ export default function InputSection({
       document.body.removeChild(link)
       window.URL.revokeObjectURL(url)
 
-      console.log(`Image ${index + 1} downloaded successfully as ${filename}`)
+      console.log(`${isVideoFile ? 'Video' : 'Image'} ${index + 1} downloaded successfully as ${filename}`)
     } catch (error) {
       console.error("Download failed:", error)
-      alert("Failed to download image. Please try again.")
+      alert(`Failed to download ${isVideo(mediaUrl) ? 'video' : 'image'}. Please try again.`)
     }
   }
 
@@ -267,7 +274,16 @@ export default function InputSection({
 
             <div className="relative bg-transparent backdrop-blur-sm border border-gray-700/30 rounded-xl p-6 lg:p-8 min-h-[400px] overflow-hidden">
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 lg:gap-6">
-                {generatedImages.map((image, index) => (
+                {generatedImages.map((image, index) => {
+                  const videoCheck = isVideo(image)
+                  console.log(`🎬 Rendering media ${index}:`, {
+                    url: image,
+                    isVideo: videoCheck,
+                    hasStaticVideos: image?.includes('/static/videos/'),
+                    hasMp4: image?.includes('.mp4')
+                  })
+
+                  return (
                   <div
                     key={index}
                     className="relative aspect-square bg-gray-900/50 rounded-xl overflow-hidden group cursor-pointer"
@@ -275,24 +291,54 @@ export default function InputSection({
                     onMouseLeave={() => setHoveredImageIndex(null)}
                   >
                     <div className="w-full aspect-square bg-transparent rounded-lg overflow-hidden border border-white/10 relative">
-                      <Image
-                        src={image || "/placeholder.svg"}
-                        alt={`Generated ${isVideo(image) ? 'video' : 'image'} ${index + 1}`}
-                        width={200}
-                        height={200}
-                        className="w-full h-full object-contain"
-                      />
-
-                      {/* Play Button Overlay for Videos */}
-                      {isVideo(image) && (
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <button
-                            onClick={() => handleVideoPlay(image, index)}
-                            className="bg-black/60 backdrop-blur-sm rounded-full p-4 shadow-lg hover:bg-black/80 transition-all duration-200 hover:scale-110"
+                      {videoCheck ? (
+                        <div className="w-full h-full bg-black rounded-lg overflow-hidden">
+                          <video
+                            src={image}
+                            className="w-full h-full object-contain"
+                            controls
+                            preload="auto"
+                            playsInline
+                            webkit-playsinline="true"
+                            crossOrigin="anonymous"
+                            onError={(e) => {
+                              console.error('Video error:', e)
+                              console.error('Failed video URL:', image)
+                            }}
+                            onLoadStart={() => console.log('✅ Video loading started:', image)}
+                            onLoadedData={() => console.log('✅ Video loaded successfully:', image)}
+                            onCanPlay={() => console.log('✅ Video can play:', image)}
+                            onPlay={() => console.log('▶️ Video started playing:', image)}
+                            onPause={() => console.log('⏸️ Video paused:', image)}
+                            onClick={(e) => {
+                              const video = e.target as HTMLVideoElement
+                              if (video.paused) {
+                                video.play().catch(err => console.error('Play failed:', err))
+                              } else {
+                                video.pause()
+                              }
+                            }}
+                            style={{
+                              maxWidth: '100%',
+                              maxHeight: '100%',
+                              backgroundColor: 'black',
+                              cursor: 'pointer'
+                            }}
                           >
-                            <Play className="w-8 h-8 text-white fill-white" />
-                          </button>
+                            <source src={image} type="video/mp4" />
+                            Your browser does not support the video tag.
+                          </video>
                         </div>
+                      ) : (
+                        <Image
+                          src={image || "/placeholder.svg"}
+                          alt={`Generated image ${index + 1}`}
+                          width={200}
+                          height={200}
+                          className="w-full h-full object-contain"
+                          onError={(e) => console.error('Image error:', e)}
+                          unoptimized={image?.includes('/static/videos/')} // Don't optimize video files
+                        />
                       )}
                     </div>
 
@@ -334,7 +380,8 @@ export default function InputSection({
                       </div>
                     </div>
                   </div>
-                ))}
+                  )
+                })}
               </div>
             </div>
           </div>
@@ -359,7 +406,16 @@ export default function InputSection({
                   WebkitOverflowScrolling: "touch",
                 }}
               >
-                {generatedImages.map((image, index) => (
+                {generatedImages.map((image, index) => {
+                  const videoCheck = isVideo(image)
+                  console.log(`📱 Mobile media ${index}:`, {
+                    url: image,
+                    isVideo: videoCheck,
+                    hasStaticVideos: image?.includes('/static/videos/'),
+                    hasMp4: image?.includes('.mp4')
+                  })
+
+                  return (
                   <div
                     key={index}
                     className="flex-shrink-0 w-[calc(100vw-6rem)] xs:w-[calc(100vw-8rem)] sm:w-[calc(100vw-12rem)] md:w-[calc(50vw-4rem)] max-w-sm"
@@ -369,24 +425,64 @@ export default function InputSection({
                     <div className="relative bg-transparent backdrop-blur-sm border border-gray-700/30 rounded-xl p-3 xs:p-4 overflow-hidden w-full">
                       <div className="relative w-full aspect-square bg-gray-900/50 rounded-xl overflow-hidden">
                         <div className="w-full aspect-square bg-transparent rounded-lg overflow-hidden border border-white/10 relative">
-                          <Image
-                            src={image || "/placeholder.svg"}
-                            alt={`Generated ${isVideo(image) ? 'video' : 'image'} ${index + 1}`}
-                            width={400}
-                            height={400}
-                            className="w-full h-full object-contain"
-                          />
-
-                          {/* Play Button Overlay for Videos - Mobile */}
-                          {isVideo(image) && (
-                            <div className="absolute inset-0 flex items-center justify-center">
-                              <button
-                                onClick={() => handleVideoPlay(image, index)}
-                                className="bg-black/60 backdrop-blur-sm rounded-full p-3 xs:p-4 shadow-lg hover:bg-black/80 transition-all duration-200 hover:scale-110"
+                          {videoCheck ? (
+                            <div className="w-full h-full bg-black rounded-lg overflow-hidden">
+                              <video
+                                src={image}
+                                className="w-full h-full object-contain"
+                                controls
+                                preload="auto"
+                                muted
+                                playsInline
+                                webkit-playsinline="true"
+                                crossOrigin="anonymous"
+                                onError={(e) => {
+                                  console.error('📱 Mobile video error:', e)
+                                  console.error('📱 Failed mobile video URL:', image)
+                                }}
+                                onLoadStart={() => console.log('📱 Mobile video loading:', image)}
+                                onLoadedData={() => console.log('📱 Mobile video loaded:', image)}
+                                onCanPlay={() => console.log('📱 Mobile video can play:', image)}
+                                onPlay={() => console.log('📱 Mobile video playing:', image)}
+                                onPause={() => console.log('📱 Mobile video paused:', image)}
+                                onTouchStart={(e) => {
+                                  // Handle mobile touch for play/pause
+                                  const video = e.target as HTMLVideoElement
+                                  if (video.paused) {
+                                    video.play().catch(err => console.error('Mobile play failed:', err))
+                                  } else {
+                                    video.pause()
+                                  }
+                                }}
+                                onClick={(e) => {
+                                  const video = e.target as HTMLVideoElement
+                                  if (video.paused) {
+                                    video.play().catch(err => console.error('Mobile play failed:', err))
+                                  } else {
+                                    video.pause()
+                                  }
+                                }}
+                                style={{
+                                  maxWidth: '100%',
+                                  maxHeight: '100%',
+                                  backgroundColor: 'black',
+                                  cursor: 'pointer'
+                                }}
                               >
-                                <Play className="w-6 h-6 xs:w-8 xs:h-8 text-white fill-white" />
-                              </button>
+                                <source src={image} type="video/mp4" />
+                                Your browser does not support the video tag.
+                              </video>
                             </div>
+                          ) : (
+                            <Image
+                              src={image || "/placeholder.svg"}
+                              alt={`Generated image ${index + 1}`}
+                              width={400}
+                              height={400}
+                              className="w-full h-full object-contain"
+                              onError={(e) => console.error('📱 Mobile image error:', e)}
+                              unoptimized={image?.includes('/static/videos/')} // Don't optimize video files
+                            />
                           )}
                         </div>
 
@@ -429,7 +525,8 @@ export default function InputSection({
                       </div>
                     </div>
                   </div>
-                ))}
+                  )
+                })}
               </div>
 
               {/* Scroll Indicators - Responsive */}

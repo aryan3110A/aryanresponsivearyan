@@ -23,7 +23,39 @@ const nextConfig = {
         hostname: 'placehold.co',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'api.minimax.io',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.minimax.io',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'public-cdn-video-data-algeng.oss-cn-wulanchabu.aliyuncs.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'public-cdn-video-data-algeng-us.oss-us-east-1.aliyuncs.com',
+        pathname: '/**',
+      },
     ],
+    // Exclude video files from image optimization
+    unoptimized: false,
+    formats: ['image/webp', 'image/avif'],
+  },
+  // Add static file serving configuration
+  async rewrites() {
+    return [
+      {
+        source: '/static/:path*',
+        destination: '/static/:path*',
+      },
+    ]
   },
 };
 

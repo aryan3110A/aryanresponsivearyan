@@ -14,9 +14,12 @@ export default function NewTextToVideo() {
   const [generatedImages, setGeneratedImages] = useState<string[]>([])
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const [isGenerating, setIsGenerating] = useState(false)
-  const [selectedModel, setSelectedModel] = useState("Stable Diffusion 3.5 Large")
-  const [selectedAspectRatio, setSelectedAspectRatio] = useState("1:1")
+  const [selectedModel, setSelectedModel] = useState("MiniMax-Hailuo-02")
+  const [selectedAspectRatio, setSelectedAspectRatio] = useState("16:9")
   const [selectedQuality, setSelectedQuality] = useState("HD")
+  const [selectedDuration, setSelectedDuration] = useState(6)
+  const [selectedCameraMovements, setSelectedCameraMovements] = useState<string[]>([])
+  const [firstFrameImage, setFirstFrameImage] = useState<string | null>(null)
 
   const handleGenerate = async () => {
     if (!prompt.trim()) return
@@ -24,41 +27,18 @@ export default function NewTextToVideo() {
     setIsGenerating(true)
 
     try {
-      // Use the prompt as is for video generation
-      const finalPrompt = prompt
-      
-      // Get resolution based on aspect ratio and quality
-      const resolutionMap: Record<string, Record<string, [number, number]>> = {
-        "1:1": {
-          SD: [512, 512],
-          HD: [768, 768],
-          FullHD: [1024, 1024],
-          "2K": [2048, 2048],
-        },
-        "16:9": {
-          SD: [640, 360],
-          HD: [1280, 720],
-          FullHD: [1920, 1080],
-          "2K": [2560, 1440],
-        },
-        "9:16": {
-          SD: [360, 640],
-          HD: [720, 1280],
-          FullHD: [1080, 1920],
-          "2K": [1440, 2560],
-        },
-        "4:3": {
-          SD: [512, 384],
-          HD: [768, 576],
-          FullHD: [1024, 768],
-          "2K": [2048, 1536],
-        },
-      }
+      // Build the final prompt with camera movements for Director models
+      let finalPrompt = prompt
+      if (selectedCameraMovements.length > 0 && selectedModel.includes("Director")) {
+        const cameraInstructions = selectedCameraMovements.map(movementId => {
+          const movement = require('./componennts/videoModels').CAMERA_MOVEMENTS.find((m: any) => m.id === movementId)
+          return movement?.instruction
+        }).filter(Boolean).join(', ')
 
-      let [width, height] = resolutionMap[selectedAspectRatio]?.[selectedQuality] || [768, 768]
-      // Ensure width and height are divisible by 16
-      width = width - (width % 16)
-      height = height - (height % 16)
+        if (cameraInstructions) {
+          finalPrompt = `${prompt} ${cameraInstructions}`
+        }
+      }
 
       // Call the API for video generation
       const response = await fetch('/api/generate-video', {
@@ -68,21 +48,31 @@ export default function NewTextToVideo() {
         },
         body: JSON.stringify({
           prompt: finalPrompt,
-          width,
-          height,
-          num_videos: 1, // Default to 1 video
-          model: selectedModel, // Use selected model for video
+          model: selectedModel,
+          selectedAspectRatio: selectedAspectRatio,
+          selectedQuality: selectedQuality,
+          duration: selectedDuration,
+          first_frame_image: firstFrameImage,
+          group_id: "default_group" // You may need to configure this
         }),
       })
 
       if (!response.ok) {
-        throw new Error('Failed to generate video')
+        const errorData = await response.json().catch(() => ({}))
+        throw new Error(errorData.error || 'Failed to generate video')
       }
 
       const data = await response.json()
-      setGeneratedImages(data.video_urls || [])
+
+      if (data.success && data.video_urls && data.video_urls.length > 0) {
+        setGeneratedImages(data.video_urls)
+      } else {
+        throw new Error(data.error || 'No video URLs in response')
+      }
     } catch (error) {
       console.error('Video generation failed:', error)
+      // Show error to user
+      alert(`Video generation failed: ${error instanceof Error ? error.message : 'Unknown error'}`)
       // Fallback to placeholder video for demo
       const placeholderVideo = ["/placeholder-video.mp4"]
       setGeneratedImages(placeholderVideo)
@@ -137,6 +127,12 @@ export default function NewTextToVideo() {
         setSelectedAspectRatio={setSelectedAspectRatio}
         selectedQuality={selectedQuality}
         setSelectedQuality={setSelectedQuality}
+        selectedDuration={selectedDuration}
+        setSelectedDuration={setSelectedDuration}
+        selectedCameraMovements={selectedCameraMovements}
+        setSelectedCameraMovements={setSelectedCameraMovements}
+        firstFrameImage={firstFrameImage}
+        setFirstFrameImage={setFirstFrameImage}
       />
       
     </div>

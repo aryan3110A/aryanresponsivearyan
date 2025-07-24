@@ -18,6 +18,8 @@ import {
   ResetToDefaults,
   promptEnhancer as PromptEnhancer
 } from "../../UI"
+import VideoSettings from "./VideoSettings"
+import { RESOLUTION_MAPPING } from "./videoModels"
 
 interface SettingsPanelProps {
   isOpen: boolean
@@ -28,6 +30,12 @@ interface SettingsPanelProps {
   setSelectedAspectRatio: (ratio: string) => void
   selectedQuality: string
   setSelectedQuality: (quality: string) => void
+  selectedDuration: number
+  setSelectedDuration: (duration: number) => void
+  selectedCameraMovements: string[]
+  setSelectedCameraMovements: (movements: string[]) => void
+  firstFrameImage: string | null
+  setFirstFrameImage: (image: string | null) => void
 }
 
 export default function SettingsPanel({
@@ -39,6 +47,12 @@ export default function SettingsPanel({
   setSelectedAspectRatio,
   selectedQuality,
   setSelectedQuality,
+  selectedDuration,
+  setSelectedDuration,
+  selectedCameraMovements,
+  setSelectedCameraMovements,
+  firstFrameImage,
+  setFirstFrameImage,
 }: SettingsPanelProps) {
   // State for ModelsPresetPanel
   const [isModelsOpen, setIsModelsOpen] = useState(false)
@@ -87,9 +101,14 @@ export default function SettingsPanel({
     setTransparency(false)
     setTiling(false)
     setFixedSeed(false)
-    setSelectedAspectRatio("")
-    setSelectedQuality("")
+    setSelectedAspectRatio("16:9")
+    setSelectedQuality("HD")
     setPromptEnhance("Auto")
+    // Reset video-specific settings
+    setSelectedModel("MiniMax-Hailuo-02")
+    setSelectedDuration(6)
+    setSelectedCameraMovements([])
+    setFirstFrameImage(null)
   }
 
   const toggleModels = () => {
@@ -151,54 +170,22 @@ export default function SettingsPanel({
               }
             `}</style>
 
-            {/* Model & Preset Section */}
-            <div className="relative">
-              <button
-                ref={toggleButtonRef}
-                onClick={toggleModels}
-                className="px-6 md:px-10 w-full py-6 md:py-8 bg-gradient-to-r from-gray-800 to-gray-700 rounded-lg border border-white/10 cursor-pointer hover:from-gray-700 hover:to-gray-600 transition-all mb-4 text-left relative overflow-hidden"
-                style={{
-                  backgroundImage: "url('/placeholder.svg?height=80&width=400')",
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
-                }}
-              >
-                <div className="absolute inset-0 bg-black/60"></div>
-                <div className="relative z-10 flex items-center justify-between">
-                  <div>
-                    <h3 className="text-white text-lg md:text-xl font-bold">
-                      Model & <span className="text-[#6C3BFF]">Preset</span>
-                    </h3>
-                  </div>
-                  <ChevronDown
-                    className={`text-white text-xl md:text-3xl transition-transform duration-300 ${
-                      isModelsOpen ? "rotate-180" : ""
-                    }`}
-                  />
-                </div>
-              </button>
-
-              {/* Models Dropdown for Mobile/Tablet */}
-              <div className="md:hidden">
-                <ModelsPresetPanel
-                  isOpen={isModelsOpen}
-                  onClose={() => setIsModelsOpen(false)}
-                  selectedModel={selectedModel}
-                  onModelSelect={handleModelSelect}
-                  excludeRef={toggleButtonRef}
-                />
-              </div>
-
-              {/* Models Dropdown for Desktop */}
-              <div className="hidden md:block">
-                <ModelsPresetPanel
-                  isOpen={isModelsOpen}
-                  onClose={() => setIsModelsOpen(false)}
-                  selectedModel={selectedModel}
-                  onModelSelect={handleModelSelect}
-                  excludeRef={toggleButtonRef}
-                />
-              </div>
+            {/* Video Settings Section */}
+            <div className="mb-6">
+              <h3 className="text-white text-lg font-bold mb-4">
+                Video <span className="text-[#6C3BFF]">Settings</span>
+              </h3>
+              <VideoSettings
+                selectedModel={selectedModel}
+                setSelectedModel={setSelectedModel}
+                selectedDuration={selectedDuration}
+                setSelectedDuration={setSelectedDuration}
+                selectedCameraMovements={selectedCameraMovements}
+                setSelectedCameraMovements={setSelectedCameraMovements}
+                firstFrameImage={firstFrameImage}
+                setFirstFrameImage={setFirstFrameImage}
+                resolution={RESOLUTION_MAPPING[selectedAspectRatio as keyof typeof RESOLUTION_MAPPING]?.[selectedQuality as keyof typeof RESOLUTION_MAPPING[keyof typeof RESOLUTION_MAPPING]] || "720P"}
+              />
             </div>
 
             {/* Camera Angle Section */}
@@ -326,17 +313,13 @@ export default function SettingsPanel({
               </button>
               {/* Settings Summary */}
               <div className="bg-white/10 backdrop-blur-3xl hover:bg-white/20 rounded-lg p-4 space-y-2 text-sm text-gray-300 mt-6">
-                <div className="text-white font-medium mb-3">Settings Summary</div>
-                <div>Model Selection : <span className="text-[#5AD7FF]">{selectedModel}</span></div>
-                <div>Camera Angle : <span className="text-[#5AD7FF]">{selectedCameraAngle || "None"}</span></div>
-                <div>Selected Effect : <span className="text-[#5AD7FF]">{selectedEffect || customEffect || "None"}</span></div>
-                <div>Expression : <span className="text-[#5AD7FF]">{selectedExpression || customExpression || "None"}</span></div>
-                <div>Timeline : <span className="text-[#5AD7FF]">{selectedTimeline || customTimeline || "None"}</span></div>
-                <div>Aspect Ratio : <span className="text-[#5AD7FF]">{selectedAspectRatio || "None"}</span></div>
-                <div>Social Platform : <span className="text-[#5AD7FF]">{selectedSocialPlatform || "None"}</span></div>
-                <div>Social Format : <span className="text-[#5AD7FF]">{selectedSocialFormat || "None"}</span></div>
-                <div>FPS : <span className="text-[#5AD7FF]">{selectedFPS || customFPS || "None"}</span></div>
-                <div>Quality : <span className="text-[#5AD7FF]">{selectedQuality || "None"}</span></div>
+                <div className="text-white font-medium mb-3">Video Settings Summary</div>
+                <div>Model : <span className="text-[#5AD7FF]">{selectedModel}</span></div>
+                <div>Duration : <span className="text-[#5AD7FF]">{selectedDuration}s</span></div>
+                <div>Aspect Ratio : <span className="text-[#5AD7FF]">{selectedAspectRatio}</span></div>
+                <div>Quality : <span className="text-[#5AD7FF]">{selectedQuality}</span></div>
+                <div>Camera Movements : <span className="text-[#5AD7FF]">{selectedCameraMovements.length > 0 ? `${selectedCameraMovements.length} selected` : "None"}</span></div>
+                <div>First Frame Image : <span className="text-[#5AD7FF]">{firstFrameImage ? "Uploaded" : "None"}</span></div>
                 <div>Private Mode : <span className="text-[#5AD7FF]">{privateMode ? "Enabled" : "Disabled"}</span></div>
                 <div>Prompt Enhancer : <span className="text-[#5AD7FF]">{promptEnhance}</span></div>
               </div>
