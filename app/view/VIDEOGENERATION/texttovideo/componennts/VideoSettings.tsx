@@ -1,8 +1,11 @@
 "use client"
 
 import { useState } from "react"
-import { ChevronDown, Upload, X } from "lucide-react"
-import { VIDEO_MODELS, CAMERA_MOVEMENTS, getAvailableDurations, supportsImageInput, supportsCameraMovements } from "./videoModels"
+import { ChevronDown } from "lucide-react"
+import { VIDEO_MODELS, getAvailableDurations, getModelType, getSupportedAspectRatios, getAvailableQualities } from "./videoModels"
+import TextToVideoInput from "./TextToVideoInput"
+import ImageToVideoInput from "./ImageToVideoInput"
+import SubjectReferenceInput from "./SubjectReferenceInput"
 
 interface VideoSettingsProps {
   selectedModel: string
@@ -13,6 +16,12 @@ interface VideoSettingsProps {
   setSelectedCameraMovements: (movements: string[]) => void
   firstFrameImage: string | null
   setFirstFrameImage: (image: string | null) => void
+  subjectImage: string | null
+  setSubjectImage: (image: string | null) => void
+  selectedAspectRatio: string
+  setSelectedAspectRatio: (ratio: string) => void
+  selectedQuality: string
+  setSelectedQuality: (quality: string) => void
   resolution: string
 }
 
@@ -25,60 +34,77 @@ export default function VideoSettings({
   setSelectedCameraMovements,
   firstFrameImage,
   setFirstFrameImage,
+  subjectImage,
+  setSubjectImage,
+  selectedAspectRatio,
+  setSelectedAspectRatio,
+  selectedQuality,
+  setSelectedQuality,
   resolution
 }: VideoSettingsProps) {
   const [isModelDropdownOpen, setIsModelDropdownOpen] = useState(false)
   const [isDurationDropdownOpen, setIsDurationDropdownOpen] = useState(false)
-  const [isCameraDropdownOpen, setIsCameraDropdownOpen] = useState(false)
 
   const currentModel = VIDEO_MODELS.find(m => m.id === selectedModel)
   const availableDurations = getAvailableDurations(selectedModel, resolution)
-  const showImageUpload = supportsImageInput(selectedModel)
-  const showCameraMovements = supportsCameraMovements(selectedModel)
+  const modelType = getModelType(selectedModel)
 
   const handleModelSelect = (modelId: string) => {
     setSelectedModel(modelId)
     setIsModelDropdownOpen(false)
-    
+
+    // Validate and reset aspect ratio if not supported by new model
+    const supportedAspectRatios = getSupportedAspectRatios(modelId)
+    if (!supportedAspectRatios.includes(selectedAspectRatio)) {
+      setSelectedAspectRatio(supportedAspectRatios[0])
+    }
+
+    // Validate and reset quality if not supported by new model and aspect ratio
+    const availableQualities = getAvailableQualities(modelId, selectedAspectRatio)
+    if (!availableQualities.includes(selectedQuality)) {
+      setSelectedQuality(availableQualities[0])
+    }
+
     // Reset duration to first available option for new model
     const newDurations = getAvailableDurations(modelId, resolution)
     if (!newDurations.includes(selectedDuration)) {
       setSelectedDuration(newDurations[0])
     }
-    
-    // Clear camera movements if new model doesn't support them
-    if (!supportsCameraMovements(modelId)) {
+
+    // Handle model-specific data when switching models
+    const newModelType = getModelType(modelId)
+    const currentModelType = getModelType(selectedModel)
+
+    if (newModelType !== currentModelType) {
       setSelectedCameraMovements([])
-    }
-    
-    // Clear first frame image if new model doesn't support it
-    if (!supportsImageInput(modelId)) {
-      setFirstFrameImage(null)
-    }
-  }
 
-  const handleCameraMovementToggle = (movementId: string) => {
-    setSelectedCameraMovements(prev => {
-      if (prev.includes(movementId)) {
-        return prev.filter(id => id !== movementId)
-      } else {
-        // Limit to 3 camera movements as recommended
-        if (prev.length >= 3) {
-          return [...prev.slice(1), movementId]
+      // Transfer images between model types if needed
+      console.log('=== MODEL SWITCH DEBUG ===')
+      console.log('Current Model Type:', currentModelType)
+      console.log('New Model Type:', newModelType)
+      console.log('FirstFrame Image exists:', !!firstFrameImage)
+      console.log('Subject Image exists:', !!subjectImage)
+      console.log('========================')
+
+      if (newModelType === 'subject-reference') {
+        // Moving to S2V-01 - ensure we have an image in subjectImage
+        if (firstFrameImage && !subjectImage) {
+          console.log('✅ Transferring firstFrameImage to subjectImage for S2V-01')
+          setSubjectImage(firstFrameImage)
+          setFirstFrameImage(null)
+        } else if (!subjectImage && !firstFrameImage) {
+          console.log('⚠️ No image available when switching to S2V-01')
+        } else if (subjectImage) {
+          console.log('✅ S2V-01 already has subjectImage')
         }
-        return [...prev, movementId]
+      } else if (currentModelType === 'subject-reference') {
+        // Moving from S2V-01 - transfer subjectImage to firstFrameImage if needed
+        if (subjectImage && !firstFrameImage) {
+          console.log('✅ Transferring subjectImage to firstFrameImage')
+          setFirstFrameImage(subjectImage)
+          setSubjectImage(null)
+        }
       }
-    })
-  }
-
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
-    if (file) {
-      const reader = new FileReader()
-      reader.onload = (e) => {
-        setFirstFrameImage(e.target?.result as string)
-      }
-      reader.readAsDataURL(file)
     }
   }
 
@@ -125,18 +151,18 @@ export default function VideoSettings({
         </div>
       </div>
 
-      {/* Duration Selection */}
+      {/* Duration Selection using Timeline component */}
       <div className="space-y-3">
-        <label className="text-white font-medium">Duration (seconds)</label>
+        <label className="text-white font-medium">Duration</label>
         <div className="relative">
           <button
             onClick={() => setIsDurationDropdownOpen(!isDurationDropdownOpen)}
             className="w-full bg-gray-800/50 border border-gray-600 rounded-lg px-4 py-3 text-white text-left flex items-center justify-between hover:bg-gray-700/50 transition-colors"
           >
-            <span>{selectedDuration}s</span>
+            <span>{selectedDuration} seconds</span>
             <ChevronDown className={`w-5 h-5 transition-transform ${isDurationDropdownOpen ? 'rotate-180' : ''}`} />
           </button>
-          
+
           {isDurationDropdownOpen && (
             <div className="absolute top-full left-0 right-0 mt-1 bg-gray-800 border border-gray-600 rounded-lg shadow-lg z-10">
               {availableDurations.map((duration) => (
@@ -158,115 +184,32 @@ export default function VideoSettings({
         </div>
       </div>
 
-      {/* First Frame Image Upload (for I2V models) */}
-      {showImageUpload && (
-        <div className="space-y-3">
-          <label className="text-white font-medium">First Frame Image (Optional)</label>
-          <div className="space-y-3">
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageUpload}
-              className="hidden"
-              id="first-frame-upload"
-            />
-            <label
-              htmlFor="first-frame-upload"
-              className="flex items-center justify-center w-full h-32 border-2 border-dashed border-gray-600 rounded-lg cursor-pointer hover:border-gray-500 transition-colors"
-            >
-              {firstFrameImage ? (
-                <div className="relative w-full h-full">
-                  <img
-                    src={firstFrameImage}
-                    alt="First frame"
-                    className="w-full h-full object-cover rounded-lg"
-                  />
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault()
-                      setFirstFrameImage(null)
-                    }}
-                    className="absolute top-2 right-2 bg-red-600 text-white rounded-full p-1 hover:bg-red-700"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                </div>
-              ) : (
-                <div className="text-center">
-                  <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                  <p className="text-gray-400">Click to upload first frame image</p>
-                  <p className="text-xs text-gray-500 mt-1">JPG, PNG, WebP (max 20MB)</p>
-                </div>
-              )}
-            </label>
-          </div>
-        </div>
-      )}
+      {/* Model-Specific Input Components */}
+      <div>
+        <h3 className="text-white font-medium mb-4">Input Configuration</h3>
+        {modelType === 'text-to-video' && (
+          <TextToVideoInput
+            selectedModel={selectedModel}
+            selectedCameraMovements={selectedCameraMovements}
+            setSelectedCameraMovements={setSelectedCameraMovements}
+          />
+        )}
 
-      {/* Camera Movements (for Director models) */}
-      {showCameraMovements && (
-        <div className="space-y-3">
-          <label className="text-white font-medium">Camera Movements (Max 3)</label>
-          <div className="relative">
-            <button
-              onClick={() => setIsCameraDropdownOpen(!isCameraDropdownOpen)}
-              className="w-full bg-gray-800/50 border border-gray-600 rounded-lg px-4 py-3 text-white text-left flex items-center justify-between hover:bg-gray-700/50 transition-colors"
-            >
-              <span>
-                {selectedCameraMovements.length > 0 
-                  ? `${selectedCameraMovements.length} movement(s) selected`
-                  : 'Select camera movements'
-                }
-              </span>
-              <ChevronDown className={`w-5 h-5 transition-transform ${isCameraDropdownOpen ? 'rotate-180' : ''}`} />
-            </button>
-            
-            {isCameraDropdownOpen && (
-              <div className="absolute top-full left-0 right-0 mt-1 bg-gray-800 border border-gray-600 rounded-lg shadow-lg z-10 max-h-60 overflow-y-auto">
-                {CAMERA_MOVEMENTS.map((movement) => (
-                  <button
-                    key={movement.id}
-                    onClick={() => handleCameraMovementToggle(movement.id)}
-                    className={`w-full px-4 py-3 text-left hover:bg-gray-700 transition-colors flex items-center justify-between ${
-                      selectedCameraMovements.includes(movement.id) ? 'bg-gray-700' : ''
-                    }`}
-                  >
-                    <div>
-                      <div className="font-medium text-white">{movement.name}</div>
-                      <div className="text-sm text-gray-400">{movement.instruction}</div>
-                    </div>
-                    {selectedCameraMovements.includes(movement.id) && (
-                      <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                    )}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-          
-          {selectedCameraMovements.length > 0 && (
-            <div className="flex flex-wrap gap-2">
-              {selectedCameraMovements.map((movementId) => {
-                const movement = CAMERA_MOVEMENTS.find(m => m.id === movementId)
-                return (
-                  <span
-                    key={movementId}
-                    className="bg-blue-600/20 text-blue-400 px-3 py-1 rounded-full text-sm flex items-center gap-2"
-                  >
-                    {movement?.name}
-                    <button
-                      onClick={() => handleCameraMovementToggle(movementId)}
-                      className="hover:text-blue-300"
-                    >
-                      <X className="w-3 h-3" />
-                    </button>
-                  </span>
-                )
-              })}
-            </div>
-          )}
-        </div>
-      )}
+        {modelType === 'image-to-video' && (
+          <ImageToVideoInput
+            selectedModel={selectedModel}
+            firstFrameImage={firstFrameImage}
+            selectedCameraMovements={selectedCameraMovements}
+            setSelectedCameraMovements={setSelectedCameraMovements}
+          />
+        )}
+
+        {modelType === 'subject-reference' && (
+          <SubjectReferenceInput
+            subjectImage={subjectImage}
+          />
+        )}
+      </div>
     </div>
   )
 }

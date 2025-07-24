@@ -37,12 +37,20 @@ function getResolutionFromAspectRatio(aspectRatio: string, quality: string, mode
     return "768P"
   }
 
-  // For other models (01 series), use 720P
+  // For S2V-01, use 768P or 1080P (same as MiniMax-Hailuo-02)
+  if (model === "S2V-01") {
+    if (quality === "FullHD" || quality === "2K" || quality === "Full HD") {
+      return "1080P"
+    }
+    return "768P"
+  }
+
+  // For other models (T2V-01, I2V-01 series), use 720P
   return "720P"
 }
 
 // Helper function to create video generation task
-async function createVideoTask(prompt: string, model: string, resolution: string, duration: number = 6, firstFrameImage?: string) {
+async function createVideoTask(prompt: string, model: string, resolution: string, duration: number = 6, firstFrameImage?: string, subjectReference?: any, aspectRatio?: string) {
   const payload: any = {
     model: VIDEO_MODELS[model as keyof typeof VIDEO_MODELS] || "MiniMax-Hailuo-02",
     prompt: prompt,
@@ -51,9 +59,53 @@ async function createVideoTask(prompt: string, model: string, resolution: string
     prompt_optimizer: true
   }
 
+  // Add aspect_ratio for most models (except S2V-01 which might not support it)
+  if (aspectRatio && model !== "S2V-01") {
+    payload.aspect_ratio = aspectRatio
+  }
+
   // Add first frame image if provided (for I2V models)
   if (firstFrameImage && (model.includes("I2V") || model === "MiniMax-Hailuo-02")) {
     payload.first_frame_image = firstFrameImage
+  }
+
+  // Add subject reference if provided (for S2V-01 model)
+  if (subjectReference && model === "S2V-01") {
+    console.log('Adding subject_reference for S2V-01:')
+    console.log('- subjectReference type:', typeof subjectReference)
+    console.log('- subjectReference is array:', Array.isArray(subjectReference))
+    console.log('- subjectReference length:', subjectReference.length)
+    console.log('- first item structure:', Object.keys(subjectReference[0] || {}))
+    console.log('- first item has type:', !!subjectReference[0]?.type)
+    console.log('- type value:', subjectReference[0]?.type)
+    console.log('- first item has image:', !!subjectReference[0]?.image)
+    console.log('- image is array:', Array.isArray(subjectReference[0]?.image))
+    console.log('- image array length:', subjectReference[0]?.image?.length || 0)
+
+    // Check the actual image data
+    const imageArray = subjectReference[0]?.image
+    if (Array.isArray(imageArray) && imageArray.length > 0) {
+      console.log('- first image data length:', imageArray[0]?.length || 0)
+      console.log('- first image preview:', imageArray[0]?.substring(0, 50) + '...')
+
+      // Validate image format
+      if (imageArray[0] && !imageArray[0].startsWith('data:image/')) {
+        console.log('❌ WARNING: Image does not start with data:image/')
+      }
+    } else {
+      console.log('❌ WARNING: Image array is empty or not an array')
+    }
+
+    payload.subject_reference = subjectReference
+
+    console.log('Final S2V-01 payload structure:')
+    console.log('- model:', payload.model)
+    console.log('- prompt:', payload.prompt)
+    console.log('- duration:', payload.duration)
+    console.log('- resolution:', payload.resolution)
+    console.log('- prompt_optimizer:', payload.prompt_optimizer)
+    console.log('- has aspect_ratio:', !!payload.aspect_ratio)
+    console.log('- subject_reference array length:', payload.subject_reference.length)
   }
 
   console.log('Sending request to MiniMax API:', {
@@ -213,7 +265,8 @@ export async function POST(request: NextRequest) {
       selectedAspectRatio = "16:9",
       selectedQuality = "HD",
       duration = 6,
-      first_frame_image
+      first_frame_image,
+      subject_reference
     } = body
 
     // Extract GroupId from the JWT token
@@ -227,10 +280,18 @@ export async function POST(request: NextRequest) {
     // Get resolution based on aspect ratio and quality
     const resolution = getResolutionFromAspectRatio(selectedAspectRatio, selectedQuality, model)
 
-    console.log('Creating video generation task...', { prompt, model, resolution, duration })
+    console.log('Creating video generation task...', {
+      prompt,
+      model,
+      resolution,
+      duration,
+      has_first_frame_image: !!first_frame_image,
+      has_subject_reference: !!subject_reference,
+      subject_reference_length: subject_reference ? subject_reference.length : 0
+    })
 
     // Step 1: Create video generation task
-    const taskResponse = await createVideoTask(prompt, model, resolution, duration, first_frame_image)
+    const taskResponse = await createVideoTask(prompt, model, resolution, duration, first_frame_image, subject_reference, selectedAspectRatio)
 
     console.log('MiniMax API Response:', taskResponse)
 

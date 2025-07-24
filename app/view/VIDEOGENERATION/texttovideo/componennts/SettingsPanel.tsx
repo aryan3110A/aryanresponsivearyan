@@ -1,9 +1,8 @@
 "use client"
 
-import { useState, useRef } from "react"
-import { X, ChevronDown } from "lucide-react"
+import { useState } from "react"
+import { X } from "lucide-react"
 import {
-  ModelsPresetPanel,
   cameraAngles as CameraAngle,
   effects as Effects,
   Expression,
@@ -19,7 +18,7 @@ import {
   promptEnhancer as PromptEnhancer
 } from "../../UI"
 import VideoSettings from "./VideoSettings"
-import { RESOLUTION_MAPPING } from "./videoModels"
+import { getApiResolution, getSupportedAspectRatios, getAvailableQualities } from "./videoModels"
 
 interface SettingsPanelProps {
   isOpen: boolean
@@ -36,6 +35,8 @@ interface SettingsPanelProps {
   setSelectedCameraMovements: (movements: string[]) => void
   firstFrameImage: string | null
   setFirstFrameImage: (image: string | null) => void
+  subjectImage: string | null
+  setSubjectImage: (image: string | null) => void
 }
 
 export default function SettingsPanel({
@@ -53,10 +54,10 @@ export default function SettingsPanel({
   setSelectedCameraMovements,
   firstFrameImage,
   setFirstFrameImage,
+  subjectImage,
+  setSubjectImage,
 }: SettingsPanelProps) {
-  // State for ModelsPresetPanel
-  const [isModelsOpen, setIsModelsOpen] = useState(false)
-  const toggleButtonRef = useRef<HTMLButtonElement>(null)
+
 
   // State for the components you requested
   const [selectedCameraAngle, setSelectedCameraAngle] = useState<string | null>(null)
@@ -81,7 +82,6 @@ export default function SettingsPanel({
   const [promptEnhance, setPromptEnhance] = useState("Auto")
 
   const handleReset = () => {
-    setIsModelsOpen(false)
     setSelectedCameraAngle(null)
     setSelectedEffect(null)
     setCustomEffect("")
@@ -111,14 +111,7 @@ export default function SettingsPanel({
     setFirstFrameImage(null)
   }
 
-  const toggleModels = () => {
-    setIsModelsOpen((prev) => !prev)
-  }
 
-  const handleModelSelect = (model: string) => {
-    setSelectedModel(model)
-    setIsModelsOpen(false) // Close the models panel after selection
-  }
 
   const handleSave = () => {
     // Handle save logic here
@@ -184,7 +177,13 @@ export default function SettingsPanel({
                 setSelectedCameraMovements={setSelectedCameraMovements}
                 firstFrameImage={firstFrameImage}
                 setFirstFrameImage={setFirstFrameImage}
-                resolution={RESOLUTION_MAPPING[selectedAspectRatio as keyof typeof RESOLUTION_MAPPING]?.[selectedQuality as keyof typeof RESOLUTION_MAPPING[keyof typeof RESOLUTION_MAPPING]] || "720P"}
+                subjectImage={subjectImage}
+                setSubjectImage={setSubjectImage}
+                selectedAspectRatio={selectedAspectRatio}
+                setSelectedAspectRatio={setSelectedAspectRatio}
+                selectedQuality={selectedQuality}
+                setSelectedQuality={setSelectedQuality}
+                resolution={getApiResolution(selectedModel, selectedQuality, selectedAspectRatio)}
               />
             </div>
 
@@ -228,7 +227,14 @@ export default function SettingsPanel({
 
             {/* Aspect Ratio Section */}
             <div className="mb-6">
-              <AspectRatio onAspectRatioSelect={setSelectedAspectRatio} selectedAspectRatio={selectedAspectRatio} />
+              <AspectRatio
+                onAspectRatioSelect={setSelectedAspectRatio}
+                selectedAspectRatio={selectedAspectRatio}
+                ratios={getSupportedAspectRatios(selectedModel).map(ratio => ({
+                  label: ratio,
+                  icon: ratio === "1:1" ? "⬜" : ratio === "16:9" ? "▭" : ratio === "9:16" ? "▬" : "⚏"
+                }))}
+              />
             </div>
 
             {/* Social Media Frame Section */}
@@ -253,7 +259,12 @@ export default function SettingsPanel({
          
             {/* Quality Section */}
             <div className="mb-6">
-              <Quality onQualitySelect={setSelectedQuality} selectedQuality={selectedQuality} />
+              <Quality
+                onQualitySelect={setSelectedQuality}
+                selectedQuality={selectedQuality}
+                qualities={getAvailableQualities(selectedModel, selectedAspectRatio)}
+                title="Video Quality"
+              />
             </div>
 
             {/* Private Mode Section */}

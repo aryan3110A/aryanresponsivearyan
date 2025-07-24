@@ -3,7 +3,8 @@
 import Image from "next/image"
 import { useState, useRef } from "react"
 import { AttachmentsDropdown, UploadComponent, ImageOverlay } from "../../UI"
-import { Download, Bookmark, Heart, Sparkles, Play } from "lucide-react"
+import { Download, Bookmark, Heart, Sparkles } from "lucide-react"
+import { getModelType } from "./videoModels"
 
 interface InputSectionProps {
   prompt: string
@@ -17,6 +18,10 @@ interface InputSectionProps {
   selectedQuality: string
   selectedAspectRatio: string
   numberOfImages: number
+  firstFrameImage: string | null
+  setFirstFrameImage: (image: string | null) => void
+  subjectImage: string | null
+  setSubjectImage: (image: string | null) => void
 }
 
 export default function InputSection({
@@ -31,6 +36,10 @@ export default function InputSection({
   selectedQuality,
   selectedAspectRatio,
   numberOfImages,
+  firstFrameImage,
+  setFirstFrameImage,
+  subjectImage,
+  setSubjectImage,
 }: InputSectionProps) {
   const [showUploadComponent, setShowUploadComponent] = useState(false)
   const [hoveredImageIndex, setHoveredImageIndex] = useState<number | null>(null)
@@ -40,6 +49,8 @@ export default function InputSection({
     url: string
     index: number
   } | null>(null)
+  const [isUploading, setIsUploading] = useState(false)
+  const [uploadProgress, setUploadProgress] = useState(0)
   const scrollContainerRef = useRef<HTMLDivElement>(null)
 
   // Helper function to check if the content is a video
@@ -57,12 +68,7 @@ export default function InputSection({
     console.log("Choose from library clicked")
   }
 
-  const handleVideoPlay = (videoUrl: string, index: number) => {
-    // Handle video playback - you can customize this based on your needs
-    console.log("Playing video:", videoUrl, "at index:", index)
-    // You could open a video modal, navigate to a video player, etc.
-    setSelectedImageForOverlay({ url: videoUrl, index })
-  }
+
 
   const handleUploadFromDevices = () => {
     setShowUploadComponent(true)
@@ -71,6 +77,82 @@ export default function InputSection({
 
   const handleFilesSelected = (files: File[]) => {
     console.log("Files selected:", files)
+
+    if (files.length > 0) {
+      const file = files[0]
+
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        alert('Please select a valid image file')
+        return
+      }
+
+      // Validate file size (max 10MB)
+      if (file.size > 10 * 1024 * 1024) {
+        alert('Image size should be less than 10MB')
+        return
+      }
+
+      // Start upload process
+      setIsUploading(true)
+      setUploadProgress(0)
+      setShowUploadComponent(false)
+
+      const reader = new FileReader()
+
+      // Simulate upload progress
+      const progressInterval = setInterval(() => {
+        setUploadProgress(prev => {
+          if (prev >= 90) {
+            clearInterval(progressInterval)
+            return 90
+          }
+          return prev + 10
+        })
+      }, 100)
+
+      reader.onload = (e) => {
+        // Complete the progress
+        setUploadProgress(100)
+
+        setTimeout(() => {
+          const imageData = e.target?.result as string
+          const modelType = getModelType(selectedModel)
+
+          // Set the appropriate image based on model type
+          console.log('=== IMAGE UPLOAD DEBUG ===')
+          console.log('Selected Model:', selectedModel)
+          console.log('Model Type:', modelType)
+          console.log('Image Data Length:', imageData.length)
+          console.log('========================')
+
+          if (modelType === 'image-to-video') {
+            console.log('✅ Setting firstFrameImage for image-to-video model')
+            setFirstFrameImage(imageData)
+          } else if (modelType === 'subject-reference') {
+            console.log('✅ Setting subjectImage for subject-reference model (S2V-01)')
+            setSubjectImage(imageData)
+          } else {
+            // For text-to-video models that support optional first frame (like MiniMax Hailuo 02)
+            console.log('✅ Setting firstFrameImage for text-to-video model')
+            setFirstFrameImage(imageData)
+          }
+
+          // Reset upload state
+          setIsUploading(false)
+          setUploadProgress(0)
+        }, 500) // Small delay to show 100% completion
+      }
+
+      reader.onerror = () => {
+        clearInterval(progressInterval)
+        setIsUploading(false)
+        setUploadProgress(0)
+        alert('Error reading file. Please try again.')
+      }
+
+      reader.readAsDataURL(file)
+    }
   }
 
   const handleDownload = async (mediaUrl: string, index: number) => {
@@ -143,14 +225,19 @@ export default function InputSection({
       <div className="hidden xl:flex items-center gap-4 w-full md:max-w-6xl lg:max-w-7xl px-4">
         <div className="flex-1 relative">
           <div className="flex items-center bg-[#ffffff]/5 hover:bg-[#ffffff]/20 backdrop-blur-sm border border-[#8E8E8E] rounded-2xl lg:rounded-3xl p-4 transition-all duration-300 ease-in-out">
-            <AttachmentsDropdown
-              onChooseFromLibrary={handleChooseFromLibrary}
-              onUploadFromDevices={handleUploadFromDevices}
-            />
+            <div className="relative">
+              <AttachmentsDropdown
+                onChooseFromLibrary={handleChooseFromLibrary}
+                onUploadFromDevices={handleUploadFromDevices}
+              />
+              {(firstFrameImage || subjectImage) && (
+                <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-gray-900"></div>
+              )}
+            </div>
 
             <input
               type="text"
-              placeholder="Type a prompt..."
+              placeholder={`Describe your ${getModelType(selectedModel).replace('-', ' to ')} generation...`}
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
               className="flex-1 bg-transparent text-white placeholder-white outline-none text-lg ml-4"
@@ -184,14 +271,19 @@ export default function InputSection({
         {/* Input Field Only - Full Width Responsive */}
         <div className="w-full mb-4">
           <div className="flex items-center bg-[#ffffff]/5 hover:bg-[#ffffff]/20 backdrop-blur-sm border border-[#8E8E8E] rounded-xl sm:rounded-2xl p-2 xs:p-4 transition-all duration-300 ease-in-out">
-            <AttachmentsDropdown
-              onChooseFromLibrary={handleChooseFromLibrary}
-              onUploadFromDevices={handleUploadFromDevices}
-            />
+            <div className="relative">
+              <AttachmentsDropdown
+                onChooseFromLibrary={handleChooseFromLibrary}
+                onUploadFromDevices={handleUploadFromDevices}
+              />
+              {(firstFrameImage || subjectImage) && (
+                <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-gray-900"></div>
+              )}
+            </div>
 
             <input
               type="text"
-              placeholder="Type a prompt..."
+              placeholder={`Describe your ${getModelType(selectedModel).replace('-', ' to ')} generation...`}
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
               className="flex-1 bg-transparent text-white placeholder-white outline-none text-sm xs:text-base sm:text-lg ml-2 mr-1 xs:ml-3"
@@ -235,12 +327,102 @@ export default function InputSection({
         </div>
       </div>
 
+      {/* Upload Progress */}
+      {isUploading && (
+        <div className="w-full max-w-4xl mx-auto px-4 mb-6">
+          <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-600 rounded-xl p-4">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-purple-500"></div>
+              <span className="text-white text-sm font-medium">Uploading image...</span>
+              <span className="text-gray-400 text-sm">{uploadProgress}%</span>
+            </div>
+            <div className="w-full bg-gray-700 rounded-full h-2">
+              <div
+                className="bg-gradient-to-r from-purple-500 to-blue-500 h-2 rounded-full transition-all duration-300"
+                style={{ width: `${uploadProgress}%` }}
+              ></div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Uploaded Images Preview */}
+      {(firstFrameImage || subjectImage) && !isUploading && (
+        <div className="w-full max-w-4xl mx-auto px-4 mb-6">
+          <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-600 rounded-xl p-4">
+            <div className="flex items-center gap-2 mb-3">
+              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+              <span className="text-white text-sm font-medium">Uploaded Images</span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {firstFrameImage && (
+                <div className="relative">
+                  <div className="relative w-full h-24 bg-gray-700 rounded-lg overflow-hidden">
+                    <Image
+                      src={firstFrameImage}
+                      alt="First frame image"
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                  <div className="mt-2 text-center">
+                    <span className="text-green-400 text-xs font-medium">
+                      {getModelType(selectedModel) === 'image-to-video' ? 'First Frame Image' :
+                       getModelType(selectedModel) === 'subject-reference' ? 'Subject Reference' : 'Reference Image'}
+                    </span>
+                  </div>
+                  <button
+                    onClick={() => setFirstFrameImage(null)}
+                    className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 hover:bg-red-600 rounded-full flex items-center justify-center text-white text-sm transition-colors"
+                  >
+                    ×
+                  </button>
+                </div>
+              )}
+
+              {subjectImage && (
+                <div className="relative">
+                  <div className="relative w-full h-24 bg-gray-700 rounded-lg overflow-hidden">
+                    <Image
+                      src={subjectImage}
+                      alt="Subject reference image"
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                  <div className="mt-2 text-center">
+                    <span className="text-green-400 text-xs font-medium">Subject Reference</span>
+                  </div>
+                  <button
+                    onClick={() => setSubjectImage(null)}
+                    className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 hover:bg-red-600 rounded-full flex items-center justify-center text-white text-sm transition-colors"
+                  >
+                    ×
+                  </button>
+                </div>
+              )}
+            </div>
+
+            <div className="mt-3 text-center">
+              <span className="text-gray-400 text-xs">
+                Model: {selectedModel} • Type: {getModelType(selectedModel).replace('-', ' to ')}
+                {getModelType(selectedModel) === 'subject-reference' && ' • Upload subject reference image'}
+                {getModelType(selectedModel) === 'image-to-video' && ' • Upload first frame image'}
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Upload Component Modal */}
       {showUploadComponent && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-gray-900/95 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6 w-full max-w-md mx-4">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-white font-medium text-lg">Upload Files</h3>
+              <h3 className="text-white font-medium text-lg">
+                Upload Image for {getModelType(selectedModel).replace('-', ' to ')} Model
+              </h3>
               <button
                 onClick={() => setShowUploadComponent(false)}
                 className="p-2 hover:bg-gray-800/50 rounded-lg transition-colors"
@@ -248,6 +430,21 @@ export default function InputSection({
                 <span className="text-white text-xl">×</span>
               </button>
             </div>
+
+            <div className="mb-4 p-3 bg-blue-900/20 border border-blue-500/30 rounded-lg">
+              <p className="text-blue-200 text-sm">
+                {getModelType(selectedModel) === 'image-to-video' &&
+                  "Upload an image that will be used as the starting frame for your video."
+                }
+                {getModelType(selectedModel) === 'subject-reference' &&
+                  "Upload an image of the subject you want to appear in the video."
+                }
+                {getModelType(selectedModel) === 'text-to-video' &&
+                  "Upload an optional reference image to guide the video generation."
+                }
+              </p>
+            </div>
+
             <UploadComponent onFilesSelected={handleFilesSelected} />
           </div>
         </div>
