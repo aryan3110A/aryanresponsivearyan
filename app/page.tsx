@@ -10,7 +10,7 @@ import Main from "./view/landingPage/page";
 // import Main from "./view/landingPage/page";
 // import ContactSection from "./view/contactus/page";
 // import Home from "./view/home/[username]/page";
-
+// import ImageToVideo from "./view/VIDEOGENERATION/imagetovideo/page";
 // import AddMusicToImage from "./view/BRANDINGKIT/AddMusicInImage/page";
 // import AddMusicToVideo from "./view/BRANDINGKIT/AddMusicToVideo/page";
 // import TestingUi from "./view/TestingUi";
@@ -18,25 +18,29 @@ import Main from "./view/landingPage/page";
 // import MockupGenerationPage from "./view/Mockupgeneration/page";
 // import NewText2Image from "./view/IMAGEGENERATIONNEW/newtexttoimage/page";
 // import AISTICKERGEN from "./view/IMAGEGENERATIONNEW/AI Sticker generation/page";
+  import NewTextToVideo from "./view/VIDEOGENERATION/texttovideo/page";
+import VideoEnhancement from "./view/VIDEOGENERATION/videoenhancement/page";
 
 // Define Page as a React functional component
 const Page: React.FC = () => {
   return (
     <>
-    <Main />
+    {/* <Main /> */}
     {/* <ProductWithModelPosePage/> */}
     {/* <AddMusicInVideo /> */}
-    
+    {/* <MockupGenerationPage/> */}
     {/* <ProductGeneration /> */}
     {/* <AISTICKERGEN /> */}
 {/* <NewText2Image /> */}
     {/* <MockupGenerationPage /> */}
     {/* <Home /> */}
     {/* <ContactSection /> */}
-
+    {/* <VideoEnhancement /> */}
     {/* <AddMusicToImage /> */}
     {/* <AddMusicToVideo /> */}
     {/* <TestingUi /> */}
+    {/* <ImageToVideo /> */}
+    <NewTextToVideo />
     </>
   );
 };

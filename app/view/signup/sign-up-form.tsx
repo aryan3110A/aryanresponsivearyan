@@ -5,11 +5,43 @@ import axios from "axios"
 import { useRouter } from "next/navigation"
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth"
 import { auth, db } from "../../../database/firebase"
-import { doc, setDoc, getDoc } from "firebase/firestore"
+import { doc, setDoc, getDoc, updateDoc, collection, query, where, getDocs } from "firebase/firestore"
 import { v4 as uuidv4 } from "uuid"
 import Image from "next/image"
 import { getImageUrl } from "@/routes/imageroute"
 import { initializeTokens } from "@/app/utils/tokenManager"
+
+// Add session management functions
+const generateSessionId = () => uuidv4()
+
+const createUserSession = async (email: string) => {
+  const sessionId = generateSessionId()
+  const userRef = doc(db, "users", email)
+  
+  await updateDoc(userRef, {
+    sessionId,
+    lastLoginTime: new Date().toISOString(),
+    deviceInfo: navigator.userAgent
+  })
+  
+  localStorage.setItem("sessionId", sessionId)
+  return sessionId
+}
+
+const validateSession = async (email: string) => {
+  const storedSessionId = localStorage.getItem("sessionId")
+  if (!storedSessionId) return false
+  
+  const userRef = doc(db, "users", email)
+  const userSnap = await getDoc(userRef)
+  
+  if (userSnap.exists()) {
+    const userData = userSnap.data()
+    return userData.sessionId === storedSessionId
+  }
+  
+  return false
+}
 
 export default function SignInForm() {
   const router = useRouter()
@@ -56,6 +88,10 @@ export default function SignInForm() {
 
       if (userSnap.exists()) {
         const data = userSnap.data()
+        
+        // Create new session (this will invalidate other sessions)
+        await createUserSession(email)
+        
         if (data.username) {
           localStorage.setItem("username", data.username)
           router.push(`/view/home/${data.username}`)
@@ -63,7 +99,13 @@ export default function SignInForm() {
           setShowUsernameForm(true)
         }
       } else {
-        await setDoc(userRef, { email })
+        await setDoc(userRef, { 
+          email,
+          sessionId: generateSessionId(),
+          lastLoginTime: new Date().toISOString(),
+          deviceInfo: navigator.userAgent
+        })
+        localStorage.setItem("sessionId", generateSessionId())
         setShowUsernameForm(true)
       }
 
@@ -105,6 +147,10 @@ export default function SignInForm() {
 
       if (userSnap.exists()) {
         const data = userSnap.data()
+        
+        // Create new session (this will invalidate other sessions)
+        await createUserSession(userEmail)
+        
         if (data.username) {
           localStorage.setItem("username", data.username)
           router.push(`/view/home/${data.username}`)
@@ -112,7 +158,14 @@ export default function SignInForm() {
           setShowUsernameForm(true)
         }
       } else {
-        await setDoc(userRef, { email: userEmail })
+        const sessionId = generateSessionId()
+        await setDoc(userRef, { 
+          email: userEmail,
+          sessionId,
+          lastLoginTime: new Date().toISOString(),
+          deviceInfo: navigator.userAgent
+        })
+        localStorage.setItem("sessionId", sessionId)
         setShowUsernameForm(true)
       }
     } catch (err) {
