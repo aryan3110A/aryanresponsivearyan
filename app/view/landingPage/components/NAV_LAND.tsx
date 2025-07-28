@@ -147,6 +147,12 @@ const NAV_LAND = () => {
               >
                 Text to image
               </li>
+              <li
+                className="w-full px-3 py-2 cursor-pointer text-center hover:text-[#dbdbdb] hover:bg-gradient-to-l hover:bg-clip-text"
+                onClick={() => router.push('/music-generation')}
+              >
+                Text to music
+              </li>
               <li className="w-full px-3 py-2 cursor-pointer text-center hover:text-[#dbdbdb] hover:bg-gradient-to-l hover:bg-clip-text">
                 Text to video (coming soon)
               </li>
@@ -301,6 +307,15 @@ const NAV_LAND = () => {
                         }}
                       >
                         Text to image
+                      </div>
+                      <div
+                        className="py-1 text-gray-300 hover:text-white cursor-pointer"
+                        onClick={() => {
+                          router.push('/music-generation')
+                          setIsMobileMenuOpen(false)
+                        }}
+                      >
+                        Text to music
                       </div>
                       <div className="py-1 text-gray-300 hover:text-white cursor-pointer">
                         Text to video (coming soon)

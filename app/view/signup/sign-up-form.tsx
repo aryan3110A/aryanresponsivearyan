@@ -24,6 +24,29 @@ export default function SignInForm() {
 
   const inputRef = useRef<HTMLInputElement>(null) // Ref for hidden input
 
+  // Test Firebase connection
+  const testFirebaseConnection = async () => {
+    try {
+      console.log("🧪 Testing Firebase connection...")
+      console.log("📊 Firebase config:", {
+        projectId: db.app.options.projectId,
+        authDomain: db.app.options.authDomain,
+        currentUser: auth.currentUser?.email || "Not authenticated"
+      })
+
+      // Try to read a test document (this will fail with permission error if rules are wrong)
+      const testRef = doc(db, "test", "connection")
+      await getDoc(testRef)
+      console.log("✅ Firebase connection test successful")
+    } catch (err: any) {
+      console.error("❌ Firebase connection test failed:", {
+        message: err.message,
+        code: err.code,
+        fullError: err
+      })
+    }
+  }
+
   const handleSendOtp = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setError("")
@@ -50,20 +73,35 @@ export default function SignInForm() {
       })
 
       localStorage.setItem("otpUser", email)
+      console.log("📧 OTP verified for email:", email)
 
       const userRef = doc(db, "users", email)
+      console.log("📄 Creating user document reference for:", email)
+
+      console.log("🔍 Attempting to read user document (OTP flow)...")
       const userSnap = await getDoc(userRef)
+      console.log("✅ User document read successful (OTP), exists:", userSnap.exists())
 
       if (userSnap.exists()) {
         const data = userSnap.data()
+        console.log("📊 User data retrieved (OTP):", {
+          hasUsername: !!data?.username,
+          username: data?.username,
+          email: data?.email
+        })
+
         if (data.username) {
           localStorage.setItem("username", data.username)
+          console.log("🏠 Redirecting to home page (OTP):", data.username)
           router.push(`/view/home/${data.username}`)
         } else {
+          console.log("👤 User exists but no username (OTP), showing username form")
           setShowUsernameForm(true)
         }
       } else {
+        console.log("🆕 User doesn't exist (OTP), creating new user document...")
         await setDoc(userRef, { email })
+        console.log("✅ New user document created successfully (OTP)")
         setShowUsernameForm(true)
       }
 
@@ -93,62 +131,158 @@ export default function SignInForm() {
 
   const handleGoogleLogin = async () => {
     try {
-      const provider = new GoogleAuthProvider()
-      const result = await signInWithPopup(auth, provider)
-      const userEmail = result.user.email
+      console.log("🚀 Starting Google login process...")
 
-      if (!userEmail) throw new Error("No email from Google user")
+      const provider = new GoogleAuthProvider()
+      console.log("📱 Google provider created")
+
+      const result = await signInWithPopup(auth, provider)
+      console.log("✅ Google sign-in popup completed", {
+        uid: result.user.uid,
+        email: result.user.email,
+        displayName: result.user.displayName
+      })
+
+      const userEmail = result.user.email
+      if (!userEmail) {
+        console.error("❌ No email from Google user")
+        throw new Error("No email from Google user")
+      }
+
+      console.log("📧 User email obtained:", userEmail)
+      console.log("🔐 Auth state:", {
+        currentUser: auth.currentUser?.email,
+        isAuthenticated: !!auth.currentUser
+      })
 
       localStorage.setItem("otpUser", userEmail)
+      console.log("💾 Email saved to localStorage")
+
       const userRef = doc(db, "users", userEmail)
+      console.log("📄 User document reference created for:", userEmail)
+
+      console.log("🔍 Attempting to read user document...")
       const userSnap = await getDoc(userRef)
+      console.log("✅ User document read successful, exists:", userSnap.exists())
 
       if (userSnap.exists()) {
         const data = userSnap.data()
-        if (data.username) {
+        console.log("📊 User data retrieved:", {
+          hasUsername: !!data?.username,
+          username: data?.username,
+          email: data?.email
+        })
+
+        if (data?.username) {
           localStorage.setItem("username", data.username)
+          console.log("🏠 Redirecting to home page for existing user:", data.username)
           router.push(`/view/home/${data.username}`)
         } else {
+          console.log("👤 User exists but no username, showing username form")
           setShowUsernameForm(true)
         }
       } else {
+        console.log("🆕 User doesn't exist, creating new user document...")
+        console.log("📝 Attempting to create user document with data:", { email: userEmail })
+
         await setDoc(userRef, { email: userEmail })
+        console.log("✅ New user document created successfully")
+        console.log("👤 Showing username form for new user")
         setShowUsernameForm(true)
       }
-    } catch (err) {
-      setError("Google sign-in failed.")
-      console.error(err)
+    } catch (err: any) {
+      console.error("❌ Google sign-in error:", {
+        message: err.message,
+        code: err.code,
+        stack: err.stack,
+        fullError: err
+      })
+
+      // More specific error messages
+      if (err.code === 'permission-denied' || err.message?.includes('permissions')) {
+        setError("Database permission error. Please contact support.")
+        console.error("🔒 PERMISSION ERROR: Firestore rules may be too restrictive")
+      } else if (err.code === 'auth/popup-closed-by-user') {
+        setError("Sign-in cancelled.")
+      } else if (err.code === 'auth/popup-blocked') {
+        setError("Popup blocked. Please allow popups and try again.")
+      } else {
+        setError("Google sign-in failed. Please try again.")
+      }
     }
   }
 
   const handleUsernameSubmit = async () => {
-    const email = localStorage.getItem("otpUser")
-    if (email && username.trim()) {
-      const realUsername = username.trim()
-      const slug = `${realUsername.toLowerCase().replace(/\s+/g, "-")}-${uuidv4().slice(0, 6)}`
+    try {
+      const email = localStorage.getItem("otpUser")
+      console.log("👤 Starting username submission for email:", email)
 
-      await setDoc(
-        doc(db, "users", email),
-        {
+      if (email && username.trim()) {
+        const realUsername = username.trim()
+        const slug = `${realUsername.toLowerCase().replace(/\s+/g, "-")}-${uuidv4().slice(0, 6)}`
+
+        console.log("📝 Username data prepared:", {
           email,
           username: realUsername,
-          slug, // only used for routing
-        },
-        { merge: true },
-      )
+          slug
+        })
 
-      localStorage.setItem("username", realUsername)
-      localStorage.setItem("slug", slug)
-      
-      // Initialize tokens for new user
-      initializeTokens()
+        console.log("💾 Attempting to update user document with username...")
+        await setDoc(
+          doc(db, "users", email),
+          {
+            email,
+            username: realUsername,
+            slug, // only used for routing
+          },
+          { merge: true },
+        )
+        console.log("✅ User document updated successfully with username")
 
-      router.push(`/view/home/${slug}`)
+        localStorage.setItem("username", realUsername)
+        localStorage.setItem("slug", slug)
+        console.log("💾 Username and slug saved to localStorage")
+
+        // Initialize tokens for new user
+        initializeTokens()
+        console.log("🎫 Tokens initialized for new user")
+
+        console.log("🏠 Redirecting to home page:", `/view/home/${slug}`)
+        router.push(`/view/home/${slug}`)
+      } else {
+        console.error("❌ Missing email or username:", { email, username: username.trim() })
+        setError("Missing email or username. Please try again.")
+      }
+    } catch (err: any) {
+      console.error("❌ Username submission error:", {
+        message: err.message,
+        code: err.code,
+        stack: err.stack,
+        fullError: err
+      })
+
+      if (err.code === 'permission-denied' || err.message?.includes('permissions')) {
+        setError("Database permission error. Please contact support.")
+        console.error("🔒 PERMISSION ERROR: Firestore rules may be too restrictive")
+      } else {
+        setError("Failed to save username. Please try again.")
+      }
     }
   }
 
   useEffect(() => {
     if (typeof window === "undefined") return
+
+    // Debug Firebase auth state on component mount
+    console.log("🔐 Firebase Auth Debug:", {
+      currentUser: auth.currentUser,
+      isAuthenticated: !!auth.currentUser,
+      projectId: db.app.options.projectId,
+      authDomain: db.app.options.authDomain
+    })
+
+    // Test Firebase connection on mount
+    testFirebaseConnection()
 
     if (otpSent && timer > 0) {
       const interval = setInterval(() => {

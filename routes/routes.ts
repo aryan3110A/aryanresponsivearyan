@@ -35,6 +35,10 @@ export const VIDEOGENERATION   = {
   // LIVEPORTRAIT:"/view/IMAGEGENERATIONNEW/LIVEPORTRAIT"
 } as const;
 
+export const MUSICGENERATION = {
+  TEXT_TO_MUSIC: '/music-generation',
+} as const;
+
 export const BRANDINGKIT   = {
   PRODUCT_GENERATION: '/view/BRANDINGKIT/PRODUCT_GENERATION',
   LOGOGENERATION:'/view/BRANDINGKIT/LOGOGENERATION',
@@ -125,4 +129,5 @@ export const ROUTES = {
   ...IMAGEGENERATION,
   ...BRANDINGKIT,
   ...VIDEOGENERATION,
-} as const; 
+  ...MUSICGENERATION,
+} as const;
