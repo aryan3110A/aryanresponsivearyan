@@ -100,7 +100,7 @@ export default function NewText2Image() {
     const timeout = setTimeout(() => controller.abort(), 60000)
 
     try {
-      const response = await fetch('/api/generate-image', {
+const response = await fetch('https://cf5fbb801d9c.ngrok-free.app/stable-turbo/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
