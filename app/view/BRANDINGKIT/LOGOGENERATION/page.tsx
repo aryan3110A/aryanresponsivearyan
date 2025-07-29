@@ -63,17 +63,14 @@ export default function LOGOGENERATION() {
       height = height - (height % 16)
 
       // Call the API
-      const response = await fetch('/api/generate-image', {
+      const response = await fetch('http://localhost:7862/generate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           prompt: finalPrompt,
-          width,
-          height,
           num_images: numberOfLogo,
-          model: selectedModel,
         }),
       })
 
@@ -82,7 +79,11 @@ export default function LOGOGENERATION() {
       }
 
       const data = await response.json()
-      setGeneratedImages(data.image_urls || [])
+      if (data.image_urls) {
+        setGeneratedImages(data.image_urls.map((url: string) => `http://localhost:7862${url}`));
+      } else {
+        setGeneratedImages([]);
+      }
     } catch (error) {
       console.error('Generation failed:', error)
       // Fallback to placeholder images for demo
