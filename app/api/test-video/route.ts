@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
         publicUrl: `/static/videos/${filename}`,
         message: exists ? 'Video file exists and is accessible' : 'Video file not found'
       })
-    } catch (error) {
+    } catch {
       return NextResponse.json({
         exists: false,
         error: 'File not found',

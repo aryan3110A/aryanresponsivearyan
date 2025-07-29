@@ -3,37 +3,49 @@
 import Image from "next/image"
 import { useState, useRef } from "react"
 import AttachmentsDropdown from "./AttachmentsDropdown"
-import { UploadComponent, ImageOverlay } from "../../UI"
+import { UploadComponent } from "../../UI"
+import ImageOverlay from "./ImageOverlay"
 import { Download, Bookmark, Heart, Sparkles } from "lucide-react"
 
 interface InputSectionProps {
   prompt: string
   setPrompt: (prompt: string) => void
+  generatedPrompt: string
   onGenerate: () => void
   onSettingsToggle: () => void
   isGenerating: boolean
   generatedImages: string[]
-  selectedModel: string
+  selectedFont: string
   selectedStyle: string | null
   selectedQuality: string
   selectedAspectRatio: string
   numberOfImages: number
+  modelImage: File | null
+  setModelImage: (file: File | null) => void
+  productImage: File | null
+  setProductImage: (file: File | null) => void
 }
 
 export default function InputSection({
   prompt,
   setPrompt,
+  generatedPrompt,
   onGenerate,
   onSettingsToggle,
   isGenerating,
   generatedImages,
-  selectedModel,
+  selectedFont,
   selectedStyle,
   selectedQuality,
   selectedAspectRatio,
   numberOfImages,
+  modelImage,
+  setModelImage,
+  productImage,
+  setProductImage,
 }: InputSectionProps) {
   const [showUploadComponent, setShowUploadComponent] = useState(false)
+  const [uploadType, setUploadType] = useState<'model' | 'product' | null>(null)
   const [hoveredImageIndex, setHoveredImageIndex] = useState<number | null>(null)
   const [likedImages, setLikedImages] = useState<Set<number>>(new Set())
   const [bookmarkedImages, setBookmarkedImages] = useState<Set<number>>(new Set())
@@ -47,13 +59,24 @@ export default function InputSection({
     console.log("Choose from library clicked")
   }
 
-  const handleUploadFromDevices = () => {
+  const handleUploadFromDevices = (type: 'model' | 'product') => {
+    setUploadType(type)
     setShowUploadComponent(true)
-    console.log("Upload from devices clicked")
+    console.log(`Upload ${type} image clicked`)
   }
 
   const handleFilesSelected = (files: File[]) => {
     console.log("Files selected:", files)
+    if (files.length > 0) {
+      if (uploadType === 'model') {
+        setModelImage(files[0])
+      } else if (uploadType === 'product') {
+        setProductImage(files[0])
+      }
+    }
+    // Close the modal when files are selected
+    setShowUploadComponent(false)
+    setUploadType(null)
   }
 
   const handleDownload = async (imageUrl: string, index: number) => {
@@ -124,10 +147,23 @@ export default function InputSection({
       <div className="hidden xl:flex items-center gap-4 w-full md:max-w-6xl lg:max-w-7xl px-4">
         <div className="flex-1 relative">
           <div className="flex items-center bg-[#ffffff]/5 hover:bg-[#ffffff]/20 backdrop-blur-sm border border-[#8E8E8E] rounded-2xl lg:rounded-3xl p-4 transition-all duration-300 ease-in-out">
-            <AttachmentsDropdown
-              onChooseFromLibrary={handleChooseFromLibrary}
-              onUploadFromDevices={handleUploadFromDevices}
-            />
+            <div className="relative">
+              <AttachmentsDropdown
+                onChooseFromLibrary={handleChooseFromLibrary}
+                onUploadFromDevices={handleUploadFromDevices}
+              />
+              {/* Image selection indicators */}
+              {(modelImage || productImage) && (
+                <div className="absolute -top-1 -right-1 flex gap-1">
+                  {modelImage && (
+                    <div className="w-2 h-2 bg-green-500 rounded-full" title="Model image selected" />
+                  )}
+                  {productImage && (
+                    <div className="w-2 h-2 bg-blue-500 rounded-full" title="Product image selected" />
+                  )}
+                </div>
+              )}
+            </div>
 
             <input
               type="text"
@@ -166,10 +202,23 @@ export default function InputSection({
         {/* Input Field Only - Full Width Responsive */}
         <div className="w-full mb-4">
           <div className="flex items-center bg-[#ffffff]/5 hover:bg-[#ffffff]/20 backdrop-blur-sm border border-[#8E8E8E] rounded-xl sm:rounded-2xl p-2 xs:p-4 transition-all duration-300 ease-in-out">
-            <AttachmentsDropdown
-              onChooseFromLibrary={handleChooseFromLibrary}
-              onUploadFromDevices={handleUploadFromDevices}
-            />
+            <div className="relative">
+              <AttachmentsDropdown
+                onChooseFromLibrary={handleChooseFromLibrary}
+                onUploadFromDevices={handleUploadFromDevices}
+              />
+              {/* Image selection indicators */}
+              {(modelImage || productImage) && (
+                <div className="absolute -top-1 -right-1 flex gap-1">
+                  {modelImage && (
+                    <div className="w-2 h-2 bg-green-500 rounded-full" title="Model image selected" />
+                  )}
+                  {productImage && (
+                    <div className="w-2 h-2 bg-blue-500 rounded-full" title="Product image selected" />
+                  )}
+                </div>
+              )}
+            </div>
 
             <input
               type="text"
@@ -223,9 +272,14 @@ export default function InputSection({
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-gray-900/95 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6 w-full max-w-md mx-4">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-white font-medium text-lg">Upload Files</h3>
+              <h3 className="text-white font-medium text-lg">
+                Upload {uploadType === 'model' ? 'Model' : 'Product'} Image
+              </h3>
               <button
-                onClick={() => setShowUploadComponent(false)}
+                onClick={() => {
+                  setShowUploadComponent(false)
+                  setUploadType(null)
+                }}
                 className="p-2 hover:bg-gray-800/50 rounded-lg transition-colors"
               >
                 <span className="text-white text-xl">×</span>
@@ -252,7 +306,7 @@ export default function InputSection({
               <div className="bg-white/10 rounded-lg p-2">
                 <Sparkles className="w-5 h-5 text-gray-400" />
               </div>
-              <span className="text-white text-sm font-medium">{prompt}</span>
+              <span className="text-white text-sm font-medium">{generatedPrompt}</span>
             </div>
 
             <div className="relative bg-transparent backdrop-blur-sm border border-gray-700/30 rounded-xl p-6 lg:p-8 min-h-[400px] overflow-hidden">
@@ -324,7 +378,7 @@ export default function InputSection({
               <div className="bg-white/10 rounded-lg p-1.5 xs:p-2 flex-shrink-0">
                 <Sparkles className="w-3 h-3 xs:w-4 xs:h-4 text-gray-400" />
               </div>
-              <span className="text-white text-xs xs:text-sm font-medium line-clamp-2 flex-1">{prompt}</span>
+              <span className="text-white text-xs xs:text-sm font-medium line-clamp-2 flex-1">{generatedPrompt}</span>
             </div>
 
             {/* Horizontal Scrolling Images Container - Fully Responsive */}
@@ -417,13 +471,12 @@ export default function InputSection({
           isOpen={!!selectedImageForOverlay}
           onClose={closeImageOverlay}
           imageUrl={selectedImageForOverlay.url}
-          prompt={prompt}
-          model={selectedModel}
-          modelSelection={selectedModel}
+          prompt={generatedPrompt}
+          fontSelect={selectedFont}
           stylePalette={selectedStyle || ""}
           imageQuality={selectedQuality}
           frameSize={selectedAspectRatio}
-          numberOfItems={numberOfImages}
+          numberOfImages={numberOfImages}
         />
       )}
 

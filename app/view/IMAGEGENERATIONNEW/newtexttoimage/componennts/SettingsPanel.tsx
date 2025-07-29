@@ -1,13 +1,35 @@
 "use client"
 
 import { useState, useRef } from "react"
-import { X, ChevronDown } from "lucide-react"
+import { X, ChevronDown, Check } from "lucide-react"
 import { ModelsPresetPanel, promptEnhancer as PromptEnhancer,  AspectRatio, Quality, NumberSelector, OptionSelector, SelectColor, effects as Effects, lightning as Lightning, cameraAngles as CameraAngle, AdvanceSettingPanel, AddToCollection, PrivateMode, VisualIntensity, SocialMedia
 , ResetToDefaults} from "../../UI"
+
+interface SettingsData {
+  model: string;
+  style: string | null;
+  aspectRatio: string;
+  quality: string;
+  numberOfImages: number;
+  color: string | null;
+  customColor: string;
+  effect: string | null;
+  customEffect: string;
+  lightning: string | null;
+  customLightning: string;
+  cameraAngle: string | null;
+  visualIntensity: number;
+  visualIntensityEnabled: boolean;
+  socialPlatform: string | null;
+  socialFormat: string | null;
+  contentType: string | null;
+  promptEnhance: string;
+}
 
 interface SettingsPanelProps {
   isOpen: boolean
   onClose: () => void
+  onSave: (settingsData: SettingsData) => void
   selectedModel: string
   setSelectedModel: (model: string) => void
   selectedStyle: string | null
@@ -18,11 +40,38 @@ interface SettingsPanelProps {
   setSelectedQuality: (quality: string) => void
   numberOfImages: number
   setNumberOfImages: (number: number) => void
+  selectedColor: string | null
+  setSelectedColor: (color: string | null) => void
+  customColor: string
+  setCustomColor: (color: string) => void
+  selectedEffect: string | null
+  setSelectedEffect: (effect: string | null) => void
+  customEffect: string
+  setCustomEffect: (effect: string) => void
+  selectedLightning: string | null
+  setSelectedLightning: (lightning: string | null) => void
+  customLightning: string
+  setCustomLightning: (lightning: string) => void
+  selectedCameraAngle: string | null
+  setSelectedCameraAngle: (angle: string | null) => void
+  visualIntensity: number
+  setVisualIntensity: (intensity: number) => void
+  visualIntensityEnabled: boolean
+  setVisualIntensityEnabled: (enabled: boolean) => void
+  selectedSocialPlatform: string | null
+  setSelectedSocialPlatform: (platform: string | null) => void
+  selectedSocialFormat: string | null
+  setSelectedSocialFormat: (format: string | null) => void
+  selectedContentType: string | null
+  setSelectedContentType: (type: string | null) => void
+  promptEnhance: string
+  setPromptEnhance: (enhance: string) => void
 }
 
 export default function SettingsPanel({
   isOpen,
   onClose,
+  onSave,
   selectedModel,
   setSelectedModel,
   selectedStyle,
@@ -33,18 +82,40 @@ export default function SettingsPanel({
   setSelectedQuality,
   numberOfImages,
   setNumberOfImages,
+  selectedColor,
+  setSelectedColor,
+  customColor,
+  setCustomColor,
+  selectedEffect,
+  setSelectedEffect,
+  customEffect,
+  setCustomEffect,
+  selectedLightning,
+  setSelectedLightning,
+  customLightning,
+  setCustomLightning,
+  selectedCameraAngle,
+  setSelectedCameraAngle,
+  visualIntensity,
+  setVisualIntensity,
+  visualIntensityEnabled,
+  setVisualIntensityEnabled,
+  selectedSocialPlatform,
+  setSelectedSocialPlatform,
+  selectedSocialFormat,
+  setSelectedSocialFormat,
+  selectedContentType, // This should come from props
+  setSelectedContentType, // This should come from props
+  promptEnhance, // This should come from props
+  setPromptEnhance, // This should come from props
 }: SettingsPanelProps) {
   const [isModelsOpen, setIsModelsOpen] = useState(false)
   const toggleButtonRef = useRef<HTMLButtonElement>(null)
 
-  // Color, Effect, and Lightning state
-  const [selectedColor, setSelectedColor] = useState<string | null>(null)
-  const [customColor, setCustomColor] = useState<string>("")
-  const [selectedEffect, setSelectedEffect] = useState<string | null>(null)
-  const [customEffect, setCustomEffect] = useState<string>("")
-  const [selectedLightning, setSelectedLightning] = useState<string | null>(null)
-  const [customLightning, setCustomLightning] = useState<string>("")
-  const [selectedCameraAngle, setSelectedCameraAngle] = useState<string | null>(null)
+  // Add popup state
+  const [showSavePopup, setShowSavePopup] = useState(false)
+
+  // Remove duplicate state declarations - use props instead
   const [photoReal, setPhotoReal] = useState(false);
   const [negativePrompt, setNegativePrompt] = useState(false);
   const [transparency, setTransparency] = useState(false);
@@ -53,13 +124,9 @@ export default function SettingsPanel({
   const [collections, setCollections] = useState<string[]>([]);
   const [isCollectionOpen, setIsCollectionOpen] = useState(false);
   const [privateMode, setPrivateMode] = useState(false);
-  const [visualIntensity, setVisualIntensity] = useState<number>(1.0);
-  const [visualIntensityEnabled, setVisualIntensityEnabled] = useState<boolean>(false);
-  const [selectedSocialPlatform, setSelectedSocialPlatform] = useState<string | null>(null);
-  const [selectedSocialFormat, setSelectedSocialFormat] = useState<string | null>(null);
-  const [selectedContentType, setSelectedContentType] = useState<string | null>(null);
-
-  const [promptEnhance, setPromptEnhance] = useState("Auto");
+  // Remove these duplicate states - use props instead
+  // const [selectedContentType, setSelectedContentType] = useState<string | null>(null);
+  // const [promptEnhance, setPromptEnhance] = useState("Auto");
 
   const handleReset = () => {
     setIsModelsOpen(false);
@@ -84,29 +151,61 @@ export default function SettingsPanel({
     setSelectedSocialFormat(null);
     setSelectedContentType(null);
     setSelectedStyle(null);
-    setSelectedAspectRatio("");
-    setSelectedQuality("");
+    setSelectedAspectRatio("1:1"); // Set default
+    setSelectedQuality("HD"); // Set default
     setNumberOfImages(1);
+    setPromptEnhance("Auto");
   };
 
   const toggleModels = () => {
     setIsModelsOpen((prev) => !prev)
   }
 
-  const handleModelSelect = (model: string) => {
-    setSelectedModel(model)
-    setIsModelsOpen(false) // Close the models panel after selection
-  }
-
   const handleSave = () => {
-    // Handle save logic here
-    console.log("Settings saved:", {
+    console.log("SettingsPanel handleSave - selectedModel:", selectedModel)
+    
+    // Validate that a model is selected before saving
+    if (!selectedModel) {
+      alert("Please select a model first!")
+      return
+    }
+    
+    // Show popup
+    setShowSavePopup(true)
+    
+    // Hide popup after 2 seconds
+    setTimeout(() => {
+      setShowSavePopup(false)
+    }, 2000)
+    
+    // Apply settings to backend/prompt
+    const settingsData: SettingsData = {
       model: selectedModel,
       style: selectedStyle,
-      quality: selectedQuality,
       aspectRatio: selectedAspectRatio,
-      numberOfImages,
-    })
+      quality: selectedQuality,
+      numberOfImages: numberOfImages,
+      color: selectedColor,
+      customColor: customColor,
+      effect: selectedEffect,
+      customEffect: customEffect,
+      lightning: selectedLightning,
+      customLightning: customLightning,
+      cameraAngle: selectedCameraAngle,
+      visualIntensity: visualIntensity,
+      visualIntensityEnabled: visualIntensityEnabled,
+      socialPlatform: selectedSocialPlatform,
+      socialFormat: selectedSocialFormat,
+      contentType: selectedContentType,
+      promptEnhance: promptEnhance
+    }
+    
+    console.log("Settings data being passed:", settingsData)
+    
+    // Call parent's save handler with settings
+    onSave(settingsData)
+    
+    // Close the settings panel
     onClose()
   }
 
@@ -174,7 +273,11 @@ export default function SettingsPanel({
                   isOpen={isModelsOpen}
                   onClose={() => setIsModelsOpen(false)}
                   selectedModel={selectedModel}
-                  onModelSelect={handleModelSelect}
+                  onModelSelect={(model: string) => {
+                    console.log('SettingsPanel - Received model from ModelsPresetPanel:', model)
+                    setSelectedModel(model)
+                    setIsModelsOpen(false)
+                  }}
                   excludeRef={toggleButtonRef}
                 />
               </div>
@@ -185,7 +288,11 @@ export default function SettingsPanel({
                   isOpen={isModelsOpen}
                   onClose={() => setIsModelsOpen(false)}
                   selectedModel={selectedModel}
-                  onModelSelect={handleModelSelect}
+                  onModelSelect={(model: string) => {
+                    console.log('SettingsPanel - Received model from ModelsPresetPanel:', model)
+                    setSelectedModel(model)
+                    setIsModelsOpen(false)
+                  }}
                   excludeRef={toggleButtonRef}
                 />
               </div>
@@ -277,7 +384,11 @@ export default function SettingsPanel({
 
             {/* Aspect Ratio Section */}
             <div className="mb-6">
-              <AspectRatio onAspectRatioSelect={setSelectedAspectRatio} selectedAspectRatio={selectedAspectRatio} />
+              <AspectRatio 
+                onAspectRatioSelect={setSelectedAspectRatio}
+                selectedAspectRatio={selectedAspectRatio}
+                title="Frame Size"
+              />
             </div>
 
             {/* Number of Images Section */}
@@ -342,13 +453,10 @@ export default function SettingsPanel({
                 <div className="text-white font-medium mb-3">Settings Summary</div>
                 <div>Model Selection : <span className="text-[#5AD7FF]">{selectedModel}</span></div>
                 <div>Visual Intensity : <span className="text-[#5AD7FF]">{visualIntensityEnabled ? visualIntensity.toFixed(1) : "Disabled"}</span></div>
-                <div>Social Platform : <span className="text-[#5AD7FF]">{selectedSocialPlatform || "None"}</span></div>
-                <div>Social Format : <span className="text-[#5AD7FF]">{selectedSocialFormat || "None"}</span></div>
-                <div>Content Type : <span className="text-[#5AD7FF]">{selectedContentType || "None"}</span></div>
-                <div>Style Palette : <span className="text-[#5AD7FF]">{selectedStyle || "Bokeh"}</span></div>
-                <div>Selected Color : <span className="text-[#5AD7FF]">{selectedColor || customColor || "None"}</span></div>
-                <div>Selected Effect : <span className="text-[#5AD7FF]">{selectedEffect || customEffect || "None"}</span></div>
-                <div>Selected Lightning : <span className="text-[#5AD7FF]">{selectedLightning || customLightning || "None"}</span></div>
+                <div>Style Palettes : <span className="text-[#5AD7FF]">{selectedStyle || "None"}</span></div>
+                <div>Effects : <span className="text-[#5AD7FF]">{selectedEffect || customEffect || "None"}</span></div>
+                <div>Color Selection : <span className="text-[#5AD7FF]">{selectedColor || customColor || "None"}</span></div>
+                <div>Lightning : <span className="text-[#5AD7FF]">{selectedLightning || customLightning || "None"}</span></div>
                 <div>Camera Angle : <span className="text-[#5AD7FF]">{selectedCameraAngle || "None"}</span></div>
                 <div>Image Quality : <span className="text-[#5AD7FF]">{selectedQuality}</span></div>
                 <div>Frame Size : <span className="text-[#5AD7FF]">{selectedAspectRatio}</span></div>
@@ -359,8 +467,28 @@ export default function SettingsPanel({
         </div>
       </div>
 
-
-
+      {/* Save Popup */}
+      {showSavePopup && (
+        <div className="fixed top-4 right-4 bg-green-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 z-60">
+          <Check className="w-4 h-4" />
+          Changes Saved
+        </div>
+      )}
     </>
   )
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

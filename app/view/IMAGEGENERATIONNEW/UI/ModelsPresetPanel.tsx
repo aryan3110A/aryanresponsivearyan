@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useEffect, useRef, useState } from "react"
+import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import Image from "next/image"
 
@@ -63,18 +63,9 @@ const models = [
   },
   {
     id: "5",
-    title: "Flux.1 Schnell",
-    shortName: "F",
-    image: "/imagegenerationnew/models/model5.png",
-    description:
-      "A powerful fusion of MidJourney's artistic capabilities, Flux-Dev's efficiency, and LoRA fine-tuning, enabling highly customized, stylistic, and efficient AI-generated imagery.",
-    tokenCost: 30,
-  },
-  {
-    id: "6",
     title: "Stable Turbo",
     shortName: "S",
-    image: "/imagegenerationnew/models/model6.png",
+    image: "/imagegenerationnew/models/model5.png",
     description:
       "Get involved with the fastest growing open software project. Download and join other developers in creating incredible applications with Stable Diffusion XL as a foundation model.",
     tokenCost: 18,
@@ -86,31 +77,20 @@ export default function ModelsPresetPanel({
   onClose,
   selectedModel,
   onModelSelect,
-  excludeRef,
+ 
 }: ModelsPresetPanelProps) {
-  const panelRef = useRef<HTMLDivElement>(null)
   const [hoveredModel, setHoveredModel] = useState<string | null>(null)
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      const target = event.target as Node
-      const isClickInsidePanel = panelRef.current && panelRef.current.contains(target)
-      const isClickOnToggleButton = excludeRef?.current && excludeRef.current.contains(target)
-
-      if (!isClickInsidePanel && !isClickOnToggleButton) {
-        onClose()
-      }
-    }
-
-    if (isOpen) {
-      document.addEventListener("mousedown", handleClickOutside)
-    }
-
-    return () => document.removeEventListener("mousedown", handleClickOutside)
-  }, [isOpen, onClose, excludeRef])
-
-  const handleModelSelect = (model: string) => {
-    onModelSelect(model)
+  const handleModelClick = (model: Model) => {
+    console.log("ModelsPresetPanel - Model clicked:", model.title)
+    console.log("ModelsPresetPanel - onModelSelect function:", onModelSelect)
+    
+    // Call the callback with the model title
+    onModelSelect(model.title)
+    
+    console.log("ModelsPresetPanel - Called onModelSelect with:", model.title)
+    
+    // Close the panel
     onClose()
   }
 
@@ -138,7 +118,7 @@ export default function ModelsPresetPanel({
                       model={model}
                       isSelected={selectedModel === model.title}
                       isHovered={hoveredModel === model.id}
-                      onSelect={handleModelSelect}
+                      onSelect={handleModelClick}  // This should call handleModelClick
                       onHover={setHoveredModel}
                     />
                   ))}
@@ -159,28 +139,15 @@ export default function ModelsPresetPanel({
               <div className="py-4 px-2 space-y-4">
                 {/* Models Grid - 2x2 for mobile */}
                 <div className="grid grid-cols-2 gap-3">
-                  {models.slice(0, 4).map((model) => (
+                  {models.map((model) => (
                     <MobileModelCard
                       key={model.id}
                       model={model}
                       isSelected={selectedModel === model.title}
-                      onSelect={handleModelSelect}
+                      onSelect={handleModelClick}  // This should call handleModelClick
                     />
                   ))}
                 </div>
-                {/* Show more models if needed */}
-                {models.length > 4 && (
-                  <div className="grid grid-cols-2 gap-3">
-                    {models.slice(4).map((model) => (
-                      <MobileModelCard
-                        key={model.id}
-                        model={model}
-                        isSelected={selectedModel === model.title}
-                        onSelect={handleModelSelect}
-                      />
-                    ))}
-                  </div>
-                )}
               </div>
             </motion.div>
           </div>
@@ -201,7 +168,7 @@ function ModelCard({
   model: Model
   isSelected: boolean
   isHovered: boolean
-  onSelect: (model: string) => void
+  onSelect: (model: Model) => void  // Change this to accept full model
   onHover: (modelId: string | null) => void
 }) {
   return (
@@ -209,7 +176,7 @@ function ModelCard({
       className={`relative rounded-xl overflow-hidden cursor-pointer transition-all duration-300 ${
         isSelected ? "" : ""
       }`}
-      onClick={() => onSelect(model.title)}
+      onClick={() => onSelect(model)}  // Pass full model object
       onMouseEnter={() => onHover(model.id)}
       onMouseLeave={() => onHover(null)}
       layout
@@ -262,14 +229,14 @@ function MobileModelCard({
 }: {
   model: Model
   isSelected: boolean
-  onSelect: (model: string) => void
+  onSelect: (model: Model) => void  // Change this to accept full model
 }) {
   return (
     <div
       className={`relative rounded-xl overflow-hidden cursor-pointer transition-all duration-200 ${
         isSelected ? "" : ""
       }`}
-      onClick={() => onSelect(model.title)}
+      onClick={() => onSelect(model)}  // Pass full model object
     >
       {/* Card Background */}
       <div className="w-full h-[8vh]  aspect-square bg-white/10 flex flex-col items-left justify-left relative py-4 pl-2">
@@ -291,3 +258,9 @@ function MobileModelCard({
     </div>
   )
 }
+
+
+
+
+
+

@@ -233,10 +233,16 @@ export default function InputSection({
         </div>
       )}
 
-      {/* Loading State */}
+      {/* Enhanced Loading State with Progress */}
       {isGenerating && (
-        <div className="flex items-center justify-center py-8 xs:py-12 lg:py-16">
-          <div className="animate-spin rounded-full h-8 w-8 xs:h-12 xs:w-12 lg:h-16 lg:w-16 border-b-2 border-white"></div>
+        <div className="flex flex-col items-center justify-center py-8 xs:py-12 lg:py-16">
+          <div className="animate-spin rounded-full h-8 w-8 xs:h-12 xs:w-12 lg:h-16 lg:w-16 border-b-2 border-white mb-4"></div>
+          <div className="text-white text-sm xs:text-base text-center">
+            <div>Generating with {selectedModel}</div>
+            <div className="text-gray-400 text-xs xs:text-sm mt-1">
+              {selectedAspectRatio} • {selectedQuality} • {numberOfImages} image{numberOfImages > 1 ? 's' : ''}
+            </div>
+          </div>
         </div>
       )}
 
@@ -257,17 +263,17 @@ export default function InputSection({
                 {generatedImages.map((image, index) => (
                   <div
                     key={index}
-                    className="relative aspect-square bg-gray-900/50 rounded-xl overflow-hidden group cursor-pointer"
+                    className="relative bg-gray-900/50 rounded-xl overflow-hidden group cursor-pointer"
                     onMouseEnter={() => setHoveredImageIndex(index)}
                     onMouseLeave={() => setHoveredImageIndex(null)}
                   >
-                    <div className="w-full aspect-square bg-transparent rounded-lg overflow-hidden border border-white/10">
+                    <div className="w-full bg-transparent rounded-lg overflow-hidden border border-white/10">
                       <Image
                         src={image || "/placeholder.svg"}
                         alt={`Generated image ${index + 1}`}
-                        width={200}
-                        height={200}
-                        className="w-full h-full object-contain"
+                        width={400}
+                        height={400}
+                        className="w-full h-auto object-contain"
                       />
                     </div>
 
@@ -342,14 +348,14 @@ export default function InputSection({
                   >
                     {/* Image Container - Responsive */}
                     <div className="relative bg-transparent backdrop-blur-sm border border-gray-700/30 rounded-xl p-3 xs:p-4 overflow-hidden w-full">
-                      <div className="relative w-full aspect-square bg-gray-900/50 rounded-xl overflow-hidden">
-                        <div className="w-full aspect-square bg-transparent rounded-lg overflow-hidden border border-white/10">
+                      <div className="relative w-full bg-gray-900/50 rounded-xl overflow-hidden">
+                        <div className="w-full bg-transparent rounded-lg overflow-hidden border border-white/10">
                           <Image
                             src={image || "/placeholder.svg"}
                             alt={`Generated image ${index + 1}`}
                             width={400}
                             height={400}
-                            className="w-full h-full object-contain"
+                            className="w-full h-auto object-contain"
                           />
                         </div>
 
@@ -437,3 +443,6 @@ export default function InputSection({
     </div>
   )
 }
+
+
+

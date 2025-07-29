@@ -5,7 +5,7 @@ import { Plus, FolderOpen, Upload } from "lucide-react"
 
 interface AttachmentsDropdownProps {
   onChooseFromLibrary: () => void
-  onUploadFromDevices: () => void
+  onUploadFromDevices: (type: 'model' | 'product') => void
 }
 
 export default function AttachmentsDropdown({ onChooseFromLibrary, onUploadFromDevices }: AttachmentsDropdownProps) {
@@ -40,8 +40,13 @@ export default function AttachmentsDropdown({ onChooseFromLibrary, onUploadFromD
     setIsOpen(false)
   }
 
-  const handleUploadFromDevices = () => {
-    onUploadFromDevices()
+  const handleUploadModelImage = () => {
+    onUploadFromDevices('model')
+    setIsOpen(false)
+  }
+
+  const handleUploadProductImage = () => {
+    onUploadFromDevices('product')
     setIsOpen(false)
   }
 
@@ -87,13 +92,23 @@ export default function AttachmentsDropdown({ onChooseFromLibrary, onUploadFromD
           </button>
 
           <button
-            onClick={handleUploadFromDevices}
+            onClick={handleUploadModelImage}
             className="w-full flex items-center gap-3 px-2 md:px-4 py-1 text-white hover:bg-gray-800/50 transition-colors duration-200"
           >
             <div className="p-2 bg-gray-800/50 rounded-lg">
               <Upload className="w-4 h-4" />
             </div>
-            <span className="text-sm font-medium">Upload From Devices</span>
+            <span className="text-sm font-medium">Upload Model Image</span>
+          </button>
+
+          <button
+            onClick={handleUploadProductImage}
+            className="w-full flex items-center gap-3 px-2 md:px-4 py-1 text-white hover:bg-gray-800/50 transition-colors duration-200"
+          >
+            <div className="p-2 bg-gray-800/50 rounded-lg">
+              <Upload className="w-4 h-4" />
+            </div>
+            <span className="text-sm font-medium">Upload Product Image</span>
           </button>
         </div>
       </div>

@@ -9,8 +9,7 @@ interface ImageOverlayProps {
   onClose: () => void
   imageUrl: string
   prompt: string
-  model: string
-  modelSelection: string
+  fontSelect: string
   stylePalette: string
   imageQuality: string
   frameSize: string
@@ -23,8 +22,7 @@ export default function ImageOverlay({
   onClose,
   imageUrl,
   prompt,
-
-  modelSelection,
+  fontSelect,
   stylePalette,
   imageQuality,
   frameSize,
@@ -185,7 +183,7 @@ export default function ImageOverlay({
             <div className="px-6 md:pt-2 lg:pt-4 pb-2 flex-1 ">
               <div className="bg-white/5 backdrop-blur-3xl hover:bg-white/20 rounded-lg lg:p-4 md:p-2  space-y-1 lg:space-y-3  md:text-xs lg:text-sm text-gray-300 transition-colors">
                 <div className="flex justify-between">
-                  <span className="text-white">Model Selection: {modelSelection}</span>
+                  <span className="text-white">Font Select: {fontSelect}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-white">Camera Angle: {stylePalette}</span>
@@ -310,8 +308,8 @@ export default function ImageOverlay({
             <div className="px-4 mb-4">
               <div className="bg-white/5 backdrop-blur-3xl hover:bg-white/20 rounded-lg p-3 space-y-2 text-xs text-gray-300 transition-colors">
                 <div className="flex justify-between">
-                  <span className="text-white">Model Selection:</span>
-                  <span>{modelSelection}</span>
+                  <span className="text-white">Font Select:</span>
+                  <span>{fontSelect}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-white">Camera Angle:</span>

@@ -1,34 +1,42 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Header } from "../UI"
-import InputSection from "./componennts/InputSection"
-import SettingsPanel from "./componennts/SettingsPanel"
-// import BackgroundShapes from "./componennts/BackgroundShapes"
-import Image from 'next/image'
-import NavigationFull from "../../Core/NavigationFull"
-import Footer from "../../Core/Footer"
+import { useState } from "react";
+import { Header } from "../UI";
+import InputSection from "./componennts/InputSection";
+import SettingsPanel from "./componennts/SettingsPanel";
+import Image from "next/image";
+import NavigationFull from "../../Core/NavigationFull";
+import Footer from "../../Core/Footer";
 
-export default function  ProductWithModelPosePage() {
-  const [prompt, setPrompt] = useState("")
-  const [generatedImages, setGeneratedImages] = useState<string[]>([])
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false)
-  const [isGenerating, setIsGenerating] = useState(false)
-  const [selectedModel, setSelectedModel] = useState("Stable Diffusion 3.5 Large")
-  const [selectedStyle, setSelectedStyle] = useState<string | null>(null)
-  const [selectedAspectRatio, setSelectedAspectRatio] = useState("1:1")
-  const [selectedQuality, setSelectedQuality] = useState("HD")
-  const [numberOfImages, setNumberOfImages] = useState(1)
+export default function ProductWithModelPosePage() {
+  const [prompt, setPrompt] = useState("");
+  const [generatedPrompt, setGeneratedPrompt] = useState(""); // Store the prompt used for generation
+  const [generatedImages, setGeneratedImages] = useState<string[]>([]);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
+
+  const [selectedFont, setSelectedFont] = useState("Inter");
+  const [selectedStyle, setSelectedStyle] = useState<string | null>(null);
+  const [selectedAspectRatio, setSelectedAspectRatio] = useState("1:1");
+  const [selectedQuality, setSelectedQuality] = useState("HD");
+  const [numberOfImages, setNumberOfImages] = useState(1);
+  const [modelImage, setModelImage] = useState<File | null>(null);
+  const [productImage, setProductImage] = useState<File | null>(null);
 
   const handleGenerate = async () => {
-    if (!prompt.trim()) return
+    if (!prompt.trim()) return;
 
-    setIsGenerating(true)
-    
+    setIsGenerating(true);
+    // Store the current prompt as the generated prompt
+    setGeneratedPrompt(prompt);
+
     try {
-      // Prepare the final prompt with style if selected
-      const finalPrompt = selectedStyle ? `${prompt}, ${selectedStyle} style` : prompt
-      
+      if (!modelImage || !productImage) {
+        alert("Please upload both model and product images.");
+        setIsGenerating(false);
+        return;
+      }
+
       // Get resolution based on aspect ratio and quality
       const resolutionMap: Record<string, Record<string, [number, number]>> = {
         "1:1": {
@@ -43,6 +51,12 @@ export default function  ProductWithModelPosePage() {
           FullHD: [1920, 1080],
           "2K": [2560, 1440],
         },
+        "2:3": {
+          SD: [384, 576],
+          HD: [512, 768],
+          FullHD: [768, 1152],
+          "2K": [1024, 1536],
+        },
         "9:16": {
           SD: [360, 640],
           HD: [720, 1280],
@@ -55,99 +69,125 @@ export default function  ProductWithModelPosePage() {
           FullHD: [1024, 768],
           "2K": [2048, 1536],
         },
-      }
-
-      let [width, height] = resolutionMap[selectedAspectRatio]?.[selectedQuality] || [768, 768]
-      // Ensure width and height are divisible by 16
-      width = width - (width % 16)
-      height = height - (height % 16)
-
-      // Call the API
-      const response = await fetch('/api/generate-image', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+        "3:4": {
+          SD: [384, 512],
+          HD: [576, 768],
+          FullHD: [768, 1024],
+          "2K": [1536, 2048],
         },
-        body: JSON.stringify({
-          prompt: finalPrompt,
-          width,
-          height,
-          num_images: numberOfImages,
-          model: selectedModel,
-        }),
-      })
+        "Custom": {
+          SD: [768, 768],
+          HD: [1024, 1024],
+          FullHD: [1280, 1280],
+          "2K": [2048, 2048],
+        },
+      };
+
+      let [width, height] = resolutionMap[selectedAspectRatio]?.[selectedQuality] || [768, 768];
+      // Ensure width and height are divisible by 16 for better compatibility
+      width = width - (width % 16);
+      height = height - (height % 16);
+
+      console.log(`Generating ${numberOfImages} images with aspect ratio: ${selectedAspectRatio}, quality: ${selectedQuality}, resolution: ${width}x${height}`);
+
+      const formData = new FormData();
+      formData.append("model_image", modelImage);
+      formData.append("product_image", productImage);
+      formData.append("scene_desc", prompt); // User's custom prompt only
+      formData.append("numberOfImages", numberOfImages.toString());
+      formData.append("width", width.toString());
+      formData.append("height", height.toString());
+
+      const response = await fetch("http://localhost:7861/generate", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json();
 
       if (!response.ok) {
-        throw new Error('Failed to generate images')
+        throw new Error("Failed to generate image.");
       }
 
-      const data = await response.json()
-      setGeneratedImages(data.image_urls || [])
+      // Handle both single image and multiple images response
+      if (data.image_urls) {
+        // Multiple images
+        setGeneratedImages(data.image_urls.map((url: string) => `http://localhost:7861${url}`));
+      } else if (data.image_url) {
+        // Single image (backward compatibility)
+        setGeneratedImages([`http://localhost:7861${data.image_url}`]);
+      } else {
+        throw new Error("No image URLs received.");
+      }
     } catch (error) {
-      console.error('Generation failed:', error)
-      // Fallback to placeholder images for demo
-      const placeholderImages = Array(numberOfImages).fill("/placeholder.svg?height=400&width=400")
-      setGeneratedImages(placeholderImages)
+      console.error("Generation failed:", error);
+      const fallback = Array(numberOfImages).fill("/placeholder.svg");
+      setGeneratedImages(fallback);
     } finally {
-      setIsGenerating(false)
+      setIsGenerating(false);
     }
-  }
+  };
 
   const handleSettingsToggle = () => {
-    setIsSettingsOpen(!isSettingsOpen)
-  }
+    setIsSettingsOpen(!isSettingsOpen);
+  };
 
   return (
     <>
-    <div className="min-h-screen bg-black text-white relative overflow-hidden">
-      {/* Background Image */}
-      <div className="absolute inset-0 w-full h-full z-0">
-        <Image src="/newt2image/bg.png" alt="background" width={1920} height={1080} className="w-auto h-auto  md:-mt-48  object-contain " />
-      </div>
-      <NavigationFull />
-      {/* <BackgroundShapes /> */}
-
-      <div className="relative z-10">
-        <Header title="Product With Model Pose" />
-
-        <main className="container mx-auto  lg:px-8 xl:px-12 2xl:px-16">
-          
-          <InputSection
-            prompt={prompt}
-            setPrompt={setPrompt}
-            onGenerate={handleGenerate}
-            onSettingsToggle={handleSettingsToggle}
-            isGenerating={isGenerating}
-            generatedImages={generatedImages}
-            selectedModel={selectedModel}
-            selectedStyle={selectedStyle}
-            selectedQuality={selectedQuality}
-            selectedAspectRatio={selectedAspectRatio}
-            numberOfImages={numberOfImages}
+      <div className="min-h-screen bg-black text-white relative overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0 w-full h-full z-0">
+          <Image
+            src="/newt2image/bg.png"
+            alt="background"
+            width={1920}
+            height={1080}
+            className="w-auto h-auto md:-mt-48 object-contain"
           />
-        </main>
+        </div>
+        <NavigationFull />
 
-        
+        <div className="relative z-10">
+          <Header title="Product With Model Pose" />
+
+          <main className="container mx-auto lg:px-8 xl:px-12 2xl:px-16">
+            <InputSection
+              prompt={prompt}
+              setPrompt={setPrompt}
+              generatedPrompt={generatedPrompt}
+              onGenerate={handleGenerate}
+              onSettingsToggle={handleSettingsToggle}
+              isGenerating={isGenerating}
+              generatedImages={generatedImages}
+              selectedFont={selectedFont}
+              selectedStyle={selectedStyle}
+              selectedQuality={selectedQuality}
+              selectedAspectRatio={selectedAspectRatio}
+              numberOfImages={numberOfImages}
+              modelImage={modelImage}
+              setModelImage={setModelImage}
+              productImage={productImage}
+              setProductImage={setProductImage}
+            />
+          </main>
+        </div>
+
+        <SettingsPanel
+          isOpen={isSettingsOpen}
+          onClose={() => setIsSettingsOpen(false)}
+          selectedFont={selectedFont}
+          setSelectedFont={setSelectedFont}
+          selectedStyle={selectedStyle}
+          setSelectedStyle={setSelectedStyle}
+          selectedAspectRatio={selectedAspectRatio}
+          setSelectedAspectRatio={setSelectedAspectRatio}
+          selectedQuality={selectedQuality}
+          setSelectedQuality={setSelectedQuality}
+          numberOfImages={numberOfImages}
+          setNumberOfImages={setNumberOfImages}
+        />
       </div>
-      
-
-      <SettingsPanel
-        isOpen={isSettingsOpen}
-        onClose={() => setIsSettingsOpen(false)}
-        selectedModel={selectedModel}
-        setSelectedModel={setSelectedModel}
-        selectedStyle={selectedStyle}
-        setSelectedStyle={setSelectedStyle}
-        selectedAspectRatio={selectedAspectRatio}
-        setSelectedAspectRatio={setSelectedAspectRatio}
-        selectedQuality={selectedQuality}
-        setSelectedQuality={setSelectedQuality}
-        numberOfImages={numberOfImages}
-        setNumberOfImages={setNumberOfImages}
-      />
-      
-    </div>
-    <Footer />
+      <Footer />
     </>
-  )
+  );
 }

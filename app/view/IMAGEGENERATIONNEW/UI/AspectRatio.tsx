@@ -1,7 +1,5 @@
 "use client"
 
-import { useState } from "react"
-
 interface AspectRatioOption {
   label: string
   icon: string
@@ -27,15 +25,17 @@ export default function AspectRatio({
   ],
   className = ""
 }: AspectRatioProps) {
-  const [selected, setSelected] = useState<string>(selectedAspectRatio)
+  // Use the prop directly instead of internal state
+  const selected = selectedAspectRatio
 
   const handleSelect = (ratio: string) => {
-    setSelected(ratio)
+    console.log("AspectRatio - Selected:", ratio)
     if (onAspectRatioSelect) {
       onAspectRatioSelect(ratio)
     }
   }
 
+  // Update the button selection logic
   return (
     <div className={className}>
       <div className="mx-2 md:mx-6 border-t border-white/15 mb-6"></div>
@@ -47,7 +47,7 @@ export default function AspectRatio({
             className={`h-[60px] border-2 rounded-lg flex flex-col items-center justify-center cursor-pointer transition-all ${
               selected === ratio.label 
               ? "border-[#6C3BFF] text-white bg-white/10" 
-              : "text-gray-300 border border-none bg-white/10 backdrop-blur-3xl hover:border-[#6C3BFF] hover:text-white"
+              : "text-gray-300 border-transparent bg-white/10 backdrop-blur-3xl hover:border-[#6C3BFF] hover:text-white"
             }`}
             onClick={() => handleSelect(ratio.label)}
           >
@@ -59,3 +59,4 @@ export default function AspectRatio({
     </div>
   )
 }
+

@@ -4,16 +4,16 @@ import { useState } from "react"
 import { ChevronDown } from 'lucide-react'
 
 interface CameraAngleProps {
-  onStyleSelect?: (style: string) => void
-  selectedStyle?: string | null
+  onCameraAngleSelect?: (cameraAngle: string) => void
+  selectedCameraAngle?: string | null
 }
 
 export default function CameraAngle({
-  onStyleSelect,
-  selectedStyle,
+  onCameraAngleSelect,
+  selectedCameraAngle,
 }: CameraAngleProps) {
   const [isOpen, setIsOpen] = useState(false)
-  const [selectedOption, setSelectedOption] = useState<string | null>(selectedStyle ?? null)
+  const [selectedOption, setSelectedOption] = useState<string | null>(selectedCameraAngle ?? null)
 
   const options = [
     "Front View",
@@ -28,15 +28,15 @@ export default function CameraAngle({
     "Context Shot",
   ]
 
-  const handleStyleSelect = (option: string) => {
+  const handleCameraAngleSelect = (option: string) => {
     setSelectedOption(option)
-    if (onStyleSelect) {
-      onStyleSelect(option)
+    if (onCameraAngleSelect) {
+      onCameraAngleSelect(option)
     }
   }
 
   return (
-    <div>
+<div><div className="mx-2 md:mx-6 border-t border-white/15 mb-6 "></div>
       <div className="flex items-center justify-between mb-4 px-2 md:px-6">
         <h3 className="text-white text-lg md:text-xl font-medium">Camera Angle</h3>
         <button
@@ -48,16 +48,16 @@ export default function CameraAngle({
       </div>
       
       {isOpen && (
-        <div className="space-y-4 mb-4 px-2 md:px-6">
+        <div className="space-y-2 mb-4 px-2 md:px-6">
           {options.map((option, index) => (
             <button
               key={index}
-              className={`w-full p-3 rounded-lg text-left text-white text-sm md:text-lg transition-all duration-200 ${
+              className={`w-full p-3 rounded-lg text-left text-white text-sm md:text-md transition-all duration-200 ${
                 selectedOption === option 
                    ? "bg-white/10 border-2 border-[#6C3BFF]"
                   : "bg-white/10 hover:bg-[#3A3A3A] border-2 border-transparent"
               }`}
-              onClick={() => handleStyleSelect(option)}
+              onClick={() => handleCameraAngleSelect(option)}
             >
               {option}
             </button>

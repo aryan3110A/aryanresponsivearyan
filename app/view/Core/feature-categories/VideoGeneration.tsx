@@ -22,8 +22,8 @@ export default function VideoGeneration() {
   return (
     <div className="space-y-4">
       <h3 className=" font-semibold text-base text-[#00F0FF] md:text-[1.25rem] mb-4">
-              <Image src="/IMAGEGENERATIONNEW/navigationcategory/imagenav.png" width={32} height={32} alt="Image Generation" className="inline-block mr-2" />
-              Image Generation</h3>
+              <Image src="/IMAGEGENERATIONNEW/navigationcategory/imagenav.png" width={32} height={32} alt="Video Generation" className="inline-block mr-2" />
+              Video Generation</h3>
             <div className="space-y-3 ">
         {videoFeatures.map((feature, index) => (
           <Link

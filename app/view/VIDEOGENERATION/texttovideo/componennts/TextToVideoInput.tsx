@@ -19,17 +19,16 @@ export default function TextToVideoInput({
   const showCameraMovements = supportsCameraMovements(selectedModel)
 
   const handleCameraMovementToggle = (movementId: string) => {
-    setSelectedCameraMovements(prev => {
-      if (prev.includes(movementId)) {
-        return prev.filter(id => id !== movementId)
+    if (selectedCameraMovements.includes(movementId)) {
+      setSelectedCameraMovements(selectedCameraMovements.filter((id: string) => id !== movementId))
+    } else {
+      // Limit to 3 camera movements as recommended
+      if (selectedCameraMovements.length >= 3) {
+        setSelectedCameraMovements([...selectedCameraMovements.slice(1), movementId])
       } else {
-        // Limit to 3 camera movements as recommended
-        if (prev.length >= 3) {
-          return [...prev.slice(1), movementId]
-        }
-        return [...prev, movementId]
+        setSelectedCameraMovements([...selectedCameraMovements, movementId])
       }
-    })
+    }
   }
 
   return (

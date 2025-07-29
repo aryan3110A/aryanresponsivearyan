@@ -9,6 +9,12 @@ const nextConfig = {
         pathname: '/images/**',
       },
       {
+        protocol: 'http',
+        hostname: 'localhost',
+        port: '7861',
+        pathname: '/download/**',
+      },
+      {
         protocol: 'https',
         hostname: 'api.wildmindai.com',
         pathname: '/images/**',
