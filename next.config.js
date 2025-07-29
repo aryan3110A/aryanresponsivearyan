@@ -49,6 +49,11 @@ const nextConfig = {
         hostname: 'public-cdn-video-data-algeng-us.oss-us-east-1.aliyuncs.com',
         pathname: '/**',
       },
+       {
+        protocol: 'https',
+        hostname: 'cf5fbb801d9c.ngrok-free.app',
+        pathname: '/**',
+      },
     ],
     // Exclude video files from image optimization
     unoptimized: false,
