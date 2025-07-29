@@ -11,7 +11,7 @@ const nextConfig = {
       {
         protocol: 'http',
         hostname: 'localhost',
-        port: '7861',
+        port: '7862',
         pathname: '/download/**',
       },
       {

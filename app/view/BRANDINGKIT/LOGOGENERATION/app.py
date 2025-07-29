@@ -15,6 +15,7 @@ CORS(app, origins=[
     "https://api.wildmindai.com",
     "https://*.vercel.app"
 ])
+
 pipe = FluxKontextPipeline.from_pretrained(
     "black-forest-labs/FLUX.1-Kontext-dev",
     torch_dtype=torch.bfloat16,
@@ -33,17 +34,6 @@ def generate_logo(prompt, seed=42):
     ).images[0]
     return image
 
-def make_transparent(image):
-    image = image.convert("RGBA")
-    np_image = np.array(image)
-    gray = cv2.cvtColor(np_image[:, :, :3], cv2.COLOR_RGB2GRAY)
-    edges = cv2.Canny(gray, threshold1=30, threshold2=120)
-    edges = cv2.dilate(edges, None, iterations=2)
-    mask = cv2.GaussianBlur(edges, (5, 5), 0)
-    _, alpha = cv2.threshold(mask, 10, 255, cv2.THRESH_BINARY)
-    np_image[:, :, 3] = alpha
-    return Image.fromarray(np_image)
-
 @app.route("/generate", methods=["POST"])
 def generate():
     data = request.get_json()
@@ -57,10 +47,9 @@ def generate():
         image = generate_logo(prompt, seed=42 + i)
         ts = datetime.now().strftime("%Y%m%d_%H%M%S")
         base_name = f"logo_{prompt.replace(' ', '_')[:30]}_{ts}_{i}"
-        transparent = make_transparent(image)
-        transparent_path = os.path.join(output_dir, base_name + "_transparent.png")
-        transparent.save(transparent_path)
-        urls.append(f"/download/{base_name}_transparent.png")
+        logo_path = os.path.join(output_dir, base_name + ".png")
+        image.save(logo_path)
+        urls.append(f"/download/{base_name}.png")
     return jsonify({"image_urls": urls})
 
 @app.route("/download/<filename>")

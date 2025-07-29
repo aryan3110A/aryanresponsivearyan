@@ -63,7 +63,7 @@ export default function LOGOGENERATION() {
       height = height - (height % 16)
 
       // Call the API
-      const response = await fetch('http://localhost:7862/generate', {
+      const response = await fetch('https://9fbe9881d16c.ngrok-free.app/generate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -80,7 +80,7 @@ export default function LOGOGENERATION() {
 
       const data = await response.json()
       if (data.image_urls) {
-        setGeneratedImages(data.image_urls.map((url: string) => `http://localhost:7862${url}`));
+        setGeneratedImages(data.image_urls.map((url: string) => `https://9fbe9881d16c.ngrok-free.app${url}`));
       } else {
         setGeneratedImages([]);
       }
@@ -115,7 +115,7 @@ export default function LOGOGENERATION() {
           
           <InputSection
             prompt={prompt}
-            setPrompt={setPrompt}
+            setPrompt={setPrompt} 
             onGenerate={handleGenerate}
             onSettingsToggle={handleSettingsToggle}
             isGenerating={isGenerating}

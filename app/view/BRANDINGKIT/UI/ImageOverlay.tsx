@@ -123,7 +123,7 @@ export default function ImageOverlay({
   return (
     <div className={className}>
       {/* Desktop Layout - Properly Centered */}
-      <div className="hidden md:flex fixed inset-0 bg:transparent backdrop-blur-3xl shadow-sm z-50 items-center justify-center md:py-10 lg:py-10">
+      <div className="hidden md:flex fixed inset-0 bg:transparent backdrop-blur-3xl shadow-sm z-50 items-center justify-center md:py-16 lg:py-20">
         {/* Modal Container - Centered */}
         <div className="relative w-full md:max-w-6xl lg:max-w-7xl h-full max-h-[90vh] bg-white/10 backdrop-blur-3xl shadow-3xl rounded-2xl overflow-hidden flex md:p-10 lg:p-10">
           <button
@@ -133,7 +133,7 @@ export default function ImageOverlay({
             <X className="w-6 h-6" />
           </button>
           {/* Left Side - Image */}
-          <div className="flex-1 flex items-center justify-center">
+          <div className="flex-1 flex items-center justify-center ">
             <div className="relative w-full h-full md:max-w-2xl lg:max-w-3xl max-h-full">
               <Image
                 src={imageUrl || "/placeholder.svg"}
