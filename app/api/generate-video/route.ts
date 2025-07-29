@@ -298,6 +298,7 @@ export async function POST(request: NextRequest) {
     // Extract GroupId from the JWT token
     const group_id = extractGroupIdFromToken(API_KEY || '')
     console.log('Using GroupId:', group_id)
+    
 
     if (!prompt) {
       return NextResponse.json({ error: 'Prompt is required' }, { status: 400 })

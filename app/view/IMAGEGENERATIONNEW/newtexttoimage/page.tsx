@@ -58,8 +58,8 @@ export default function NewText2Image() {
 
   const modelSlugMap: Record<string, string> = {
     "Stable Turbo": "stable-turbo",
-    "Stable Large": "stable-large",
-    "Stable Medium": "stable-medium",
+    "Stable Diffusion 3.5 Large": "stable-large",
+    "Stable Diffusion 3.5 Medium": "stable-medium",
     "Stable XL": "stable-xl",
     "Flux.1 Dev": "flux-dev",
     "Flux.1 Schnell": "flux-schnell"
