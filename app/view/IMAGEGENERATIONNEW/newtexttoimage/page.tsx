@@ -79,8 +79,8 @@ export default function NewText2Image() {
 
   const handleGenerate = async () => {
     if (!prompt.trim()) return
-    setIsGenerating(true)
 
+    setIsGenerating(true)
     const finalPrompt = currentSettings ? buildEnhancedPrompt(prompt, currentSettings) : prompt
     console.log("Generating with enhanced prompt:", finalPrompt)
     console.log("Using settings:", currentSettings)
@@ -90,22 +90,23 @@ export default function NewText2Image() {
     let width = 768, height = 768
     if (aspectRatio === "16:9") {
       width = quality === "4K" ? 1920 : 1024
-      height = quality === "4K" ? 1080 : 576
     } else if (aspectRatio === "9:16") {
-      width = quality === "4K" ? 1080 : 576
       height = quality === "4K" ? 1920 : 1024
+      width = quality === "4K" ? 1080 : 576
     }
 
     const controller = new AbortController()
     const timeout = setTimeout(() => controller.abort(), 60000)
 
+    const modelName = currentSettings?.model || selectedModel
+    const modelEndpoint = `https://cf5fbb801d9c.ngrok-free.app/${modelName}/generate`
+
     try {
-const response = await fetch('https://cf5fbb801d9c.ngrok-free.app/stable-turbo/generate', {
+      const response = await fetch(modelEndpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           prompt: finalPrompt,
-          model: currentSettings?.model || selectedModel,
           width,
           height,
           num_images: currentSettings?.numberOfImages || 1,
@@ -121,7 +122,7 @@ const response = await fetch('https://cf5fbb801d9c.ngrok-free.app/stable-turbo/g
     } catch (err) {
       console.error("Primary API failed:", err)
       try {
-        const fallback = await fetch('https://cf5fbb801d9c.ngrok-free.app/stable-turbo/generate', {
+        const fallback = await fetch(modelEndpoint, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ prompt: finalPrompt, width, height, num_images: numberOfImages })
