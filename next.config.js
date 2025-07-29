@@ -54,6 +54,11 @@ const nextConfig = {
         hostname: 'cf5fbb801d9c.ngrok-free.app',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: '9fbe9881d16c.ngrok-free.app',
+        pathname: '/**',
+      },
     ],
     // Exclude video files from image optimization
     unoptimized: false,
