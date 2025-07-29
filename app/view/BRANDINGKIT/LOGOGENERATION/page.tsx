@@ -29,39 +29,6 @@ export default function LOGOGENERATION() {
       // Prepare the final prompt with style if selected
       const finalPrompt = selectedStyle ? `${prompt}, ${selectedStyle} style` : prompt
       
-      // Get resolution based on aspect ratio and quality
-      const resolutionMap: Record<string, Record<string, [number, number]>> = {
-        "1:1": {
-          SD: [512, 512],
-          HD: [768, 768],
-          FullHD: [1024, 1024],
-          "2K": [2048, 2048],
-        },
-        "16:9": {
-          SD: [640, 360],
-          HD: [1280, 720],
-          FullHD: [1920, 1080],
-          "2K": [2560, 1440],
-        },
-        "9:16": {
-          SD: [360, 640],
-          HD: [720, 1280],
-          FullHD: [1080, 1920],
-          "2K": [1440, 2560],
-        },
-        "4:3": {
-          SD: [512, 384],
-          HD: [768, 576],
-          FullHD: [1024, 768],
-          "2K": [2048, 1536],
-        },
-      }
-
-      let [width, height] = resolutionMap[selectedAspectRatio]?.[selectedQuality] || [768, 768]
-      // Ensure width and height are divisible by 16
-      width = width - (width % 16)
-      height = height - (height % 16)
-
       // Call the API
       const response = await fetch('https://9fbe9881d16c.ngrok-free.app/generate', {
         method: 'POST',
