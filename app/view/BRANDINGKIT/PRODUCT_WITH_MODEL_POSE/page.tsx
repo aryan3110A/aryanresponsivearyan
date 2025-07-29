@@ -1,3 +1,4 @@
+// Backend API now uses ngrok for remote access: https://9fbe9881d16c.ngrok-free.app
 "use client";
 
 import { useState } from "react";
@@ -98,7 +99,7 @@ export default function ProductWithModelPosePage() {
       formData.append("width", width.toString());
       formData.append("height", height.toString());
 
-      const response = await fetch("http://localhost:7861/generate", {
+      const response = await fetch("https://9fbe9881d16c.ngrok-free.app/generate", {
         method: "POST",
         body: formData,
       });
@@ -112,10 +113,10 @@ export default function ProductWithModelPosePage() {
       // Handle both single image and multiple images response
       if (data.image_urls) {
         // Multiple images
-        setGeneratedImages(data.image_urls.map((url: string) => `http://localhost:7861${url}`));
+        setGeneratedImages(data.image_urls.map((url: string) => `https://9fbe9881d16c.ngrok-free.app${url}`));
       } else if (data.image_url) {
         // Single image (backward compatibility)
-        setGeneratedImages([`http://localhost:7861${data.image_url}`]);
+        setGeneratedImages([`https://9fbe9881d16c.ngrok-free.app${data.image_url}`]);
       } else {
         throw new Error("No image URLs received.");
       }
