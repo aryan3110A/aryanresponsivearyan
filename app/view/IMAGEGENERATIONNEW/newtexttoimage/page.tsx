@@ -97,7 +97,7 @@ export default function NewText2Image() {
     }
 
     const controller = new AbortController()
-    const timeout = setTimeout(() => controller.abort(), 9500)
+    const timeout = setTimeout(() => controller.abort(), 60000)
 
     try {
       const response = await fetch('/api/generate-image', {
