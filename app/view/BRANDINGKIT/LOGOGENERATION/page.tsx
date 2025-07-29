@@ -36,10 +36,11 @@ export default function LOGOGENERATION() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          prompt: finalPrompt,
+          prompt: finalPrompt, // just prompt + style if selected
           num_images: numberOfLogo,
         }),
       })
+      
 
       if (!response.ok) {
         throw new Error('Failed to generate images')
