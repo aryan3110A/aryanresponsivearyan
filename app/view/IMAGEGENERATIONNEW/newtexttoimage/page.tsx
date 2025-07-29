@@ -106,9 +106,9 @@ export default function NewText2Image() {
     }
 
     const controller = new AbortController()
-    const timeout = setTimeout(() => controller.abort(), 60000)
+    const timeout = setTimeout(() => controller.abort(), 180000)
 
-    try {
+    try { 
       const modelName = currentSettings?.model || selectedModel
       const modelSlug = modelSlugMap[modelName] || "stable-turbo"
       const modelEndpoint = `https://cf5fbb801d9c.ngrok-free.app/${modelSlug}/generate`
