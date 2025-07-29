@@ -137,7 +137,7 @@ export default function NewText2Image() {
         height = quality === "4K" ? 1920 : 1024
       }
 
-      const response = await fetch('/api/generate-image', {
+const response = await fetch('https://cf5fbb801d9c.ngrok-free.app', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
