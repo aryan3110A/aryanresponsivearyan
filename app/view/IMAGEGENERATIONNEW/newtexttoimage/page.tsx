@@ -56,6 +56,15 @@ export default function NewText2Image() {
 
   const [currentSettings, setCurrentSettings] = useState<SettingsData | null>(null)
 
+  const modelSlugMap: Record<string, string> = {
+    "Stable Turbo": "stable-turbo",
+    "Stable Large": "stable-large",
+    "Stable Medium": "stable-medium",
+    "Stable XL": "stable-xl",
+    "Flux.1 Dev": "flux-dev",
+    "Flux.1 Schnell": "flux-schnell"
+  };
+
   const buildEnhancedPrompt = (basePrompt: string, settings: SettingsData) => {
     let enhancedPrompt = basePrompt
     if (settings?.style) enhancedPrompt += `, ${settings.style} style`
@@ -79,8 +88,8 @@ export default function NewText2Image() {
 
   const handleGenerate = async () => {
     if (!prompt.trim()) return
-
     setIsGenerating(true)
+
     const finalPrompt = currentSettings ? buildEnhancedPrompt(prompt, currentSettings) : prompt
     console.log("Generating with enhanced prompt:", finalPrompt)
     console.log("Using settings:", currentSettings)
@@ -90,23 +99,25 @@ export default function NewText2Image() {
     let width = 768, height = 768
     if (aspectRatio === "16:9") {
       width = quality === "4K" ? 1920 : 1024
+      height = quality === "4K" ? 1080 : 576
     } else if (aspectRatio === "9:16") {
-      height = quality === "4K" ? 1920 : 1024
       width = quality === "4K" ? 1080 : 576
+      height = quality === "4K" ? 1920 : 1024
     }
 
     const controller = new AbortController()
     const timeout = setTimeout(() => controller.abort(), 60000)
 
-    const modelName = currentSettings?.model || selectedModel
-    const modelEndpoint = `https://cf5fbb801d9c.ngrok-free.app/${modelName}/generate`
-
     try {
+      const modelName = currentSettings?.model || selectedModel
+      const modelSlug = modelSlugMap[modelName] || "stable-turbo"
+      const modelEndpoint = `https://cf5fbb801d9c.ngrok-free.app/${modelSlug}/generate`
       const response = await fetch(modelEndpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           prompt: finalPrompt,
+          model: currentSettings?.model || selectedModel,
           width,
           height,
           num_images: currentSettings?.numberOfImages || 1,
@@ -122,6 +133,9 @@ export default function NewText2Image() {
     } catch (err) {
       console.error("Primary API failed:", err)
       try {
+        const modelName = currentSettings?.model || selectedModel
+        const modelSlug = modelSlugMap[modelName] || "stable-turbo"
+        const modelEndpoint = `https://cf5fbb801d9c.ngrok-free.app/${modelSlug}/generate`
         const fallback = await fetch(modelEndpoint, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
