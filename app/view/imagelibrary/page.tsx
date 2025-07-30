@@ -1,8 +1,10 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { collection, query, orderBy, onSnapshot, deleteDoc, doc } from 'firebase/firestore'
+import { collection, query, orderBy, onSnapshot, deleteDoc, doc, getDoc } from 'firebase/firestore'
 import { db } from '@/lib/firebase'
+import { deleteObject, ref } from 'firebase/storage'
+import { storage } from '@/lib/firebase'
 import CategorySelector from './components/CategorySelector'
 import ImageUploader from './components/ImageUploader'
 import PromptInput from './components/PromptInput'
@@ -89,6 +91,7 @@ export default function ImageLibrary() {
   const [generatedSets, setGeneratedSets] = useState<GeneratedSet[]>([])
   const [, setCurrentGeneratedSet] = useState<GeneratedSet | null>(null)
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
+  const [isDeleting, setIsDeleting] = useState(false)
 
   // Load generated sets from Firestore
   useEffect(() => {
@@ -153,12 +156,107 @@ export default function ImageLibrary() {
     setCurrentStep('library')
   }
 
-  const deleteSet = async (setId: string) => {
+  // Utility function to clean up placeholder data
+  const cleanupPlaceholderData = async () => {
     try {
+      console.log('🧹 Cleaning up placeholder data...')
+
+      const setsToDelete: string[] = []
+
+      generatedSets.forEach(set => {
+        // Check if this set contains only placeholder images
+        const hasOnlyPlaceholders = set.generatedImages.every(img =>
+          img.url.includes('picsum.photos') || img.url.includes('placeholder')
+        )
+
+        if (hasOnlyPlaceholders || set.generatedImages.length === 0) {
+          setsToDelete.push(set.id)
+        }
+      })
+
+      if (setsToDelete.length > 0) {
+        console.log(`🗑️ Found ${setsToDelete.length} sets with placeholder data to delete`)
+
+        for (const setId of setsToDelete) {
+          await deleteSet(setId)
+        }
+
+        console.log('✅ Cleanup completed')
+      } else {
+        console.log('✅ No placeholder data found')
+      }
+    } catch (error) {
+      console.error('❌ Error during cleanup:', error)
+    }
+  }
+
+  const deleteSet = async (setId: string) => {
+    if (isDeleting) return // Prevent multiple simultaneous deletions
+
+    try {
+      setIsDeleting(true)
+      console.log('🗑️ Deleting generated set:', setId)
+
+      // First, get the set data to access image URLs and storage paths
+      const setDoc = await getDoc(doc(db, 'generatedSets', setId))
+
+      if (setDoc.exists()) {
+        const setData = setDoc.data() as GeneratedSet
+
+        // Delete images from Firebase Storage if they have storage paths
+        if (setData.generatedImages && setData.generatedImages.length > 0) {
+          console.log(`🗑️ Deleting ${setData.generatedImages.length} images from Firebase Storage...`)
+
+          const deletePromises = setData.generatedImages.map(async (image) => {
+            try {
+              // Extract storage path from Firebase Storage URL
+              if (image.url && image.url.includes('firebasestorage.googleapis.com')) {
+                const urlParts = image.url.split('/')
+                const fileNameWithParams = urlParts[urlParts.length - 1]
+                const fileName = fileNameWithParams.split('?')[0]
+                const decodedFileName = decodeURIComponent(fileName)
+
+                // Create storage reference and delete
+                const imageRef = ref(storage, decodedFileName)
+                await deleteObject(imageRef)
+                console.log('✅ Deleted image from storage:', decodedFileName)
+              }
+            } catch (storageError) {
+              console.warn('⚠️ Could not delete image from storage:', storageError)
+              // Continue with deletion even if storage cleanup fails
+            }
+          })
+
+          // Wait for all storage deletions to complete (or fail)
+          await Promise.allSettled(deletePromises)
+        }
+
+        // Delete the original reference image if it exists
+        if (setData.originalImage && setData.originalImage.includes('firebasestorage.googleapis.com')) {
+          try {
+            const urlParts = setData.originalImage.split('/')
+            const fileNameWithParams = urlParts[urlParts.length - 1]
+            const fileName = fileNameWithParams.split('?')[0]
+            const decodedFileName = decodeURIComponent(fileName)
+
+            const originalImageRef = ref(storage, decodedFileName)
+            await deleteObject(originalImageRef)
+            console.log('✅ Deleted original image from storage:', decodedFileName)
+          } catch (storageError) {
+            console.warn('⚠️ Could not delete original image from storage:', storageError)
+          }
+        }
+      }
+
+      // Finally, delete the Firestore document
       await deleteDoc(doc(db, 'generatedSets', setId))
-      console.log('✅ Generated set deleted')
+      console.log('✅ Generated set deleted from Firestore')
+
     } catch (error) {
       console.error('❌ Error deleting generated set:', error)
+      throw error // Re-throw to show error to user
+    } finally {
+      setIsDeleting(false)
     }
   }
 
@@ -261,6 +359,7 @@ export default function ImageLibrary() {
             onViewModeChange={setViewMode}
             onDeleteSet={deleteSet}
             onNewProject={resetToStart}
+            onCleanupPlaceholders={cleanupPlaceholderData}
           />
         )}
       </div>
