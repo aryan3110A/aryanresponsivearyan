@@ -180,7 +180,7 @@ export default function InputSection({
               <div className="space-y-3">
                 <div className="flex items-center gap-3">
                   <div className="w-2 h-2 bg-[#6C3BFF] rounded-full"></div>
-                  <h3 className="text-white text-lg font-medium">Music Style</h3>
+                  <h3 className="text-white text-lg font-medium">Music styles</h3>
                 </div>
                 <input
                   type="text"
