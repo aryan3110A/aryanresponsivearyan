@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Firebase Storage CORS Test</title>
+</head>
+<body>
+    <h1>Firebase Storage CORS Test</h1>
+    <div id="status">Testing...</div>
+    <div id="result"></div>
+    
+    <script>
+        async function testCORS() {
+            const statusDiv = document.getElementById('status');
+            const resultDiv = document.getElementById('result');
+            
+            // Test URL - replace with an actual Firebase Storage URL from your bucket
+            const testUrl = 'https://firebasestorage.googleapis.com/v0/b/wild-mind-ai.firebasestorage.app/o/generated-images%2Ftest.png?alt=media';
+            
+            try {
+                statusDiv.innerHTML = '🔍 Testing CORS with fetch...';
+                
+                const response = await fetch(testUrl, {
+                    method: 'HEAD',
+                    mode: 'cors'
+                });
+                
+                if (response.ok) {
+                    statusDiv.innerHTML = '✅ CORS is working! Status: ' + response.status;
+                    resultDiv.innerHTML = '<p>Headers:</p><pre>' + JSON.stringify(Object.fromEntries(response.headers.entries()), null, 2) + '</pre>';
+                } else {
+                    statusDiv.innerHTML = '❌ CORS test failed. Status: ' + response.status;
+                }
+                
+            } catch (error) {
+                statusDiv.innerHTML = '❌ CORS test failed with error: ' + error.message;
+                resultDiv.innerHTML = '<p>This usually means CORS is not configured properly.</p>';
+                
+                // Try with an image element as fallback test
+                statusDiv.innerHTML += '<br>🔍 Testing with image element...';
+                
+                const img = new Image();
+                img.crossOrigin = 'anonymous';
+                
+                img.onload = function() {
+                    statusDiv.innerHTML += '<br>✅ Image element test passed!';
+                };
+                
+                img.onerror = function() {
+                    statusDiv.innerHTML += '<br>❌ Image element test failed!';
+                };
+                
+                img.src = testUrl;
+            }
+        }
+        
+        // Run test when page loads
+        testCORS();
+    </script>
+</body>
+</html>

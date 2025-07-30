@@ -132,4 +132,5 @@ export const ROUTES = {
   ...IMAGEGENERATION,
   ...BRANDINGKIT,
   ...VIDEOGENERATION,
-} as const; 
+  ...MUSICGENERATION,
+} as const;
