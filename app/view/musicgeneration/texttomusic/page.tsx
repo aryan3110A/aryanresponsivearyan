@@ -22,24 +22,35 @@ export default function TextToMusic() {
   const [promptEnhance, setPromptEnhance] = useState<string>("Auto")
   const [lyrics, setLyrics] = useState<string>("")
   const [songStructure, setSongStructure] = useState<string[]>(["verse", "chorus", "verse", "chorus", "bridge", "chorus"])
+  const [generationStatus, setGenerationStatus] = useState<string>("")
 
   const handleGenerate = async () => {
-    if (!prompt.trim() || !lyrics.trim()) {
-      alert("Please provide both prompt and lyrics")
+    // Add default values if fields are empty
+    const finalPrompt = prompt.trim() || "Create a beautiful instrumental music piece"
+    const finalLyrics = lyrics.trim() || "This is a beautiful song with meaningful lyrics that tell a story of hope and inspiration"
+    
+    if (finalPrompt.length < 10) {
+      alert("Please provide a prompt with at least 10 characters")
+      return
+    }
+
+    if (finalLyrics.length < 10) {
+      alert("Please provide lyrics with at least 10 characters")
       return
     }
 
     setIsGenerating(true)
+    setGenerationStatus("Starting music generation...")
 
     try {
       // Create structured lyrics by combining user lyrics with song structure
       const createStructuredLyrics = () => {
         if (songStructure.length === 0) {
-          return lyrics; // Return raw lyrics if no structure
+          return finalLyrics; // Return raw lyrics if no structure
         }
 
         // Split lyrics into lines and distribute across structure
-        const lyricsLines = lyrics.split('\n').filter(line => line.trim());
+        const lyricsLines = finalLyrics.split('\n').filter(line => line.trim());
         const linesPerSection = Math.ceil(lyricsLines.length / songStructure.length);
 
         let structuredLyrics = '';
@@ -56,7 +67,20 @@ export default function TextToMusic() {
         return structuredLyrics.trim();
       };
 
-      const finalLyrics = createStructuredLyrics();
+      const finalStructuredLyrics = createStructuredLyrics();
+
+      console.log('Sending request to API:', {
+        model: selectedModel,
+        prompt: finalPrompt,
+        promptLength: finalPrompt.length,
+        lyrics: finalStructuredLyrics,
+        lyricsLength: finalStructuredLyrics.length,
+        audio_setting: {
+          sample_rate: sampleRate,
+          bitrate: bitrate,
+          format: audioFormat
+        }
+      })
 
       // Call the music generation API
       const response = await fetch('/api/generate-music', {
@@ -66,8 +90,8 @@ export default function TextToMusic() {
         },
         body: JSON.stringify({
           model: selectedModel,
-          prompt: prompt,
-          lyrics: finalLyrics,
+          prompt: finalPrompt,
+          lyrics: finalStructuredLyrics,
           audio_setting: {
             sample_rate: sampleRate,
             bitrate: bitrate,
@@ -76,14 +100,19 @@ export default function TextToMusic() {
         }),
       })
 
+      console.log('API Response status:', response.status)
+      
       if (!response.ok) {
-        throw new Error('Failed to generate music')
+        const errorText = await response.text()
+        console.error('API Error response:', errorText)
+        throw new Error(`Failed to generate music: ${errorText}`)
       }
 
       const data = await response.json()
 
       if (data.status === 'in_progress') {
-        alert(data.message)
+        // Start polling for results
+        await pollForResults(data.trace_id)
         return
       }
 
@@ -97,10 +126,65 @@ export default function TextToMusic() {
       }
     } catch (error) {
       console.error('Music generation failed:', error)
+      setGenerationStatus('')
       alert('Music generation failed. Please try again.')
     } finally {
       setIsGenerating(false)
     }
+  }
+
+  // Add polling function for long-running requests
+  const pollForResults = async (traceId: string) => {
+    const maxAttempts = 30 // 5 minutes with 10-second intervals
+    let attempts = 0
+    
+    const poll = async (): Promise<void> => {
+      attempts++
+      setGenerationStatus(`Checking progress... (${attempts}/${maxAttempts})`)
+      
+      try {
+        const response = await fetch(`/api/generate-music?trace_id=${traceId}`)
+        
+        if (!response.ok) {
+          throw new Error(`Polling failed: ${response.status}`)
+        }
+        
+        const data = await response.json()
+        
+        if (data.status === 'completed') {
+          setGenerationStatus('Processing audio...')
+          // Convert base64 audio data to blob URL for playback
+          const audioBlob = new Blob([Uint8Array.from(atob(data.audio_data), c => c.charCodeAt(0))], {
+            type: `audio/${data.audio_format}`
+          })
+          const audioUrl = URL.createObjectURL(audioBlob)
+          setGeneratedImages([audioUrl])
+          setGenerationStatus('Music generated successfully!')
+          setTimeout(() => setGenerationStatus(''), 3000) // Clear status after 3 seconds
+          setIsGenerating(false)
+          return
+        }
+        
+        if (data.status === 'failed') {
+          throw new Error(data.error || 'Music generation failed')
+        }
+        
+        if (attempts >= maxAttempts) {
+          throw new Error('Music generation timed out. Please try again.')
+        }
+        
+        // Wait 10 seconds before next poll
+        setTimeout(poll, 10000)
+        
+      } catch (error) {
+        console.error('Polling error:', error)
+        setGenerationStatus('')
+        setIsGenerating(false)
+        alert('Music generation failed. Please try again.')
+      }
+    }
+    
+    poll()
   }
 
   const handleSettingsToggle = () => {
@@ -121,6 +205,14 @@ export default function TextToMusic() {
         <Header title="Text To Music" />
 
         <main className="container mx-auto  lg:px-8 xl:px-12 2xl:px-16">
+          {generationStatus && (
+            <div className="mb-6 p-4 bg-blue-900/20 border border-blue-500/30 rounded-lg">
+              <div className="flex items-center gap-3">
+                <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                <span className="text-blue-300 text-sm">{generationStatus}</span>
+              </div>
+            </div>
+          )}
           <InputSection
             prompt={prompt}
             setPrompt={setPrompt}
