@@ -36,7 +36,7 @@ export const VIDEOGENERATION   = {
 } as const;
 
 export const MUSICGENERATION   = {
-  TEXTTOMUSICNEW: '/view/MUSICGENERATION/texttomusic',
+  TEXTTOMUSICNEW: '/view/musicgeneration/texttomusic',
   // STICKER_GENERATION: '/view/IMAGEGENERATIONNEW/AI_Sticker_generation',
   // IMAGE2IMAGEGENERATION:'/view/IMAGEGENERATIONNEW/IMAGETOIMAGE',
   // LIVEPORTRAIT:"/view/IMAGEGENERATIONNEW/LIVEPORTRAIT"
