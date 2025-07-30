@@ -1,5 +1,6 @@
 import Link from "next/link"
 import Image from "next/image"
+import { MUSICGENERATION } from "@/routes/routes"
 interface FeatureItem {
   title: string
   href: string
@@ -8,7 +9,7 @@ interface FeatureItem {
 }
 
 const audioFeatures: FeatureItem[] = [
-  { title: "Text to Music", href: "/features/text-to-music", icon: "🎼" },
+  { title: "Text to Music", href: MUSICGENERATION.TEXTTOMUSIC, icon: "🎼" },
   { title: "Audio to Music", href: "/features/audio-to-music", icon: "🎧" },
   { title: "Lyrics to Music", href: "/features/lyrics-to-music", icon: "📝" },
   { title: "Image to Music Suggestion", href: "/features/image-to-music", icon: "🖼️" },
