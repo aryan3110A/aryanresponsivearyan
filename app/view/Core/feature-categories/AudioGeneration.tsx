@@ -9,7 +9,7 @@ interface FeatureItem {
 }
 
 const audioFeatures: FeatureItem[] = [
-  { title: "Text to Music", href: MUSICGENERATION.TEXTTOMUSIC, icon: "🎼" },
+  { title: "Text to Music", href: MUSICGENERATION.TEXTTOMUSICNEW, icon: "🎼" },
   { title: "Audio to Music", href: "/features/audio-to-music", icon: "🎧" },
   { title: "Lyrics to Music", href: "/features/lyrics-to-music", icon: "📝" },
   { title: "Image to Music Suggestion", href: "/features/image-to-music", icon: "🖼️" },
