@@ -3,7 +3,7 @@ import { downloadAndStoreImage, generateImageFileName } from '@/lib/firebaseStor
 
 // Queue to manage multiple image generation requests
 class GenerationQueue {
-  private queue: Array<() => Promise<any>> = []
+  private queue: Array<() => Promise<unknown>> = []
   private processing = false
   private maxConcurrent = 1 // Process one at a time to avoid rate limiting
   private delay = 2000 // 2 second delay between requests
@@ -202,11 +202,16 @@ async function generateSingleImage({
     throw new Error(`BFL API error: ${bflResponse.status} - ${errorData}`)
   }
 
-  const data = await bflResponse.json()
+  const data: { id?: string; polling_url?: string; image_urls?: string[]; error?: string } = await bflResponse.json()
   console.log(`✅ BFL API Response for ${shotType}:`, { id: data.id })
 
+  if (!data.polling_url) {
+    throw new Error('No polling URL received from BFL API')
+  }
+  const pollingUrl = data.polling_url
+
   // Start polling for result
-  const pollResult = await pollForResult(data.polling_url, shotType)
+  const pollResult = await pollForResult(pollingUrl, shotType)
 
   if (pollResult.error) {
     throw new Error(pollResult.error)
@@ -265,7 +270,7 @@ async function pollForResult(pollingUrl: string, shotType: string, maxAttempts =
         continue
       }
 
-      const data = await response.json()
+      const data: { status: string; result?: { sample?: string; error?: string } } = await response.json()
       console.log(`📊 ${shotType} status:`, data.status)
 
       if (data.status === 'Ready') {

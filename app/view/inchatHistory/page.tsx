@@ -3,8 +3,6 @@
 import React, { useState, useEffect } from 'react'
 import { collection, addDoc, query, orderBy, onSnapshot, deleteDoc, doc, getDocs, writeBatch } from 'firebase/firestore'
 import { db } from '@/lib/firebase'
-import { runStorageSetupWizard } from '@/lib/firebaseStorageSetup'
-import { runAllDiagnostics } from '@/lib/firebaseStorageDiagnostic'
 import ChatInterface from './components/ChatInterface'
 import Sidebar from './components/Sidebar'
 import Library from './components/Library'
@@ -21,6 +19,8 @@ export interface ChatMessage {
   aspectRatio?: string
   seed?: number
   taskId?: string
+  editingImageId?: string  // For tracking which image is being edited
+  editedFromImageId?: string  // For tracking which image was edited from
 }
 
 export interface GeneratedImage {
@@ -37,40 +37,40 @@ export interface GeneratedImage {
   storedInFirebase?: boolean // Whether image is stored in Firebase
 }
 
+// Add interfaces for clean objects
+interface CleanChatMessage {
+  type: 'user' | 'assistant';
+  content: string;
+  timestamp: Date;
+  imageUrl?: string;
+  prompt?: string;
+  model?: string;
+  aspectRatio?: string;
+  seed?: number;
+  taskId?: string;
+  editingImageId?: string;
+  editedFromImageId?: string;
+}
+
+interface CleanGeneratedImage {
+  imageUrl: string;
+  prompt: string;
+  model: string;
+  aspectRatio: string;
+  timestamp: Date;
+  taskId: string;
+  seed?: number;
+}
+
 export default function InChatHistory() {
   const [currentView, setCurrentView] = useState<'chat' | 'library'>('chat')
   const [sidebarOpen, setSidebarOpen] = useState(true)
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([])
   const [generatedImages, setGeneratedImages] = useState<GeneratedImage[]>([])
   const [isGenerating, setIsGenerating] = useState(false)
-  const [firebaseConnected, setFirebaseConnected] = useState(false)
   const [selectedImageForEdit, setSelectedImageForEdit] = useState<GeneratedImage | null>(null)
   const [isClearingChat, setIsClearingChat] = useState(false)
   const [showImageNotice, setShowImageNotice] = useState(true)
-
-  // Test Firebase connection
-  useEffect(() => {
-    const testFirebase = async () => {
-      console.log('🔥 Testing Firebase connection...')
-      try {
-        // Simple test to verify Firebase is initialized
-        const testCollection = collection(db, 'test')
-        console.log('✅ Firebase initialized successfully')
-        setFirebaseConnected(true)
-
-        // Skip client-side diagnostics to avoid CORS issues
-        console.log('ℹ️ Firebase Storage configured for wild-mind-ai project')
-        console.log('💡 Storage rules need to be updated in Firebase Console')
-        console.log('🔧 Go to Firebase Console → Storage → Rules and set: allow read, write: if true;')
-
-      } catch (error) {
-        console.error('❌ Firebase initialization failed:', error)
-        setFirebaseConnected(false)
-      }
-    }
-
-    testFirebase()
-  }, [])
 
   // Load chat messages from Firestore
   useEffect(() => {
@@ -129,7 +129,7 @@ export default function InChatHistory() {
   const addMessage = async (message: Omit<ChatMessage, 'id'>) => {
     try {
       // Clean the message object to remove undefined values
-      const cleanMessage: any = {
+      const cleanMessage: CleanChatMessage = {
         type: message.type,
         content: message.content,
         timestamp: new Date()
@@ -165,7 +165,7 @@ export default function InChatHistory() {
   const addGeneratedImage = async (image: Omit<GeneratedImage, 'id'>) => {
     try {
       // Clean the image object to remove undefined values
-      const cleanImage: any = {
+      const cleanImage: CleanGeneratedImage = {
         imageUrl: image.imageUrl,
         prompt: image.prompt,
         model: image.model,

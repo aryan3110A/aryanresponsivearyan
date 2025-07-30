@@ -85,7 +85,7 @@ export async function verifyFirebaseStorageSetup(): Promise<StorageSetupResult> 
 export async function quickStorageHealthCheck(): Promise<boolean> {
   try {
     // Just try to create a reference
-    const testRef = ref(storage, 'health-check')
+    ref(storage, 'health-check')
     console.log('✅ Firebase Storage is accessible')
     return true
   } catch (error) {

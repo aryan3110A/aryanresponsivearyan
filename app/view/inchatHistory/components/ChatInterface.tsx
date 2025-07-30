@@ -42,6 +42,17 @@ const MODELS = [
   }
 ]
 
+// Add interface for request body
+interface ImageGenerationRequestBody {
+  prompt: string;
+  aspect_ratio: string;
+  output_format: string;
+  prompt_upsampling: boolean;
+  safety_tolerance: number;
+  input_image?: string;
+  seed?: number;
+}
+
 export default function ChatInterface({
   messages,
   onAddMessage,
@@ -67,8 +78,6 @@ export default function ChatInterface({
 
   // Determine if we're in edit mode
   const isEditMode = !!selectedImageForEdit
-  const editModeText = isEditMode ? 'Edit Mode' : 'Create Mode'
-
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }
@@ -94,7 +103,7 @@ export default function ChatInterface({
     setIsGenerating(true)
 
     // Add user message (clean undefined values)
-    const userMessage: any = {
+    const userMessage: Omit<ChatMessage, 'id'> = {
       type: 'user',
       content: isEditMode ? `[EDIT MODE] ${prompt}` : prompt,
       timestamp: new Date(),
@@ -117,7 +126,7 @@ export default function ChatInterface({
 
     try {
       // Prepare request body
-      const requestBody: any = {
+      const requestBody: ImageGenerationRequestBody = {
         prompt: prompt.trim(),
         aspect_ratio: aspectRatio,
         output_format: 'png',
@@ -196,7 +205,7 @@ export default function ChatInterface({
       }
 
       // Add assistant message with generated image (clean undefined values)
-      const assistantMessage: any = {
+      const assistantMessage: Omit<ChatMessage, 'id'> = {
         type: 'assistant',
         content: isEditMode ? 'Image edited successfully!' : 'Image generated successfully!',
         timestamp: new Date(),
@@ -224,7 +233,7 @@ export default function ChatInterface({
 
       // Add to generated images collection
       if (generatedImageUrl) {
-        const generatedImage: any = {
+        const generatedImage: Omit<GeneratedImage, 'id'> = {
           imageUrl: generatedImageUrl,
           originalImageUrl: data.originalImageUrl || null,
           storagePath: data.storagePath || null,

@@ -3,6 +3,7 @@
 import React, { useState } from 'react'
 import { Category } from '../page'
 import { ArrowLeft, Sparkles, Wand2 } from 'lucide-react'
+import Image from 'next/image'
 
 interface PromptInputProps {
   category: Category
@@ -85,9 +86,11 @@ export default function PromptInput({ category, uploadedImage, onGenerate, onBac
         <div className="space-y-6">
           <div className="bg-gray-800/50 rounded-xl p-4">
             <h3 className="font-semibold text-white mb-4">Your Image</h3>
-            <img
+            <Image
               src={uploadedImage}
               alt="Uploaded jewelry"
+              width={400}
+              height={256}
               className="w-full h-64 object-contain bg-gray-900/50 rounded-lg"
             />
           </div>

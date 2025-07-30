@@ -5,6 +5,7 @@ import { Category, GeneratedSet } from '../page'
 import { ArrowLeft, Download, Sparkles, Clock, CheckCircle } from 'lucide-react'
 import { addDoc, collection } from 'firebase/firestore'
 import { db } from '@/lib/firebase'
+import Image from 'next/image'
 
 interface GenerationResultsProps {
   category: Category
@@ -375,10 +376,12 @@ Critical Rules:
             {/* Image */}
             <div className="mb-4">
               {step.imageUrl ? (
-                <img
+                <Image
                   src={step.imageUrl}
                   alt={step.title}
-                  className="w-full h-48 object-cover rounded-lg"
+                  width={400}
+                  height={400}
+                  className="w-full h-full object-cover"
                 />
               ) : (
                 <div className="w-full h-48 bg-gray-700/50 rounded-lg flex items-center justify-center">
@@ -409,9 +412,11 @@ Critical Rules:
       <div className="mt-8 p-6 bg-gray-800/30 border border-gray-700/50 rounded-xl">
         <h3 className="font-semibold text-white mb-4">Original Reference</h3>
         <div className="flex gap-4">
-          <img
+          <Image
             src={uploadedImage}
             alt="Original jewelry"
+            width={128}
+            height={128}
             className="w-32 h-32 object-contain bg-gray-900/50 rounded-lg"
           />
           <div className="flex-1">

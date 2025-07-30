@@ -4,6 +4,7 @@ import React, { useState, useRef } from 'react'
 import { Category } from '../page'
 import { Upload, ArrowLeft, X, Camera, FileImage } from 'lucide-react'
 import { uploadToFirebaseStorage } from '@/lib/firebaseStorage'
+import Image from 'next/image'
 
 interface ImageUploaderProps {
   category: Category
@@ -215,9 +216,11 @@ export default function ImageUploader({ category, onImageUpload, onBack }: Image
 
             <div className="flex flex-col lg:flex-row gap-6">
               <div className="flex-1">
-                <img
+                <Image
                   src={uploadedImage}
                   alt="Uploaded jewelry"
+                  width={400}
+                  height={320}
                   className="w-full h-80 object-contain bg-gray-900/50 rounded-lg"
                 />
               </div>
@@ -229,7 +232,7 @@ export default function ImageUploader({ category, onImageUpload, onBack }: Image
                 </p>
                 
                 <div className="space-y-3">
-                  <h4 className="font-medium text-white">What we'll create:</h4>
+                  <h4 className="font-medium text-white">What we&apos;ll create:</h4>
                   <ul className="space-y-2 text-sm text-gray-400">
                     <li className="flex items-center gap-2">
                       <div className="w-2 h-2 bg-[#6C3BFF] rounded-full"></div>

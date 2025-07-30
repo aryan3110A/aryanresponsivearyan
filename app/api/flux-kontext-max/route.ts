@@ -1,6 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { downloadAndStoreImage, generateImageFileName } from '@/lib/firebaseStorage'
 
+// Add interface at the top of the file
+interface FluxKontextMaxRequestBody {
+  prompt: string;
+  output_format: string;
+  prompt_upsampling: boolean;
+  safety_tolerance: number;
+  input_image?: string;
+  seed?: number;
+  aspect_ratio?: string;
+  webhook_url?: string;
+  webhook_secret?: string;
+}
+
 // Test endpoint
 export async function GET() {
   return NextResponse.json({
@@ -48,7 +61,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Prepare request body for BFL API
-    const requestBody: any = {
+    const requestBody: FluxKontextMaxRequestBody = {
       prompt,
       output_format,
       prompt_upsampling,
@@ -105,11 +118,16 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const data = await bflResponse.json()
+    const data: { id?: string; polling_url?: string; image_urls?: string[]; error?: string } = await bflResponse.json()
     console.log('✅ BFL API Response:', { id: data.id, polling_url: data.polling_url })
 
+    if (!data.polling_url) {
+      throw new Error('No polling URL received from BFL API')
+    }
+    const pollingUrl = data.polling_url
+
     // Start polling for result
-    const pollResult = await pollForResult(data.polling_url)
+    const pollResult = await pollForResult(pollingUrl)
 
     if (pollResult.error) {
       return NextResponse.json(
@@ -203,7 +221,7 @@ async function pollForResult(pollingUrl: string, maxAttempts = 30, interval = 20
         continue
       }
 
-      const data = await response.json()
+      const data: { status: string; result?: { sample?: string; error?: string } } = await response.json()
       console.log('📊 Polling status:', data.status)
 
       if (data.status === 'Ready') {

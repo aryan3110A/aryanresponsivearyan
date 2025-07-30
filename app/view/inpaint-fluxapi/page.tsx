@@ -2,7 +2,7 @@
 
 import React, { useState, useRef } from 'react'
 import Image from 'next/image'
-import { Upload, Download, Brush, Eraser, RotateCcw, Sparkles, Settings, Zap, X, Square, MousePointer, Maximize, Eye } from 'lucide-react'
+import { Upload, Download, Brush, Eraser, RotateCcw, Sparkles, Settings, Zap, X, Square, MousePointer, Maximize } from 'lucide-react'
 
 interface InpaintSettings {
   use_finetune: boolean
@@ -36,9 +36,10 @@ export default function InpaintFluxAPI() {
   const [selectionMode, setSelectionMode] = useState<'brush' | 'rectangle' | 'lasso'>('brush')
   const [isSelecting, setIsSelecting] = useState(false)
   const [selectionStart, setSelectionStart] = useState<{ x: number, y: number } | null>(null)
-  const [currentSelection, setCurrentSelection] = useState<{ x: number, y: number, width: number, height: number } | null>(null)
   const [lassoPoints, setLassoPoints] = useState<{ x: number, y: number }[]>([])
   const [isDrawingLasso, setIsDrawingLasso] = useState(false)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [currentSelection, setCurrentSelection] = useState<{ x: number, y: number, width: number, height: number } | null>(null)
 
   // Fullscreen states
   const [showFullscreen, setShowFullscreen] = useState(false)
@@ -48,7 +49,6 @@ export default function InpaintFluxAPI() {
   const [isGenerating, setIsGenerating] = useState(false)
   const [showSettings, setShowSettings] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [taskId, setTaskId] = useState<string | null>(null)
   const [generationStatus, setGenerationStatus] = useState<string>('')
 
   // Settings
@@ -205,7 +205,7 @@ export default function InpaintFluxAPI() {
     }
   }
 
-  const drawLassoSelection = (ctx: CanvasRenderingContext2D, points: { x: number, y: number }[], isComplete = true, showHandles = true) => {
+  const drawLassoSelection = (ctx: CanvasRenderingContext2D, points: { x: number, y: number }[], isComplete = true) => {
     if (points.length < 2) return
 
     // Create smooth path for the lasso selection
@@ -264,26 +264,6 @@ export default function InpaintFluxAPI() {
       }
       return prev
     })
-  }
-
-  const applySelection = () => {
-    const canvas = canvasRef.current
-    if (!canvas) return
-
-    const ctx = canvas.getContext('2d')
-    if (!ctx) return
-
-    // Clear canvas first
-    ctx.clearRect(0, 0, canvas.width, canvas.height)
-
-    if (selectionMode === 'rectangle' && currentSelection) {
-      drawRectangleSelection(ctx, currentSelection.x, currentSelection.y, currentSelection.width, currentSelection.height)
-    } else if (selectionMode === 'lasso' && lassoPoints.length > 2) {
-      drawLassoSelection(ctx, lassoPoints)
-    }
-
-    // Generate mask after applying selection
-    generateMask()
   }
 
   // Generate mask from canvas - following Black Forest Labs specifications
@@ -583,7 +563,7 @@ export default function InpaintFluxAPI() {
       }
 
       const data = await response.json()
-      setTaskId(data.id)
+      // setTaskId(data.id) // Removed as per edit hint
       setGenerationStatus('Task submitted, generating...')
 
       // Poll for results

@@ -2,7 +2,8 @@
 
 import React, { useState } from 'react'
 import { GeneratedSet } from '../page'
-import { Grid, List, Download, Trash2, Calendar, Eye, Plus, Search } from 'lucide-react'
+import { Eye, Download, Trash2, Calendar, Grid, List, Plus, Search } from 'lucide-react'
+import Image from 'next/image'
 
 interface LibraryGridProps {
   sets: GeneratedSet[]
@@ -169,10 +170,12 @@ export default function LibraryGrid({
               <div className={viewMode === 'grid' ? 'p-4' : 'flex-shrink-0'}>
                 <div className={`grid grid-cols-2 gap-1 ${viewMode === 'grid' ? 'aspect-square' : 'w-24 h-24'} rounded-lg overflow-hidden`}>
                   {set.generatedImages.slice(0, 4).map((image) => (
-                    <img
+                    <Image
                       key={image.id}
                       src={image.url}
                       alt={image.type}
+                      width={100}
+                      height={100}
                       className="w-full h-full object-cover"
                     />
                   ))}
@@ -257,9 +260,11 @@ export default function LibraryGrid({
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {selectedSet.generatedImages.map((image) => (
                   <div key={image.id} className="space-y-3">
-                    <img
+                    <Image
                       src={image.url}
                       alt={image.type}
+                      width={400}
+                      height={400}
                       className="w-full aspect-square object-cover rounded-lg"
                     />
                     <div>

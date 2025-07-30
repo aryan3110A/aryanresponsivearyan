@@ -1,6 +1,11 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { storage } from '@/lib/firebase'
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage'
+
+// Add interface for Firebase errors
+interface FirebaseError extends Error {
+  code: string;
+}
 
 export async function GET() {
   try {
@@ -59,7 +64,7 @@ export async function GET() {
       
       // Check for specific Firebase errors
       if ('code' in error) {
-        errorCode = (error as any).code
+        errorCode = (error as FirebaseError).code
       }
     }
 

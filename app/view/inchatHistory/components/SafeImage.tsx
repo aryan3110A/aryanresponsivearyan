@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react'
 import { ImageIcon, X } from 'lucide-react'
+import Image from 'next/image'
 
 interface SafeImageProps {
   src: string
@@ -72,13 +73,13 @@ export default function SafeImage({
     )
   }
 
-  // Use native img element for simplicity and reliability
+  // Use Next.js Image component for better performance
   return (
-    <img
+    <Image
       src={src}
       alt={alt}
-      width={width}
-      height={height}
+      width={width || 400}
+      height={height || 400}
       className={className}
       onError={handleImageError}
       onClick={onClick}

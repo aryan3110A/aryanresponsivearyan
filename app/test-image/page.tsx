@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react'
 import SafeImage from '../view/inchatHistory/components/SafeImage'
+import Image from 'next/image'
 
 const testImageUrl = "https://firebasestorage.googleapis.com/v0/b/wild-mind-ai.firebasestorage.app/o/generated-images%2F1753770522559_kontext_pro_a_cat_and_a_dog_1753770519235.png?alt=media&token=3dd3cf1b-3c72-4bf4-99df-07724c8d871d"
 
@@ -40,13 +41,11 @@ export default function TestImagePage() {
           
           {showNativeImg && (
             <div className="w-64 h-64 border border-gray-600 rounded-lg overflow-hidden">
-              <img
+              <Image
                 src={testImageUrl}
                 alt="Test image native"
-                className="w-full h-full object-cover"
-                onLoad={() => console.log('✅ Native img loaded successfully')}
-                onError={(e) => console.error('❌ Native img failed to load:', e)}
-                crossOrigin="anonymous"
+                width={400}
+                height={400}
               />
             </div>
           )}

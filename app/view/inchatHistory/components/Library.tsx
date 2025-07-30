@@ -2,9 +2,8 @@
 
 import React, { useState, useMemo, useEffect } from 'react'
 import { GeneratedImage } from '../page'
-import { Search, Filter, Download, Trash2, Maximize, Copy, Check, Calendar, Image as ImageIcon, Grid, List, RefreshCw, Upload, Database } from 'lucide-react'
+import { Search, Download, Trash2, Maximize, Copy, Check, Calendar, Image as ImageIcon, Grid, List, Database } from 'lucide-react'
 import SafeImage from './SafeImage'
-import { isLikelyExpired } from '../utils/imageUtils'
 import { migrateAllImagesToStorage, getMigrationStatus, type MigrationResult } from '@/lib/imageMigration'
 import { preloadFirebaseImages, isFirebaseStorageUrl } from '@/lib/imagePreloader'
 

@@ -1,6 +1,14 @@
 import { storage } from './firebase'
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 
+// Add interface definition at the top
+interface StorageError {
+  code: string;
+  message: string;
+  status_?: number;
+  customData?: unknown;
+}
+
 /**
  * Comprehensive Firebase Storage diagnostic tool
  */
@@ -88,15 +96,15 @@ export async function diagnoseFirebaseStorage() {
 
       // Check for specific Firebase errors
       if ('code' in uploadError) {
-        console.log('   Firebase error code:', (uploadError as any).code)
+        console.log('   Firebase error code:', (uploadError as StorageError).code)
       }
 
       if ('status_' in uploadError) {
-        console.log('   HTTP status:', (uploadError as any).status_)
+        console.log('   HTTP status:', (uploadError as unknown as StorageError).status_)
       }
 
       if ('customData' in uploadError) {
-        console.log('   Custom data:', (uploadError as any).customData)
+        console.log('   Custom data:', (uploadError as unknown as StorageError).customData)
       }
 
       // Provide specific guidance based on error
@@ -149,7 +157,7 @@ export async function testStorageBucketFormats() {
     try {
       // This is just a format test - we can't actually change the bucket at runtime
       console.log('   Format is valid syntax')
-    } catch (error) {
+    } catch {
       console.log('   ❌ Invalid format')
     }
   }
@@ -174,8 +182,8 @@ export async function checkStorageRules() {
     console.log('Rules endpoint status:', response.status)
     console.log('Rules endpoint headers:', Object.fromEntries(response.headers.entries()))
     
-  } catch (error) {
-    console.error('Rules check failed:', error)
+  } catch {
+    console.log('❌ Storage rules test failed')
   }
   
   console.log('=====================================')

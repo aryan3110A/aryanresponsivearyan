@@ -2,7 +2,8 @@
 
 import React, { useState } from 'react'
 import { ChatMessage, GeneratedImage } from '../page'
-import { MessageSquare, Images, Plus, Trash2, Calendar, Image as ImageIcon, Bot, User } from 'lucide-react'
+import { MessageSquare, Images, Trash2, Plus, Calendar, ImageIcon, Bot, User } from 'lucide-react'
+import Image from 'next/image'
 
 interface SidebarProps {
   currentView: 'chat' | 'library'
@@ -249,9 +250,11 @@ export default function Sidebar({
                             className="aspect-square bg-gray-800/30 rounded-lg overflow-hidden cursor-pointer hover:ring-2 hover:ring-[#6C3BFF]/50 transition-all"
                             onClick={() => setCurrentView('library')}
                           >
-                            <img
+                            <Image
                               src={image.imageUrl}
                               alt={truncateText(image.prompt, 30)}
+                              width={100}
+                              height={100}
                               className="w-full h-full object-cover"
                             />
                           </div>
