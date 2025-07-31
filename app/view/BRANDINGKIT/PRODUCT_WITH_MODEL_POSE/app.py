@@ -7,12 +7,29 @@ from datetime import datetime
 from diffusers import FluxKontextPipeline
 
 app = Flask(__name__)
-CORS(app, origins=[
-    "http://localhost:3000",    
-    "https://www.wildmindai.com",
-    "https://api.wildmindai.com",
-    "https://*.vercel.app"
-])
+
+# Disable Flask-CORS and handle CORS manually for more control
+# CORS(app, origins=[
+#     "http://localhost:3000",    
+#     "https://www.wildmindai.com",
+#     "https://api.wildmindai.com",
+#     "https://84a198721ebc.ngrok-free.app",
+#     "https://9fbe9881d16c.ngrok-free.app"
+# ], supports_credentials=True, allow_headers=["Content-Type", "Authorization"], methods=["GET", "POST", "OPTIONS"])
+
+# Manual CORS handling
+@app.after_request
+def after_request(response):
+    origin = request.headers.get('Origin')
+    if origin in ["http://localhost:3000", "https://www.wildmindai.com", "https://api.wildmindai.com", "https://84a198721ebc.ngrok-free.app", "https://9fbe9881d16c.ngrok-free.app"]:
+        response.headers['Access-Control-Allow-Origin'] = origin
+    else:
+        response.headers['Access-Control-Allow-Origin'] = 'https://www.wildmindai.com'
+    
+    response.headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS'
+    response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
+    response.headers['Access-Control-Allow-Credentials'] = 'true'
+    return response
 
 # ─── Load Shared FluxKontext Pipeline ─────────────────────────
 print("🔄 Loading FLUX.1-Kontext pipeline...")
@@ -63,6 +80,7 @@ def create_reference_image(model_img, product_img, width=1024, height=1024):
 # ─── Single Smart Generate Endpoint ───────────────────────────
 @app.route("/generate", methods=["POST"])
 def generate():
+    
     try:
         if request.content_type.startswith("application/json"):
             # ─── Logo Generation ───
@@ -130,6 +148,12 @@ def generate():
         print(f"❌ Error: {e}")
         return jsonify({ "error": str(e) }), 500
 
+# ─── OPTIONS Route for CORS Preflight ─────────────────────────
+@app.route("/generate", methods=["OPTIONS"])
+def handle_options():
+    """Handle preflight OPTIONS requests"""
+    return '', 200
+
 # ─── Download Route ───────────────────────────────────────────
 @app.route("/download/<filename>")
 def download_file(filename):
@@ -137,7 +161,14 @@ def download_file(filename):
 
 @app.route("/health")
 def health():
-    return jsonify({ "status": "healthy", "model": "FluxKontext", "output_dir": output_dir })
+    origin = request.headers.get('Origin', 'No Origin')
+    return jsonify({ 
+        "status": "healthy", 
+        "model": "FluxKontext", 
+        "output_dir": output_dir,
+        "origin": origin,
+        "cors_enabled": True
+    })
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=7861, debug=True)
