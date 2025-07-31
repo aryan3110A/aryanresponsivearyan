@@ -5,11 +5,9 @@ import { useState, useRef } from "react"
 import AttachmentsDropdown from "./AttachmentsDropdown"
 import { UploadComponent } from "../../UI"
 import ImageOverlay from "./ImageOverlay"
-import { Download, Bookmark, Heart, Sparkles } from "lucide-react"
+import { Download, Bookmark, Heart, Sparkles, X } from "lucide-react"
 
 interface InputSectionProps {
-  prompt: string
-  setPrompt: (prompt: string) => void
   generatedPrompt: string
   onGenerate: () => void
   onSettingsToggle: () => void
@@ -29,8 +27,6 @@ interface InputSectionProps {
 }
 
 export default function InputSection({
-  prompt,
-  setPrompt,
   generatedPrompt,
   onGenerate,
   onSettingsToggle,
@@ -139,47 +135,71 @@ export default function InputSection({
       {/* Desktop Layout */}
       <div className="hidden xl:flex items-center gap-4 w-full md:max-w-6xl lg:max-w-7xl px-4">
         <div className="flex-1 relative">
-          <div className="flex flex-col gap-4 bg-[#ffffff]/5 hover:bg-[#ffffff]/20 backdrop-blur-sm border border-[#8E8E8E] rounded-2xl lg:rounded-3xl p-4 transition-all duration-300 ease-in-out">
-            <div className="flex items-center gap-4">
-              <div className="relative">
-                <AttachmentsDropdown
-                  onUploadFromDevices={() => handleUploadLogo()}
-                  onChooseFromLibrary={handleChooseFromLibrary}
-                />
-                {logoFile && (
-                  <div className="absolute -top-1 -right-1 w-2 h-2 bg-green-500 rounded-full" title="Logo file selected" />
+          <div className="flex flex-col gap-4 bg-[#ffffff]/5 hover:bg-[#ffffff]/10 backdrop-blur-sm border border-[#8E8E8E] rounded-2xl lg:rounded-3xl p-4 transition-all duration-300 ease-in-out">
+            <div className="flex flex-col gap-4">
+              {/* Logo Upload Section */}
+              <div className="flex items-center gap-4">
+                {!logoFile ? (
+                  <button
+                    onClick={() => handleUploadLogo()}
+                    className="flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-[#6C3BFF] to-[#412399] text-white rounded-xl hover:from-[#5A2FE6] hover:to-[#3A1F8A] transition-all duration-300 border border-[#8E8E8E]/30 hover:border-[#6C3BFF]/50"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                    </svg>
+                    <span className="font-medium">Upload Logo</span>
+                  </button>
+                ) : (
+                  <div className="flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-green-500/20 to-green-600/20 border border-green-500/30 rounded-xl">
+                    <div className="flex items-center gap-2">
+                      <svg className="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span className="text-green-400 font-medium text-sm">
+                        {logoFile.name.length > 25 ? logoFile.name.substring(0, 25) + '...' : logoFile.name}
+                      </span>
+                    </div>
+                    <button
+                      onClick={() => setLogoFile(null)}
+                      className="p-1 hover:bg-red-500/20 rounded-full transition-colors"
+                      title="Remove logo"
+                    >
+                      <svg className="w-4 h-4 text-red-400 hover:text-red-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </div>
                 )}
               </div>
-              <input
-                type="text"
-                placeholder="Business Name"
-                value={businessName}
-                onChange={e => setBusinessName(e.target.value)}
-                className="flex-1 bg-transparent text-white placeholder-white outline-none text-lg"
-              />
-              <input
-                type="text"
-                placeholder="Business Tagline"
-                value={businessTagline}
-                onChange={e => setBusinessTagline(e.target.value)}
-                className="flex-1 bg-transparent text-white placeholder-white outline-none text-lg"
-              />
+              
+              {/* Business Information Section */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="flex flex-col">
+                  <label className="text-white/80 text-sm mb-2 font-medium">Business Name *</label>
+                  <input
+                    type="text"
+                    placeholder="Enter your business name"
+                    value={businessName}
+                    onChange={e => setBusinessName(e.target.value)}
+                    className="w-full bg-[#ffffff]/10 border border-[#8E8E8E]/50 rounded-lg px-4 py-3 text-white placeholder-white/60 outline-none focus:border-[#6C3BFF] transition-all duration-300"
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <label className="text-white/80 text-sm mb-2 font-medium">Business Tagline (Optional)</label>
+                  <input
+                    type="text"
+                    placeholder="Enter your business tagline"
+                    value={businessTagline}
+                    onChange={e => setBusinessTagline(e.target.value)}
+                    className="w-full bg-[#ffffff]/10 border border-[#8E8E8E]/50 rounded-lg px-4 py-3 text-white placeholder-white/60 outline-none focus:border-[#6C3BFF] transition-all duration-300"
+                  />
+                </div>
+              </div>
             </div>
             <div className="flex items-center gap-4">
-              <input
-                type="text"
-                placeholder="Type a prompt..."
-                value={prompt}
-                onChange={e => setPrompt(e.target.value)}
-                className="flex-1 bg-transparent text-white placeholder-white outline-none text-lg"
-                onKeyDown={e => e.key === "Enter" && onGenerate()}
-              />
-              <button className="p-2 hover:bg-gray-700/50 rounded-lg transition-colors border border-white/10">
-                <Image src="/newt2image/enhancer.png" alt="enhancer" width={28} height={28} />
-              </button>
               <button
                 onClick={onGenerate}
-                disabled={!prompt.trim() || isGenerating || !logoFile || !businessName.trim()}
+                disabled={isGenerating || !logoFile || !businessName.trim()}
                 className="bg-gradient-to-b from-[#6C3BFF] to-[#412399] transition-colors text-white px-12 py-3 rounded-2xl font-medium text-base"
               >
                 {isGenerating ? "Generating..." : "Generate"}
@@ -198,50 +218,72 @@ export default function InputSection({
       <div className="xl:hidden w-full px-0 ">
         <div className="w-full mb-4">
           <div className="flex flex-col gap-3 bg-[#ffffff]/5 hover:bg-[#ffffff]/20 backdrop-blur-sm border border-[#8E8E8E] rounded-xl sm:rounded-2xl p-2 xs:p-4 transition-all duration-300 ease-in-out">
-            <div className="flex items-center gap-2">
-              <div className="relative">
-                <AttachmentsDropdown
-                  onUploadFromDevices={() => handleUploadLogo()}
-                  onChooseFromLibrary={handleChooseFromLibrary}
-                />
-                {logoFile && (
-                  <div className="absolute -top-1 -right-1 w-2 h-2 bg-green-500 rounded-full" title="Logo file selected" />
+            <div className="flex flex-col gap-3">
+              {/* Logo Upload Section */}
+              <div className="flex items-center gap-2">
+                {!logoFile ? (
+                  <button
+                    onClick={() => handleUploadLogo()}
+                    className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#6C3BFF] to-[#412399] text-white rounded-lg hover:from-[#5A2FE6] hover:to-[#3A1F8A] transition-all duration-300 text-sm border border-[#8E8E8E]/30 hover:border-[#6C3BFF]/50"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                    </svg>
+                    <span className="font-medium text-sm">Upload Logo</span>
+                  </button>
+                ) : (
+                  <div className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-green-500/20 to-green-600/20 border border-green-500/30 rounded-lg">
+                    <div className="flex items-center gap-1.5">
+                      <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span className="text-green-400 font-medium text-xs">
+                        {logoFile.name.length > 12 ? logoFile.name.substring(0, 12) + '...' : logoFile.name}
+                      </span>
+                    </div>
+                    <button
+                      onClick={() => setLogoFile(null)}
+                      className="p-0.5 hover:bg-red-500/20 rounded-full transition-colors"
+                      title="Remove logo"
+                    >
+                      <svg className="w-3 h-3 text-red-400 hover:text-red-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </div>
                 )}
               </div>
-              <input
-                type="text"
-                placeholder="Business Name"
-                value={businessName}
-                onChange={e => setBusinessName(e.target.value)}
-                className="flex-1 bg-transparent text-white placeholder-white outline-none text-sm xs:text-base sm:text-lg"
-              />
-            </div>
-            <input
-              type="text"
-              placeholder="Business Tagline"
-              value={businessTagline}
-              onChange={e => setBusinessTagline(e.target.value)}
-              className="flex-1 bg-transparent text-white placeholder-white outline-none text-sm xs:text-base sm:text-lg"
-            />
-            <div className="flex items-center gap-2 mt-2">
-              <input
-                type="text"
-                placeholder="Type a prompt..."
-                value={prompt}
-                onChange={e => setPrompt(e.target.value)}
-                className="flex-1 bg-transparent text-white placeholder-white outline-none text-sm xs:text-base sm:text-lg"
-                onKeyDown={e => e.key === "Enter" && onGenerate()}
-              />
-              <button className="p-2 hover:bg-gray-700/50 rounded-lg transition-colors border border-white/10 md:ml-2">
-                <Image src="/newt2image/enhancer.png" alt="enhancer" width={20} height={20} className="w-5 h-5 " />
-              </button>
+              
+              {/* Business Information Section */}
+              <div className="flex flex-col gap-3">
+                <div className="flex flex-col">
+                  <label className="text-white/80 text-xs mb-1 font-medium">Business Name *</label>
+                  <input
+                    type="text"
+                    placeholder="Enter your business name"
+                    value={businessName}
+                    onChange={e => setBusinessName(e.target.value)}
+                    className="w-full bg-[#ffffff]/10 border border-[#8E8E8E]/50 rounded-lg px-3 py-2 text-white placeholder-white/60 outline-none focus:border-[#6C3BFF] transition-all duration-300 text-sm"
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <label className="text-white/80 text-xs mb-1 font-medium">Business Tagline (Optional)</label>
+                  <input
+                    type="text"
+                    placeholder="Enter your business tagline"
+                    value={businessTagline}
+                    onChange={e => setBusinessTagline(e.target.value)}
+                    className="w-full bg-[#ffffff]/10 border border-[#8E8E8E]/50 rounded-lg px-3 py-2 text-white placeholder-white/60 outline-none focus:border-[#6C3BFF] transition-all duration-300 text-sm"
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>
         <div className="flex items-center gap-3 xs:gap-4 justify-end w-full">
           <button
             onClick={onGenerate}
-            disabled={!prompt.trim() || isGenerating || !logoFile || !businessName.trim()}
+            disabled={isGenerating || !logoFile || !businessName.trim()}
             className="bg-gradient-to-b from-[#6C3BFF] to-[#412399] transition-colors text-white px-2  py-2.5 xs:py-3 rounded-lg xs:rounded-xl font-medium text-sm xs:text-base flex-1 max-w-[32%] "
           >
             {isGenerating ? "Generating..." : "Generate"}
@@ -443,6 +485,30 @@ export default function InputSection({
                 </div>
               )}
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Upload Component Modal */}
+      {showUploadComponent && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-[#1F1F1F] rounded-2xl p-6 max-w-md w-full border border-[#8E8E8E]">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-white text-lg font-medium">Upload Logo</h3>
+              <button
+                onClick={() => setShowUploadComponent(false)}
+                className="text-white/60 hover:text-white transition-colors"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            <UploadComponent
+              onFilesSelected={handleFilesSelected}
+              title="Upload Logo"
+              description="Select a logo file to use for mockup generation"
+              supportedFormats="Supports: JPG, PNG, GIF"
+              acceptedTypes="image/*"
+            />
           </div>
         </div>
       )}

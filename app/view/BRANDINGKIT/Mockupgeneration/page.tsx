@@ -1,4 +1,3 @@
-// Backend API now uses ngrok for remote access: https://9fbe9881d16c.ngrok-free.app
 "use client";
 
 import { useState } from "react";
@@ -10,8 +9,7 @@ import NavigationFull from "../../Core/NavigationFull";
 import Footer from "../../Core/Footer";
 
 export default function ProductWithModelPosePage() {
-  const [prompt, setPrompt] = useState("");
-  const [generatedPrompt, setGeneratedPrompt] = useState(""); // Store the prompt used for generation
+  const [generatedPrompt, setGeneratedPrompt] = useState("professional logo mockup");
   const [generatedImages, setGeneratedImages] = useState<string[]>([]);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -26,102 +24,69 @@ export default function ProductWithModelPosePage() {
   const [businessTagline, setBusinessTagline] = useState("");
 
   const handleGenerate = async () => {
-    if (!prompt.trim()) return;
-
     setIsGenerating(true);
-    // Store the current prompt as the generated prompt
-    setGeneratedPrompt(prompt);
+    setGeneratedImages([]);
 
     try {
-      if (!logoFile) {
-        alert("Please upload a logo file.");
+      if (!logoFile || !businessName.trim()) {
+        alert("Please upload a logo and provide a business name.");
         setIsGenerating(false);
         return;
       }
 
-      // Get resolution based on aspect ratio and quality
       const resolutionMap: Record<string, Record<string, [number, number]>> = {
-        "1:1": {
-          SD: [512, 512],
-          HD: [768, 768],
-          FullHD: [1024, 1024],
-          "2K": [2048, 2048],
-        },
-        "16:9": {
-          SD: [640, 360],
-          HD: [1280, 720],
-          FullHD: [1920, 1080],
-          "2K": [2560, 1440],
-        },
-        "2:3": {
-          SD: [384, 576],
-          HD: [512, 768],
-          FullHD: [768, 1152],
-          "2K": [1024, 1536],
-        },
-        "9:16": {
-          SD: [360, 640],
-          HD: [720, 1280],
-          FullHD: [1080, 1920],
-          "2K": [1440, 2560],
-        },
-        "4:3": {
-          SD: [512, 384],
-          HD: [768, 576],
-          FullHD: [1024, 768],
-          "2K": [2048, 1536],
-        },
-        "3:4": {
-          SD: [384, 512],
-          HD: [576, 768],
-          FullHD: [768, 1024],
-          "2K": [1536, 2048],
-        },
-        "Custom": {
-          SD: [768, 768],
-          HD: [1024, 1024],
-          FullHD: [1280, 1280],
-          "2K": [2048, 2048],
-        },
+        "1:1": { SD: [512, 512], HD: [768, 768], FullHD: [1024, 1024], "2K": [2048, 2048] },
+        "16:9": { SD: [640, 360], HD: [1280, 720], FullHD: [1920, 1080], "2K": [2560, 1440] },
+        "2:3": { SD: [384, 576], HD: [512, 768], FullHD: [768, 1152], "2K": [1024, 1536] },
+        "9:16": { SD: [360, 640], HD: [720, 1280], FullHD: [1080, 1920], "2K": [1440, 2560] },
+        "4:3": { SD: [512, 384], HD: [768, 576], FullHD: [1024, 768], "2K": [2048, 1536] },
+        "3:4": { SD: [384, 512], HD: [576, 768], FullHD: [768, 1024], "2K": [1536, 2048] },
+        "Custom": { SD: [768, 768], HD: [1024, 1024], FullHD: [1280, 1280], "2K": [2048, 2048] },
       };
 
       let [width, height] = resolutionMap[selectedAspectRatio]?.[selectedQuality] || [768, 768];
-      // Ensure width and height are divisible by 16 for better compatibility
-      width = width - (width % 16);
-      height = height - (height % 16);
-
-      console.log(`Generating ${numberOfImages} images with aspect ratio: ${selectedAspectRatio}, quality: ${selectedQuality}, resolution: ${width}x${height}`);
+      width -= width % 16;
+      height -= height % 16;
 
       const formData = new FormData();
       formData.append("logo_file", logoFile);
       formData.append("business_name", businessName);
       formData.append("business_tagline", businessTagline);
-      formData.append("scene_desc", prompt); // User's custom prompt only
-      formData.append("numberOfImages", numberOfImages.toString());
-      formData.append("width", width.toString());
-      formData.append("height", height.toString());
 
-      const response = await fetch("https://9fbe9881d16c.ngrok-free.app/generate", {
+      const response = await fetch("http://localhost:7862/generate_step", {
         method: "POST",
         body: formData,
       });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error("Failed to generate image.");
+      if (!response.ok || !response.body) {
+        throw new Error("Failed to connect to backend.");
       }
 
-      // Handle both single image and multiple images response
-      if (data.image_urls) {
-        // Multiple images
-        setGeneratedImages(data.image_urls.map((url: string) => `https://9fbe9881d16c.ngrok-free.app${url}`));
-      } else if (data.image_url) {
-        // Single image (backward compatibility)
-        setGeneratedImages([`https://9fbe9881d16c.ngrok-free.app${data.image_url}`]);
-      } else {
-        throw new Error("No image URLs received.");
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder("utf-8");
+      let buffer = "";
+
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+
+        const chunks = buffer.split("\n\n");
+        for (const chunk of chunks) {
+          if (chunk.startsWith("data: ")) {
+            try {
+              const json = JSON.parse(chunk.replace("data: ", ""));
+              setGeneratedImages((prev) => [...prev, `http://localhost:7862${json.image_url}`]);
+            } catch (err) {
+              console.warn("Invalid JSON chunk:", chunk);
+            }
+          }
+        }
+
+        buffer = chunks[chunks.length - 1]; // save leftover
       }
+
     } catch (error) {
       console.error("Generation failed:", error);
       const fallback = Array(numberOfImages).fill("/placeholder.svg");
@@ -148,15 +113,13 @@ export default function ProductWithModelPosePage() {
             className="w-auto h-auto md:-mt-48 object-contain"
           />
         </div>
+
         <NavigationFull />
 
         <div className="relative z-10">
           <Header title="Mockup Generation" />
-
           <main className="container mx-auto lg:px-8 xl:px-12 2xl:px-16">
             <InputSection
-              prompt={prompt}
-              setPrompt={setPrompt}
               generatedPrompt={generatedPrompt}
               onGenerate={handleGenerate}
               onSettingsToggle={handleSettingsToggle}

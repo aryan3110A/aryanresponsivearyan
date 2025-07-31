@@ -40,7 +40,6 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     console.log('[POST] Received request body:', JSON.stringify(body, null, 2))
     const { prompt, lyrics, model = "music-1.5", audio_setting } = body
-    const { prompt, lyrics, model = "music-1.5", audio_setting, output_format = "hex" } = body
 
     // Validate required fields
     if (!prompt || !lyrics) {
@@ -54,14 +53,6 @@ export async function POST(request: NextRequest) {
     if (lyrics.length < 10 || lyrics.length > 600) {
       console.log('[POST] Invalid lyrics length:', lyrics.length)
       return NextResponse.json({ error: 'Lyrics must be between 10-600 characters' }, { status: 400 })
-    }
-
-    // Validate output_format
-    if (output_format && !["hex", "url"].includes(output_format)) {
-      return NextResponse.json(
-        { error: 'Output format must be either "hex" or "url"' },
-        { status: 400 }
-      )
     }
 
     // Generate a trace_id for this job
@@ -107,93 +98,10 @@ export async function GET(request: NextRequest) {
       message: 'Music generated successfully'
     })
   }
-    // Make request to MiniMax API
-    const response = await fetch(
-      'https://api.minimax.io/v1/music_generation',
-      {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${process.env.MINIMAX_API_KEY}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(musicRequest),
-      }
-    )
-
-    if (!response.ok) {
-      const errorText = await response.text()
-      console.error('MiniMax API error:', response.status, errorText)
-      return NextResponse.json(
-        { error: `MiniMax API error: ${response.status} - ${errorText}` },
-        { status: response.status }
-      )
-    }
-
-    const data = await response.json()
-    console.log('MiniMax API response:', JSON.stringify(data, null, 2))
-    
-    // Check for API errors
-    if (data.base_resp?.status_code !== 0) {
-      console.error('MiniMax API returned error:', data.base_resp)
-      return NextResponse.json(
-        { 
-          status_code: data.base_resp.status_code,
-          status_msg: data.base_resp.status_msg 
-        },
-        { status: 400 }
-      )
-    }
-
-    // Check if generation is complete
-    if (data.data?.status === 2) {
-      console.log('Music generation completed successfully')
-      
-      if (output_format === "hex" && data.data.audio) {
-        return NextResponse.json({
-          status_code: 0,
-          audio_data: data.data.audio,
-          audio_format: musicRequest.audio_setting.format,
-          trace_id: data.trace_id,
-          status_msg: 'Music generated successfully'
-        })
-      } else if (output_format === "url") {
-        // For URL format, we need to check if there's a URL in the response
-        // Since the API doesn't seem to return URLs, we'll return the hex data anyway
-        return NextResponse.json({
-          status_code: 0,
-          audio_data: data.data.audio,
-          audio_format: musicRequest.audio_setting.format,
-          trace_id: data.trace_id,
-          status_msg: 'Music generated successfully'
-        })
-      }
-    } else if (data.data?.status === 1) {
-      // Still processing (though this shouldn't happen with MiniMax)
-      return NextResponse.json({
-        status: 'pending',
-        trace_id: data.trace_id,
-        status_msg: 'Music generation in progress'
-      })
-    }
-
-    // Fallback error
-    return NextResponse.json(
-      { 
-        status_code: 500,
-        status_msg: 'Unexpected response from MiniMax API' 
-      },
-      { status: 500 }
-    )
 
   if (job.status === 'failed') {
     jobStatus.delete(traceId) // Clean up
     return NextResponse.json({ error: job.error }, { status: 400 })
-  } catch (error) {
-    console.error('Music generation error:', error)
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Internal server error' },
-      { status: 500 }
-    )
   }
 
   return NextResponse.json({ status: 'in_progress', message: 'Music generation in progress. Please try again in a few moments.', trace_id: traceId })
