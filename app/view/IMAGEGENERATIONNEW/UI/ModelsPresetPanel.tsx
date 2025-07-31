@@ -70,6 +70,26 @@ const models = [
       "Get involved with the fastest growing open software project. Download and join other developers in creating incredible applications with Stable Diffusion XL as a foundation model.",
     tokenCost: 18,
   },
+  {
+    id: "6",
+    title: "Flux.1 KONTEXT MAX",
+    shortName: "FM",
+    image: "/imagegenerationnew/models/model5.png",
+    description:
+      "Flux.1 KONTEXT MAX, a powerful 12B parameter flow transformer model from the FLUX series. This model delivers high-quality image generation with exceptional detail and efficiency.",
+    tokenCost: 20,
+  },  
+  {
+    id: "7",
+    title: "Flux.1 KONTEXT PRO",
+    shortName: "FP",
+    image: "/imagegenerationnew/models/model5.png",
+    description:
+      "Flux.1 KONTEXT PRO, a powerful 12B parameter flow transformer model from the FLUX series. This model delivers high-quality image generation with exceptional detail and efficiency.",
+    tokenCost: 20,
+  },  
+
+
 ]
 
 export default function ModelsPresetPanel({

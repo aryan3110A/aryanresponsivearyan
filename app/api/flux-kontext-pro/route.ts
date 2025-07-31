@@ -95,7 +95,8 @@ export async function POST(request: NextRequest) {
       aspectRatio: aspect_ratio,
       seed,
       promptUpsampling: prompt_upsampling,
-      safetyTolerance: safety_tolerance
+      safetyTolerance: safety_tolerance,
+      modelId: 7
     })
 
     // Call BFL API
@@ -155,15 +156,16 @@ export async function POST(request: NextRequest) {
         } else {
           console.error('❌ Failed to store image in Firebase:', storageResult.error)
           storageError = storageResult.error
-          console.log('⚠️ Using original BFL URL as fallback (will expire)')
-          permanentImageUrl = originalImageUrl
+          console.log('⚠️ Using image proxy for BFL URL to avoid CORS issues')
+          // Use image proxy to avoid CORS issues
+          const proxyUrl = `/api/image-proxy?url=${encodeURIComponent(originalImageUrl)}`
+          permanentImageUrl = proxyUrl
         }
       } catch (error: unknown) {
         console.error('❌ Error during upload:', error)
-        return NextResponse.json(
-          { error: error instanceof Error ? error.message : 'Unknown error occurred' },
-          { status: 500 }
-        )
+        // Use image proxy as fallback
+        const proxyUrl = `/api/image-proxy?url=${encodeURIComponent(originalImageUrl)}`
+        permanentImageUrl = proxyUrl
       }
     } else {
       return NextResponse.json(
@@ -187,6 +189,7 @@ export async function POST(request: NextRequest) {
       // Add metadata for better error handling
       metadata: {
         model: 'flux-kontext-pro',
+        modelId: 7,
         prompt: requestBody.prompt.substring(0, 100),
         aspectRatio: requestBody.aspect_ratio,
         hasInputImage: !!requestBody.input_image,
@@ -198,7 +201,9 @@ export async function POST(request: NextRequest) {
 
     console.log('✅ Returning successful response:', {
       id: responseData.id,
-      hasImageUrl: !!responseData.imageUrl
+      hasImageUrl: !!responseData.imageUrl,
+      imageUrl: responseData.imageUrl,
+      originalImageUrl: responseData.originalImageUrl
     })
 
     return NextResponse.json(responseData)

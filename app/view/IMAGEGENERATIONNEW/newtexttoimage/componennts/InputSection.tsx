@@ -12,11 +12,14 @@ interface InputSectionProps {
   onSettingsToggle: () => void
   isGenerating: boolean
   generatedImages: string[]
+  generatedPrompts: string[]
   selectedModel: string
   selectedStyle: string | null
   selectedQuality: string
   selectedAspectRatio: string
   numberOfImages: number
+  lastGeneratedPrompt?: string
+  onCopyLastPrompt?: () => void
 }
 
 export default function InputSection({
@@ -26,11 +29,14 @@ export default function InputSection({
   onSettingsToggle,
   isGenerating,
   generatedImages,
+  generatedPrompts,
   selectedModel,
   selectedStyle,
   selectedQuality,
   selectedAspectRatio,
   numberOfImages,
+  lastGeneratedPrompt,
+  onCopyLastPrompt,
 }: InputSectionProps) {
   const [showUploadComponent, setShowUploadComponent] = useState(false)
   const [hoveredImageIndex, setHoveredImageIndex] = useState<number | null>(null)
@@ -58,27 +64,20 @@ export default function InputSection({
   const handleDownload = async (imageUrl: string, index: number) => {
     try {
       console.log(`Downloading image ${index + 1}...`)
+      console.log(`📥 Image URL: ${imageUrl}`)
 
-      const response = await fetch(imageUrl)
-      if (!response.ok) {
-        throw new Error("Failed to fetch image")
-      }
-
-      const blob = await response.blob()
-      const url = window.URL.createObjectURL(blob)
+      // Create a temporary link element and trigger download
       const link = document.createElement("a")
-      link.href = url
-
-      const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, "-")
-      const filename = `generated-image-${index + 1}-${timestamp}.png`
-      link.download = filename
-
+      link.href = imageUrl
+      link.download = `generated-image-${index + 1}-${new Date().toISOString().slice(0, 19).replace(/:/g, "-")}.png`
+      link.target = "_blank"
+      
+      // Append to body, click, and remove
       document.body.appendChild(link)
       link.click()
       document.body.removeChild(link)
-      window.URL.revokeObjectURL(url)
 
-      console.log(`Image ${index + 1} downloaded successfully as ${filename}`)
+      console.log(`✅ Download initiated for image ${index + 1}`)
     } catch (error) {
       console.error("Download failed:", error)
       alert("Failed to download image. Please try again.")
@@ -157,6 +156,18 @@ export default function InputSection({
         >
           <Image src="/mockupgeneration/setting.png" alt="Settings" width={32} height={32} className="w-12 h-12" />
         </button>
+        
+        {lastGeneratedPrompt && (
+          <button
+            onClick={onCopyLastPrompt}
+            className="p-3 bg-[#1F1F1F] backdrop-blur-sm rounded-2xl hover:bg-gradient-to-b from-[#00F0FF] to-[#009099] transition-colors border border-[#8E8E8E]"
+            title="Copy last generated prompt"
+          >
+            <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+            </svg>
+          </button>
+        )}
       </div>
 
       {/* Mobile & Tablet Layout - Fully Responsive */}
@@ -212,6 +223,18 @@ export default function InputSection({
               className="w-5 h-5 xs:w-6 xs:h-6 sm:w-7 sm:h-7"
             />
           </button>
+          
+          {lastGeneratedPrompt && (
+            <button
+              onClick={onCopyLastPrompt}
+              className="p-2 bg-[#1F1F1F] backdrop-blur-sm rounded-lg xs:rounded-xl hover:bg-gradient-to-b from-[#00F0FF] to-[#009099] transition-colors border border-[#8E8E8E] flex-shrink-0"
+              title="Copy last generated prompt"
+            >
+              <svg className="w-4 h-4 xs:w-5 xs:h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+            </button>
+          )}
         </div>
       </div>
 
@@ -255,7 +278,9 @@ export default function InputSection({
               <div className="bg-white/10 rounded-lg p-2">
                 <Sparkles className="w-5 h-5 text-gray-400" />
               </div>
-              <span className="text-white text-sm font-medium">{prompt}</span>
+              <span className="text-white text-sm font-medium">
+                {generatedPrompts.length > 0 ? generatedPrompts[0] : prompt}
+              </span>
             </div>
 
             <div className="relative bg-transparent backdrop-blur-sm border border-gray-700/30 rounded-xl p-6 lg:p-8 min-h-[400px] overflow-hidden">
@@ -327,7 +352,9 @@ export default function InputSection({
               <div className="bg-white/10 rounded-lg p-1.5 xs:p-2 flex-shrink-0">
                 <Sparkles className="w-3 h-3 xs:w-4 xs:h-4 text-gray-400" />
               </div>
-              <span className="text-white text-xs xs:text-sm font-medium line-clamp-2 flex-1">{prompt}</span>
+              <span className="text-white text-xs xs:text-sm font-medium line-clamp-2 flex-1">
+                {generatedPrompts.length > 0 ? generatedPrompts[0] : prompt}
+              </span>
             </div>
 
             {/* Horizontal Scrolling Images Container - Fully Responsive */}
@@ -340,65 +367,68 @@ export default function InputSection({
                   WebkitOverflowScrolling: "touch",
                 }}
               >
-                {generatedImages.map((image, index) => (
-                  <div
-                    key={index}
-                    className="flex-shrink-0 w-[calc(100vw-6rem)] xs:w-[calc(100vw-8rem)] sm:w-[calc(100vw-12rem)] md:w-[calc(50vw-4rem)] max-w-sm"
-                    style={{ scrollSnapAlign: "start" }}
-                  >
-                    {/* Image Container - Responsive */}
-                    <div className="relative bg-transparent backdrop-blur-sm border border-gray-700/30 rounded-xl p-3 xs:p-4 overflow-hidden w-full">
-                      <div className="relative w-full bg-gray-900/50 rounded-xl overflow-hidden">
-                        <div className="w-full bg-transparent rounded-lg overflow-hidden border border-white/10">
-                          <Image
-                            src={image || "/placeholder.svg"}
-                            alt={`Generated image ${index + 1}`}
-                            width={400}
-                            height={400}
-                            className="w-full h-auto object-contain"
-                          />
-                        </div>
+                {generatedImages.map((image, index) => {
+                  console.log(`🖼️ Rendering image ${index}: ${image}`)
+                  return (
+                    <div
+                      key={index}
+                      className="flex-shrink-0 w-[calc(100vw-6rem)] xs:w-[calc(100vw-8rem)] sm:w-[calc(100vw-12rem)] md:w-[calc(50vw-4rem)] max-w-sm"
+                      style={{ scrollSnapAlign: "start" }}
+                    >
+                      {/* Image Container - Responsive */}
+                      <div className="relative bg-transparent backdrop-blur-sm border border-gray-700/30 rounded-xl p-3 xs:p-4 overflow-hidden w-full">
+                        <div className="relative w-full bg-gray-900/50 rounded-xl overflow-hidden">
+                          <div className="w-full bg-transparent rounded-lg overflow-hidden border border-white/10">
+                            <Image
+                              src={image || "/placeholder.svg"}
+                              alt={`Generated image ${index + 1}`}
+                              width={400}
+                              height={400}
+                              className="w-full h-auto object-contain"
+                            />
+                          </div>
 
-                        {/* Mobile Action Buttons - Responsive Sizing */}
-                        <div className="absolute inset-0 bg-black/5">
-                          {/* Info Button - Top Right */}
-                          <button
-                            onClick={() => handleInfo(image, index)}
-                            className="text-black font-semibold absolute top-2 xs:top-3 right-2 xs:right-3 w-6 h-6 xs:w-8 xs:h-8 bg-gradient-to-b from-[#00F0FF] to-[#009099] backdrop-blur-sm rounded-full hover:bg-white/30 transition-all duration-200 flex items-center justify-center text-xs xs:text-sm"
-                          >
-                            !
-                          </button>
-
-                          {/* Action Buttons - Bottom Left */}
-                          <div className="absolute bottom-2 xs:bottom-3 left-2 xs:left-3 flex items-center gap-1.5 xs:gap-2">
+                          {/* Mobile Action Buttons - Responsive Sizing */}
+                          <div className="absolute inset-0 bg-black/5">
+                            {/* Info Button - Top Right */}
                             <button
-                              onClick={() => handleDownload(image, index)}
-                              className="p-1.5 xs:p-2 bg-gradient-to-b from-[#00F0FF] to-[#009099] backdrop-blur-sm rounded-lg hover:bg-[#5AD7FF]/30 transition-all duration-200"
+                              onClick={() => handleInfo(image, index)}
+                              className="text-black font-semibold absolute top-2 xs:top-3 right-2 xs:right-3 w-6 h-6 xs:w-8 xs:h-8 bg-gradient-to-b from-[#00F0FF] to-[#009099] backdrop-blur-sm rounded-full hover:bg-white/30 transition-all duration-200 flex items-center justify-center text-xs xs:text-sm"
                             >
-                              <Download className="w-3 h-3 xs:w-4 xs:h-4 text-[#000]" />
+                              !
                             </button>
 
-                            <button onClick={() => handleBookmark(index)}>
-                              <Bookmark
-                                className={`w-4 h-4 xs:w-5 xs:h-5 transition-colors duration-200 ${
-                                  bookmarkedImages.has(index) ? "fill-[#a4c48c] text-[#a4c48c]" : "text-[#fff]"
-                                }`}
-                              />
-                            </button>
+                            {/* Action Buttons - Bottom Left */}
+                            <div className="absolute bottom-2 xs:bottom-3 left-2 xs:left-3 flex items-center gap-1.5 xs:gap-2">
+                              <button
+                                onClick={() => handleDownload(image, index)}
+                                className="p-1.5 xs:p-2 bg-gradient-to-b from-[#00F0FF] to-[#009099] backdrop-blur-sm rounded-lg hover:bg-[#5AD7FF]/30 transition-all duration-200"
+                              >
+                                <Download className="w-3 h-3 xs:w-4 xs:h-4 text-[#000]" />
+                              </button>
 
-                            <button onClick={() => handleLike(index)}>
-                              <Heart
-                                className={`w-4 h-4 xs:w-5 xs:h-5 transition-colors duration-200 ${
-                                  likedImages.has(index) ? "fill-red-500 text-red-500" : "text-[#fff]"
-                                }`}
-                              />
-                            </button>
+                              <button onClick={() => handleBookmark(index)}>
+                                <Bookmark
+                                  className={`w-4 h-4 xs:w-5 xs:h-5 transition-colors duration-200 ${
+                                    bookmarkedImages.has(index) ? "fill-[#a4c48c] text-[#a4c48c]" : "text-[#fff]"
+                                  }`}
+                                />
+                              </button>
+
+                              <button onClick={() => handleLike(index)}>
+                                <Heart
+                                  className={`w-4 h-4 xs:w-5 xs:h-5 transition-colors duration-200 ${
+                                    likedImages.has(index) ? "fill-red-500 text-red-500" : "text-[#fff]"
+                                  }`}
+                                />
+                              </button>
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  )
+                })}
               </div>
 
               {/* Scroll Indicators - Responsive */}
@@ -420,7 +450,7 @@ export default function InputSection({
           isOpen={!!selectedImageForOverlay}
           onClose={closeImageOverlay}
           imageUrl={selectedImageForOverlay.url}
-          prompt={prompt}
+          prompt={generatedPrompts[selectedImageForOverlay.index] || prompt}
           modelSelection={selectedModel}
           stylePalette={selectedStyle || ""}
           imageQuality={selectedQuality}

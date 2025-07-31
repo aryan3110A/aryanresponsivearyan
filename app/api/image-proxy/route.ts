@@ -9,19 +9,29 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Missing image URL' }, { status: 400 })
     }
     
-    // Validate that it's a Firebase Storage URL
-    if (!imageUrl.includes('firebasestorage.googleapis.com')) {
+    // Validate that it's a Firebase Storage URL or BFL API URL
+    const isValidUrl = imageUrl.includes('firebasestorage.googleapis.com') || 
+                      imageUrl.includes('delivery-us1.bfl.ai') ||
+                      imageUrl.includes('delivery-eu1.bfl.ai') ||
+                      imageUrl.includes('bfl.ai')
+    
+    if (!isValidUrl) {
       return NextResponse.json({ error: 'Invalid image URL' }, { status: 400 })
     }
     
-    console.log('🔄 Proxying Firebase Storage image:', imageUrl)
+    console.log('🔄 Proxying image:', imageUrl.substring(0, 100) + '...')
     
-    // Fetch the image from Firebase Storage
+    // Fetch the image with appropriate headers
     const response = await fetch(imageUrl, {
       headers: {
-        'User-Agent': 'WildMind-ImageProxy/1.0'
+        'User-Agent': 'WildMind-ImageProxy/1.0',
+        'Accept': 'image/*',
+        'Referer': 'https://api.bfl.ai/'
       }
     })
+    
+    console.log(`📊 Proxy response status: ${response.status}`)
+    console.log(`📊 Proxy response headers:`, Object.fromEntries(response.headers.entries()))
     
     if (!response.ok) {
       console.error('❌ Failed to fetch image:', response.status, response.statusText)
