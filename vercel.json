@@ -1,34 +1,34 @@
 {
   "functions": {
     "app/api/generate-music/route.ts": {
-      "maxDuration": 300
+      "maxDuration": 60
     },
     "app/api/generate-video/route.ts": {
-      "maxDuration": 300
+      "maxDuration": 60
     },
     "app/api/flux-kontext-max/route.ts": {
-      "maxDuration": 300
+      "maxDuration": 60
     },
     "app/api/flux-kontext-pro/route.ts": {
-      "maxDuration": 300
+      "maxDuration": 60
     },
     "app/api/flux-inpaint/route.ts": {
-      "maxDuration": 300
+      "maxDuration": 60
     },
     "app/api/generate-image/route.ts": {
-      "maxDuration": 300
+      "maxDuration": 60
     },
     "app/api/jewelry-studio/route.ts": {
-      "maxDuration": 300
+      "maxDuration": 60
     },
     "app/api/test-video/route.ts": {
-      "maxDuration": 300
+      "maxDuration": 60
     },
     "app/api/test-firebase-storage/route.ts": {
-      "maxDuration": 300
+      "maxDuration": 60
     },
     "app/api/image-proxy/route.ts": {
-      "maxDuration": 300
+      "maxDuration": 60
     }
   },
   "headers": [
