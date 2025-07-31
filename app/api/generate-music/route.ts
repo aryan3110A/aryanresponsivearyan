@@ -16,6 +16,7 @@ interface MusicGenerationResponse {
   data: {
     status: number
     audio: string
+    audio_url?: string
   }
   trace_id: string
   base_resp: {
@@ -27,7 +28,7 @@ interface MusicGenerationResponse {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { prompt, lyrics, model = "music-1.5", audio_setting } = body
+    const { prompt, lyrics, model = "music-1.5", audio_setting, output_format = "hex" } = body
 
     // Validate required fields
     if (!prompt || !lyrics) {
@@ -53,6 +54,14 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Validate output_format
+    if (output_format && !["hex", "url"].includes(output_format)) {
+      return NextResponse.json(
+        { error: 'Output format must be either "hex" or "url"' },
+        { status: 400 }
+      )
+    }
+
     // Default audio settings
     const defaultAudioSettings = {
       sample_rate: 44100,
@@ -65,14 +74,15 @@ export async function POST(request: NextRequest) {
       prompt,
       lyrics,
       audio_setting: audio_setting || defaultAudioSettings,
-      output_format: "hex"
+      output_format
     }
 
     console.log('Making request to MiniMax API:', {
       model: musicRequest.model,
       prompt: musicRequest.prompt,
       lyrics: musicRequest.lyrics.substring(0, 100) + '...',
-      audio_setting: musicRequest.audio_setting
+      audio_setting: musicRequest.audio_setting,
+      output_format: musicRequest.output_format
     })
 
     // Make request to MiniMax API
@@ -89,7 +99,10 @@ export async function POST(request: NextRequest) {
       const errorText = await response.text()
       console.error('MiniMax API error:', response.status, errorText)
       return NextResponse.json(
-        { error: `MiniMax API error: ${response.status}` },
+        { 
+          status_code: response.status,
+          status_msg: `MiniMax API error: ${response.status}` 
+        },
         { status: response.status }
       )
     }
@@ -100,7 +113,10 @@ export async function POST(request: NextRequest) {
     if (musicResponse.base_resp.status_code !== 0) {
       console.error('MiniMax API returned error:', musicResponse.base_resp)
       return NextResponse.json(
-        { error: musicResponse.base_resp.status_msg },
+        { 
+          status_code: musicResponse.base_resp.status_code,
+          status_msg: musicResponse.base_resp.status_msg 
+        },
         { status: 400 }
       )
     }
@@ -108,29 +124,38 @@ export async function POST(request: NextRequest) {
     // Check if music generation is complete
     if (musicResponse.data.status === 1) {
       return NextResponse.json({
-        status: 'in_progress',
-        message: 'Music generation in progress. Please try again in a few moments.',
+        status_code: 1,
+        status_msg: 'Music generation in progress. Please try again in a few moments.',
         trace_id: musicResponse.trace_id
       })
     }
 
-    // Convert hex audio data to base64 for easier handling
-    const hexAudio = musicResponse.data.audio
-    const audioBuffer = Buffer.from(hexAudio, 'hex')
-    const base64Audio = audioBuffer.toString('base64')
-
-    return NextResponse.json({
-      status: 'completed',
-      audio_data: base64Audio,
-      audio_format: musicRequest.audio_setting.format,
-      trace_id: musicResponse.trace_id,
-      message: 'Music generated successfully'
-    })
+    // Return response based on output format
+    if (output_format === "hex") {
+      return NextResponse.json({
+        status_code: 0,
+        audio_data: musicResponse.data.audio,
+        audio_format: musicRequest.audio_setting.format,
+        trace_id: musicResponse.trace_id,
+        status_msg: 'Music generated successfully'
+      })
+    } else if (output_format === "url") {
+      return NextResponse.json({
+        status_code: 0,
+        audio_url: musicResponse.data.audio_url,
+        audio_format: musicRequest.audio_setting.format,
+        trace_id: musicResponse.trace_id,
+        status_msg: 'Music generated successfully'
+      })
+    }
 
   } catch (error) {
     console.error('Music generation error:', error)
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { 
+        status_code: 500,
+        status_msg: 'Internal server error' 
+      },
       { status: 500 }
     )
   }

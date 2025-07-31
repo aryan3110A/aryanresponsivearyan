@@ -171,8 +171,8 @@ export default function ImageUploader({ category, onImageUpload, onBack }: Image
               <p className="text-gray-400 mb-4">
                 or click to browse from your device
               </p>
-              <p className="text-sm text-gray-500">
-                Supports JPG, PNG, WebP • Max 10MB
+              <p className="text-sm text-gray-600 mt-2">
+                Drag and drop your images here, or click to browse. Supported formats: JPG, PNG, GIF, WEBP
               </p>
             </div>
 
@@ -229,7 +229,7 @@ export default function ImageUploader({ category, onImageUpload, onBack }: Image
                 </p>
                 
                 <div className="space-y-3">
-                  <h4 className="font-medium text-white">What we'll create:</h4>
+                  <h4 className="font-medium text-white">What we&apos;ll create:</h4>
                   <ul className="space-y-2 text-sm text-gray-400">
                     <li className="flex items-center gap-2">
                       <div className="w-2 h-2 bg-[#6C3BFF] rounded-full"></div>

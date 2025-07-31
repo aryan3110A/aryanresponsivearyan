@@ -1,10 +1,9 @@
 'use client'
 
-import React, { useState, useMemo, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
+import { Search, Grid, List, Download, Trash2, Calendar, Database, ImageIcon, Maximize, Check, Copy } from 'lucide-react'
 import { GeneratedImage } from '../page'
-import { Search, Filter, Download, Trash2, Maximize, Copy, Check, Calendar, Image as ImageIcon, Grid, List, RefreshCw, Upload, Database } from 'lucide-react'
 import SafeImage from './SafeImage'
-import { isLikelyExpired } from '../utils/imageUtils'
 import { migrateAllImagesToStorage, getMigrationStatus, type MigrationResult } from '@/lib/imageMigration'
 import { preloadFirebaseImages, isFirebaseStorageUrl } from '@/lib/imagePreloader'
 

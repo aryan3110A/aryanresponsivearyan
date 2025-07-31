@@ -2,7 +2,7 @@
 
 import React, { useState, useRef } from 'react'
 import Image from 'next/image'
-import { Upload, Download, Brush, Eraser, RotateCcw, Sparkles, Settings, Zap, X, Square, MousePointer, Maximize, Eye } from 'lucide-react'
+import { Upload, Download, Settings, RotateCcw, Brush, Eraser, Square, MousePointer, Sparkles, Zap, Maximize, X } from 'lucide-react'
 
 interface InpaintSettings {
   use_finetune: boolean
@@ -36,7 +36,6 @@ export default function InpaintFluxAPI() {
   const [selectionMode, setSelectionMode] = useState<'brush' | 'rectangle' | 'lasso'>('brush')
   const [isSelecting, setIsSelecting] = useState(false)
   const [selectionStart, setSelectionStart] = useState<{ x: number, y: number } | null>(null)
-  const [currentSelection, setCurrentSelection] = useState<{ x: number, y: number, width: number, height: number } | null>(null)
   const [lassoPoints, setLassoPoints] = useState<{ x: number, y: number }[]>([])
   const [isDrawingLasso, setIsDrawingLasso] = useState(false)
 
@@ -48,7 +47,6 @@ export default function InpaintFluxAPI() {
   const [isGenerating, setIsGenerating] = useState(false)
   const [showSettings, setShowSettings] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [taskId, setTaskId] = useState<string | null>(null)
   const [generationStatus, setGenerationStatus] = useState<string>('')
 
   // Settings
@@ -149,63 +147,25 @@ export default function InpaintFluxAPI() {
   // Professional selection drawing functions
   const drawMarchingAnts = (ctx: CanvasRenderingContext2D, path: Path2D) => {
     ctx.save()
-    ctx.strokeStyle = '#000000'
-    ctx.lineWidth = 1
-    ctx.setLineDash([4, 4])
+    ctx.strokeStyle = '#00ffff'
+    ctx.lineWidth = 2
+    ctx.setLineDash([5, 5])
     ctx.lineDashOffset = marchingAntsOffset
     ctx.stroke(path)
-
-    ctx.strokeStyle = '#FFFFFF'
-    ctx.setLineDash([4, 4])
-    ctx.lineDashOffset = marchingAntsOffset + 4
-    ctx.stroke(path)
     ctx.restore()
   }
 
-  const drawSelectionHandles = (ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number) => {
-    const handleSize = 6
-    const handles = [
-      { x: x - handleSize/2, y: y - handleSize/2 }, // top-left
-      { x: x + width/2 - handleSize/2, y: y - handleSize/2 }, // top-center
-      { x: x + width - handleSize/2, y: y - handleSize/2 }, // top-right
-      { x: x + width - handleSize/2, y: y + height/2 - handleSize/2 }, // middle-right
-      { x: x + width - handleSize/2, y: y + height - handleSize/2 }, // bottom-right
-      { x: x + width/2 - handleSize/2, y: y + height - handleSize/2 }, // bottom-center
-      { x: x - handleSize/2, y: y + height - handleSize/2 }, // bottom-left
-      { x: x - handleSize/2, y: y + height/2 - handleSize/2 }, // middle-left
-    ]
-
-    ctx.save()
-    ctx.fillStyle = '#FFFFFF'
-    ctx.strokeStyle = '#000000'
-    ctx.lineWidth = 1
-
-    handles.forEach(handle => {
-      ctx.fillRect(handle.x, handle.y, handleSize, handleSize)
-      ctx.strokeRect(handle.x, handle.y, handleSize, handleSize)
-    })
-    ctx.restore()
+  const drawRectangleSelection = (ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number) => {
+    // Draw selection rectangle with marching ants
+    ctx.strokeStyle = '#00ffff'
+    ctx.lineWidth = 2
+    ctx.setLineDash([5, 5])
+    ctx.lineDashOffset = marchingAntsOffset
+    ctx.strokeRect(x, y, width, height)
+    ctx.setLineDash([])
   }
 
-  const drawRectangleSelection = (ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number, showHandles = true) => {
-    // Fill the selection area with cyan
-    ctx.save()
-    ctx.fillStyle = 'rgba(0, 255, 255, 0.3)'
-    ctx.fillRect(x, y, width, height)
-    ctx.restore()
-
-    // Draw marching ants border
-    const path = new Path2D()
-    path.rect(x, y, width, height)
-    drawMarchingAnts(ctx, path)
-
-    // Draw selection handles
-    if (showHandles) {
-      drawSelectionHandles(ctx, x, y, width, height)
-    }
-  }
-
-  const drawLassoSelection = (ctx: CanvasRenderingContext2D, points: { x: number, y: number }[], isComplete = true, showHandles = true) => {
+  const drawLassoSelection = (ctx: CanvasRenderingContext2D, points: { x: number, y: number }[], isComplete = true) => {
     if (points.length < 2) return
 
     // Create smooth path for the lasso selection
@@ -255,35 +215,15 @@ export default function InpaintFluxAPI() {
 
   // Smooth lasso drawing with automatic point sampling
   const addLassoPoint = (x: number, y: number) => {
-    setLassoPoints(prev => {
-      const lastPoint = prev[prev.length - 1]
-
-      // Only add point if it's far enough from the last point (for smoothness)
-      if (!lastPoint || Math.hypot(x - lastPoint.x, y - lastPoint.y) > 3) {
-        return [...prev, { x, y }]
+    if (lassoPoints.length === 0) {
+      lassoPoints.push({ x, y })
+    } else {
+      const lastPoint = lassoPoints[lassoPoints.length - 1]
+      const distance = Math.sqrt((x - lastPoint.x) ** 2 + (y - lastPoint.y) ** 2)
+      if (distance > 5) { // Only add point if it's far enough from last point
+        lassoPoints.push({ x, y })
       }
-      return prev
-    })
-  }
-
-  const applySelection = () => {
-    const canvas = canvasRef.current
-    if (!canvas) return
-
-    const ctx = canvas.getContext('2d')
-    if (!ctx) return
-
-    // Clear canvas first
-    ctx.clearRect(0, 0, canvas.width, canvas.height)
-
-    if (selectionMode === 'rectangle' && currentSelection) {
-      drawRectangleSelection(ctx, currentSelection.x, currentSelection.y, currentSelection.width, currentSelection.height)
-    } else if (selectionMode === 'lasso' && lassoPoints.length > 2) {
-      drawLassoSelection(ctx, lassoPoints)
     }
-
-    // Generate mask after applying selection
-    generateMask()
   }
 
   // Generate mask from canvas - following Black Forest Labs specifications
@@ -583,7 +523,6 @@ export default function InpaintFluxAPI() {
       }
 
       const data = await response.json()
-      setTaskId(data.id)
       setGenerationStatus('Task submitted, generating...')
 
       // Poll for results
@@ -752,7 +691,6 @@ export default function InpaintFluxAPI() {
                           // Reset image and canvas states but keep prompt and settings
                           setOriginalImage(null)
                           setMaskImage(null)
-                          setCurrentSelection(null)
                           setLassoPoints([])
                           setIsSelecting(false)
                           setIsDrawingLasso(false)
@@ -906,7 +844,6 @@ export default function InpaintFluxAPI() {
                             const ctx = canvas.getContext('2d')
                             ctx?.clearRect(0, 0, canvas.width, canvas.height)
                             setMaskImage(null)
-                            setCurrentSelection(null)
                             setLassoPoints([])
                             setIsSelecting(false)
                             setIsDrawingLasso(false)
@@ -933,7 +870,6 @@ export default function InpaintFluxAPI() {
                             if (ctx) {
                               // Clear all selections first
                               ctx.clearRect(0, 0, canvas.width, canvas.height)
-                              setCurrentSelection(null)
                               setLassoPoints([])
                               setIsSelecting(false)
                               setIsDrawingLasso(false)
@@ -946,7 +882,7 @@ export default function InpaintFluxAPI() {
                               const y = centerY - rectSize/2
 
                               // Set rectangle selection
-                              setCurrentSelection({ x, y, width: rectSize, height: rectSize })
+                              setSelectionStart({ x, y })
 
                               // Draw professional rectangle selection
                               drawRectangleSelection(ctx, x, y, rectSize, rectSize)
@@ -1020,7 +956,6 @@ export default function InpaintFluxAPI() {
                               // Reset image and canvas states but keep prompt and settings
                               setOriginalImage(null)
                               setMaskImage(null)
-                              setCurrentSelection(null)
                               setLassoPoints([])
                               setIsSelecting(false)
                               setIsDrawingLasso(false)
@@ -1088,7 +1023,7 @@ export default function InpaintFluxAPI() {
                               ctx.clearRect(0, 0, canvas.width, canvas.height)
                               const width = x - selectionStart.x
                               const height = y - selectionStart.y
-                              drawRectangleSelection(ctx, selectionStart.x, selectionStart.y, width, height, false)
+                              drawRectangleSelection(ctx, selectionStart.x, selectionStart.y, width, height)
                             }
                           } else if (selectionMode === 'lasso' && isDrawingLasso) {
                             // Smooth lasso drawing - add points continuously
@@ -1124,7 +1059,6 @@ export default function InpaintFluxAPI() {
                           } else if (selectionMode === 'rectangle') {
                             setIsSelecting(true)
                             setSelectionStart({ x, y })
-                            setCurrentSelection(null)
                           } else if (selectionMode === 'lasso') {
                             // Start smooth lasso drawing
                             setIsDrawingLasso(true)
@@ -1150,13 +1084,6 @@ export default function InpaintFluxAPI() {
                             const height = y - selectionStart.y
 
                             if (Math.abs(width) > 5 && Math.abs(height) > 5) {
-                              setCurrentSelection({
-                                x: Math.min(selectionStart.x, x),
-                                y: Math.min(selectionStart.y, y),
-                                width: Math.abs(width),
-                                height: Math.abs(height)
-                              })
-
                               // Apply the selection
                               const ctx = canvas.getContext('2d')
                               if (ctx) {

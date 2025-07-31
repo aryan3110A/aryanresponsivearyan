@@ -1,13 +1,11 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
+import ChatInterface from './components/ChatInterface'
+import Library from './components/Library'
+import Sidebar from './components/Sidebar'
 import { collection, addDoc, query, orderBy, onSnapshot, deleteDoc, doc, getDocs, writeBatch } from 'firebase/firestore'
 import { db } from '@/lib/firebase'
-import { runStorageSetupWizard } from '@/lib/firebaseStorageSetup'
-import { runAllDiagnostics } from '@/lib/firebaseStorageDiagnostic'
-import ChatInterface from './components/ChatInterface'
-import Sidebar from './components/Sidebar'
-import Library from './components/Library'
 import { MessageSquare, Images, Menu, X } from 'lucide-react'
 
 export interface ChatMessage {
@@ -38,38 +36,32 @@ export interface GeneratedImage {
 }
 
 export default function InChatHistory() {
-  const [currentView, setCurrentView] = useState<'chat' | 'library'>('chat')
-  const [sidebarOpen, setSidebarOpen] = useState(true)
-  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([])
   const [generatedImages, setGeneratedImages] = useState<GeneratedImage[]>([])
   const [isGenerating, setIsGenerating] = useState(false)
-  const [firebaseConnected, setFirebaseConnected] = useState(false)
   const [selectedImageForEdit, setSelectedImageForEdit] = useState<GeneratedImage | null>(null)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [currentView, setCurrentView] = useState<'chat' | 'library'>('chat')
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([])
   const [isClearingChat, setIsClearingChat] = useState(false)
   const [showImageNotice, setShowImageNotice] = useState(true)
 
   // Test Firebase connection
   useEffect(() => {
-    const testFirebase = async () => {
-      console.log('🔥 Testing Firebase connection...')
+    const testConnection = async () => {
       try {
-        // Simple test to verify Firebase is initialized
-        const testCollection = collection(db, 'test')
-        console.log('✅ Firebase initialized successfully')
-        setFirebaseConnected(true)
-
-        // Skip client-side diagnostics to avoid CORS issues
-        console.log('ℹ️ Firebase Storage configured for wild-mind-ai project')
-        console.log('💡 Storage rules need to be updated in Firebase Console')
-        console.log('🔧 Go to Firebase Console → Storage → Rules and set: allow read, write: if true;')
-
+        console.log('🔍 Testing Firebase connection...')
+        const testDoc = await addDoc(collection(db, 'test'), {
+          timestamp: new Date(),
+          test: true
+        })
+        console.log('✅ Firebase connection successful:', testDoc.id)
+        await deleteDoc(testDoc)
+        console.log('🧹 Test document cleaned up')
       } catch (error) {
-        console.error('❌ Firebase initialization failed:', error)
-        setFirebaseConnected(false)
+        console.error('❌ Firebase connection failed:', error)
       }
     }
-
-    testFirebase()
+    testConnection()
   }, [])
 
   // Load chat messages from Firestore
@@ -129,7 +121,7 @@ export default function InChatHistory() {
   const addMessage = async (message: Omit<ChatMessage, 'id'>) => {
     try {
       // Clean the message object to remove undefined values
-      const cleanMessage: any = {
+      const cleanMessage: Omit<ChatMessage, 'id'> = {
         type: message.type,
         content: message.content,
         timestamp: new Date()
@@ -165,7 +157,7 @@ export default function InChatHistory() {
   const addGeneratedImage = async (image: Omit<GeneratedImage, 'id'>) => {
     try {
       // Clean the image object to remove undefined values
-      const cleanImage: any = {
+      const cleanImage: Omit<GeneratedImage, 'id'> = {
         imageUrl: image.imageUrl,
         prompt: image.prompt,
         model: image.model,

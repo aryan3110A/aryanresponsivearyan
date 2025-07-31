@@ -38,10 +38,10 @@ export default function SignInForm() {
       const testRef = doc(db, "test", "connection")
       await getDoc(testRef)
       console.log("✅ Firebase connection test successful")
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("❌ Firebase connection test failed:", {
-        message: err.message,
-        code: err.code,
+        message: err instanceof Error ? err.message : 'Unknown error',
+        code: err instanceof Error && 'code' in err ? (err as { code: string }).code : undefined,
         fullError: err
       })
     }
@@ -190,21 +190,24 @@ export default function SignInForm() {
         console.log("👤 Showing username form for new user")
         setShowUsernameForm(true)
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("❌ Google sign-in error:", {
-        message: err.message,
-        code: err.code,
-        stack: err.stack,
+        message: err instanceof Error ? err.message : 'Unknown error',
+        code: err instanceof Error && 'code' in err ? (err as { code: string }).code : undefined,
+        stack: err instanceof Error ? err.stack : undefined,
         fullError: err
       })
 
       // More specific error messages
-      if (err.code === 'permission-denied' || err.message?.includes('permissions')) {
+      const errorCode = err instanceof Error && 'code' in err ? (err as { code: string }).code : undefined
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error'
+      
+      if (errorCode === 'permission-denied' || errorMessage?.includes('permissions')) {
         setError("Database permission error. Please contact support.")
         console.error("🔒 PERMISSION ERROR: Firestore rules may be too restrictive")
-      } else if (err.code === 'auth/popup-closed-by-user') {
+      } else if (errorCode === 'auth/popup-closed-by-user') {
         setError("Sign-in cancelled.")
-      } else if (err.code === 'auth/popup-blocked') {
+      } else if (errorCode === 'auth/popup-blocked') {
         setError("Popup blocked. Please allow popups and try again.")
       } else {
         setError("Google sign-in failed. Please try again.")
@@ -253,15 +256,18 @@ export default function SignInForm() {
         console.error("❌ Missing email or username:", { email, username: username.trim() })
         setError("Missing email or username. Please try again.")
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("❌ Username submission error:", {
-        message: err.message,
-        code: err.code,
-        stack: err.stack,
+        message: err instanceof Error ? err.message : 'Unknown error',
+        code: err instanceof Error && 'code' in err ? (err as { code: string }).code : undefined,
+        stack: err instanceof Error ? err.stack : undefined,
         fullError: err
       })
 
-      if (err.code === 'permission-denied' || err.message?.includes('permissions')) {
+      const errorCode = err instanceof Error && 'code' in err ? (err as { code: string }).code : undefined
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error'
+      
+      if (errorCode === 'permission-denied' || errorMessage?.includes('permissions')) {
         setError("Database permission error. Please contact support.")
         console.error("🔒 PERMISSION ERROR: Firestore rules may be too restrictive")
       } else {

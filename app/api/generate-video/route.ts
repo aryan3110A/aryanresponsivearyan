@@ -50,8 +50,17 @@ function getResolutionFromAspectRatio(aspectRatio: string, quality: string, mode
 }
 
 // Helper function to create video generation task
-async function createVideoTask(prompt: string, model: string, resolution: string, duration: number = 6, firstFrameImage?: string, subjectReference?: any, aspectRatio?: string) {
-  const payload: any = {
+async function createVideoTask(prompt: string, model: string, resolution: string, duration: number = 6, firstFrameImage?: string, subjectReference?: Array<{ type: string; image: string[] }>, aspectRatio?: string) {
+  const payload: {
+    model: string
+    prompt: string
+    duration: number
+    resolution: string
+    prompt_optimizer: boolean
+    aspect_ratio?: string
+    first_frame_image?: string
+    subject_reference?: Array<{ type: string; image: string[] }>
+  } = {
     model: VIDEO_MODELS[model as keyof typeof VIDEO_MODELS] || "MiniMax-Hailuo-02",
     prompt: prompt,
     duration: duration,
@@ -385,7 +394,7 @@ export async function POST(request: NextRequest) {
       })
     }
 
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Video generation failed:', error)
     
     // Return placeholder video for demo/fallback

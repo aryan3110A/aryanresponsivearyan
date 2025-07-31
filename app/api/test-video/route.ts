@@ -26,13 +26,11 @@ export async function GET(request: NextRequest) {
         publicUrl: `/static/videos/${filename}`,
         message: exists ? 'Video file exists and is accessible' : 'Video file not found'
       })
-    } catch (error) {
-      return NextResponse.json({
-        exists: false,
-        error: 'File not found',
-        path: filePath,
-        publicUrl: `/static/videos/${filename}`
-      })
+    } catch {
+      return NextResponse.json(
+        { error: 'Failed to process video' },
+        { status: 500 }
+      )
     }
   } catch (error) {
     return NextResponse.json({ 

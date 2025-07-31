@@ -3,7 +3,7 @@ import { downloadAndStoreImage, generateImageFileName } from '@/lib/firebaseStor
 
 // Queue to manage multiple image generation requests
 class GenerationQueue {
-  private queue: Array<() => Promise<any>> = []
+  private queue: Array<() => Promise<unknown>> = []
   private processing = false
   private maxConcurrent = 1 // Process one at a time to avoid rate limiting
   private delay = 2000 // 2 second delay between requests
@@ -50,7 +50,6 @@ const generationQueue = new GenerationQueue()
 
 export async function POST(request: NextRequest) {
   try {
-    console.log('🎨 Jewelry Studio API called')
     const body = await request.json()
     
     const {

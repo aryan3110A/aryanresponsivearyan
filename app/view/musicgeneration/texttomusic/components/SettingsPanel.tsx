@@ -1,13 +1,6 @@
 "use client"
 
 import { X, ChevronDown } from "lucide-react"
-import {
-  PrivateMode,
-  AddToCollection,
-  AdvanceSettingPanel,
-  ResetToDefaults,
-  promptEnhancer as PromptEnhancer
-} from "../../UI"
 import { useState, useEffect } from "react"
 import Image from "next/image"
 
@@ -22,8 +15,11 @@ interface SettingsPanelProps {
   setBitrate: (rate: number) => void
   audioFormat: string
   setAudioFormat: (format: string) => void
-  promptEnhance: string
-  setPromptEnhance: (value: string) => void
+  outputFormat: string
+  setOutputFormat: (format: string) => void
+  lyrics: string
+  songStructure: string[]
+  setSongStructure: (structure: string[]) => void
 }
 
 export default function SettingsPanel({
@@ -37,19 +33,15 @@ export default function SettingsPanel({
   setBitrate,
   audioFormat,
   setAudioFormat,
-  promptEnhance,
-  setPromptEnhance,
+  outputFormat,
+  setOutputFormat,
+  lyrics,
+  songStructure,
+  setSongStructure,
 }: SettingsPanelProps) {
   // State for music generation settings
   const [isModelsOpen, setIsModelsOpen] = useState(false);
-  const [privateMode, setPrivateMode] = useState(false);
-  const [collections, setCollections] = useState<string[]>([]);
-  const [isCollectionOpen, setIsCollectionOpen] = useState(false);
-  const [photoReal, setPhotoReal] = useState(false);
-  const [negativePrompt, setNegativePrompt] = useState(false);
-  const [transparency, setTransparency] = useState(false);
-  const [tiling, setTiling] = useState(false);
-  const [fixedSeed, setFixedSeed] = useState(false);
+  const [showPreview, setShowPreview] = useState<boolean>(false);
 
   // Debug: Log whenever selectedModel changes
   console.log("SettingsPanel render - selectedModel:", selectedModel);
@@ -60,19 +52,12 @@ export default function SettingsPanel({
 
   const handleReset = () => {
     setIsModelsOpen(false);
-    setPrivateMode(false);
-    setCollections([]);
-    setIsCollectionOpen(false);
-    setPhotoReal(false);
-    setNegativePrompt(false);
-    setTransparency(false);
-    setTiling(false);
-    setFixedSeed(false);
     setSelectedModel("music-1.5");
     setSampleRate(44100);
     setBitrate(256000);
     setAudioFormat("mp3");
-    setPromptEnhance("Auto");
+    setOutputFormat("hex");
+    setSongStructure(["verse", "chorus", "verse", "chorus", "bridge", "chorus"]);
   };
 
   const handleSave = () => {
@@ -82,11 +67,35 @@ export default function SettingsPanel({
       sampleRate,
       bitrate,
       audioFormat,
-      privateMode,
-      promptEnhance,
+      outputFormat,
+      lyrics: lyrics.substring(0, 50) + "...",
+      songStructure,
     })
     onClose()
   }
+
+  // Create structured lyrics preview
+  const createStructuredLyrics = () => {
+    if (songStructure.length === 0 || !lyrics.trim()) {
+      return lyrics;
+    }
+
+    const lyricsLines = lyrics.split('\n').filter(line => line.trim());
+    const linesPerSection = Math.ceil(lyricsLines.length / songStructure.length);
+
+    let structuredLyrics = '';
+    songStructure.forEach((section, index) => {
+      const startIndex = index * linesPerSection;
+      const endIndex = Math.min(startIndex + linesPerSection, lyricsLines.length);
+      const sectionLines = lyricsLines.slice(startIndex, endIndex);
+
+      if (sectionLines.length > 0) {
+        structuredLyrics += `[${section}]\n${sectionLines.join('\n')}\n\n`;
+      }
+    });
+
+    return structuredLyrics.trim();
+  };
 
   return (
     <>
@@ -189,118 +198,165 @@ export default function SettingsPanel({
               )}
             </div>
 
-            {/* Audio Settings Section */}
+            {/* Song Structure Section */}
+            <div className="mb-6">
+              <div className="mx-2 md:mx-6 border-t border-white/15 mb-6"></div>
+              
+              <div className="mb-4">
+                <h3 className="text-white text-lg font-medium mb-4 px-2 md:px-6">Song Structure</h3>
+                <div className="px-2 md:px-6">
+                  <p className="text-sm text-gray-400 mb-3">Add sections to build your song:</p>
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {['intro', 'verse', 'chorus', 'bridge', 'outro'].map((section) => (
+                      <button
+                        key={section}
+                        onClick={() => {
+                          if (!songStructure.includes(section)) {
+                            setSongStructure([...songStructure, section]);
+                          }
+                        }}
+                        disabled={songStructure.includes(section)}
+                        className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+                          songStructure.includes(section)
+                            ? "bg-gray-700 text-gray-500 cursor-not-allowed"
+                            : "bg-[#6C3BFF]/20 border border-[#6C3BFF] text-[#6C3BFF] hover:bg-[#6C3BFF]/30"
+                        }`}
+                      >
+                        {songStructure.includes(section) ? "✓" : "+"} {section.charAt(0).toUpperCase() + section.slice(1)}
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Current Structure */}
+                  {songStructure.length > 0 && (
+                    <div className="space-y-3">
+                      <p className="text-sm text-gray-400">Your song structure:</p>
+                      <div className="bg-gray-900/50 border border-gray-700 rounded-xl p-4">
+                        <div className="flex flex-wrap gap-2">
+                          {songStructure.map((section, index) => (
+                            <div key={index} className="flex items-center gap-2 px-3 py-2 bg-[#6C3BFF] text-white rounded-lg text-sm font-medium">
+                              <span>{index + 1}. {section.charAt(0).toUpperCase() + section.slice(1)}</span>
+                              <button
+                                onClick={() => setSongStructure(songStructure.filter((_, i) => i !== index))}
+                                className="ml-1 w-5 h-5 flex items-center justify-center rounded-full hover:bg-red-500 transition-colors"
+                              >
+                                ×
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                        {songStructure.length > 0 && (
+                          <button
+                            onClick={() => setSongStructure([])}
+                            className="mt-3 text-xs text-red-400 hover:text-red-300 transition-colors"
+                          >
+                            Clear all
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Preview Section */}
+                  {showPreview && songStructure.length > 0 && lyrics.trim() && (
+                    <div className="bg-gray-800/50 border border-gray-600 rounded-xl p-4 space-y-3 mt-4">
+                      <div className="flex items-center gap-2">
+                        <div className="w-1.5 h-1.5 bg-green-400 rounded-full"></div>
+                        <span className="text-sm text-green-400 font-medium">Structured Preview</span>
+                      </div>
+                      <div className="bg-gray-900/50 rounded-lg p-3 max-h-32 overflow-y-auto">
+                        <pre className="text-sm text-gray-200 whitespace-pre-wrap font-mono leading-relaxed">
+                          {createStructuredLyrics()}
+                        </pre>
+                      </div>
+                      <p className="text-xs text-gray-400">This is how your lyrics will be sent to the AI music generator</p>
+                    </div>
+                  )}
+
+                  {songStructure.length > 0 && lyrics.trim() && (
+                    <button
+                      onClick={() => setShowPreview(!showPreview)}
+                      className="mt-3 px-4 py-2 bg-[#6C3BFF]/20 border border-[#6C3BFF] text-[#6C3BFF] rounded-lg text-sm hover:bg-[#6C3BFF]/30 transition-colors"
+                    >
+                      {showPreview ? "Hide Preview" : "Show Preview"}
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Audio Settings Section - MinMax API Supported Only */}
             <div className="mb-6">
               <div className="mx-2 md:mx-6 border-t border-white/15 mb-6"></div>
 
-              {/* Sample Rate */}
+              {/* Sample Rate - Fixed to MinMax recommended */}
               <div className="mb-4">
                 <h3 className="text-white text-lg font-medium mb-4 px-2 md:px-6">Sample Rate</h3>
-                <div className="grid grid-cols-2 gap-2 md:gap-4 px-2 md:px-6">
-                  {[16000, 24000, 32000, 44100].map((rate) => (
-                    <div
-                      key={rate}
-                      className={`w-full h-[60px] border rounded-lg flex items-center justify-center gap-2 cursor-pointer transition-all
-                        ${sampleRate === rate
-                          ? "border-[#6C3BFF] text-[#6C3BFF] bg-white/10"
-                          : "border-gray-700 text-white hover:border-[#6C3BFF] bg-white/10"
-                        }`}
-                      onClick={() => setSampleRate(rate)}
-                    >
-                      <span className="text-sm">{rate}Hz</span>
-                    </div>
-                  ))}
+                <div className="px-2 md:px-6">
+                  <div className="w-full h-[60px] border border-[#6C3BFF] rounded-lg flex items-center justify-center bg-white/10">
+                    <span className="text-[#6C3BFF] text-sm font-medium">44100Hz (Recommended)</span>
+                  </div>
+                  <p className="text-xs text-gray-400 mt-2">MinMax API recommended sample rate</p>
                 </div>
               </div>
 
-              {/* Bitrate */}
+              {/* Bitrate - Fixed to MinMax recommended */}
               <div className="mb-4">
                 <h3 className="text-white text-lg font-medium mb-4 px-2 md:px-6">Bitrate</h3>
-                <div className="grid grid-cols-2 gap-2 md:gap-4 px-2 md:px-6">
-                  {[32000, 64000, 128000, 256000].map((rate) => (
-                    <div
-                      key={rate}
-                      className={`w-full h-[60px] border rounded-lg flex items-center justify-center gap-2 cursor-pointer transition-all
-                        ${bitrate === rate
-                          ? "border-[#6C3BFF] text-[#6C3BFF] bg-white/10"
-                          : "border-gray-700 text-white hover:border-[#6C3BFF] bg-white/10"
-                        }`}
-                      onClick={() => setBitrate(rate)}
-                    >
-                      <span className="text-sm">{rate/1000}k</span>
-                    </div>
-                  ))}
+                <div className="px-2 md:px-6">
+                  <div className="w-full h-[60px] border border-[#6C3BFF] rounded-lg flex items-center justify-center bg-white/10">
+                    <span className="text-[#6C3BFF] text-sm font-medium">256k (Recommended)</span>
+                  </div>
+                  <p className="text-xs text-gray-400 mt-2">MinMax API recommended bitrate</p>
                 </div>
               </div>
 
-              {/* Audio Format */}
+              {/* Audio Format - Fixed to MinMax supported */}
               <div className="mb-4">
                 <h3 className="text-white text-lg font-medium mb-4 px-2 md:px-6">Audio Format</h3>
-                <div className="grid grid-cols-3 gap-2 md:gap-4 px-2 md:px-6">
-                  {["mp3", "wav", "pcm"].map((format) => (
+                <div className="px-2 md:px-6">
+                  <div className="w-full h-[60px] border border-[#6C3BFF] rounded-lg flex items-center justify-center bg-white/10">
+                    <span className="text-[#6C3BFF] text-sm font-medium">MP3</span>
+                  </div>
+                  <p className="text-xs text-gray-400 mt-2">MinMax API supported format</p>
+                </div>
+              </div>
+
+              {/* Output Format - MinMax supported options */}
+              <div className="mb-4">
+                <h3 className="text-white text-lg font-medium mb-4 px-2 md:px-6">Output Format</h3>
+                <div className="grid grid-cols-2 gap-2 md:gap-4 px-2 md:px-6">
+                  {["hex", "url"].map((format) => (
                     <div
                       key={format}
                       className={`w-full h-[60px] border rounded-lg flex items-center justify-center gap-2 cursor-pointer transition-all
-                        ${audioFormat === format
+                        ${outputFormat === format
                           ? "border-[#6C3BFF] text-[#6C3BFF] bg-white/10"
                           : "border-gray-700 text-white hover:border-[#6C3BFF] bg-white/10"
                         }`}
-                      onClick={() => setAudioFormat(format)}
+                      onClick={() => setOutputFormat(format)}
                     >
                       <span className="text-sm uppercase">{format}</span>
                     </div>
                   ))}
                 </div>
+                <p className="text-xs text-gray-400 px-2 md:px-6 mt-2">
+                  Choose &quot;url&quot; to receive a direct downloadable file link
+                </p>
               </div>
-            </div>
-
-            {/* Private Mode Section */}
-            <div className="mb-6">
-              <PrivateMode
-                privateMode={privateMode}
-                setPrivateMode={setPrivateMode}
-              />
-            </div>
-            {/* Add To Collection Section */}
-            <div className="mb-6">
-              <AddToCollection
-                collections={collections}
-                setCollections={setCollections}
-                isCollectionOpen={isCollectionOpen}
-                setIsCollectionOpen={setIsCollectionOpen}
-              />
-            </div>
-
-            {/* Advance Settings Section */}
-            <div className="mb-6">
-              <AdvanceSettingPanel
-                photoReal={photoReal}
-                setPhotoReal={setPhotoReal}
-                negativePrompt={negativePrompt}
-                setNegativePrompt={setNegativePrompt}
-                transparency={transparency}
-                setTransparency={setTransparency}
-                tiling={tiling}
-                setTiling={setTiling}
-                fixedSeed={fixedSeed}
-                setFixedSeed={setFixedSeed}
-              />
             </div>
 
             {/* Reset to Defaults Section */}
             <div className="mb-6">
-              <ResetToDefaults onReset={handleReset} />
+              <div className="px-2 md:px-6">
+                <button
+                  onClick={handleReset}
+                  className="w-full bg-gray-800/50 hover:bg-gray-700/50 text-white py-3 rounded-lg font-medium transition-colors border border-gray-600"
+                >
+                  Reset to Defaults
+                </button>
+              </div>
             </div>
-
-            {/* Prompt Enhancer Section */}
-            <div className="mb-6">
-              <PromptEnhancer
-                promptEnhance={promptEnhance}
-                setPromptEnhance={setPromptEnhance}
-                options={["Auto", "Standard", "Creative"]}
-              />
-            </div>
-
               
             {/* Save Button */}
             <div className="mb-6 px-2 md:px-6">
@@ -315,11 +371,12 @@ export default function SettingsPanel({
               <div className="bg-white/10 backdrop-blur-3xl hover:bg-white/20 rounded-lg p-4 space-y-2 text-sm text-gray-300 mt-6">
                 <div className="text-white font-medium mb-3">Music Generation Settings</div>
                 <div>Model: <span className="text-[#5AD7FF]">{selectedModel}</span></div>
-                <div>Sample Rate: <span className="text-[#5AD7FF]">{sampleRate}Hz</span></div>
-                <div>Bitrate: <span className="text-[#5AD7FF]">{bitrate/1000}k</span></div>
-                <div>Format: <span className="text-[#5AD7FF]">{audioFormat.toUpperCase()}</span></div>
-                <div>Private Mode: <span className="text-[#5AD7FF]">{privateMode ? "Enabled" : "Disabled"}</span></div>
-                <div>Prompt Enhance: <span className="text-[#5AD7FF]">{promptEnhance}</span></div>
+                <div>Sample Rate: <span className="text-[#5AD7FF]">44100Hz (Fixed)</span></div>
+                <div>Bitrate: <span className="text-[#5AD7FF]">256k (Fixed)</span></div>
+                <div>Format: <span className="text-[#5AD7FF]">MP3 (Fixed)</span></div>
+                <div>Output Format: <span className="text-[#5AD7FF]">{outputFormat.toUpperCase()}</span></div>
+                <div>Lyrics Length: <span className="text-[#5AD7FF]">{lyrics.length}/600</span></div>
+                <div>Song Structure: <span className="text-[#5AD7FF]">{songStructure.length} sections</span></div>
               </div>
             </div>
           </div>

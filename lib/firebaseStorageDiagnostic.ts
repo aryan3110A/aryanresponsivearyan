@@ -88,15 +88,15 @@ export async function diagnoseFirebaseStorage() {
 
       // Check for specific Firebase errors
       if ('code' in uploadError) {
-        console.log('   Firebase error code:', (uploadError as any).code)
+        console.log('   Firebase error code:', (uploadError as { code: string }).code)
       }
 
       if ('status_' in uploadError) {
-        console.log('   HTTP status:', (uploadError as any).status_)
+        console.log('   HTTP status:', (uploadError as { status_: number }).status_)
       }
 
       if ('customData' in uploadError) {
-        console.log('   Custom data:', (uploadError as any).customData)
+        console.log('   Custom data:', (uploadError as { customData: unknown }).customData)
       }
 
       // Provide specific guidance based on error
@@ -149,7 +149,7 @@ export async function testStorageBucketFormats() {
     try {
       // This is just a format test - we can't actually change the bucket at runtime
       console.log('   Format is valid syntax')
-    } catch (error) {
+    } catch {
       console.log('   ❌ Invalid format')
     }
   }

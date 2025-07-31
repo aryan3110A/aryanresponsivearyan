@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { storage } from '@/lib/firebase'
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage'
 
@@ -12,41 +12,49 @@ export async function GET() {
 
     // Test 2: Upload test file
     const testData = new Blob(['Server-side Firebase Storage test'], { type: 'text/plain' })
-    const uploadResult = await uploadBytes(testRef, testData)
-    console.log('✅ Upload successful:', uploadResult.metadata.fullPath)
-
-    // Test 3: Get download URL
-    const downloadURL = await getDownloadURL(uploadResult.ref)
-    console.log('✅ Download URL generated:', downloadURL)
-
-    // Test 4: Test CORS by making a client-side request
-    console.log('🔍 Testing CORS configuration...')
     try {
-      const corsTestResponse = await fetch(downloadURL, {
-        method: 'HEAD',
-        headers: {
-          'Origin': 'http://localhost:3000'
+      const uploadResult = await uploadBytes(testRef, testData)
+      console.log('✅ Upload successful:', uploadResult.metadata.fullPath)
+
+      // Test 3: Get download URL
+      const downloadURL = await getDownloadURL(uploadResult.ref)
+      console.log('✅ Download URL generated:', downloadURL)
+
+      // Test 4: Test CORS by making a client-side request
+      console.log('🔍 Testing CORS configuration...')
+      try {
+        const corsTestResponse = await fetch(downloadURL, {
+          method: 'HEAD',
+          headers: {
+            'Origin': 'http://localhost:3000'
+          }
+        })
+        console.log('✅ CORS test successful:', corsTestResponse.status)
+      } catch (corsError) {
+        console.warn('⚠️ CORS test failed (this is expected if CORS is not configured):', corsError)
+      }
+
+      // Test 5: Clean up
+      await deleteObject(testRef)
+      console.log('✅ Test file deleted')
+
+      return NextResponse.json({
+        success: true,
+        message: 'Firebase Storage is working correctly!',
+        details: {
+          bucket: storage.app.options.storageBucket,
+          projectId: storage.app.options.projectId,
+          testUrl: downloadURL,
+          corsConfigured: true // Will be true if we reach this point
         }
       })
-      console.log('✅ CORS test successful:', corsTestResponse.status)
-    } catch (corsError) {
-      console.warn('⚠️ CORS test failed (this is expected if CORS is not configured):', corsError)
+    } catch (error: unknown) {
+      console.error('❌ Error during upload:', error)
+      return NextResponse.json(
+        { error: error instanceof Error ? error.message : 'Unknown error occurred' },
+        { status: 500 }
+      )
     }
-
-    // Test 5: Clean up
-    await deleteObject(testRef)
-    console.log('✅ Test file deleted')
-
-    return NextResponse.json({
-      success: true,
-      message: 'Firebase Storage is working correctly!',
-      details: {
-        bucket: storage.app.options.storageBucket,
-        projectId: storage.app.options.projectId,
-        testUrl: downloadURL,
-        corsConfigured: true // Will be true if we reach this point
-      }
-    })
 
   } catch (error) {
     console.error('❌ Firebase Storage test failed:', error)
@@ -59,7 +67,7 @@ export async function GET() {
       
       // Check for specific Firebase errors
       if ('code' in error) {
-        errorCode = (error as any).code
+        errorCode = (error as { code: string }).code
       }
     }
 

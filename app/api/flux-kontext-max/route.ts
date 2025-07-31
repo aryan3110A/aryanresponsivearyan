@@ -48,7 +48,17 @@ export async function POST(request: NextRequest) {
     }
 
     // Prepare request body for BFL API
-    const requestBody: any = {
+    const requestBody: {
+      prompt: string
+      output_format: string
+      prompt_upsampling: boolean
+      safety_tolerance: number
+      input_image?: string
+      seed?: number
+      aspect_ratio?: string
+      webhook_url?: string
+      webhook_secret?: string
+    } = {
       prompt,
       output_format,
       prompt_upsampling,
@@ -127,17 +137,25 @@ export async function POST(request: NextRequest) {
     if (originalImageUrl) {
       console.log('💾 Storing image in Firebase Storage...')
       const fileName = generateImageFileName(requestBody.prompt, 'flux-kontext-max')
-      const storageResult = await downloadAndStoreImage(originalImageUrl, fileName)
+      try {
+        const storageResult = await downloadAndStoreImage(originalImageUrl, fileName)
 
-      if (storageResult.success) {
-        permanentImageUrl = storageResult.url!
-        storagePath = storageResult.path
-        console.log('✅ Image stored permanently in Firebase:', permanentImageUrl)
-      } else {
-        console.error('❌ Failed to store image in Firebase:', storageResult.error)
-        storageError = storageResult.error
-        console.log('⚠️ Using original BFL URL as fallback (will expire)')
-        permanentImageUrl = originalImageUrl
+        if (storageResult.success) {
+          permanentImageUrl = storageResult.url!
+          storagePath = storageResult.path
+          console.log('✅ Image stored permanently in Firebase:', permanentImageUrl)
+        } else {
+          console.error('❌ Failed to store image in Firebase:', storageResult.error)
+          storageError = storageResult.error
+          console.log('⚠️ Using original BFL URL as fallback (will expire)')
+          permanentImageUrl = originalImageUrl
+        }
+      } catch (error: unknown) {
+        console.error('❌ Error during upload:', error)
+        return NextResponse.json(
+          { error: error instanceof Error ? error.message : 'Unknown error occurred' },
+          { status: 500 }
+        )
       }
     } else {
       return NextResponse.json(

@@ -28,7 +28,9 @@ export async function verifyFirebaseStorageSetup(): Promise<StorageSetupResult> 
   }
 
   try {
-    console.log('🔍 Starting Firebase Storage verification...')
+    console.log('🔧 Setting up Firebase Storage...')
+    console.log('📋 Project ID:', storage.app.options.projectId)
+    console.log('📋 Storage Bucket:', storage.app.options.storageBucket)
 
     // Step 1: Test if we can create a reference (bucket exists)
     const testRef = ref(storage, 'setup-test/test-file.txt')
@@ -85,7 +87,6 @@ export async function verifyFirebaseStorageSetup(): Promise<StorageSetupResult> 
 export async function quickStorageHealthCheck(): Promise<boolean> {
   try {
     // Just try to create a reference
-    const testRef = ref(storage, 'health-check')
     console.log('✅ Firebase Storage is accessible')
     return true
   } catch (error) {

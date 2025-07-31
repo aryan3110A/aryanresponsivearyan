@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react'
 import { GeneratedSet } from '../page'
-import { Grid, List, Download, Trash2, Calendar, Eye, Plus, Search, ImageIcon, AlertCircle } from 'lucide-react'
+import { Grid, List, Download, Trash2, Calendar, Eye, Plus, Search, AlertCircle } from 'lucide-react'
 
 interface LibraryGridProps {
   sets: GeneratedSet[]
