@@ -21,8 +21,9 @@ export default function ProductWithModelPosePage() {
   const [selectedAspectRatio, setSelectedAspectRatio] = useState("1:1");
   const [selectedQuality, setSelectedQuality] = useState("HD");
   const [numberOfImages, setNumberOfImages] = useState(1);
-  const [modelImage, setModelImage] = useState<File | null>(null);
-  const [productImage, setProductImage] = useState<File | null>(null);
+  const [logoFile, setLogoFile] = useState<File | null>(null);
+  const [businessName, setBusinessName] = useState("");
+  const [businessTagline, setBusinessTagline] = useState("");
 
   const handleGenerate = async () => {
     if (!prompt.trim()) return;
@@ -32,8 +33,8 @@ export default function ProductWithModelPosePage() {
     setGeneratedPrompt(prompt);
 
     try {
-      if (!modelImage || !productImage) {
-        alert("Please upload both model and product images.");
+      if (!logoFile) {
+        alert("Please upload a logo file.");
         setIsGenerating(false);
         return;
       }
@@ -92,14 +93,15 @@ export default function ProductWithModelPosePage() {
       console.log(`Generating ${numberOfImages} images with aspect ratio: ${selectedAspectRatio}, quality: ${selectedQuality}, resolution: ${width}x${height}`);
 
       const formData = new FormData();
-      formData.append("model_image", modelImage);
-      formData.append("product_image", productImage);
+      formData.append("logo_file", logoFile);
+      formData.append("business_name", businessName);
+      formData.append("business_tagline", businessTagline);
       formData.append("scene_desc", prompt); // User's custom prompt only
       formData.append("numberOfImages", numberOfImages.toString());
       formData.append("width", width.toString());
       formData.append("height", height.toString());
 
-      const response = await fetch("https://84a198721ebc.ngrok-free.app/generate", {
+      const response = await fetch("https://9fbe9881d16c.ngrok-free.app/generate", {
         method: "POST",
         body: formData,
       });
@@ -113,10 +115,10 @@ export default function ProductWithModelPosePage() {
       // Handle both single image and multiple images response
       if (data.image_urls) {
         // Multiple images
-        setGeneratedImages(data.image_urls.map((url: string) => `https://84a198721ebc.ngrok-free.app ${url}`));
+        setGeneratedImages(data.image_urls.map((url: string) => `https://9fbe9881d16c.ngrok-free.app${url}`));
       } else if (data.image_url) {
         // Single image (backward compatibility)
-        setGeneratedImages([`https://84a198721ebc.ngrok-free.app${data.image_url}`]);
+        setGeneratedImages([`https://9fbe9881d16c.ngrok-free.app${data.image_url}`]);
       } else {
         throw new Error("No image URLs received.");
       }
@@ -149,7 +151,7 @@ export default function ProductWithModelPosePage() {
         <NavigationFull />
 
         <div className="relative z-10">
-          <Header title="Product With Model Pose" />
+          <Header title="Mockup Generation" />
 
           <main className="container mx-auto lg:px-8 xl:px-12 2xl:px-16">
             <InputSection
@@ -165,10 +167,12 @@ export default function ProductWithModelPosePage() {
               selectedQuality={selectedQuality}
               selectedAspectRatio={selectedAspectRatio}
               numberOfImages={numberOfImages}
-              modelImage={modelImage}
-              setModelImage={setModelImage}
-              productImage={productImage}
-              setProductImage={setProductImage}
+              logoFile={logoFile}
+              setLogoFile={setLogoFile}
+              businessName={businessName}
+              setBusinessName={setBusinessName}
+              businessTagline={businessTagline}
+              setBusinessTagline={setBusinessTagline}
             />
           </main>
         </div>

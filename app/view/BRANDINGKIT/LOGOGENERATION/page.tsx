@@ -30,7 +30,7 @@ export default function LOGOGENERATION() {
       const finalPrompt = selectedStyle ? `${prompt}, ${selectedStyle} style` : prompt
       
       // Call the API
-      const response = await fetch('https://9fbe9881d16c.ngrok-free.app/generate', {
+      const response = await fetch('https://84a198721ebc.ngrok-free.app/generate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -47,7 +47,7 @@ export default function LOGOGENERATION() {
 
       const data = await response.json()
       if (data.image_urls) {
-        setGeneratedImages(data.image_urls.map((url: string) => `https://9fbe9881d16c.ngrok-free.app${url}`));
+        setGeneratedImages(data.image_urls.map((url: string) => `https://84a198721ebc.ngrok-free.app${url}`));
       } else {
         setGeneratedImages([]);
       }
