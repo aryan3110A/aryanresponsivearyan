@@ -25,6 +25,17 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     console.log('🚀 Flux Kontext Pro API called')
+    
+    // Check if API key is available
+    const apiKey = process.env.FLUX_API_KEY
+    if (!apiKey) {
+      console.error('❌ FLUX_API_KEY environment variable is not set')
+      return NextResponse.json(
+        { error: 'Flux API key not configured. Please set FLUX_API_KEY environment variable.' },
+        { status: 500 }
+      )
+    }
+    
     const body = await request.json()
     console.log('📝 Request body received:', {
       hasPrompt: !!body.prompt,
