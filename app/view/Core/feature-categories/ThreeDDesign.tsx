@@ -15,7 +15,7 @@ const threeDFeatures: FeatureItem[] = [
 export default function ThreeDDesign() {
   return (
     <div className="space-y-4">
-      <h3 className=" font-semibold text-base text-[#00F0FF] md:text-[1.25rem] mb-4">
+      <h3 className=" font-semibold text-base text-[#00F0FF] md:text-[0.9rem] lg:text-[1.25rem] mb-4">
               <Image src="/IMAGEGENERATIONNEW/navigationcategory/imagenav.png" width={32} height={32} alt="ThreeD Design" className="inline-block mr-2" />
               3D Design</h3>
             <div className="space-y-3 ">

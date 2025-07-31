@@ -56,6 +56,7 @@ export default function NewTextToVideo() {
 
         if (cameraInstructions) {
           finalPrompt = `${prompt} ${cameraInstructions}`
+          
         }
       }
 
@@ -207,6 +208,8 @@ export default function NewTextToVideo() {
       setIsGenerating(false)
     }
   }
+
+
 
   const handleSettingsToggle = () => {
     setIsSettingsOpen(!isSettingsOpen)
