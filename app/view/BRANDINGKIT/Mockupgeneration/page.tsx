@@ -53,7 +53,7 @@ export default function ProductWithModelPosePage() {
       formData.append("business_name", businessName);
       formData.append("business_tagline", businessTagline);
 
-      const response = await fetch("http://localhost:7862/generate_step", {
+      const response = await fetch("https://8a6fc092d30c.ngrok-free.app/generate_step", {
         method: "POST",
         body: formData,
       });
@@ -77,7 +77,7 @@ export default function ProductWithModelPosePage() {
           if (chunk.startsWith("data: ")) {
             try {
               const json = JSON.parse(chunk.replace("data: ", ""));
-              setGeneratedImages((prev) => [...prev, `http://localhost:7862${json.image_url}`]);
+              setGeneratedImages((prev) => [...prev, `https://8a6fc092d30c.ngrok-free.app${json.image_url}`]);
             } catch {
               console.warn("Invalid JSON chunk:", chunk);
             }
