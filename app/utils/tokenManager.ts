@@ -61,13 +61,18 @@ export const initializeTokens = (): void => {
 
 // Create a custom hook for token updates
 export const useTokenUpdate = () => {
-  const [tokens, setTokens] = useState(getTokens());
+  const [tokens, setTokens] = useState(DEFAULT_TOKENS);
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
+    setIsClient(true);
     if (!isBrowser) return;
     
     // Initialize tokens on component mount only if they don't exist
     initializeTokens();
+    
+    // Set the actual tokens from localStorage
+    setTokens(getTokens());
     
     const handleTokenUpdate = (event: CustomEvent) => {
       setTokens(event.detail);
@@ -79,5 +84,6 @@ export const useTokenUpdate = () => {
     };
   }, []);
 
-  return tokens;
+  // Return DEFAULT_TOKENS during SSR, actual tokens only after hydration
+  return isClient ? tokens : DEFAULT_TOKENS;
 };

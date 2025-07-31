@@ -74,41 +74,41 @@ export default function TextToMusic() {
       const data = await response.json()
       
       if (!response.ok) {
-        throw new Error(data.status_msg || data.error || `HTTP error! status: ${response.status}`)
+        throw new Error(data.error || `HTTP error! status: ${response.status}`)
       }
 
-      if (data.status_code !== 0) {
-        throw new Error(data.status_msg || 'Music generation failed')
-      }
-
-      console.log('Music generation completed successfully')
-
-      // Handle the audio data
-      if (data.audio_data) {
-        if (outputFormat === "hex") {
+      // Handle the synchronous response
+      if (data.status === 'completed' && data.audio_data) {
+        console.log('Music generation completed successfully')
+        
+        try {
           // Convert hex to blob URL for playback
-          const hexString = data.audio_data;
-          const bytes = new Uint8Array(hexString.match(/.{1,2}/g)?.map((byte: string) => parseInt(byte, 16)) || []);
+          const hexString = data.audio_data
+          const bytes = new Uint8Array(hexString.match(/.{1,2}/g)?.map((byte: string) => parseInt(byte, 16)) || [])
+          
+          // Create blob with proper MIME type based on the audio format
+          const mimeType = data.audio_format === 'mp3' ? 'audio/mpeg' : 'audio/wav'
           const audioBlob = new Blob([bytes], {
-            type: `audio/${audioFormat}`
+            type: mimeType
           })
           const audioUrl = URL.createObjectURL(audioBlob)
           setGeneratedMusic([audioUrl])
-        } else if (outputFormat === "url" && data.audio_url) {
-          // Use the direct URL provided
-          setGeneratedMusic([data.audio_url])
-        } else {
-          // Fallback to hex if URL format is requested but not available
-          const hexString = data.audio_data;
-          const bytes = new Uint8Array(hexString.match(/.{1,2}/g)?.map((byte: string) => parseInt(byte, 16)) || []);
-          const audioBlob = new Blob([bytes], {
-            type: `audio/${audioFormat}`
+          console.log('Audio blob created successfully:', audioBlob.size, 'bytes')
+          
+          // Test if the audio can be loaded
+          const audio = new Audio(audioUrl)
+          audio.addEventListener('canplaythrough', () => {
+            console.log('Audio loaded successfully and can play')
           })
-          const audioUrl = URL.createObjectURL(audioBlob)
-          setGeneratedMusic([audioUrl])
+          audio.addEventListener('error', (e) => {
+            console.error('Audio loading error:', e)
+          })
+        } catch (conversionError) {
+          console.error('Error converting audio data:', conversionError)
+          throw new Error('Failed to convert audio data')
         }
       } else {
-        throw new Error('No audio data received')
+        throw new Error(data.error || 'Music generation failed')
       }
     } catch (error: any) {
       console.error('Music generation failed:', error)
@@ -166,8 +166,9 @@ export default function TextToMusic() {
                 disabled={isGenerating}
                 className="bg-purple-600 hover:bg-purple-700 disabled:bg-purple-800 text-white px-6 py-2 rounded-lg font-medium transition-colors mr-3"
               >
-                {isGenerating ? "Generating..." : "Generate"}
+                {isGenerating ? "Generating Music..." : "Generate"}
               </button>
+
               {/* Settings Button */}
               <button
                 onClick={handleSettingsToggle}
@@ -195,30 +196,77 @@ export default function TextToMusic() {
                     <p className="text-gray-400 text-sm">Format: {audioFormat.toUpperCase()}</p>
                   </div>
                 </div>
-                <audio
-                  controls
-                  className="w-full mb-4"
-                  style={{
-                    filter: 'invert(1) hue-rotate(180deg)',
-                    borderRadius: '8px'
-                  }}
-                >
-                  <source src={generatedMusic[0]} type={`audio/${audioFormat}`} />
-                  Your browser does not support the audio element.
-                </audio>
-                <div className="flex items-center justify-center gap-3">
+                <div className="space-y-2">
+                  <audio
+                    controls
+                    className="w-full"
+                    style={{
+                      filter: 'invert(1) hue-rotate(180deg)',
+                      borderRadius: '8px'
+                    }}
+                    onError={(e) => {
+                      console.error('Audio playback error:', e)
+                      const target = e.target as HTMLAudioElement
+                      console.error('Audio error details:', {
+                        error: target.error,
+                        networkState: target.networkState,
+                        readyState: target.readyState
+                      })
+                    }}
+                    onLoadStart={() => console.log('Audio loading started')}
+                    onCanPlay={() => console.log('Audio can play')}
+                    onLoadedData={() => console.log('Audio data loaded')}
+                    onCanPlayThrough={() => console.log('Audio can play through')}
+                  >
+                    <source src={generatedMusic[0]} type={`audio/${audioFormat}`} />
+                    Your browser does not support the audio element.
+                  </audio>
+                  
+                  {/* Fallback play button */}
                   <button
                     onClick={() => {
-                      const link = document.createElement("a")
-                      link.href = generatedMusic[0]
-                      const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, "-")
-                      const filename = `generated-music-${timestamp}.${audioFormat}`
-                      link.download = filename
-                      document.body.appendChild(link)
-                      link.click()
-                      document.body.removeChild(link)
+                      const audio = new Audio(generatedMusic[0])
+                      audio.play().catch(error => {
+                        console.error('Fallback audio play failed:', error)
+                        alert('Audio playback failed. Please try downloading the file.')
+                      })
+                    }}
+                    className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm"
+                  >
+                    Play Audio (Fallback)
+                  </button>
+                </div>
+                <div className="flex items-center justify-center gap-3">
+                  <button
+                    onClick={async () => {
+                      try {
+                        // Fetch the blob from the blob URL
+                        const response = await fetch(generatedMusic[0])
+                        const blob = await response.blob()
+                        
+                        // Create download link
+                        const link = document.createElement("a")
+                        link.href = URL.createObjectURL(blob)
+                        const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, "-")
+                        const filename = `generated-music-${timestamp}.${audioFormat}`
+                        link.download = filename
+                        
+                        // Trigger download
+                        document.body.appendChild(link)
+                        link.click()
+                        document.body.removeChild(link)
+                        
+                        // Clean up the temporary URL
+                        URL.revokeObjectURL(link.href)
+                        
+                        console.log('Download started:', filename)
+                      } catch (error) {
+                        console.error('Download failed:', error)
+                        alert('Download failed. Please try again.')
+                      }
                     }}
                     className="p-2 rounded-full bg-white/20 text-white hover:bg-white/30 transition-colors"
+                    title="Download Music"
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />

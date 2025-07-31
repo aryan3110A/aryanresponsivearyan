@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react'
 import { GeneratedSet } from '../page'
+import Image from 'next/image'
 import { Grid, List, Download, Trash2, Calendar, Eye, Plus, Search, AlertCircle } from 'lucide-react'
 
 interface LibraryGridProps {
@@ -54,13 +55,15 @@ const SafeLibraryImage = ({ src, alt, className, onClick }: {
           <div className="w-4 h-4 border-2 border-gray-500 border-t-[#6C3BFF] rounded-full animate-spin"></div>
         </div>
       )}
-      <img
+      <Image
         src={src}
         alt={alt}
-        className={`w-full h-full object-cover ${isLoading ? 'opacity-0' : 'opacity-100'} transition-opacity`}
+        fill
+        className={`object-cover ${isLoading ? 'opacity-0' : 'opacity-100'} transition-opacity`}
         onError={handleImageError}
         onLoad={handleImageLoad}
         onClick={onClick}
+        unoptimized
       />
     </div>
   )
