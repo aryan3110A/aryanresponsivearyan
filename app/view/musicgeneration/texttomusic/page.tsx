@@ -12,7 +12,9 @@ export default function TextToMusic() {
   const [generatedMusic, setGeneratedMusic] = useState<string[]>([])
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const [isGenerating, setIsGenerating] = useState(false)
-  
+  const [polling, setPolling] = useState(false)
+  const [pollError, setPollError] = useState<string | null>(null)
+
   // Music generation specific states
   const [selectedModel, setSelectedModel] = useState<string>("music-1.5")
   const [sampleRate, setSampleRate] = useState<number>(44100)
@@ -22,56 +24,88 @@ export default function TextToMusic() {
   const [lyrics, setLyrics] = useState<string>("")
   const [songStructure, setSongStructure] = useState<string[]>(["verse", "chorus", "verse", "chorus", "bridge", "chorus"])
 
+  // Polling function
+  const pollForMusic = async (traceId: string) => {
+    setPolling(true)
+    setPollError(null)
+    let attempts = 0
+    const maxAttempts = 20 // ~40 seconds
+    const poll = async () => {
+      try {
+        const res = await fetch(`/api/music-status?trace_id=${traceId}&output_format=${outputFormat}`)
+        const data = await res.json()
+        if (data.status === 'done') {
+          setPolling(false)
+          setIsGenerating(false)
+          if (outputFormat === "hex" && data.audio_data) {
+            const hexString = data.audio_data;
+            const bytes = new Uint8Array(hexString.match(/.{1,2}/g)?.map((byte: string) => parseInt(byte, 16)) || []);
+            const audioBlob = new Blob([bytes], { type: `audio/${audioFormat}` })
+            const audioUrl = URL.createObjectURL(audioBlob)
+            setGeneratedMusic([audioUrl])
+          } else if (outputFormat === "url" && data.audio_url) {
+            setGeneratedMusic([data.audio_url])
+          }
+        } else if (data.status === 'pending') {
+          attempts++
+          if (attempts < maxAttempts) {
+            setTimeout(poll, 2000)
+          } else {
+            setPolling(false)
+            setIsGenerating(false)
+            setPollError('Music generation timed out. Please try again.')
+          }
+        } else {
+          setPolling(false)
+          setIsGenerating(false)
+          setPollError(data.status_msg || 'Music generation failed.')
+        }
+      } catch (err: any) {
+        setPolling(false)
+        setIsGenerating(false)
+        setPollError(err.message || 'Music generation failed.')
+      }
+    }
+    poll()
+  }
+
   const handleGenerate = async () => {
     if (!lyrics.trim()) {
       alert("Please provide lyrics")
       return
     }
-
-    // Validate lyrics length (10-600 characters)
     if (lyrics.length < 10 || lyrics.length > 600) {
       alert("Lyrics must be between 10 and 600 characters")
       return
     }
-
     setIsGenerating(true)
-
+    setGeneratedMusic([])
+    setPollError(null)
     try {
       // Create structured lyrics by combining user lyrics with song structure
       const createStructuredLyrics = () => {
-        if (songStructure.length === 0) {
-          return lyrics; // Return raw lyrics if no structure
-        }
-
-        // Split lyrics into lines and distribute across structure
-        const lyricsLines = lyrics.split('\n').filter(line => line.trim());
-        const linesPerSection = Math.ceil(lyricsLines.length / songStructure.length);
-
-        let structuredLyrics = '';
+        if (songStructure.length === 0) return lyrics
+        const lyricsLines = lyrics.split('\n').filter(line => line.trim())
+        const linesPerSection = Math.ceil(lyricsLines.length / songStructure.length)
+        let structuredLyrics = ''
         songStructure.forEach((section, index) => {
-          const startIndex = index * linesPerSection;
-          const endIndex = Math.min(startIndex + linesPerSection, lyricsLines.length);
-          const sectionLines = lyricsLines.slice(startIndex, endIndex);
-
+          const startIndex = index * linesPerSection
+          const endIndex = Math.min(startIndex + linesPerSection, lyricsLines.length)
+          const sectionLines = lyricsLines.slice(startIndex, endIndex)
           if (sectionLines.length > 0) {
-            structuredLyrics += `[${section}]\n${sectionLines.join('\n')}\n\n`;
+            structuredLyrics += `[${section}]\n${sectionLines.join('\n')}\n\n`
           }
-        });
-
-        return structuredLyrics.trim();
-      };
-
-      const finalLyrics = createStructuredLyrics();
-
-      // Call the music generation API
+        })
+        return structuredLyrics.trim()
+      }
+      const finalLyrics = createStructuredLyrics()
+      // Start the job
       const response = await fetch('/api/generate-music', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           model: selectedModel,
-          prompt: "Generate music based on the provided lyrics", // Default prompt since we're using lyrics
+          prompt: "Generate music based on the provided lyrics",
           lyrics: finalLyrics,
           audio_setting: {
             sample_rate: sampleRate,
@@ -79,45 +113,23 @@ export default function TextToMusic() {
             format: audioFormat
           },
           output_format: outputFormat
-        }),
+        })
       })
-
-      if (!response.ok) {
-        throw new Error('Failed to generate music')
-      }
-
       const data = await response.json()
-
-      if (data.status_code !== 0) {
-        throw new Error(data.status_msg || 'Music generation failed')
+      if (!response.ok || !data.trace_id) {
+        setIsGenerating(false)
+        setPollError(data.status_msg || data.error || 'Failed to start music generation.')
+        return
       }
-
-      if (data.status_code === 0) {
-        if (outputFormat === "hex") {
-          // Convert hex to blob URL for playback
-          const hexString = data.audio_data;
-          const bytes = new Uint8Array(hexString.match(/.{1,2}/g)?.map((byte: string) => parseInt(byte, 16)) || []);
-          const audioBlob = new Blob([bytes], {
-            type: `audio/${audioFormat}`
-          })
-          const audioUrl = URL.createObjectURL(audioBlob)
-          setGeneratedMusic([audioUrl])
-        } else if (outputFormat === "url") {
-          // Use the direct URL provided
-          setGeneratedMusic([data.audio_url])
-        }
-      }
-    } catch (error) {
-      console.error('Music generation failed:', error)
-      alert('Music generation failed. Please try again.')
-    } finally {
+      // Start polling
+      pollForMusic(data.trace_id)
+    } catch (error: any) {
       setIsGenerating(false)
+      setPollError(error.message || 'Music generation failed.')
     }
   }
 
-  const handleSettingsToggle = () => {
-    setIsSettingsOpen(!isSettingsOpen)
-  }
+  const handleSettingsToggle = () => setIsSettingsOpen(!isSettingsOpen)
 
   return (
     <>
@@ -128,10 +140,8 @@ export default function TextToMusic() {
       </div>
       <NavigationFull />
       {/* <BackgroundShapes /> */}
-
       <div className="relative z-10">
         <Header title="Text To Music" />
-
         <main className="container mx-auto lg:px-8 xl:px-12 2xl:px-16">
           {/* Centered Input Box with Generate and Settings Buttons */}
           <div className="flex items-center justify-center min-h-[60vh] px-4">
@@ -142,7 +152,6 @@ export default function TextToMusic() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                 </svg>
               </button>
-
               {/* Input Field */}
               <input
                 type="text"
@@ -151,7 +160,6 @@ export default function TextToMusic() {
                 onChange={(e) => setLyrics(e.target.value)}
                 className="flex-1 bg-transparent text-white placeholder-gray-400 outline-none text-lg px-4"
               />
-
               {/* Sparkle Button */}
               <button className="flex items-center justify-center w-10 h-10 rounded-lg border border-white/20 hover:bg-white/10 transition-colors mr-3">
                 <div className="relative">
@@ -163,16 +171,14 @@ export default function TextToMusic() {
                   </svg>
                 </div>
               </button>
-
               {/* Generate Button */}
               <button
                 onClick={handleGenerate}
-                disabled={isGenerating}
+                disabled={isGenerating || polling}
                 className="bg-purple-600 hover:bg-purple-700 disabled:bg-purple-800 text-white px-6 py-2 rounded-lg font-medium transition-colors mr-3"
               >
-                {isGenerating ? "Generating..." : "Generate"}
+                {isGenerating || polling ? "Generating..." : "Generate"}
               </button>
-
               {/* Settings Button */}
               <button
                 onClick={handleSettingsToggle}
@@ -185,9 +191,15 @@ export default function TextToMusic() {
               </button>
             </div>
           </div>
-
+          {/* Polling/Error UI */}
+          {polling && (
+            <div className="flex justify-center mt-4 text-yellow-400">Generating music, please wait...</div>
+          )}
+          {pollError && (
+            <div className="flex justify-center mt-4 text-red-400">{pollError}</div>
+          )}
           {/* Generated Music Display */}
-          {generatedMusic.length > 0 && (
+          {generatedMusic.length > 0 && !polling && (
             <div className="flex items-center justify-center mt-8">
               <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-700/30 rounded-xl p-6 max-w-md">
                 <div className="flex items-center gap-4 mb-4">
@@ -201,7 +213,6 @@ export default function TextToMusic() {
                     <p className="text-gray-400 text-sm">Format: {audioFormat.toUpperCase()}</p>
                   </div>
                 </div>
-
                 <audio
                   controls
                   className="w-full mb-4"
@@ -213,7 +224,6 @@ export default function TextToMusic() {
                   <source src={generatedMusic[0]} type={`audio/${audioFormat}`} />
                   Your browser does not support the audio element.
                 </audio>
-
                 <div className="flex items-center justify-center gap-3">
                   <button
                     onClick={() => {
@@ -237,11 +247,7 @@ export default function TextToMusic() {
             </div>
           )}
         </main>
-
-        
       </div>
-      
-
       <SettingsPanel
         isOpen={isSettingsOpen}
         onClose={() => setIsSettingsOpen(false)}
@@ -259,7 +265,6 @@ export default function TextToMusic() {
         songStructure={songStructure}
         setSongStructure={setSongStructure}
       />
-      
     </div>
     <Footer />
     </>

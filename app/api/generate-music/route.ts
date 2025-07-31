@@ -12,19 +12,6 @@ interface MusicGenerationRequest {
   output_format?: string
 }
 
-interface MusicGenerationResponse {
-  data: {
-    status: number
-    audio: string
-    audio_url?: string
-  }
-  trace_id: string
-  base_resp: {
-    status_code: number
-    status_msg: string
-  }
-}
-
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
@@ -77,85 +64,37 @@ export async function POST(request: NextRequest) {
       output_format
     }
 
-    console.log('Making request to MiniMax API:', {
-      model: musicRequest.model,
-      prompt: musicRequest.prompt,
-      lyrics: musicRequest.lyrics.substring(0, 100) + '...',
-      audio_setting: musicRequest.audio_setting,
-      output_format: musicRequest.output_format
-    })
-
-    // Make request to MiniMax API
-    const response = await fetch('https://api.minimax.io/v1/music_generation', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${process.env.MINIMAX_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(musicRequest),
-    })
+    // Make initial request to MiniMax API (do not wait for completion)
+    const response = await fetch(
+      'https://api.minimax.io/v1/music_generation',
+      {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${process.env.MINIMAX_API_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(musicRequest),
+      }
+    )
 
     if (!response.ok) {
       const errorText = await response.text()
-      console.error('MiniMax API error:', response.status, errorText)
       return NextResponse.json(
-        { 
-          status_code: response.status,
-          status_msg: `MiniMax API error: ${response.status}` 
-        },
+        { error: `MiniMax API error: ${response.status} - ${errorText}` },
         { status: response.status }
       )
     }
 
-    const musicResponse: MusicGenerationResponse = await response.json()
-
-    // Check for API errors
-    if (musicResponse.base_resp.status_code !== 0) {
-      console.error('MiniMax API returned error:', musicResponse.base_resp)
-      return NextResponse.json(
-        { 
-          status_code: musicResponse.base_resp.status_code,
-          status_msg: musicResponse.base_resp.status_msg 
-        },
-        { status: 400 }
-      )
-    }
-
-    // Check if music generation is complete
-    if (musicResponse.data.status === 1) {
-      return NextResponse.json({
-        status_code: 1,
-        status_msg: 'Music generation in progress. Please try again in a few moments.',
-        trace_id: musicResponse.trace_id
-      })
-    }
-
-    // Return response based on output format
-    if (output_format === "hex") {
-      return NextResponse.json({
-        status_code: 0,
-        audio_data: musicResponse.data.audio,
-        audio_format: musicRequest.audio_setting.format,
-        trace_id: musicResponse.trace_id,
-        status_msg: 'Music generated successfully'
-      })
-    } else if (output_format === "url") {
-      return NextResponse.json({
-        status_code: 0,
-        audio_url: musicResponse.data.audio_url,
-        audio_format: musicRequest.audio_setting.format,
-        trace_id: musicResponse.trace_id,
-        status_msg: 'Music generated successfully'
-      })
-    }
-
+    const data = await response.json()
+    // Return trace_id and status
+    return NextResponse.json({
+      status: 'pending',
+      trace_id: data.trace_id || data.data?.trace_id,
+      status_msg: 'Music generation started. Poll status endpoint.'
+    })
   } catch (error) {
-    console.error('Music generation error:', error)
     return NextResponse.json(
-      { 
-        status_code: 500,
-        status_msg: 'Internal server error' 
-      },
+      { error: error instanceof Error ? error.message : 'Internal server error' },
       { status: 500 }
     )
   }
