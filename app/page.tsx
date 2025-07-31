@@ -7,6 +7,8 @@ const Page: React.FC = () => {
   return (
     <>
       <Main />
+
+      
       {/* <InpaintFluxAPI/> */}
       {/* <ImageLibrary/> */}
       {/* <InChatHistory/> */}
