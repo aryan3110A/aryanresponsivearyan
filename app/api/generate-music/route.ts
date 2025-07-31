@@ -64,7 +64,15 @@ export async function POST(request: NextRequest) {
       output_format
     }
 
-    // Make initial request to MiniMax API (do not wait for completion)
+    console.log('Making request to MiniMax API:', {
+      model: musicRequest.model,
+      prompt: musicRequest.prompt.substring(0, 50) + '...',
+      lyrics: musicRequest.lyrics.substring(0, 50) + '...',
+      audio_setting: musicRequest.audio_setting,
+      output_format: musicRequest.output_format
+    })
+
+    // Make request to MiniMax API
     const response = await fetch(
       'https://api.minimax.io/v1/music_generation',
       {
@@ -79,6 +87,7 @@ export async function POST(request: NextRequest) {
 
     if (!response.ok) {
       const errorText = await response.text()
+      console.error('MiniMax API error:', response.status, errorText)
       return NextResponse.json(
         { error: `MiniMax API error: ${response.status} - ${errorText}` },
         { status: response.status }
@@ -86,13 +95,63 @@ export async function POST(request: NextRequest) {
     }
 
     const data = await response.json()
-    // Return trace_id and status
-    return NextResponse.json({
-      status: 'pending',
-      trace_id: data.trace_id || data.data?.trace_id,
-      status_msg: 'Music generation started. Poll status endpoint.'
-    })
+    console.log('MiniMax API response:', JSON.stringify(data, null, 2))
+    
+    // Check for API errors
+    if (data.base_resp?.status_code !== 0) {
+      console.error('MiniMax API returned error:', data.base_resp)
+      return NextResponse.json(
+        { 
+          status_code: data.base_resp.status_code,
+          status_msg: data.base_resp.status_msg 
+        },
+        { status: 400 }
+      )
+    }
+
+    // Check if generation is complete
+    if (data.data?.status === 2) {
+      console.log('Music generation completed successfully')
+      
+      if (output_format === "hex" && data.data.audio) {
+        return NextResponse.json({
+          status_code: 0,
+          audio_data: data.data.audio,
+          audio_format: musicRequest.audio_setting.format,
+          trace_id: data.trace_id,
+          status_msg: 'Music generated successfully'
+        })
+      } else if (output_format === "url") {
+        // For URL format, we need to check if there's a URL in the response
+        // Since the API doesn't seem to return URLs, we'll return the hex data anyway
+        return NextResponse.json({
+          status_code: 0,
+          audio_data: data.data.audio,
+          audio_format: musicRequest.audio_setting.format,
+          trace_id: data.trace_id,
+          status_msg: 'Music generated successfully'
+        })
+      }
+    } else if (data.data?.status === 1) {
+      // Still processing (though this shouldn't happen with MiniMax)
+      return NextResponse.json({
+        status: 'pending',
+        trace_id: data.trace_id,
+        status_msg: 'Music generation in progress'
+      })
+    }
+
+    // Fallback error
+    return NextResponse.json(
+      { 
+        status_code: 500,
+        status_msg: 'Unexpected response from MiniMax API' 
+      },
+      { status: 500 }
+    )
+
   } catch (error) {
+    console.error('Music generation error:', error)
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Internal server error' },
       { status: 500 }

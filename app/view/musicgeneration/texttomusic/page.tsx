@@ -12,8 +12,6 @@ export default function TextToMusic() {
   const [generatedMusic, setGeneratedMusic] = useState<string[]>([])
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const [isGenerating, setIsGenerating] = useState(false)
-  const [polling, setPolling] = useState(false)
-  const [pollError, setPollError] = useState<string | null>(null)
 
   // Music generation specific states
   const [selectedModel, setSelectedModel] = useState<string>("music-1.5")
@@ -23,51 +21,6 @@ export default function TextToMusic() {
   const [outputFormat, setOutputFormat] = useState<string>("hex")
   const [lyrics, setLyrics] = useState<string>("")
   const [songStructure, setSongStructure] = useState<string[]>(["verse", "chorus", "verse", "chorus", "bridge", "chorus"])
-
-  // Polling function
-  const pollForMusic = async (traceId: string) => {
-    setPolling(true)
-    setPollError(null)
-    let attempts = 0
-    const maxAttempts = 20 // ~40 seconds
-    const poll = async () => {
-      try {
-        const res = await fetch(`/api/music-status?trace_id=${traceId}&output_format=${outputFormat}`)
-        const data = await res.json()
-        if (data.status === 'done') {
-          setPolling(false)
-          setIsGenerating(false)
-          if (outputFormat === "hex" && data.audio_data) {
-            const hexString = data.audio_data;
-            const bytes = new Uint8Array(hexString.match(/.{1,2}/g)?.map((byte: string) => parseInt(byte, 16)) || []);
-            const audioBlob = new Blob([bytes], { type: `audio/${audioFormat}` })
-            const audioUrl = URL.createObjectURL(audioBlob)
-            setGeneratedMusic([audioUrl])
-          } else if (outputFormat === "url" && data.audio_url) {
-            setGeneratedMusic([data.audio_url])
-          }
-        } else if (data.status === 'pending') {
-          attempts++
-          if (attempts < maxAttempts) {
-            setTimeout(poll, 2000)
-          } else {
-            setPolling(false)
-            setIsGenerating(false)
-            setPollError('Music generation timed out. Please try again.')
-          }
-        } else {
-          setPolling(false)
-          setIsGenerating(false)
-          setPollError(data.status_msg || 'Music generation failed.')
-        }
-      } catch (err: any) {
-        setPolling(false)
-        setIsGenerating(false)
-        setPollError(err.message || 'Music generation failed.')
-      }
-    }
-    poll()
-  }
 
   const handleGenerate = async () => {
     if (!lyrics.trim()) {
@@ -80,7 +33,7 @@ export default function TextToMusic() {
     }
     setIsGenerating(true)
     setGeneratedMusic([])
-    setPollError(null)
+    
     try {
       // Create structured lyrics by combining user lyrics with song structure
       const createStructuredLyrics = () => {
@@ -99,7 +52,8 @@ export default function TextToMusic() {
         return structuredLyrics.trim()
       }
       const finalLyrics = createStructuredLyrics()
-      // Start the job
+      
+      // Call the music generation API
       const response = await fetch('/api/generate-music', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -115,17 +69,51 @@ export default function TextToMusic() {
           output_format: outputFormat
         })
       })
+
       const data = await response.json()
-      if (!response.ok || !data.trace_id) {
-        setIsGenerating(false)
-        setPollError(data.status_msg || data.error || 'Failed to start music generation.')
-        return
+      
+      if (!response.ok) {
+        throw new Error(data.status_msg || data.error || `HTTP error! status: ${response.status}`)
       }
-      // Start polling
-      pollForMusic(data.trace_id)
+
+      if (data.status_code !== 0) {
+        throw new Error(data.status_msg || 'Music generation failed')
+      }
+
+      console.log('Music generation completed successfully')
+
+      // Handle the audio data
+      if (data.audio_data) {
+        if (outputFormat === "hex") {
+          // Convert hex to blob URL for playback
+          const hexString = data.audio_data;
+          const bytes = new Uint8Array(hexString.match(/.{1,2}/g)?.map((byte: string) => parseInt(byte, 16)) || []);
+          const audioBlob = new Blob([bytes], {
+            type: `audio/${audioFormat}`
+          })
+          const audioUrl = URL.createObjectURL(audioBlob)
+          setGeneratedMusic([audioUrl])
+        } else if (outputFormat === "url" && data.audio_url) {
+          // Use the direct URL provided
+          setGeneratedMusic([data.audio_url])
+        } else {
+          // Fallback to hex if URL format is requested but not available
+          const hexString = data.audio_data;
+          const bytes = new Uint8Array(hexString.match(/.{1,2}/g)?.map((byte: string) => parseInt(byte, 16)) || []);
+          const audioBlob = new Blob([bytes], {
+            type: `audio/${audioFormat}`
+          })
+          const audioUrl = URL.createObjectURL(audioBlob)
+          setGeneratedMusic([audioUrl])
+        }
+      } else {
+        throw new Error('No audio data received')
+      }
     } catch (error: any) {
+      console.error('Music generation failed:', error)
+      alert(error.message || 'Music generation failed. Please try again.')
+    } finally {
       setIsGenerating(false)
-      setPollError(error.message || 'Music generation failed.')
     }
   }
 
@@ -174,10 +162,10 @@ export default function TextToMusic() {
               {/* Generate Button */}
               <button
                 onClick={handleGenerate}
-                disabled={isGenerating || polling}
+                disabled={isGenerating}
                 className="bg-purple-600 hover:bg-purple-700 disabled:bg-purple-800 text-white px-6 py-2 rounded-lg font-medium transition-colors mr-3"
               >
-                {isGenerating || polling ? "Generating..." : "Generate"}
+                {isGenerating ? "Generating..." : "Generate"}
               </button>
               {/* Settings Button */}
               <button
@@ -191,15 +179,8 @@ export default function TextToMusic() {
               </button>
             </div>
           </div>
-          {/* Polling/Error UI */}
-          {polling && (
-            <div className="flex justify-center mt-4 text-yellow-400">Generating music, please wait...</div>
-          )}
-          {pollError && (
-            <div className="flex justify-center mt-4 text-red-400">{pollError}</div>
-          )}
           {/* Generated Music Display */}
-          {generatedMusic.length > 0 && !polling && (
+          {generatedMusic.length > 0 && (
             <div className="flex items-center justify-center mt-8">
               <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-700/30 rounded-xl p-6 max-w-md">
                 <div className="flex items-center gap-4 mb-4">
