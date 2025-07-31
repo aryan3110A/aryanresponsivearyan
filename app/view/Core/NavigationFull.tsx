@@ -35,21 +35,25 @@ export default function NavigationFull() {
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
       if (firebaseUser) {
         setUserEmail(firebaseUser.email || "")
-        const storedUsername = localStorage.getItem("username")
-        if (storedUsername) {
-          setUsername(storedUsername)
-        } else {
-          setShowUsernamePrompt(true)
-        }
-      } else {
-        const otpEmail = localStorage.getItem("otpUser")
-        if (otpEmail) {
-          setUserEmail(otpEmail)
+        if (typeof window !== 'undefined') {
           const storedUsername = localStorage.getItem("username")
           if (storedUsername) {
             setUsername(storedUsername)
           } else {
             setShowUsernamePrompt(true)
+          }
+        }
+      } else {
+        if (typeof window !== 'undefined') {
+          const otpEmail = localStorage.getItem("otpUser")
+          if (otpEmail) {
+            setUserEmail(otpEmail)
+            const storedUsername = localStorage.getItem("username")
+            if (storedUsername) {
+              setUsername(storedUsername)
+            } else {
+              setShowUsernamePrompt(true)
+            }
           }
         }
       }
@@ -62,9 +66,11 @@ export default function NavigationFull() {
       await signOut(auth)
     } catch { }
 
-    localStorage.removeItem("otpUser")
-    localStorage.removeItem("username")
-    localStorage.removeItem("slug")
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem("otpUser")
+      localStorage.removeItem("username")
+      localStorage.removeItem("slug")
+    }
 
     setUserEmail("")
     setUsername("")
@@ -96,23 +102,27 @@ export default function NavigationFull() {
   }
 
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (headerRef.current && !headerRef.current.contains(event.target as Node)) {
-        setActiveDropdown(null)
-        setIsUserDropdownOpen(false)
+    if (typeof window !== 'undefined') {
+      const handleClickOutside = (event: MouseEvent) => {
+        if (headerRef.current && !headerRef.current.contains(event.target as Node)) {
+          setActiveDropdown(null)
+          setIsUserDropdownOpen(false)
+        }
       }
-    }
-    document.addEventListener("mousedown", handleClickOutside)
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside)
+      document.addEventListener("mousedown", handleClickOutside)
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside)
+      }
     }
   }, [])
 
   useEffect(() => {
-    const needsUsername = localStorage.getItem("needsUsername")
-    if (needsUsername === "true") {
-      setShowUsernamePrompt(true)
-      localStorage.removeItem("needsUsername")
+    if (typeof window !== 'undefined') {
+      const needsUsername = localStorage.getItem("needsUsername")
+      if (needsUsername === "true") {
+        setShowUsernamePrompt(true)
+        localStorage.removeItem("needsUsername")
+      }
     }
   }, [])
 
@@ -215,7 +225,7 @@ export default function NavigationFull() {
           <div className="flex items-center space-x-3 lg:space-x-4">
             {/* Token Display */}
             <div className="flex items-center space-x-0 bg-gradient-to-b from-[#6C3BFF] to-[#412399] backdrop-blur-sm border-none rounded-lg px-3 py-1.5 lg:px-4 lg:py-1.5">
-              <Image src="/core/newToken.png" alt="" width={20} height={20} className="mr-2" />
+              <Image src="/Core/newToken.png" alt="" width={20} height={20} className="mr-2" />
               <span className="text-xs lg:text-sm font-normal text-blue-100">
                 <span>{availableTokens}</span>
               </span>

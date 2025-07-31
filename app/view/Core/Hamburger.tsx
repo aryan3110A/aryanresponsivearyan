@@ -75,21 +75,21 @@ const socialLinks: SocialLink[] = [
   },
   {
     icon: IconBrandInstagram,
-    href: "Instagram",
+    href: "https://www.instagram.com/wildmindai",
     hoverColor: "hover:text-pink-500",
     borderHoverColor: "hover:border-pink-500",
     glowColor: "hover:shadow-[0_0_15px_rgba(236,72,153,0.5)]",
   },
   {
     icon: IconBrandBlogger,
-    href: "Blogger",
+    href: "https://wildmindai.blogspot.com",
     hoverColor: "hover:text-green-500",
     borderHoverColor: "hover:border-green-500",
     glowColor: "hover:shadow-[0_0_15px_rgba(34,197,94,0.5)]",
   },
   {
     icon: IconBrandYoutube,
-    href: "Youtube",
+    href: "https://www.youtube.com/@wildmindai",
     hoverColor: "hover:text-red-500",
     borderHoverColor: "hover:border-red-500",
     glowColor: "hover:shadow-[0_0_15px_rgba(220,38,38,0.5)]",
@@ -117,13 +117,15 @@ export default function Hamburger({ isOpen, onClose }: { isOpen: boolean; onClos
   }, [isOpen, isSettingsOpen])
 
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = "hidden"
-    } else {
-      document.body.style.overflow = ""
-    }
-    return () => {
-      document.body.style.overflow = ""
+    if (typeof window !== 'undefined') {
+      if (isOpen) {
+        document.body.style.overflow = "hidden"
+      } else {
+        document.body.style.overflow = ""
+      }
+      return () => {
+        document.body.style.overflow = ""
+      }
     }
   }, [isOpen])
 
