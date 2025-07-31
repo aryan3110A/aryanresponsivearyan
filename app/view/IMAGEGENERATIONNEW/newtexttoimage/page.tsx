@@ -111,7 +111,7 @@ export default function NewText2Image() {
     try { 
       const modelName = currentSettings?.model || selectedModel
       const modelSlug = modelSlugMap[modelName] || "stable-turbo"
-      const modelEndpoint = `https://c9b20607338c.ngrok-free.app/${modelSlug}/generate`
+      const modelEndpoint = `https://46c557b611ed.ngrok-free.app/${modelSlug}/generate`
       const response = await fetch(modelEndpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

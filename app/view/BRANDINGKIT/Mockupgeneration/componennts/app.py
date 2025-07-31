@@ -8,7 +8,13 @@ from PIL import Image
 from datetime import datetime
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, origins=[
+    "http://localhost:3000",
+    "https://www.wildmindai.com",
+    "https://api.wildmindai.com",
+    "https://*.vercel.app",
+    "https://*.ngrok-free.app"
+], supports_credentials=True)
 
 # Load pipeline once on server start
 model_id = "black-forest-labs/FLUX.1-Kontext-dev"
@@ -25,24 +31,56 @@ def resize_and_pad(image, size=(512, 512), bg_color=(0, 0, 0)):
     result.paste(image, offset)
     return result
 
-def create_optimized_prompt(user_prompt):
+def create_logo_mockup(logo_img, business_name, business_tagline, target_size=1024):
+    """Create a mockup reference image with the logo and business info"""
+    try:
+        # Create a clean background
+        background = Image.new("RGB", (target_size, target_size), (255, 255, 255))
+        
+        # Resize logo to fit nicely in the center
+        logo_size = min(target_size // 3, 300)  # Logo takes up about 1/3 of the image
+        logo_resized = resize_and_pad(logo_img, (logo_size, logo_size))
+        
+        # Calculate position to center the logo
+        logo_x = (target_size - logo_size) // 2
+        logo_y = (target_size - logo_size) // 2 - 50  # Slightly above center
+        
+        # Paste the logo
+        background.paste(logo_resized, (logo_x, logo_y))
+        
+        return background
+    except Exception as e:
+        print(f"Error creating logo mockup: {e}")
+        # Fallback to logo-only image
+        return resize_and_pad(logo_img, (target_size, target_size))
+
+def create_optimized_prompt(user_prompt, business_name="", business_tagline=""):
     """Create a prompt under 77 tokens for CLIP compatibility"""
     # Clean and optimize the user's prompt
     words = user_prompt.strip().split()
 
-    # Create base instruction for identity preservation and natural integration
-    base_instruction = "Same person from reference"
-    integration_hint = "natural pose, proper product size, single scene"
+    # Create base instruction for logo mockup
+    base_instruction = "professional logo mockup"
+    mockup_hint = "clean design, business presentation, high quality"
+
+    # Combine business info if available
+    business_info = ""
+    if business_name:
+        business_info = f"for {business_name}"
+    if business_tagline:
+        business_info += f" - {business_tagline}"
 
     # If user prompt is short enough, combine with base instruction
-    if len(words) <= 30:
-        return f"{base_instruction}, {user_prompt}, {integration_hint}"
+    if len(words) <= 20:
+        combined_prompt = f"{base_instruction} {business_info}, {user_prompt}, {mockup_hint}"
+        if len(combined_prompt.split()) <= 30:
+            return combined_prompt
 
     # If too long, extract key elements and create shorter version
     key_words = []
-    important_terms = ['holding', 'using', 'wearing', 'with', 'product', 'phone', 'bottle', 'item', 'drinking', 'pointing', 'showing']
+    important_terms = ['logo', 'brand', 'business', 'professional', 'clean', 'modern', 'design']
 
-    # First, add important action terms
+    # First, add important terms
     for word in words:
         if word.lower() in important_terms and len(key_words) < 5:
             key_words.append(word)
@@ -53,7 +91,7 @@ def create_optimized_prompt(user_prompt):
             key_words.append(word)
 
     optimized_prompt = ' '.join(key_words)
-    return f"{base_instruction}, {optimized_prompt}, {integration_hint}"
+    return f"{base_instruction} {business_info}, {optimized_prompt}, {mockup_hint}"
 
 def create_integrated_reference(model_img, product_img, target_width=1024):
     """Create a reference that suggests integration with properly sized product"""
@@ -89,12 +127,28 @@ def create_integrated_reference(model_img, product_img, target_width=1024):
 
 @app.route('/generate', methods=['POST'])
 def generate_image():
+    # Add CORS headers
+    response_headers = {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'POST, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+    }
+    
     try:
-        model_file = request.files['model_image']
-        product_file = request.files['product_image']
-        # Get user's custom prompt only - no static interactions
-        user_prompt = request.form.get('scene_desc', request.form.get('prompt', 'person with product'))
+        # Check if we have the required files
+        if 'logo_file' not in request.files:
+            return jsonify({"error": "Logo file is required"}), 400, response_headers
+            
+        logo_file = request.files['logo_file']
+        business_name = request.form.get('business_name', '')
+        business_tagline = request.form.get('business_tagline', '')
+        
+        # Get user's custom prompt
+        user_prompt = request.form.get('scene_desc', request.form.get('prompt', 'professional logo mockup'))
         print(f"User prompt: {user_prompt}")
+        print(f"Business name: {business_name}")
+        print(f"Business tagline: {business_tagline}")
+        
         # Get number of images to generate (default to 1 if not provided)
         num_images = int(request.form.get('numberOfImages', 1))
         # Get target resolution (default to 768x768 if not provided)
@@ -109,19 +163,17 @@ def generate_image():
 
         print(f"Generating {num_images} images with resolution: {target_width}x{target_height}")
 
-        model_img = Image.open(model_file).convert("RGB")
-        product_img = Image.open(product_file).convert("RGB")  # Will be used for product description
+        logo_img = Image.open(logo_file).convert("RGB")
 
-        # Create reference image with model as main focus and product properly sized
-        print(f"Creating reference image for target: {target_width}x{target_height}")
+        # Create a mockup reference image using the logo
+        print(f"Creating mockup reference image for target: {target_width}x{target_height}")
 
-        # Use integrated approach: model dominant, product appropriately sized for interaction
-        reference_image = create_integrated_reference(model_img, product_img, 1024)
+        # Create a simple mockup background with the logo
+        reference_image = create_logo_mockup(logo_img, business_name, business_tagline, 1024)
         print(f"Reference image created: {reference_image.size}")
-        print("Product sized at 1/3 of image width for proper visibility")
 
         # Create CLIP-compatible prompt (under 77 tokens)
-        prompt = create_optimized_prompt(user_prompt)
+        prompt = create_optimized_prompt(user_prompt, business_name, business_tagline)
         print(f"Original user prompt: {user_prompt}")
         print(f"Optimized prompt: {prompt}")
         print(f"Token count: ~{len(prompt.split())}")
@@ -190,15 +242,26 @@ def generate_image():
 
         # Return single image URL for backward compatibility if only 1 image
         if num_images == 1:
-            return jsonify({ "image_url": image_urls[0] })
+            return jsonify({ "image_url": image_urls[0] }), 200, response_headers
         else:
-            return jsonify({ "image_urls": image_urls })
+            return jsonify({ "image_urls": image_urls }), 200, response_headers
 
     except Exception as e:
         print(f"Error generating image: {e}")
         import traceback
         traceback.print_exc()
-        return jsonify({ "error": f"Image generation failed: {str(e)}" }), 500
+        return jsonify({ "error": f"Image generation failed: {str(e)}" }), 500, response_headers
+
+@app.route('/generate', methods=['OPTIONS'])
+def handle_options():
+    """Handle preflight OPTIONS requests"""
+    response_headers = {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'POST, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        'Access-Control-Max-Age': '86400'
+    }
+    return '', 200, response_headers
 
 @app.route('/download/<filename>')
 def download_file(filename):
