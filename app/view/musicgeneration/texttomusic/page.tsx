@@ -21,7 +21,7 @@ export default function TextToMusic() {
   const [outputFormat, setOutputFormat] = useState<string>("hex")
   const [lyrics, setLyrics] = useState<string>("")
   const [songStructure, setSongStructure] = useState<string[]>(["verse", "chorus", "verse", "chorus", "bridge", "chorus"])
-  const [generationStatus, setGenerationStatus] = useState<string>("")
+  // const [generationStatus, setGenerationStatus] = useState<string>("")
 
   const handleGenerate = async () => {
     if (!lyrics.trim()) {

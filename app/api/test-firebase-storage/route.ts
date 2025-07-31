@@ -3,9 +3,9 @@ import { storage } from '@/lib/firebase'
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage'
 
 // Add interface for Firebase errors
-interface FirebaseError extends Error {
-  code: string;
-}
+// interface FirebaseError extends Error {
+//   code: string;
+// }
 
 export async function GET() {
   try {

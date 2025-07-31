@@ -314,7 +314,7 @@ Critical Rules:
     return () => {
       isCancelled = true
     }
-  }, [isGenerating, category.id, uploadedImage, userPrompt, selectedModel])
+  }, [isGenerating, category.id, uploadedImage, userPrompt, selectedModel, onGenerationComplete, steps])
 
   const downloadImage = async (imageUrl: string, filename: string) => {
     try {

@@ -2,17 +2,17 @@ import { NextRequest, NextResponse } from 'next/server'
 import { downloadAndStoreImage, generateImageFileName } from '@/lib/firebaseStorage'
 
 // Add interface at the top of the file
-interface FluxKontextMaxRequestBody {
-  prompt: string;
-  output_format: string;
-  prompt_upsampling: boolean;
-  safety_tolerance: number;
-  input_image?: string;
-  seed?: number;
-  aspect_ratio?: string;
-  webhook_url?: string;
-  webhook_secret?: string;
-}
+// interface FluxKontextMaxRequestBody {
+//   prompt: string;
+//   output_format: string;
+//   prompt_upsampling: boolean;
+//   safety_tolerance: number;
+//   input_image?: string;
+//   seed?: number;
+//   aspect_ratio?: string;
+//   webhook_url?: string;
+//   webhook_secret?: string;
+// }
 
 // Test endpoint
 export async function GET() {

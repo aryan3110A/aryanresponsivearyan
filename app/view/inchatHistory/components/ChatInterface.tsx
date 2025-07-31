@@ -43,15 +43,15 @@ const MODELS = [
 ]
 
 // Add interface for request body
-interface ImageGenerationRequestBody {
-  prompt: string;
-  aspect_ratio: string;
-  output_format: string;
-  prompt_upsampling: boolean;
-  safety_tolerance: number;
-  input_image?: string;
-  seed?: number;
-}
+// interface ImageGenerationRequestBody {
+//   prompt: string;
+//   aspect_ratio: string;
+//   output_format: string;
+//   prompt_upsampling: boolean;
+//   safety_tolerance: number;
+//   input_image?: string;
+//   seed?: number;
+// }
 
 export default function ChatInterface({
   messages,

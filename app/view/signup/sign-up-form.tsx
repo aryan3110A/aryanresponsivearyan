@@ -468,11 +468,11 @@ export default function SignInForm() {
 }
 
 // Add interface for Firebase errors
-interface FirebaseError {
-  message: string;
-  code?: string;
-  stack?: string;
-}
+// interface FirebaseError {
+//   message: string;
+//   code?: string;
+//   stack?: string;
+// }
 
 // Replace the any type with proper typing
 interface ApiError {

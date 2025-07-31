@@ -2,12 +2,12 @@ import { storage } from './firebase'
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 
 // Add interface definition at the top
-interface StorageError {
-  code: string;
-  message: string;
-  status_?: number;
-  customData?: unknown;
-}
+// interface StorageError {
+//   code: string;
+//   message: string;
+//   status_?: number;
+//   customData?: unknown;
+// }
 
 /**
  * Comprehensive Firebase Storage diagnostic tool

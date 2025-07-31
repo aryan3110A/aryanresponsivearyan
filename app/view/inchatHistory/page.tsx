@@ -38,29 +38,29 @@ export interface GeneratedImage {
 }
 
 // Add interfaces for clean objects
-interface CleanChatMessage {
-  type: 'user' | 'assistant';
-  content: string;
-  timestamp: Date;
-  imageUrl?: string;
-  prompt?: string;
-  model?: string;
-  aspectRatio?: string;
-  seed?: number;
-  taskId?: string;
-  editingImageId?: string;
-  editedFromImageId?: string;
-}
+// interface CleanChatMessage {
+//   type: 'user' | 'assistant';
+//   content: string;
+//   timestamp: Date;
+//   imageUrl?: string;
+//   prompt?: string;
+//   model?: string;
+//   aspectRatio?: string;
+//   seed?: number;
+//   taskId?: string;
+//   editingImageId?: string;
+//   editedFromImageId?: string;
+// }
 
-interface CleanGeneratedImage {
-  imageUrl: string;
-  prompt: string;
-  model: string;
-  aspectRatio: string;
-  timestamp: Date;
-  taskId: string;
-  seed?: number;
-}
+// interface CleanGeneratedImage {
+//   imageUrl: string;
+//   prompt: string;
+//   model: string;
+//   aspectRatio: string;
+//   timestamp: Date;
+//   taskId: string;
+//   seed?: number;
+// }
 
 export default function InChatHistory() {
   const [generatedImages, setGeneratedImages] = useState<GeneratedImage[]>([])

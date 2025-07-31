@@ -2,7 +2,7 @@
 
 import Image from "next/image"
 import { useState, useRef } from "react"
-import AttachmentsDropdown from "./AttachmentsDropdown"
+// import AttachmentsDropdown from "./AttachmentsDropdown"
 import { UploadComponent } from "../../UI"
 import ImageOverlay from "./ImageOverlay"
 import { Download, Bookmark, Heart, Sparkles, X } from "lucide-react"
@@ -54,9 +54,9 @@ export default function InputSection({
   } | null>(null)
   const scrollContainerRef = useRef<HTMLDivElement>(null)
 
-  const handleChooseFromLibrary = () => {
-    console.log("Choose from library clicked")
-  }
+  // const handleChooseFromLibrary = () => {
+  //   console.log("Choose from library clicked")
+  // }
 
   const handleUploadLogo = () => {
     setShowUploadComponent(true)

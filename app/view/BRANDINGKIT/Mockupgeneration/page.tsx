@@ -9,7 +9,7 @@ import NavigationFull from "../../Core/NavigationFull";
 import Footer from "../../Core/Footer";
 
 export default function ProductWithModelPosePage() {
-  const [generatedPrompt, setGeneratedPrompt] = useState("professional logo mockup");
+  const [generatedPrompt] = useState("professional logo mockup");
   const [generatedImages, setGeneratedImages] = useState<string[]>([]);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -34,19 +34,19 @@ export default function ProductWithModelPosePage() {
         return;
       }
 
-      const resolutionMap: Record<string, Record<string, [number, number]>> = {
-        "1:1": { SD: [512, 512], HD: [768, 768], FullHD: [1024, 1024], "2K": [2048, 2048] },
-        "16:9": { SD: [640, 360], HD: [1280, 720], FullHD: [1920, 1080], "2K": [2560, 1440] },
-        "2:3": { SD: [384, 576], HD: [512, 768], FullHD: [768, 1152], "2K": [1024, 1536] },
-        "9:16": { SD: [360, 640], HD: [720, 1280], FullHD: [1080, 1920], "2K": [1440, 2560] },
-        "4:3": { SD: [512, 384], HD: [768, 576], FullHD: [1024, 768], "2K": [2048, 1536] },
-        "3:4": { SD: [384, 512], HD: [576, 768], FullHD: [768, 1024], "2K": [1536, 2048] },
-        "Custom": { SD: [768, 768], HD: [1024, 1024], FullHD: [1280, 1280], "2K": [2048, 2048] },
-      };
+      // const resolutionMap: Record<string, Record<string, [number, number]>> = {
+      //   "1:1": { SD: [512, 512], HD: [768, 768], FullHD: [1024, 1024], "2K": [2048, 2048] },
+      //   "16:9": { SD: [640, 360], HD: [1280, 720], FullHD: [1920, 1080], "2K": [2560, 1440] },
+      //   "2:3": { SD: [384, 576], HD: [512, 768], FullHD: [768, 1152], "2K": [1024, 1536] },
+      //   "9:16": { SD: [360, 640], HD: [720, 1280], FullHD: [1080, 1920], "2K": [1440, 2560] },
+      //   "4:3": { SD: [512, 384], HD: [768, 576], FullHD: [1024, 768], "2K": [2048, 1536] },
+      //   "3:4": { SD: [384, 512], HD: [576, 768], FullHD: [768, 1024], "2K": [1536, 2048] },
+      //   "Custom": { SD: [768, 768], HD: [1024, 1024], FullHD: [1280, 1280], "2K": [2048, 2048] },
+      // };
 
-      let [width, height] = resolutionMap[selectedAspectRatio]?.[selectedQuality] || [768, 768];
-      width -= width % 16;
-      height -= height % 16;
+      // let [width, height] = resolutionMap[selectedAspectRatio]?.[selectedQuality] || [768, 768];
+      // width -= width % 16;
+      // height -= height % 16;
 
       const formData = new FormData();
       formData.append("logo_file", logoFile);
@@ -78,7 +78,7 @@ export default function ProductWithModelPosePage() {
             try {
               const json = JSON.parse(chunk.replace("data: ", ""));
               setGeneratedImages((prev) => [...prev, `http://localhost:7862${json.image_url}`]);
-            } catch (err) {
+            } catch {
               console.warn("Invalid JSON chunk:", chunk);
             }
           }
