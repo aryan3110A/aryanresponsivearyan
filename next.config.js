@@ -10,7 +10,7 @@ const nextConfig = {
       },
       {
         protocol: 'http',
-        hostname: 'localhost',
+        hostname: 'localhost',  
         port: '7862',
         pathname: '/download/**',
       },
@@ -62,6 +62,11 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'delivery-us1.bfl.ai',
         pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'www.wildmindai.com',
+        pathname: '/core/**',  // or '/**' if you serve assets elsewhere
       },
     ],
     // Exclude video files from image optimization
