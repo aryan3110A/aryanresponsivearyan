@@ -1,11 +1,11 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
+import ChatInterface from './components/ChatInterface'
+import Library from './components/Library'
+import Sidebar from './components/Sidebar'
 import { collection, addDoc, query, orderBy, onSnapshot, deleteDoc, doc, getDocs, writeBatch } from 'firebase/firestore'
 import { db } from '@/lib/firebase'
-import ChatInterface from './components/ChatInterface'
-import Sidebar from './components/Sidebar'
-import Library from './components/Library'
 import { MessageSquare, Images, Menu, X } from 'lucide-react'
 
 export interface ChatMessage {
@@ -63,14 +63,33 @@ interface CleanGeneratedImage {
 }
 
 export default function InChatHistory() {
-  const [currentView, setCurrentView] = useState<'chat' | 'library'>('chat')
-  const [sidebarOpen, setSidebarOpen] = useState(true)
-  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([])
   const [generatedImages, setGeneratedImages] = useState<GeneratedImage[]>([])
   const [isGenerating, setIsGenerating] = useState(false)
   const [selectedImageForEdit, setSelectedImageForEdit] = useState<GeneratedImage | null>(null)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [currentView, setCurrentView] = useState<'chat' | 'library'>('chat')
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([])
   const [isClearingChat, setIsClearingChat] = useState(false)
   const [showImageNotice, setShowImageNotice] = useState(true)
+
+  // Test Firebase connection
+  useEffect(() => {
+    const testConnection = async () => {
+      try {
+        console.log('🔍 Testing Firebase connection...')
+        const testDoc = await addDoc(collection(db, 'test'), {
+          timestamp: new Date(),
+          test: true
+        })
+        console.log('✅ Firebase connection successful:', testDoc.id)
+        await deleteDoc(testDoc)
+        console.log('🧹 Test document cleaned up')
+      } catch (error) {
+        console.error('❌ Firebase connection failed:', error)
+      }
+    }
+    testConnection()
+  }, [])
 
   // Load chat messages from Firestore
   useEffect(() => {
@@ -129,7 +148,7 @@ export default function InChatHistory() {
   const addMessage = async (message: Omit<ChatMessage, 'id'>) => {
     try {
       // Clean the message object to remove undefined values
-      const cleanMessage: CleanChatMessage = {
+      const cleanMessage: Omit<ChatMessage, 'id'> = {
         type: message.type,
         content: message.content,
         timestamp: new Date()
@@ -165,7 +184,7 @@ export default function InChatHistory() {
   const addGeneratedImage = async (image: Omit<GeneratedImage, 'id'>) => {
     try {
       // Clean the image object to remove undefined values
-      const cleanImage: CleanGeneratedImage = {
+      const cleanImage: Omit<GeneratedImage, 'id'> = {
         imageUrl: image.imageUrl,
         prompt: image.prompt,
         model: image.model,

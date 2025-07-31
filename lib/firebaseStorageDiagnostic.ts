@@ -96,15 +96,15 @@ export async function diagnoseFirebaseStorage() {
 
       // Check for specific Firebase errors
       if ('code' in uploadError) {
-        console.log('   Firebase error code:', (uploadError as StorageError).code)
+        console.log('   Firebase error code:', (uploadError as { code: string }).code)
       }
 
       if ('status_' in uploadError) {
-        console.log('   HTTP status:', (uploadError as unknown as StorageError).status_)
+        console.log('   HTTP status:', (uploadError as { status_: number }).status_)
       }
 
       if ('customData' in uploadError) {
-        console.log('   Custom data:', (uploadError as unknown as StorageError).customData)
+        console.log('   Custom data:', (uploadError as { customData: unknown }).customData)
       }
 
       // Provide specific guidance based on error

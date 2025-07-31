@@ -50,7 +50,6 @@ const generationQueue = new GenerationQueue()
 
 export async function POST(request: NextRequest) {
   try {
-    console.log('🎨 Jewelry Studio API called')
     const body = await request.json()
     
     const {

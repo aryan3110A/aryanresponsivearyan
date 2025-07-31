@@ -20,7 +20,7 @@ export default function TextToVideoInput({
 
   const handleCameraMovementToggle = (movementId: string) => {
     if (selectedCameraMovements.includes(movementId)) {
-      setSelectedCameraMovements(selectedCameraMovements.filter((id: string) => id !== movementId))
+      setSelectedCameraMovements(selectedCameraMovements.filter(id => id !== movementId))
     } else {
       // Limit to 3 camera movements as recommended
       if (selectedCameraMovements.length >= 3) {

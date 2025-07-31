@@ -27,12 +27,10 @@ export async function GET(request: NextRequest) {
         message: exists ? 'Video file exists and is accessible' : 'Video file not found'
       })
     } catch {
-      return NextResponse.json({
-        exists: false,
-        error: 'File not found',
-        path: filePath,
-        publicUrl: `/static/videos/${filename}`
-      })
+      return NextResponse.json(
+        { error: 'Failed to process video' },
+        { status: 500 }
+      )
     }
   } catch (error) {
     return NextResponse.json({ 

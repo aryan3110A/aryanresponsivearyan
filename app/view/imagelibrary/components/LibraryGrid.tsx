@@ -2,15 +2,68 @@
 
 import React, { useState } from 'react'
 import { GeneratedSet } from '../page'
-import { Eye, Download, Trash2, Calendar, Grid, List, Plus, Search } from 'lucide-react'
-import Image from 'next/image'
+import { Grid, List, Download, Trash2, Calendar, Eye, Plus, Search, AlertCircle } from 'lucide-react'
 
 interface LibraryGridProps {
   sets: GeneratedSet[]
   viewMode: 'grid' | 'list'
   onViewModeChange: (mode: 'grid' | 'list') => void
-  onDeleteSet: (setId: string) => void
+  onDeleteSet: (setId: string) => Promise<void>
   onNewProject: () => void
+  onCleanupPlaceholders?: () => Promise<void>
+}
+
+// Safe Image component with error handling
+const SafeLibraryImage = ({ src, alt, className, onClick }: {
+  src: string
+  alt: string
+  className?: string
+  onClick?: () => void
+}) => {
+  const [imageError, setImageError] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+
+  const handleImageError = () => {
+    setImageError(true)
+    setIsLoading(false)
+  }
+
+  const handleImageLoad = () => {
+    setIsLoading(false)
+    setImageError(false)
+  }
+
+  if (imageError) {
+    return (
+      <div
+        className={`bg-gray-700/50 flex items-center justify-center ${className}`}
+        onClick={onClick}
+      >
+        <div className="text-center">
+          <AlertCircle className="w-6 h-6 text-gray-500 mx-auto mb-1" />
+          <p className="text-xs text-gray-500">Image unavailable</p>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className={`relative ${className}`}>
+      {isLoading && (
+        <div className="absolute inset-0 bg-gray-700/50 flex items-center justify-center">
+          <div className="w-4 h-4 border-2 border-gray-500 border-t-[#6C3BFF] rounded-full animate-spin"></div>
+        </div>
+      )}
+      <img
+        src={src}
+        alt={alt}
+        className={`w-full h-full object-cover ${isLoading ? 'opacity-0' : 'opacity-100'} transition-opacity`}
+        onError={handleImageError}
+        onLoad={handleImageLoad}
+        onClick={onClick}
+      />
+    </div>
+  )
 }
 
 export default function LibraryGrid({
@@ -18,16 +71,28 @@ export default function LibraryGrid({
   viewMode,
   onViewModeChange,
   onDeleteSet,
-  onNewProject
+  onNewProject,
+  onCleanupPlaceholders
 }: LibraryGridProps) {
   const [selectedSet, setSelectedSet] = useState<GeneratedSet | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null)
 
-  const filteredSets = sets.filter(set =>
-    set.userPrompt.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    set.category.toLowerCase().includes(searchQuery.toLowerCase())
-  )
+  const filteredSets = sets.filter(set => {
+    // Filter by search query
+    const matchesSearch = set.userPrompt.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      set.category.toLowerCase().includes(searchQuery.toLowerCase())
+
+    // Filter out sets with only placeholder images or no images
+    const hasRealImages = set.generatedImages.length > 0 &&
+      set.generatedImages.some(img =>
+        !img.url.includes('picsum.photos') &&
+        !img.url.includes('placeholder') &&
+        img.url.trim() !== ''
+      )
+
+    return matchesSearch && hasRealImages
+  })
 
   const formatDate = (timestamp: Date) => {
     return new Intl.DateTimeFormat('en-US', {
@@ -41,10 +106,24 @@ export default function LibraryGrid({
 
   const downloadImage = async (imageUrl: string, filename: string) => {
     try {
-      const response = await fetch(imageUrl)
+      console.log('📥 Downloading image:', filename)
+
+      // For Firebase Storage URLs, we need to handle CORS properly
+      const response = await fetch(imageUrl, {
+        method: 'GET',
+        mode: 'cors',
+        headers: {
+          'Accept': 'image/*'
+        }
+      })
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch image: ${response.status}`)
+      }
+
       const blob = await response.blob()
       const url = window.URL.createObjectURL(blob)
-      
+
       const link = document.createElement('a')
       link.href = url
       link.download = filename
@@ -52,25 +131,106 @@ export default function LibraryGrid({
       document.body.appendChild(link)
       link.click()
       document.body.removeChild(link)
-      
+
       window.URL.revokeObjectURL(url)
+      console.log('✅ Image downloaded successfully:', filename)
     } catch (error) {
-      console.error('Download failed:', error)
+      console.error('❌ Download failed:', error)
+
+      // Fallback: try opening in new tab
+      try {
+        const newWindow = window.open(imageUrl, '_blank')
+        if (!newWindow) {
+          alert('Download failed. Please allow popups and try again.')
+        }
+      } catch (fallbackError) {
+        console.error('❌ Fallback download failed:', fallbackError)
+        alert('Download failed. Please try right-clicking the image and selecting "Save image as..."')
+      }
     }
   }
 
   const downloadSetAsZip = async (set: GeneratedSet) => {
-    // For now, download images individually
-    set.generatedImages.forEach((image, index) => {
-      setTimeout(() => {
-        downloadImage(image.url, `${set.category}-${image.type}-${index + 1}.jpg`)
-      }, index * 500)
-    })
+    console.log('📦 Downloading complete set:', set.id)
+
+    // Show progress notification
+    const notification = document.createElement('div')
+    notification.className = 'fixed top-4 right-4 bg-[#6C3BFF] text-white px-4 py-2 rounded-lg shadow-lg z-50'
+    notification.textContent = `Downloading ${set.generatedImages.length} images...`
+    document.body.appendChild(notification)
+
+    try {
+      // Download images individually with proper naming
+      for (let index = 0; index < set.generatedImages.length; index++) {
+        const image = set.generatedImages[index]
+        const filename = `${set.category}_${image.type}_${Date.now()}_${index + 1}.jpg`
+
+        await new Promise(resolve => {
+          setTimeout(async () => {
+            await downloadImage(image.url, filename)
+            resolve(void 0)
+          }, index * 1000) // 1 second delay between downloads
+        })
+      }
+
+      // Update notification
+      notification.textContent = '✅ All images downloaded!'
+      notification.className = 'fixed top-4 right-4 bg-green-600 text-white px-4 py-2 rounded-lg shadow-lg z-50'
+
+    } catch (error) {
+      console.error('❌ Error downloading set:', error)
+      notification.textContent = '❌ Download failed'
+      notification.className = 'fixed top-4 right-4 bg-red-600 text-white px-4 py-2 rounded-lg shadow-lg z-50'
+    }
+
+    // Remove notification after 3 seconds
+    setTimeout(() => {
+      if (document.body.contains(notification)) {
+        document.body.removeChild(notification)
+      }
+    }, 3000)
   }
 
-  const handleDelete = (setId: string) => {
-    onDeleteSet(setId)
-    setDeleteConfirm(null)
+  const handleDelete = async (setId: string) => {
+    try {
+      // Show loading state
+      const deleteButton = document.querySelector(`[data-delete-id="${setId}"]`) as HTMLButtonElement
+      if (deleteButton) {
+        deleteButton.disabled = true
+        deleteButton.textContent = 'Deleting...'
+      }
+
+      await onDeleteSet(setId)
+      setDeleteConfirm(null)
+
+      // Show success notification
+      const notification = document.createElement('div')
+      notification.className = 'fixed top-4 right-4 bg-green-600 text-white px-4 py-2 rounded-lg shadow-lg z-50'
+      notification.textContent = '✅ Project deleted successfully'
+      document.body.appendChild(notification)
+
+      setTimeout(() => {
+        if (document.body.contains(notification)) {
+          document.body.removeChild(notification)
+        }
+      }, 3000)
+
+    } catch (error) {
+      console.error('❌ Error deleting set:', error)
+      setDeleteConfirm(null)
+
+      // Show error notification
+      const notification = document.createElement('div')
+      notification.className = 'fixed top-4 right-4 bg-red-600 text-white px-4 py-2 rounded-lg shadow-lg z-50'
+      notification.textContent = '❌ Failed to delete project'
+      document.body.appendChild(notification)
+
+      setTimeout(() => {
+        if (document.body.contains(notification)) {
+          document.body.removeChild(notification)
+        }
+      }, 3000)
+    }
   }
 
   return (
@@ -80,8 +240,15 @@ export default function LibraryGrid({
         <div>
           <h1 className="text-2xl font-bold text-white">Your Library</h1>
           <p className="text-gray-400">
-            {filteredSets.length} of {sets.length} generated sets
+            {filteredSets.length} of {sets.length} projects • {sets.reduce((total, set) => total + set.generatedImages.length, 0)} total images
           </p>
+          {sets.length > 0 && (
+            <div className="flex items-center gap-4 mt-2 text-xs text-gray-500">
+              <span>Latest: {formatDate(sets[0].timestamp)}</span>
+              <span>•</span>
+              <span>Categories: {new Set(sets.map(s => s.category)).size}</span>
+            </div>
+          )}
         </div>
 
         <div className="flex items-center gap-3">
@@ -120,6 +287,21 @@ export default function LibraryGrid({
               <List className="w-4 h-4" />
             </button>
           </div>
+
+          {/* Cleanup Button */}
+          {onCleanupPlaceholders && sets.some(set =>
+            set.generatedImages.some(img => img.url.includes('picsum.photos') || img.url.includes('placeholder')) ||
+            set.generatedImages.length === 0
+          ) && (
+            <button
+              onClick={onCleanupPlaceholders}
+              className="flex items-center gap-2 px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg transition-colors"
+              title="Remove projects with placeholder images"
+            >
+              <Trash2 className="w-4 h-4" />
+              Clean Up
+            </button>
+          )}
 
           {/* New Project Button */}
           <button
@@ -170,13 +352,12 @@ export default function LibraryGrid({
               <div className={viewMode === 'grid' ? 'p-4' : 'flex-shrink-0'}>
                 <div className={`grid grid-cols-2 gap-1 ${viewMode === 'grid' ? 'aspect-square' : 'w-24 h-24'} rounded-lg overflow-hidden`}>
                   {set.generatedImages.slice(0, 4).map((image) => (
-                    <Image
+                    <SafeLibraryImage
                       key={image.id}
                       src={image.url}
                       alt={image.type}
-                      width={100}
-                      height={100}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full"
+                      onClick={() => setSelectedSet(set)}
                     />
                   ))}
                   {set.generatedImages.length > 4 && (
@@ -201,6 +382,12 @@ export default function LibraryGrid({
                       <span className="capitalize">{set.category}</span>
                       <span>•</span>
                       <span>{set.generatedImages.length} photos</span>
+                      {set.model && (
+                        <>
+                          <span>•</span>
+                          <span className="text-[#6C3BFF]">{set.model}</span>
+                        </>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -257,25 +444,56 @@ export default function LibraryGrid({
             </div>
 
             <div className="p-6">
+              {/* Original Reference Image */}
+              {selectedSet.originalImage && (
+                <div className="mb-8 p-4 bg-gray-700/30 rounded-lg">
+                  <h3 className="text-lg font-semibold text-white mb-4">Original Reference</h3>
+                  <div className="flex gap-4">
+                    <SafeLibraryImage
+                      src={selectedSet.originalImage}
+                      alt="Original reference"
+                      className="w-32 h-32 rounded-lg flex-shrink-0"
+                    />
+                    <div className="flex-1">
+                      <p className="text-gray-300 mb-2"><strong>User Description:</strong></p>
+                      <p className="text-gray-400 text-sm mb-3">{selectedSet.userPrompt}</p>
+                      <div className="flex items-center gap-4 text-xs text-gray-500">
+                        <span>Model: {selectedSet.model}</span>
+                        <span>•</span>
+                        <span>Generated: {formatDate(selectedSet.timestamp)}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Generated Images */}
+              <h3 className="text-lg font-semibold text-white mb-4">Generated Images ({selectedSet.generatedImages.length})</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {selectedSet.generatedImages.map((image) => (
                   <div key={image.id} className="space-y-3">
-                    <Image
+                    <SafeLibraryImage
                       src={image.url}
                       alt={image.type}
-                      width={400}
-                      height={400}
-                      className="w-full aspect-square object-cover rounded-lg"
+                      className="w-full aspect-square rounded-lg"
                     />
                     <div>
                       <h4 className="font-medium text-white capitalize">{image.type}</h4>
                       <p className="text-sm text-gray-400">{image.description}</p>
-                      <button
-                        onClick={() => downloadImage(image.url, `${selectedSet.category}-${image.type}.jpg`)}
-                        className="mt-2 w-full px-3 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg text-sm transition-colors"
-                      >
-                        Download
-                      </button>
+                      <div className="flex gap-2 mt-2">
+                        <button
+                          onClick={() => downloadImage(image.url, `${selectedSet.category}-${image.type}.jpg`)}
+                          className="flex-1 px-3 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg text-sm transition-colors"
+                        >
+                          Download
+                        </button>
+                        <button
+                          onClick={() => window.open(image.url, '_blank')}
+                          className="px-3 py-2 bg-[#6C3BFF] hover:bg-[#5A2FE6] text-white rounded-lg text-sm transition-colors"
+                        >
+                          <Eye className="w-4 h-4" />
+                        </button>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -302,7 +520,8 @@ export default function LibraryGrid({
               </button>
               <button
                 onClick={() => handleDelete(deleteConfirm)}
-                className="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
+                data-delete-id={deleteConfirm}
+                className="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded-lg transition-colors"
               >
                 Delete
               </button>

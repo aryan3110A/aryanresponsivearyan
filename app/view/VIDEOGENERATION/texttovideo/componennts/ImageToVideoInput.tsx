@@ -1,7 +1,7 @@
 "use client"
 
-import { useState } from "react"
-import { Upload, ChevronDown } from "lucide-react"
+import React, { useState } from 'react'
+import { Upload, ChevronDown } from 'lucide-react'
 import { CAMERA_MOVEMENTS, supportsCameraMovements } from "./videoModels"
 import Image from "next/image"
 
@@ -25,7 +25,7 @@ export default function ImageToVideoInput({
 
   const handleCameraMovementToggle = (movementId: string) => {
     if (selectedCameraMovements.includes(movementId)) {
-      setSelectedCameraMovements(selectedCameraMovements.filter((id: string) => id !== movementId))
+      setSelectedCameraMovements(selectedCameraMovements.filter(id => id !== movementId))
     } else {
       // Limit to 3 camera movements as recommended
       if (selectedCameraMovements.length >= 3) {

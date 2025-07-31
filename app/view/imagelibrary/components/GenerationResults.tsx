@@ -17,15 +17,7 @@ interface GenerationResultsProps {
   onBack: () => void
 }
 
-interface ApiResult {
-  id: string
-  type: string
-  success: boolean
-  imageUrl?: string
-  prompt?: string
-  error?: string
-  isPlaceholder?: boolean
-}
+// Removed unused ApiResult interface
 
 interface GenerationStep {
   id: string
@@ -82,7 +74,7 @@ export default function GenerationResults({
   const [steps, setSteps] = useState<GenerationStep[]>(
     GENERATION_STEPS.map(step => ({ ...step, status: 'pending' }))
   )
-  // Removed unused currentStep state
+  const [currentProcessingStep, setCurrentProcessingStep] = useState(0)
   const [allComplete, setAllComplete] = useState(false)
 
   // Generate backend prompts for each shot type
@@ -137,116 +129,192 @@ Critical Rules:
 - Avoid any digital or AI-generated artifacts.`
   }
 
-  // Generate all images using the jewelry studio API
+  // Generate images one by one with proper queue management
   useEffect(() => {
     if (!isGenerating) return
 
-    const generateAllImages = async () => {
+    let isCancelled = false
+
+    const generateImagesSequentially = async () => {
       try {
-        console.log('🎨 Starting jewelry studio generation...')
+        console.log('🎨 Starting sequential jewelry generation...')
 
         // Mark all steps as pending initially
         setSteps(prev => prev.map(step => ({ ...step, status: 'pending' })))
 
-        // Prepare prompts for all 5 shots
-        const prompts = steps.map(step => ({
-          id: step.id,
-          type: step.type,
-          prompt: generateBackendPrompt(userPrompt, step.type)
-        }))
+        // Process each image one by one
+        for (let i = 0; i < steps.length; i++) {
+          if (isCancelled) break
 
-        console.log('📝 Generated prompts for all shots:', prompts.length)
+          const step = steps[i]
+          console.log(`🚀 Processing step ${i + 1}/${steps.length}: ${step.type}`)
 
-        // Call the jewelry studio API with all prompts
-        const response = await fetch('/api/jewelry-studio', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            prompts,
-            input_image: uploadedImage,
-            model: selectedModel,
-            aspect_ratio: '1:1',
-            output_format: 'png',
-            prompt_upsampling: true,
-            safety_tolerance: 2
-          }),
-        })
+          // Update current processing step
+          setCurrentProcessingStep(i)
 
-        if (!response.ok) {
-          const errorData = await response.text()
-          throw new Error(`API error: ${response.status} - ${errorData}`)
-        }
+          // Mark current step as generating
+          setSteps(prev => prev.map((s, index) =>
+            index === i ? { ...s, status: 'generating' } : s
+          ))
 
-        const data = await response.json()
+          try {
+            // Generate the backend prompt for this specific shot
+            const backendPrompt = generateBackendPrompt(userPrompt, step.type)
 
-        if (!data.success) {
-          throw new Error(data.error || 'Generation failed')
-        }
+            // Determine API endpoint
+            const apiEndpoint = selectedModel === 'flux-kontext-max'
+              ? '/api/flux-kontext-max'
+              : '/api/flux-kontext-pro'
 
-        console.log(`✅ Jewelry studio API completed: ${data.successfulRequests}/${data.totalRequests} successful`)
+            console.log(`📡 Calling ${apiEndpoint} for ${step.type}`)
 
-        // Update steps with results
-        setSteps(prev => prev.map(step => {
-          const result = data.results.find((r: ApiResult) => r.id === step.id)
-          if (result) {
-            return {
-              ...step,
-              status: result.success ? 'complete' : 'error',
-              imageUrl: result.imageUrl,
-              prompt: result.prompt || generateBackendPrompt(userPrompt, step.type)
+            // Make API call for this single image
+            const response = await fetch(apiEndpoint, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                prompt: backendPrompt,
+                input_image: uploadedImage,
+                aspect_ratio: '1:1',
+                output_format: 'png',
+                prompt_upsampling: true,
+                safety_tolerance: 2
+              }),
+            })
+
+            if (!response.ok) {
+              const errorData = await response.text()
+              throw new Error(`API error: ${response.status} - ${errorData}`)
             }
+
+            const data = await response.json()
+
+            if (!data.success) {
+              throw new Error(data.error || 'Generation failed')
+            }
+
+            const imageUrl = data.imageUrl || data.result?.sample
+
+            if (!imageUrl) {
+              throw new Error('No image URL in response')
+            }
+
+            console.log(`✅ Successfully generated ${step.type}`)
+
+            // Mark step as complete
+            if (!isCancelled) {
+              setSteps(prev => prev.map((s, index) =>
+                index === i ? {
+                  ...s,
+                  status: 'complete',
+                  imageUrl: imageUrl,
+                  prompt: backendPrompt
+                } : s
+              ))
+            }
+
+            // Add delay between requests to avoid rate limiting
+            if (i < steps.length - 1) {
+              console.log('⏳ Waiting 3 seconds before next request...')
+              await new Promise(resolve => setTimeout(resolve, 3000))
+            }
+
+          } catch (error) {
+            console.error(`❌ Error generating ${step.type}:`, error)
+
+            // Mark step as error (not complete)
+            if (!isCancelled) {
+              setSteps(prev => prev.map((s, index) =>
+                index === i ? {
+                  ...s,
+                  status: 'error',
+                  prompt: generateBackendPrompt(userPrompt, step.type)
+                } : s
+              ))
+            }
+
+            console.log(`❌ Failed to generate ${step.type}`)
           }
-          return { ...step, status: 'error' }
-        }))
-
-        // Mark as complete
-        setAllComplete(true)
-
-        // Save to Firestore
-        const generatedSet: Omit<GeneratedSet, 'id'> = {
-          category: category.id,
-          originalImage: uploadedImage,
-          userPrompt,
-          generatedImages: data.results.map((result: ApiResult) => {
-            const step = steps.find(s => s.id === result.id)
-            return {
-              id: result.id,
-              url: result.imageUrl || '',
-              prompt: result.prompt || '',
-              type: result.type,
-              description: step?.description || ''
-            }
-          }),
-          model: selectedModel,
-          timestamp: new Date(),
-          storedInFirebase: true
         }
 
-        const docRef = await addDoc(collection(db, 'generatedSets'), generatedSet)
-        console.log('✅ Generated set saved to Firestore:', docRef.id)
+        if (!isCancelled) {
+          // All steps complete
+          setAllComplete(true)
+          console.log('🎉 All images generated successfully!')
 
-        onGenerationComplete({ ...generatedSet, id: docRef.id })
+          // Save to Firestore - only save successful generations
+          try {
+            // Filter out failed generations - only save steps with actual image URLs
+            const successfulSteps = steps.filter(step =>
+              step.status === 'complete' && step.imageUrl && !step.imageUrl.includes('picsum.photos')
+            )
+
+            if (successfulSteps.length > 0) {
+              const generatedSet: Omit<GeneratedSet, 'id'> = {
+                category: category.id,
+                originalImage: uploadedImage,
+                userPrompt,
+                generatedImages: successfulSteps.map(step => ({
+                  id: step.id,
+                  url: step.imageUrl!,
+                  prompt: step.prompt || generateBackendPrompt(userPrompt, step.type),
+                  type: step.type,
+                  description: step.description
+                })),
+                model: selectedModel,
+                timestamp: new Date(),
+                storedInFirebase: true
+              }
+
+              const docRef = await addDoc(collection(db, 'generatedSets'), generatedSet)
+              console.log(`✅ Generated set saved to Firestore: ${docRef.id} (${successfulSteps.length}/${steps.length} images)`)
+
+              onGenerationComplete({ ...generatedSet, id: docRef.id })
+            } else {
+              console.warn('⚠️ No successful generations to save - all API calls failed')
+              // Still call onGenerationComplete to update UI state
+              onGenerationComplete({
+                id: 'failed-generation',
+                category: category.id,
+                originalImage: uploadedImage,
+                userPrompt,
+                generatedImages: [],
+                model: selectedModel,
+                timestamp: new Date(),
+                storedInFirebase: false
+              })
+            }
+          } catch (error) {
+            console.error('❌ Error saving to Firestore:', error)
+          }
+        }
 
       } catch (error) {
-        console.error('❌ Error in jewelry studio generation:', error)
+        console.error('❌ Error in sequential generation:', error)
 
-        // Mark all steps as error and use placeholders
-        setSteps(prev => prev.map((step, index) => ({
-          ...step,
-          status: 'complete',
-          imageUrl: `https://picsum.photos/400/400?random=${index}&blur=1`,
-          prompt: generateBackendPrompt(userPrompt, step.type)
-        })))
+        if (!isCancelled) {
+          // Mark all remaining steps as error (don't use placeholders)
+          setSteps(prev => prev.map((step) => ({
+            ...step,
+            status: step.status === 'complete' ? 'complete' : 'error',
+            prompt: step.prompt || generateBackendPrompt(userPrompt, step.type)
+          })))
 
-        setAllComplete(true)
-        console.log('⚠️ Using placeholder images due to API error')
+          setAllComplete(true)
+          console.log('❌ Generation completed with errors')
+        }
       }
     }
 
-    generateAllImages()
-  }, [isGenerating, category.id, uploadedImage, userPrompt, selectedModel, steps, onGenerationComplete])
+    generateImagesSequentially()
+
+    // Cleanup function to cancel generation if component unmounts
+    return () => {
+      isCancelled = true
+    }
+  }, [isGenerating, category.id, uploadedImage, userPrompt, selectedModel])
 
   const downloadImage = async (imageUrl: string, filename: string) => {
     try {
@@ -337,11 +405,14 @@ Critical Rules:
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#6C3BFF]/20 border border-[#6C3BFF]/30 rounded-lg">
               <div className="w-4 h-4 border-2 border-[#6C3BFF] border-t-transparent rounded-full animate-spin"></div>
               <span className="text-[#6C3BFF] text-sm font-medium">
-                Processing images in queue... This may take 2-3 minutes
+                Processing {steps[currentProcessingStep]?.title || 'image'}... ({currentProcessingStep + 1}/{steps.length})
               </span>
             </div>
             <p className="text-xs text-gray-500 mt-2">
               Images are generated one at a time to ensure quality and avoid rate limits
+            </p>
+            <p className="text-xs text-gray-400 mt-1">
+              Estimated time remaining: {Math.max(0, (steps.length - currentProcessingStep - 1) * 30)} seconds
             </p>
           </div>
         )}
@@ -367,6 +438,11 @@ Critical Rules:
               )}
               {step.status === 'complete' && (
                 <CheckCircle className="w-5 h-5 text-green-500" />
+              )}
+              {step.status === 'error' && (
+                <div className="w-5 h-5 bg-red-500 rounded-full flex items-center justify-center">
+                  <span className="text-white text-xs">✕</span>
+                </div>
               )}
               {step.status === 'pending' && (
                 <Clock className="w-5 h-5 text-gray-500" />

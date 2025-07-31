@@ -116,7 +116,6 @@ export default function ChatInterface({
       userMessage.imageUrl = uploadedImage
     } else if (isEditMode && selectedImageForEdit) {
       userMessage.imageUrl = selectedImageForEdit.imageUrl
-      userMessage.editingImageId = selectedImageForEdit.id
     }
     if (seed) {
       userMessage.seed = seed
@@ -126,7 +125,15 @@ export default function ChatInterface({
 
     try {
       // Prepare request body
-      const requestBody: ImageGenerationRequestBody = {
+      const requestBody: {
+        prompt: string
+        aspect_ratio: string
+        output_format: string
+        prompt_upsampling: boolean
+        safety_tolerance: number
+        input_image?: string
+        seed?: number
+      } = {
         prompt: prompt.trim(),
         aspect_ratio: aspectRatio,
         output_format: 'png',
@@ -217,7 +224,7 @@ export default function ChatInterface({
 
       // Add edit mode information
       if (isEditMode && selectedImageForEdit) {
-        assistantMessage.editedFromImageId = selectedImageForEdit.id
+        // Note: Edit mode information is handled in the content
       }
 
       // Only add imageUrl if it exists

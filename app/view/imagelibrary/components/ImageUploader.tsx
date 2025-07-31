@@ -172,8 +172,8 @@ export default function ImageUploader({ category, onImageUpload, onBack }: Image
               <p className="text-gray-400 mb-4">
                 or click to browse from your device
               </p>
-              <p className="text-sm text-gray-500">
-                Supports JPG, PNG, WebP • Max 10MB
+              <p className="text-sm text-gray-600 mt-2">
+                Drag and drop your images here, or click to browse. Supported formats: JPG, PNG, GIF, WEBP
               </p>
             </div>
 
