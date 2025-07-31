@@ -1,48 +1,38 @@
-import torch
+from flask import Flask, request, jsonify, send_from_directory, stream_with_context, Response
+import os, datetime, torch
 from diffusers import FluxKontextPipeline
 from diffusers.utils import load_image
 from PIL import Image
-import datetime
-import os
+from flask_cors import CORS
 
-# ─── Step 1: User Inputs ──────────────────────────────────────────────
-print("\n🏢 FULL OFFICE BRANDING VISUAL GENERATOR")
-print("────────────────────────────────────────────")
-logo_path = input("📂 Enter path to your LOGO image file: ").strip()
-if not os.path.exists(logo_path):
-    raise FileNotFoundError(f"❌ Logo file not found at: {logo_path}")
-
-business_name = input("🏢 Enter your BUSINESS name: ").strip()
-tagline = input("💬 Enter your TAGLINE: ").strip()
-# employee_name = input("🧑 Enter EMPLOYEE NAME for I-Card: ").strip()
-# photo_path = input("🧑‍💼 Upload EMPLOYEE PHOTO for I-Card: ").strip()
-# if not os.path.exists(photo_path):
-#     raise FileNotFoundError(f"❌ Photo file not found at: {photo_path}")
-
-# ─── Step 2: Load Model ───────────────────────────────────────────────
-print("\n🚀 Loading FLUX.1-Kontext model...")
+app = Flask(__name__)
+CORS(app)  # 👈 This enables CORS for all routes
 pipe = FluxKontextPipeline.from_pretrained(
-    "black-forest-labs/FLUX.1-Kontext-dev",
-    torch_dtype=torch.bfloat16
+    "black-forest-labs/FLUX.1-Kontext-dev", torch_dtype=torch.bfloat16
 ).to("cuda")
-print("✅ Model loaded!")
 
-# ─── Step 3: Load Images ──────────────────────────────────────────────
-logo_image = load_image(logo_path).convert("RGB")
-# photo_image = load_image(photo_path).convert("RGB")
+@app.route('/generate_step', methods=['POST'])
+def generate_step():
+    try:
+        logo_file = request.files.get('logo_file')
+        business_name = request.form.get('business_name')
+        tagline = request.form.get('business_tagline')
 
-# ─── Step 4: Output Directory ─────────────────────────────────────────
-timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-output_dir = f"full_office_branding_output_{timestamp}"
-os.makedirs(output_dir, exist_ok=True)
+        if not logo_file or not business_name or not tagline:
+            return jsonify({"error": "Missing logo, business name, or tagline."}), 400
 
-# ─── Step 5: Combined Prompts (77-token safe) ─────────────────────────
-prompts = {
-    # "I-Card": (
-    #     f"Professional ID card for {business_name} with photo of employee {employee_name}. "
-    #     f"Include logo at top, white background, corporate design, minimal badge layout."
-    # ),
-    "Cap": (
+        timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+        logo_path = f"uploads/logo_{timestamp}.png"
+        os.makedirs("uploads", exist_ok=True)
+        logo_file.save(logo_path)
+
+        logo_image = load_image(logo_path).convert("RGB")
+
+        output_dir = f"outputs/mockup_{timestamp}"
+        os.makedirs(output_dir, exist_ok=True)
+
+        prompts = {
+            "Cap": (
         f"White cap with {business_name} logo on front. Tagline '{tagline}' below. Clean lighting, realistic stitch details."
     ),
     "T-Shirt": (
@@ -142,34 +132,31 @@ prompts = {
         f"Office clock with {business_name} logo and tagline '{tagline}'. "
         f"Simple, metallic clock with professional vibe."
     ),
-    # "Eraser": (
-    #     f"Office eraser with {business_name} logo and tagline '{tagline}'. "
-    #     f"Simple, metallic eraser with professional vibe."
-    # ),
-    # "Scissors": (
-    #     f"Office scissors with {business_name} logo and tagline '{tagline}'. "
-    #     f"Simple, metallic scissors with professional vibe."
-    # ),
+        }
 
-}
+        def generate_stream():
+            for item, prompt in prompts.items():
+                result = pipe(
+                    image=logo_image,
+                    prompt=prompt,
+                    guidance_scale=4.5,
+                    num_inference_steps=10
+                ).images[0]
 
-# ─── Step 6: Generate All Visuals ──────────────────────────────────────
-print("\n🎨 Generating 12 branding visuals...\n")
-for item, prompt in prompts.items():
-    print(f"🎯 Generating: {item}")
-    
-    input_image = photo_image if item == "I-Card" else logo_image
+                file_name = f"{item.lower().replace(' ', '_')}.png"
+                save_path = os.path.join(output_dir, file_name)
+                result.save(save_path)
+                yield f'data: {{"image_url": "/outputs/mockup_{timestamp}/{file_name}", "item": "{item}"}}\n\n'
 
-    result = pipe(
-        image=input_image,
-        prompt=prompt,
-        guidance_scale=4.5,
-        num_inference_steps=35
-    ).images[0]
+        return Response(stream_with_context(generate_stream()), mimetype='text/event-stream')
 
-    file_name = f"{item.lower().replace(' ', '_')}.png"
-    save_path = os.path.join(output_dir, file_name)
-    result.save(save_path)
-    print(f"✅ Saved to: {save_path}")
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
-print("\n✅ ALL 12 DESIGNS GENERATED IN FOLDER:", output_dir)
+# Serve images from outputs
+@app.route('/outputs/<path:subdir>/<filename>')
+def serve_output(subdir, filename):
+    return send_from_directory(f"outputs/{subdir}", filename)
+
+if __name__ == '__main__':
+    app.run(port=7862, debug=True)

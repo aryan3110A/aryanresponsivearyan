@@ -34,26 +34,13 @@ export default function ProductWithModelPosePage() {
         return;
       }
 
-      // const resolutionMap: Record<string, Record<string, [number, number]>> = {
-      //   "1:1": { SD: [512, 512], HD: [768, 768], FullHD: [1024, 1024], "2K": [2048, 2048] },
-      //   "16:9": { SD: [640, 360], HD: [1280, 720], FullHD: [1920, 1080], "2K": [2560, 1440] },
-      //   "2:3": { SD: [384, 576], HD: [512, 768], FullHD: [768, 1152], "2K": [1024, 1536] },
-      //   "9:16": { SD: [360, 640], HD: [720, 1280], FullHD: [1080, 1920], "2K": [1440, 2560] },
-      //   "4:3": { SD: [512, 384], HD: [768, 576], FullHD: [1024, 768], "2K": [2048, 1536] },
-      //   "3:4": { SD: [384, 512], HD: [576, 768], FullHD: [768, 1024], "2K": [1536, 2048] },
-      //   "Custom": { SD: [768, 768], HD: [1024, 1024], FullHD: [1280, 1280], "2K": [2048, 2048] },
-      // };
-
-      // let [width, height] = resolutionMap[selectedAspectRatio]?.[selectedQuality] || [768, 768];
-      // width -= width % 16;
-      // height -= height % 16;
-
       const formData = new FormData();
       formData.append("logo_file", logoFile);
       formData.append("business_name", businessName);
       formData.append("business_tagline", businessTagline);
 
-      const response = await fetch("https://8a6fc092d30c.ngrok-free.app/generate_step", {
+      // Updated endpoint to use the unified /generate endpoint
+      const response = await fetch("https://8a6fc092d30c.ngrok-free.app/generate", {
         method: "POST",
         body: formData,
       });
@@ -77,6 +64,7 @@ export default function ProductWithModelPosePage() {
           if (chunk.startsWith("data: ")) {
             try {
               const json = JSON.parse(chunk.replace("data: ", ""));
+              // Updated URL construction to match the new download route
               setGeneratedImages((prev) => [...prev, `https://8a6fc092d30c.ngrok-free.app${json.image_url}`]);
             } catch {
               console.warn("Invalid JSON chunk:", chunk);
@@ -158,4 +146,4 @@ export default function ProductWithModelPosePage() {
       <Footer />
     </>
   );
-}
+} 
