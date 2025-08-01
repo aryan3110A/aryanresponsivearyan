@@ -47,7 +47,7 @@ export default function LOGOGENERATION() {
 
       const data = await response.json()
       if (data.image_urls) {
-          setGeneratedImages(data.image_urls.map((url: string) => `https://8a6fc092d30c.ngrok-free.app${url}`));
+          setGeneratedImages(data.image_urls.map((url: string) => `/api/image-proxy?url=${encodeURIComponent(`https://8a6fc092d30c.ngrok-free.app${url}`)}`));
       } else {
         setGeneratedImages([]);
       }

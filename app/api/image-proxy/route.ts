@@ -9,11 +9,12 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Missing image URL' }, { status: 400 })
     }
     
-    // Validate that it's a Firebase Storage URL or BFL API URL
+    // Validate that it's a Firebase Storage URL, BFL API URL, or ngrok URL
     const isValidUrl = imageUrl.includes('firebasestorage.googleapis.com') || 
                       imageUrl.includes('delivery-us1.bfl.ai') ||
                       imageUrl.includes('delivery-eu1.bfl.ai') ||
-                      imageUrl.includes('bfl.ai')
+                      imageUrl.includes('bfl.ai') ||
+                      imageUrl.includes('ngrok-free.app')
     
     if (!isValidUrl) {
       return NextResponse.json({ error: 'Invalid image URL' }, { status: 400 })
@@ -26,7 +27,8 @@ export async function GET(request: NextRequest) {
       headers: {
         'User-Agent': 'WildMind-ImageProxy/1.0',
         'Accept': 'image/*',
-        'Referer': 'https://api.bfl.ai/'
+        'Referer': 'https://api.bfl.ai/',
+        'ngrok-skip-browser-warning': 'true' // Bypass ngrok warning page
       }
     })
     

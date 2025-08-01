@@ -64,8 +64,8 @@ export default function ProductWithModelPosePage() {
           if (chunk.startsWith("data: ")) {
             try {
               const json = JSON.parse(chunk.replace("data: ", ""));
-              // Updated URL construction to match the new download route
-              setGeneratedImages((prev) => [...prev, `https://8a6fc092d30c.ngrok-free.app${json.image_url}`]);
+              // Use image proxy to bypass ngrok warning page
+              setGeneratedImages((prev) => [...prev, `/api/image-proxy?url=${encodeURIComponent(`https://8a6fc092d30c.ngrok-free.app${json.image_url}`)}`]);
             } catch {
               console.warn("Invalid JSON chunk:", chunk);
             }

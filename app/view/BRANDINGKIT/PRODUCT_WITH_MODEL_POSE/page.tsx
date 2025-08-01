@@ -112,11 +112,11 @@ export default function ProductWithModelPosePage() {
 
       // Handle both single image and multiple images response
       if (data.image_urls) {
-        // Multiple images
-        setGeneratedImages(data.image_urls.map((url: string) => `https://8a6fc092d30c.ngrok-free.app${url}`));
+        // Multiple images - use image proxy to bypass ngrok warning
+        setGeneratedImages(data.image_urls.map((url: string) => `/api/image-proxy?url=${encodeURIComponent(`https://8a6fc092d30c.ngrok-free.app${url}`)}`));
       } else if (data.image_url) {  
-        // Single image (backward compatibility)
-        setGeneratedImages([`https://8a6fc092d30c.ngrok-free.app${data.image_url}`]);
+        // Single image (backward compatibility) - use image proxy to bypass ngrok warning
+        setGeneratedImages([`/api/image-proxy?url=${encodeURIComponent(`https://8a6fc092d30c.ngrok-free.app${data.image_url}`)}`]);
       } else {  
         throw new Error("No image URLs received.");
       }
