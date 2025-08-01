@@ -1,4 +1,4 @@
-import {  NextResponse } from 'next/server'
+import {  NextResponse, NextRequest } from 'next/server'
 
 // Helper function to handle regular model generation
 async function handleRegularModel(prompt: string, model: string, width: number, height: number, num_images: number) {
@@ -101,7 +101,44 @@ export async function POST(request: Request) {
 async function callFluxAPI(endpoint: string, modelName: string, prompt: string, width: number, height: number, num_images: number) {
   console.log(`📡 Calling ${modelName} endpoint: ${endpoint}`)
   
-  // For now, fallback to Stable Turbo since Flux APIs have authentication issues in Vercel
-  console.log(`🔄 ${modelName} not available in deployment, using Stable Turbo instead`)
-  return await handleRegularModel(prompt, "Stable Turbo", width, height, num_images)
+  try {
+    // Call Flux API directly by importing the route handlers
+    if (endpoint === '/api/flux-kontext-max') {
+      const { POST: fluxMaxHandler } = await import('../flux-kontext-max/route')
+      const request = new NextRequest('http://localhost/api/flux-kontext-max', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          prompt,
+          aspect_ratio: `${width}:${height}`,
+          output_format: 'png',
+          prompt_upsampling: false,
+          safety_tolerance: 2,
+          seed: Math.floor(Math.random() * 1000000)
+        })
+      })
+      return await fluxMaxHandler(request)
+    } else if (endpoint === '/api/flux-kontext-pro') {
+      const { POST: fluxProHandler } = await import('../flux-kontext-pro/route')
+      const request = new NextRequest('http://localhost/api/flux-kontext-pro', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          prompt,
+          aspect_ratio: `${width}:${height}`,
+          output_format: 'png',
+          prompt_upsampling: false,
+          safety_tolerance: 2,
+          seed: Math.floor(Math.random() * 1000000)
+        })
+      })
+      return await fluxProHandler(request)
+    } else {
+      throw new Error(`Unknown Flux endpoint: ${endpoint}`)
+    }
+  } catch (error) {
+    console.error(`❌ ${modelName} API error:`, error)
+    console.log(`🔄 ${modelName} failed, falling back to Stable Turbo`)
+    return await handleRegularModel(prompt, "Stable Turbo", width, height, num_images)
+  }
 }
