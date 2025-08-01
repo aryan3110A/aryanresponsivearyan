@@ -68,30 +68,20 @@ export default function InputSection({
     setShowUploadComponent(false)
   }
 
-  const handleDownload = async (imageUrl: string, index: number) => {
+  const handleDownload = (imageUrl: string, index: number) => {
     try {
       console.log(`Downloading image ${index + 1}...`)
 
-      const response = await fetch(imageUrl)
-      if (!response.ok) {
-        throw new Error("Failed to fetch image")
-      }
-
-      const blob = await response.blob()
-      const url = window.URL.createObjectURL(blob)
       const link = document.createElement("a")
-      link.href = url
-
-      const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, "-")
-      const filename = `generated-image-${index + 1}-${timestamp}.png`
-      link.download = filename
+      link.href = imageUrl
+      link.download = `generated-image-${index + 1}-${new Date().toISOString().slice(0, 19).replace(/:/g, "-")}.png`
+      link.target = "_blank"
 
       document.body.appendChild(link)
       link.click()
       document.body.removeChild(link)
-      window.URL.revokeObjectURL(url)
 
-      console.log(`Image ${index + 1} downloaded successfully as ${filename}`)
+      console.log(`✅ Image ${index + 1} download initiated successfully`)
     } catch (error) {
       console.error("Download failed:", error)
       alert("Failed to download image. Please try again.")

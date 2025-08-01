@@ -55,45 +55,24 @@ export default function ImageOverlay({
     console.log("Like clicked")
   }
 
-  const handleDownload = async () => {
+  const handleDownload = () => {
     try {
       console.log("Starting download...")
 
-      // Fetch the image
-      const response = await fetch(imageUrl)
-      if (!response.ok) {
-        throw new Error("Failed to fetch image")
-      }
-
-      // Convert to blob
-      const blob = await response.blob()
-
       // Create download link
-      const url = window.URL.createObjectURL(blob)
       const link = document.createElement("a")
-      link.href = url
-
-      // Set filename based on prompt and timestamp
-      const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, "-")
-      const promptSlug = prompt
-        .toLowerCase()
-        .replace(/[^a-z0-9]/g, "-")
-        .slice(0, 30)
-      const filename = `${promptSlug}-${timestamp}.png`
-      link.download = filename
+      link.href = imageUrl
+      link.download = `${prompt.toLowerCase().replace(/[^a-z0-9]/g, "-").slice(0, 30)}-${new Date().toISOString().slice(0, 19).replace(/:/g, "-")}.png`
+      link.target = "_blank"
 
       // Trigger download
       document.body.appendChild(link)
       link.click()
-
-      // Cleanup
       document.body.removeChild(link)
-      window.URL.revokeObjectURL(url)
 
-      console.log(`Image downloaded successfully as ${filename}`)
+      console.log("✅ Download initiated successfully")
     } catch (error) {
       console.error("Download failed:", error)
-      // You could show a toast notification here
       alert("Failed to download image. Please try again.")
     }
   }
