@@ -147,8 +147,8 @@ export default function NewText2Image() {
 
         const data = await response.json()
         console.log(`✅ Flux ${modelId === 6 ? 'Max' : 'Pro'} generation successful:`, {
-          hasImageUrl: !!data.imageUrl,
-          model: data.metadata?.model,
+          hasImageUrl: data.hasImageUrl,
+          model: data.model,
           imageUrl: data.imageUrl
         })
         
@@ -209,16 +209,19 @@ export default function NewText2Image() {
 
       const data = await response.json()
       console.log(`✅ ${modelName} generation successful`)
-      if (data.success && data.image_urls) {
-        console.log("🚀 Generation successful:", data);
+      if (data.imageUrl) {
+        // Handle Flux API response format
+        console.log("🚀 Flux API generation successful:", data);
+        setGeneratedImages([data.imageUrl])
+        setGeneratedPrompts([prompt])
+      }
+      else if (data.success && data.image_urls) {
+        // Handle regular API response format
+        console.log("🚀 Regular API generation successful:", data);
         setGeneratedImages(data.image_urls)
         // Create array of prompts for each image (using original input prompt)
         const promptsArray = Array(data.image_urls.length).fill(prompt)
         setGeneratedPrompts(promptsArray)
-      }
-      else if (data.imageUrl) {
-        setGeneratedImages([data.imageUrl])
-        setGeneratedPrompts([prompt])
       }
       else console.error('❌ Generation failed:', data.error)
     } catch (err) {
