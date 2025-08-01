@@ -121,7 +121,7 @@ async function callFluxAPI(endpoint: string, modelName: string, prompt: string, 
   if (!response.ok) {
     const errorText = await response.text()
     console.error(`❌ ${modelName} API error:`, errorText)
-    return NextResponse.json({ error: `${modelName} generation failed` }, { status: 500 })
+    return NextResponse.json({ error: `Flux API erro + ${response}` }, { status: 500 })
   }
 
   const data = await response.json()
