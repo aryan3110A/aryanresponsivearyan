@@ -93,6 +93,7 @@ export async function POST(request: Request) {
     
   } catch (error) {
     console.error('❌ API Route Error:', error);
+    return NextResponse.json({ error: `${error}` }, { status: 500 })
   }
 }
 
