@@ -46,8 +46,8 @@ async function handleRegularModel(prompt: string, model: string, width: number, 
 
 export async function POST(request: Request) {
   try {
-    const { prompt, model, width, height, num_images, modelId } = await request.json()
-    console.log('🚀 Generate Image API called:', { prompt, model, width, height, num_images, modelId })
+    const { prompt, model, width, height, num_images, modelId, input_image, aspect_ratio, output_format, prompt_upsampling, safety_tolerance, seed } = await request.json()
+    console.log('🚀 Generate Image API called:', { prompt, model, width, height, num_images, modelId, hasInputImage: !!input_image })
     
     if (!prompt) {
       return NextResponse.json({ error: 'Prompt is required' }, { status: 400 })
@@ -71,11 +71,12 @@ export async function POST(request: Request) {
           },
           body: JSON.stringify({
             prompt,
-            aspect_ratio: `${width}:${height}`,
-            output_format: 'png',
-            prompt_upsampling: false,
-            safety_tolerance: 2,
-            seed: Math.floor(Math.random() * 1000000) // Random seed
+            aspect_ratio: aspect_ratio || `${width}:${height}`,
+            output_format: output_format || 'png',
+            prompt_upsampling: prompt_upsampling || false,
+            safety_tolerance: safety_tolerance || 2,
+            seed: seed || Math.floor(Math.random() * 1000000), // Random seed
+            ...(input_image && { input_image })
           }),
         })
         

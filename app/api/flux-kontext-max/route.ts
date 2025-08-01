@@ -52,6 +52,7 @@ export async function POST(request: NextRequest) {
       webhook_url,
       webhook_secret,
       prompt_upsampling = false,
+      
       safety_tolerance = 2
     } = body
 

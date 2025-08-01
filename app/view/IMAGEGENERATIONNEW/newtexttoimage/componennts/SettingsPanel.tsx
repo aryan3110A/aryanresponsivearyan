@@ -245,9 +245,9 @@ export default function SettingsPanel({
               <button
                 ref={toggleButtonRef}
                 onClick={toggleModels}
-                className="px-6 md:px-10 w-full py-6 md:py-8 bg-gradient-to-r from-gray-800 to-gray-700 rounded-lg border border-white/10 cursor-pointer hover:from-gray-700 hover:to-gray-600 transition-all mb-4 text-left relative overflow-hidden"
+                className="px-6 md:px-10 w-full py-6 md:py-8 bg-white/10 rounded-lg border border-white/5 cursor-pointer hover:from-gray-700 hover:to-gray-600 transition-all mb-4 text-left relative overflow-hidden"
                 style={{
-                  backgroundImage: "url('/placeholder.svg?height=80&width=400')",
+                  backgroundImage: "",
                   backgroundSize: "cover",
                   backgroundPosition: "center",
                 }}

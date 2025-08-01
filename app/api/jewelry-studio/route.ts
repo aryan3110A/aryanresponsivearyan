@@ -209,6 +209,8 @@ async function generateSingleImage({
   }
   const pollingUrl = data.polling_url
 
+  console.log('🚀 Polling URL:', pollingUrl)
+
   // Start polling for result
   const pollResult = await pollForResult(pollingUrl, shotType)
 

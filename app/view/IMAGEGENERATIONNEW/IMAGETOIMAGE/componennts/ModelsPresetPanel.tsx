@@ -24,59 +24,15 @@ type Model = {
   tokenCost: number
 }
 
+// Only Flux models for Image to Image
 const models = [
-  {
-    id: "1",
-    title: "Stable XL",
-    shortName: "S",
-    image: "/imagegenerationnew/models/model1.png",
-    description:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since",
-    tokenCost: 20,
-  },
-  {
-    id: "2",
-    title: "Flux.1 Dev",
-    shortName: "F",
-    image: "/imagegenerationnew/models/model2.png",
-    description:
-      "Flux.1 Dev, a powerful 12B parameter flow transformer model from the FLUX series. This model delivers high-quality image generation with exceptional detail and efficiency.",
-    tokenCost: 20,
-  },
-  {
-    id: "3",
-    title: "Stable Diffusion 3.5 Large",
-    shortName: "S",
-    image: "/imagegenerationnew/models/model3.png",
-    description:
-      "Google's Imagen - generating images with even better detail, richer lighting and fewer distracting artifacts than our previous models.",
-    tokenCost: 25,
-  },
-  {
-    id: "4",
-    title: "Stable Diffusion 3.5 Medium",
-    shortName: "S",
-    image: "/imagegenerationnew/models/model4.png",
-    description:
-      "Stable Diffusion 3.5 Medium With 2.5B parameters and enhanced MMDiT-X architecture, this model runs efficiently on consumer hardware, balancing quality and customization while generating images from 0.25 to 2 MP.",
-    tokenCost: 15,
-  },
-  {
-    id: "5",
-    title: "Stable Turbo",
-    shortName: "S",
-    image: "/imagegenerationnew/models/model5.png",
-    description:
-      "Get involved with the fastest growing open software project. Download and join other developers in creating incredible applications with Stable Diffusion XL as a foundation model.",
-    tokenCost: 18,
-  },
   {
     id: "6",
     title: "Flux.1 KONTEXT MAX",
     shortName: "FM",
     image: "/imagegenerationnew/models/model5.png",
     description:
-      "Flux.1 KONTEXT MAX, a powerful 12B parameter flow transformer model from the FLUX series. This model delivers high-quality image generation with exceptional detail and efficiency.",
+      "Flux.1 KONTEXT MAX, a powerful 12B parameter flow transformer model from the FLUX series. This model delivers high-quality image-to-image generation with exceptional detail and efficiency.",
     tokenCost: 20,
   },  
   {
@@ -85,11 +41,9 @@ const models = [
     shortName: "FP",
     image: "/imagegenerationnew/models/model5.png",
     description:
-      "Flux.1 KONTEXT PRO, a powerful 12B parameter flow transformer model from the FLUX series. This model delivers high-quality image generation with exceptional detail and efficiency.",
+      "Flux.1 KONTEXT PRO, a powerful 12B parameter flow transformer model from the FLUX series. This model delivers high-quality image-to-image generation with exceptional detail and efficiency.",
     tokenCost: 20,
   },  
-
-
 ]
 
 export default function ModelsPresetPanel({
@@ -291,10 +245,4 @@ function MobileModelCard({
       </div>
     </div>
   )
-}
-
-
-
-
-
-
+} 

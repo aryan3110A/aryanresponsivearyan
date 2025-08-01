@@ -17,6 +17,8 @@ interface InputSectionProps {
   selectedQuality: string
   selectedAspectRatio: string
   numberOfImages: number
+  uploadedImage: File | null
+  setUploadedImage: (file: File | null) => void
 }
 
 export default function InputSection({
@@ -31,6 +33,8 @@ export default function InputSection({
   selectedQuality,
   selectedAspectRatio,
   numberOfImages,
+  uploadedImage,
+  setUploadedImage,
 }: InputSectionProps) {
   const [showUploadComponent, setShowUploadComponent] = useState(false)
   const [hoveredImageIndex, setHoveredImageIndex] = useState<number | null>(null)
@@ -53,32 +57,26 @@ export default function InputSection({
 
   const handleFilesSelected = (files: File[]) => {
     console.log("Files selected:", files)
+    if (files.length > 0) {
+      setUploadedImage(files[0])
+    }
+    setShowUploadComponent(false)
   }
 
-  const handleDownload = async (imageUrl: string, index: number) => {
+  const handleDownload = (imageUrl: string, index: number) => {
     try {
       console.log(`Downloading image ${index + 1}...`)
 
-      const response = await fetch(imageUrl)
-      if (!response.ok) {
-        throw new Error("Failed to fetch image")
-      }
-
-      const blob = await response.blob()
-      const url = window.URL.createObjectURL(blob)
       const link = document.createElement("a")
-      link.href = url
-
-      const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, "-")
-      const filename = `generated-image-${index + 1}-${timestamp}.png`
-      link.download = filename
+      link.href = imageUrl
+      link.download = `generated-image-${index + 1}-${new Date().toISOString().slice(0, 19).replace(/:/g, "-")}.png`
+      link.target = "_blank"
 
       document.body.appendChild(link)
       link.click()
       document.body.removeChild(link)
-      window.URL.revokeObjectURL(url)
 
-      console.log(`Image ${index + 1} downloaded successfully as ${filename}`)
+      console.log(`✅ Image ${index + 1} download initiated successfully`)
     } catch (error) {
       console.error("Download failed:", error)
       alert("Failed to download image. Please try again.")
@@ -123,10 +121,16 @@ export default function InputSection({
       <div className="hidden xl:flex items-center gap-4 w-full md:max-w-6xl lg:max-w-7xl px-4">
         <div className="flex-1 relative">
           <div className="flex items-center bg-[#ffffff]/5 hover:bg-[#ffffff]/20 backdrop-blur-sm border border-[#8E8E8E] rounded-2xl lg:rounded-3xl p-4 transition-all duration-300 ease-in-out">
-            <AttachmentsDropdown
-              onChooseFromLibrary={handleChooseFromLibrary}
-              onUploadFromDevices={handleUploadFromDevices}
-            />
+            <div className="relative">
+              <AttachmentsDropdown
+                onChooseFromLibrary={handleChooseFromLibrary}
+                onUploadFromDevices={handleUploadFromDevices}
+              />
+              {/* Image selection indicator */}
+              {uploadedImage && (
+                <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full" title="Image uploaded" />
+              )}
+            </div>
 
             <input
               type="text"
@@ -164,10 +168,16 @@ export default function InputSection({
         {/* Input Field Only - Full Width Responsive */}
         <div className="w-full mb-4">
           <div className="flex items-center bg-[#ffffff]/5 hover:bg-[#ffffff]/20 backdrop-blur-sm border border-[#8E8E8E] rounded-xl sm:rounded-2xl p-2 xs:p-4 transition-all duration-300 ease-in-out">
-            <AttachmentsDropdown
-              onChooseFromLibrary={handleChooseFromLibrary}
-              onUploadFromDevices={handleUploadFromDevices}
-            />
+            <div className="relative">
+              <AttachmentsDropdown
+                onChooseFromLibrary={handleChooseFromLibrary}
+                onUploadFromDevices={handleUploadFromDevices}
+              />
+              {/* Image selection indicator */}
+              {uploadedImage && (
+                <div className="absolute -top-1 -right-1 w-2 h-2 bg-green-500 rounded-full" title="Image uploaded" />
+              )}
+            </div>
 
             <input
               type="text"
