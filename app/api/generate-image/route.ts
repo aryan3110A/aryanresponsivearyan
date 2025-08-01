@@ -101,8 +101,12 @@ export async function POST(request: Request) {
 async function callFluxAPI(endpoint: string, modelName: string, prompt: string, width: number, height: number, num_images: number, input_image?: string, aspect_ratio?: string, output_format?: string, prompt_upsampling?: boolean, safety_tolerance?: number, seed?: number) {
   console.log(`📡 Calling ${modelName} endpoint: ${endpoint}`)
   
-  // Call the Flux API
-  const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}${endpoint}`, {
+  // Use relative URL for serverless environment compatibility
+  const baseUrl = process.env.VERCEL_URL 
+    ? `https://${process.env.VERCEL_URL}` 
+    : process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
+  
+  const response = await fetch(`${baseUrl}${endpoint}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -121,7 +125,7 @@ async function callFluxAPI(endpoint: string, modelName: string, prompt: string, 
   if (!response.ok) {
     const errorText = await response.text()
     console.error(`❌ ${modelName} API error:`, errorText)
-    return NextResponse.json({ error: `Flux API erro + ${response}` }, { status: 500 })
+    return NextResponse.json({ error: `${modelName} generation failed` }, { status: 500 })
   }
 
   const data = await response.json()
