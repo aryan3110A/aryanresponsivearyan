@@ -15,11 +15,15 @@ async function handleRegularModel(prompt: string, model: string, width: number, 
 
   const modelKey = modelEndpoints[model] || "stable-turbo"
   const API_BASE = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://c9b20607338c.ngrok-free.app'
-  
-  console.log(`🎯 Using fallback model: ${model} (${modelKey})`)
-  
+
+  // Use a different endpoint for Kontext Max/Pro models
+  let endpoint = (model === "Flux.1 KONTEXT MAX" || model === "Flux.1 KONTEXT PRO")
+    ? `${API_BASE}/${modelKey}`
+    : `${API_BASE}/${modelKey}/generate`;
+
+  console.log(`🎯 Using fallback model: ${model} (${modelKey})`);
   // Call the model-specific endpoint
-  const endpoint = `${API_BASE}/${modelKey}/generate`
+   endpoint = `${API_BASE}/${modelKey}/generate`
   console.log('📡 Calling fallback endpoint:', endpoint)
   
   const response = await fetch(endpoint, {
