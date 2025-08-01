@@ -23,7 +23,6 @@ async function handleRegularModel(prompt: string, model: string, width: number, 
 
   console.log(`🎯 Using fallback model: ${model} (${modelKey})`);
   // Call the model-specific endpoint
-   endpoint = `${API_BASE}/${modelKey}/generate`
   console.log('📡 Calling fallback endpoint:', endpoint)
   
   const response = await fetch(endpoint, {
