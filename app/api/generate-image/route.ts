@@ -17,7 +17,7 @@ async function handleRegularModel(prompt: string, model: string, width: number, 
   const API_BASE = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://c9b20607338c.ngrok-free.app'
 
   // Use a different endpoint for Kontext Max/Pro models
-  let endpoint = (model === "Flux.1 KONTEXT MAX" || model === "Flux.1 KONTEXT PRO")
+  const endpoint = (model === "Flux.1 KONTEXT MAX" || model === "Flux.1 KONTEXT PRO")
     ? `${API_BASE}/${modelKey}`
     : `${API_BASE}/${modelKey}/generate`;
 
