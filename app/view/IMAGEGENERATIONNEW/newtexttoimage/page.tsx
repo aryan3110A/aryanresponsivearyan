@@ -147,17 +147,23 @@ export default function NewText2Image() {
 
         const data = await response.json()
         console.log(`✅ Flux ${modelId === 6 ? 'Max' : 'Pro'} generation successful:`, {
-          hasImageUrl: data.hasImageUrl,
-          model: data.model,
-          imageUrl: data.imageUrl
+          hasImageUrl: !!data.imageUrl,
+          model: data.metadata?.model || data.model,
+          imageUrl: data.imageUrl,
+          fullResponse: data
         })
         
         if (data.imageUrl) {
           console.log(`🖼️ Setting generated image URL: ${data.imageUrl}`)
           setGeneratedImages([data.imageUrl])
           setGeneratedPrompts([prompt]) // Store the original input prompt
+        } else if (data.success && data.result?.sample) {
+          // Alternative response format
+          console.log(`🖼️ Setting generated image URL from result.sample: ${data.result.sample}`)
+          setGeneratedImages([data.result.sample])
+          setGeneratedPrompts([prompt])
         } else {
-          console.error('❌ No image URL in response')
+          console.error('❌ No image URL in response. Full response:', data)
           setGeneratedImages(["/placeholder.svg"])
           setGeneratedPrompts([""])
         }
@@ -208,7 +214,7 @@ export default function NewText2Image() {
       if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
 
       const data = await response.json()
-      console.log(`✅ ${modelName} generation successful`)
+      console.log(`✅ ${modelName} generation successful. Full response:`, data)
       if (data.imageUrl) {
         // Handle Flux API response format
         console.log("🚀 Flux API generation successful:", data);
@@ -223,7 +229,11 @@ export default function NewText2Image() {
         const promptsArray = Array(data.image_urls.length).fill(prompt)
         setGeneratedPrompts(promptsArray)
       }
-      else console.error('❌ Generation failed:', data.error)
+      else {
+        console.error('❌ Generation failed. Full response:', data)
+        setGeneratedImages(["/placeholder.svg"])
+        setGeneratedPrompts([""])
+      }
     } catch (err) {
       console.error("❌ Primary API failed:", err)
       try {
