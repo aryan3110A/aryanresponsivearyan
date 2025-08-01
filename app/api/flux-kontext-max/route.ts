@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
     if (!apiKey) {
       console.error('❌ FLUX_API_KEY environment variable is not set')
       return NextResponse.json(
-        { error: 'Flux API key not configured. Please set FLUX_API_KEY environment variable.' },
+        { error: 'Flux API key not configured. Please set FLUX_API_KEY environment variable in Vercel deployment.' },
         { status: 500 }
       )
     }

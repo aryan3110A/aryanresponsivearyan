@@ -8,9 +8,7 @@ async function handleRegularModel(prompt: string, model: string, width: number, 
     "Flux.1 Dev": "flux-dev", 
     "Stable Diffusion 3.5 Large": "stable-large",
     "Stable Diffusion 3.5 Medium": "stable-medium",
-    "Stable Turbo": "stable-turbo",
-    "Flux.1 KONTEXT MAX": "flux-kontext-max",
-    "Flux.1 KONTEXT PRO": "flux-kontext-pro"
+    "Stable Turbo": "stable-turbo"
   }
 
   const modelKey = modelEndpoints[model] || "stable-turbo"
@@ -86,9 +84,9 @@ export async function POST(request: Request) {
           const errorText = await response.text()
           console.error(`❌ ${modelName} API error:`, errorText)
           
-          // If Flux API fails, fallback to regular model
-          console.log(`🔄 Flux API failed, falling back to regular model`)
-          return await handleRegularModel(prompt, model, width, height, num_images)
+          // If Flux API fails, fallback to stable-turbo (a working backend endpoint)
+          console.log(`🔄 Flux API failed, falling back to stable-turbo`)
+          return await handleRegularModel(prompt, "Stable Turbo", width, height, num_images)
         }
 
         const data = await response.json()
@@ -99,8 +97,8 @@ export async function POST(request: Request) {
         return NextResponse.json(data)
       } catch (error) {
         console.error(`❌ ${modelName} API failed with error:`, error)
-        console.log(`🔄 Falling back to regular model`)
-        return await handleRegularModel(prompt, model, width, height, num_images)
+        console.log(`🔄 Falling back to stable-turbo`)
+        return await handleRegularModel(prompt, "Stable Turbo", width, height, num_images)
       }
     }
 
