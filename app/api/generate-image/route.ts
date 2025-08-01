@@ -8,7 +8,9 @@ async function handleRegularModel(prompt: string, model: string, width: number, 
     "Flux.1 Dev": "flux-dev", 
     "Stable Diffusion 3.5 Large": "stable-large",
     "Stable Diffusion 3.5 Medium": "stable-medium",
-    "Stable Turbo": "stable-turbo"
+    "Stable Turbo": "stable-turbo",
+    "Flux.1 KONTEXT MAX": "flux-kontext-max",
+    "Flux.1 KONTEXT PRO": "flux-kontext-pro"
   }
 
   const modelKey = modelEndpoints[model] || "stable-turbo"

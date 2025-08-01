@@ -56,7 +56,6 @@ export default function NewTextToVideo() {
 
         if (cameraInstructions) {
           finalPrompt = `${prompt} ${cameraInstructions}`
-          
         }
       }
 
@@ -87,44 +86,12 @@ export default function NewTextToVideo() {
       }
 
       // For S2V-01 model, add subject_reference array (required)
-      console.log('Checking S2V-01 conditions:')
-      console.log('- supportsSubjectReference(selectedModel):', supportsSubjectReference(selectedModel))
-      console.log('- selectedModel === "S2V-01":', selectedModel === 'S2V-01')
-      console.log('- subjectImage exists:', !!subjectImage)
-      console.log('- subjectImage length:', subjectImage?.length || 0)
-
-      // Special handling for S2V-01 - check both subjectImage and firstFrameImage
       if (selectedModel === 'S2V-01') {
-        console.log('=== S2V-01 IMAGE CHECK ===')
-        console.log('subjectImage exists:', !!subjectImage)
-        console.log('subjectImage length:', subjectImage?.length || 0)
-        console.log('firstFrameImage exists:', !!firstFrameImage)
-        console.log('firstFrameImage length:', firstFrameImage?.length || 0)
-
-        // Use subjectImage if available, otherwise use firstFrameImage
         const imageToUse = subjectImage || firstFrameImage
 
         if (!imageToUse) {
           console.log('❌ ERROR: No image available for S2V-01')
           alert('S2V-01 model requires a subject reference image. Please upload an image using the attachment button and try again.')
-          return
-        }
-
-        console.log('Using image source:', subjectImage ? 'subjectImage' : 'firstFrameImage')
-        console.log('Image preview:', imageToUse.substring(0, 50) + '...')
-
-        // Ensure the image has proper data URL format
-        if (!imageToUse.startsWith('data:image/')) {
-          console.log('❌ ERROR: Image data does not start with data:image/')
-          console.log('Image data preview:', imageToUse.substring(0, 100))
-          alert('Invalid image format. Please upload a valid image file.')
-          return
-        }
-
-        // Validate image data length
-        if (imageToUse.length < 1000) {
-          console.log('❌ ERROR: Image data too short:', imageToUse.length)
-          alert('Image data appears to be corrupted. Please try uploading again.')
           return
         }
 
@@ -136,47 +103,12 @@ export default function NewTextToVideo() {
         ]
 
         apiPayload.subject_reference = subjectRefArray
-
-        console.log('✅ Subject reference created:', {
-          array_length: subjectRefArray.length,
-          has_type: !!subjectRefArray[0].type,
-          type_value: subjectRefArray[0].type,
-          has_image_array: Array.isArray(subjectRefArray[0].image),
-          image_array_length: subjectRefArray[0].image.length,
-          first_image_length: subjectRefArray[0].image[0]?.length || 0
-        })
-
-        // Remove aspect_ratio for S2V-01 as it's not in the API docs
         delete apiPayload.aspect_ratio
-        console.log('========================')
       }
 
-      // Debug logging
-      console.log('=== GENERATION DEBUG ===')
-      console.log('Selected Model:', selectedModel)
-      console.log('Model Type:', modelType)
-      console.log('Supports Subject Reference:', supportsSubjectReference(selectedModel))
-      console.log('Subject Image Present:', !!subjectImage)
-      console.log('First Frame Image Present:', !!firstFrameImage)
-      console.log('Subject Image Length:', subjectImage?.length || 0)
-      console.log('First Frame Image Length:', firstFrameImage?.length || 0)
-      // Log payload structure without full base64 data
-      console.log('Final API Payload structure:')
-      console.log('- model:', apiPayload.model)
-      console.log('- prompt:', apiPayload.prompt)
-      console.log('- duration:', apiPayload.duration)
-      console.log('- resolution:', apiPayload.resolution)
-      console.log('- has subject_reference:', !!apiPayload.subject_reference)
-      console.log('- has first_frame_image:', !!apiPayload.first_frame_image)
-      if (apiPayload.subject_reference) {
-        const subjectRefArray = apiPayload.subject_reference as Array<{image: string}>
-        console.log('- subject_reference array length:', subjectRefArray.length)
-        console.log('- first subject_reference has image:', !!subjectRefArray[0]?.image)
-        console.log('- first subject_reference image length:', subjectRefArray[0]?.image?.length || 0)
-      }
-      console.log('========================')
-
-      // Call the API for video generation
+      console.log('=== STEP 1: Creating video generation task ===')
+      
+      // Step 1: Create video generation task
       const response = await fetch('/api/generate-video', {
         method: 'POST',
         headers: {
@@ -187,15 +119,89 @@ export default function NewTextToVideo() {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}))
-        throw new Error(errorData.error || 'Failed to generate video')
+        throw new Error(errorData.error || 'Failed to create video generation task')
       }
 
-      const data = await response.json()
+      const taskData = await response.json()
+      
+      if (!taskData.success || !taskData.task_id) {
+        throw new Error(taskData.error || 'No task ID received')
+      }
 
-      if (data.success && data.video_urls && data.video_urls.length > 0) {
-        setGeneratedImages(data.video_urls)
+      console.log('✅ Task created with ID:', taskData.task_id)
+
+      // Step 2: Poll for task completion
+      console.log('=== STEP 2: Polling for task completion ===')
+      const maxAttempts = 60 // 5 minutes with 5-second intervals
+      let attempts = 0
+      let taskStatus = 'Queueing'
+      let fileId = null
+
+      while (attempts < maxAttempts && !['Success', 'Fail'].includes(taskStatus)) {
+        await new Promise(resolve => setTimeout(resolve, 5000)) // Wait 5 seconds
+        
+        try {
+          const statusResponse = await fetch('/api/query-video-status', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ task_id: taskData.task_id }),
+          })
+
+          if (!statusResponse.ok) {
+            console.log(`Status check failed, attempt ${attempts + 1}/${maxAttempts}`)
+            attempts++
+            continue
+          }
+
+          const statusData = await statusResponse.json()
+          taskStatus = statusData.status
+          fileId = statusData.file_id
+
+          console.log(`Task ${taskData.task_id} status: ${taskStatus}`)
+          
+          if (taskStatus === 'Success') {
+            console.log('✅ Video generation completed!')
+            break
+          } else if (taskStatus === 'Fail') {
+            throw new Error('Video generation failed')
+          }
+        } catch (statusError) {
+          console.log(`Status check error, attempt ${attempts + 1}/${maxAttempts}:`, statusError)
+        }
+        
+        attempts++
+      }
+
+      if (taskStatus !== 'Success' || !fileId) {
+        throw new Error('Video generation timed out or failed')
+      }
+
+      console.log('✅ Video generation completed, file ID:', fileId)
+
+      // Step 3: Download the video
+      console.log('=== STEP 3: Downloading video ===')
+      const downloadResponse = await fetch('/api/download-video', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ file_id: fileId }),
+      })
+
+      if (!downloadResponse.ok) {
+        const errorData = await downloadResponse.json().catch(() => ({}))
+        throw new Error(errorData.error || 'Failed to download video')
+      }
+
+      const downloadData = await downloadResponse.json()
+
+      if (downloadData.success && downloadData.video_urls && downloadData.video_urls.length > 0) {
+        setGeneratedImages(downloadData.video_urls)
+        console.log('✅ Video downloaded successfully:', downloadData.video_urls)
       } else {
-        throw new Error(data.error || 'No video URLs in response')
+        throw new Error(downloadData.error || 'No video URLs in response')
       }
     } catch (error) {
       console.error('Video generation failed:', error)

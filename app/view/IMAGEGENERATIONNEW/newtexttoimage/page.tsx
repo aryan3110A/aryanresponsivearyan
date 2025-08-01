@@ -35,7 +35,7 @@ export default function NewText2Image() {
   const [generatedPrompts, setGeneratedPrompts] = useState<string[]>([]) // Store prompts for each image
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const [isGenerating, setIsGenerating] = useState(false)
-  const [lastGeneratedPrompt, setLastGeneratedPrompt] = useState("")
+
 
   const [selectedModel, setSelectedModel] = useState("")
   const [selectedStyle, setSelectedStyle] = useState<string | null>(null)
@@ -156,7 +156,6 @@ export default function NewText2Image() {
           console.log(`🖼️ Setting generated image URL: ${data.imageUrl}`)
           setGeneratedImages([data.imageUrl])
           setGeneratedPrompts([prompt]) // Store the original input prompt
-          setLastGeneratedPrompt(prompt) // Store the last generated prompt
         } else {
           console.error('❌ No image URL in response')
           setGeneratedImages(["/placeholder.svg"])
@@ -211,16 +210,15 @@ export default function NewText2Image() {
       const data = await response.json()
       console.log(`✅ ${modelName} generation successful`)
       if (data.success && data.image_urls) {
+        console.log("🚀 Generation successful:", data);
         setGeneratedImages(data.image_urls)
         // Create array of prompts for each image (using original input prompt)
         const promptsArray = Array(data.image_urls.length).fill(prompt)
         setGeneratedPrompts(promptsArray)
-        setLastGeneratedPrompt(prompt) // Store the last generated prompt
       }
       else if (data.imageUrl) {
         setGeneratedImages([data.imageUrl])
         setGeneratedPrompts([prompt])
-        setLastGeneratedPrompt(prompt) // Store the last generated prompt
       }
       else console.error('❌ Generation failed:', data.error)
     } catch (err) {
@@ -256,25 +254,7 @@ export default function NewText2Image() {
   const handleSettingsSave = (settingsData: SettingsData) => setCurrentSettings(settingsData)
   const handleSettingsToggle = () => setIsSettingsOpen(!isSettingsOpen)
   
-  const handleCopyLastPrompt = async () => {
-    if (lastGeneratedPrompt) {
-      try {
-        await navigator.clipboard.writeText(lastGeneratedPrompt)
-        console.log("✅ Last generated prompt copied to clipboard")
-        // You could add a toast notification here
-      } catch (error) {
-        console.error("❌ Failed to copy prompt:", error)
-        // Fallback for older browsers
-        const textArea = document.createElement("textarea")
-        textArea.value = lastGeneratedPrompt
-        document.body.appendChild(textArea)
-        textArea.select()
-        document.execCommand("copy")
-        document.body.removeChild(textArea)
-        console.log("✅ Last generated prompt copied to clipboard (fallback)")
-      }
-    }
-  }
+
 
   return (
     <>
@@ -299,8 +279,8 @@ export default function NewText2Image() {
               selectedQuality={selectedQuality}
               selectedAspectRatio={selectedAspectRatio}
               numberOfImages={numberOfImages}
-              lastGeneratedPrompt={lastGeneratedPrompt}
-              onCopyLastPrompt={handleCopyLastPrompt}
+
+
             />
           </main>
         </div>
