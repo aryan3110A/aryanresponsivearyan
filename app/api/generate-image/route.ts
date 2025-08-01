@@ -60,6 +60,14 @@ export async function POST(request: Request) {
 
     // Check if it's a Flux model first
     if (modelId === 6 || modelId === 7) {
+      // Validate Flux API key
+      if (!process.env.FLUX_API_KEY) {
+        console.error('❌ FLUX_API_KEY not configured')
+        return NextResponse.json({ 
+          error: 'Flux API key not configured. Please set FLUX_API_KEY environment variable in Vercel deployment.' 
+        }, { status: 500 })
+      }
+      
       const fluxEndpoint = modelId === 6 ? '/api/flux-kontext-max' : '/api/flux-kontext-pro'
       const modelName = modelId === 6 ? 'Flux Kontext Max' : 'Flux Kontext Pro'
       console.log(`🎯 Using ${modelName} (ID: ${modelId})`)
