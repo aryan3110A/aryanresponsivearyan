@@ -51,7 +51,7 @@ async function handleRegularModel(prompt: string, model: string, width: number, 
 
 export async function POST(request: Request) {
   try {
-    const { prompt, model, width, height, num_images, modelId, input_image, aspect_ratio, output_format, prompt_upsampling, safety_tolerance, seed } = await request.json()
+    const { prompt, model, width, height, num_images, modelId, input_image } = await request.json()
     console.log('🚀 Generate Image API called:', { prompt, model, width, height, num_images, modelId, hasInputImage: !!input_image })
     
     if (!prompt) {
@@ -71,7 +71,7 @@ export async function POST(request: Request) {
       const fluxEndpoint = modelId === 6 ? '/api/flux-kontext-max' : '/api/flux-kontext-pro'
       const modelName = modelId === 6 ? 'Flux Kontext Max' : 'Flux Kontext Pro'
       console.log(`🎯 Using ${modelName} (ID: ${modelId})`)
-      return await callFluxAPI(fluxEndpoint, modelName, prompt, width, height, num_images, input_image, aspect_ratio, output_format, prompt_upsampling, safety_tolerance, seed)
+      return await callFluxAPI(fluxEndpoint, modelName, prompt, width, height, num_images)
     }
 
     // For all other models, check if they exist in backend endpoints
@@ -98,7 +98,7 @@ export async function POST(request: Request) {
 }
 
 // Helper function to call Flux APIs
-async function callFluxAPI(endpoint: string, modelName: string, prompt: string, width: number, height: number, num_images: number, input_image?: string, aspect_ratio?: string, output_format?: string, prompt_upsampling?: boolean, safety_tolerance?: number, seed?: number) {
+async function callFluxAPI(endpoint: string, modelName: string, prompt: string, width: number, height: number, num_images: number) {
   console.log(`📡 Calling ${modelName} endpoint: ${endpoint}`)
   
   // For now, fallback to Stable Turbo since Flux APIs have authentication issues in Vercel
