@@ -101,37 +101,7 @@ export async function POST(request: Request) {
 async function callFluxAPI(endpoint: string, modelName: string, prompt: string, width: number, height: number, num_images: number, input_image?: string, aspect_ratio?: string, output_format?: string, prompt_upsampling?: boolean, safety_tolerance?: number, seed?: number) {
   console.log(`📡 Calling ${modelName} endpoint: ${endpoint}`)
   
-  // Use relative URL for serverless environment compatibility
-  const baseUrl = process.env.VERCEL_URL 
-    ? `https://${process.env.VERCEL_URL}` 
-    : process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
-  
-  const response = await fetch(`${baseUrl}${endpoint}`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      prompt,
-      aspect_ratio: aspect_ratio || `${width}:${height}`,
-      output_format: output_format || 'png',
-      prompt_upsampling: prompt_upsampling || false,
-      safety_tolerance: safety_tolerance || 2,
-      seed: seed || Math.floor(Math.random() * 1000000), // Random seed
-      ...(input_image && { input_image })
-    }),
-  })
-  
-  if (!response.ok) {
-    const errorText = await response.text()
-    console.error(`❌ ${modelName} API error:`, errorText)
-    return NextResponse.json({ error: `${modelName} generation failed` }, { status: 500 })
-  }
-
-  const data = await response.json()
-  console.log(`✅ ${modelName} generation successful:`, { 
-    hasImageUrl: !!data.imageUrl,
-    model: data.metadata?.model 
-  })
-  return NextResponse.json(data)
+  // For now, fallback to Stable Turbo since Flux APIs have authentication issues in Vercel
+  console.log(`🔄 ${modelName} not available in deployment, using Stable Turbo instead`)
+  return await handleRegularModel(prompt, "Stable Turbo", width, height, num_images)
 }
