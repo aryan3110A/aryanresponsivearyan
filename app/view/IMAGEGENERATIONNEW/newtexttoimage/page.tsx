@@ -153,6 +153,15 @@ export default function NewText2Image() {
           fullResponse: data
         })
         
+        // Debug: Log the exact response structure
+        console.log('🔍 DEBUG - Response structure:', {
+          hasImageUrl: !!data.imageUrl,
+          hasSuccess: !!data.success,
+          hasResult: !!data.result,
+          hasMetadata: !!data.metadata,
+          keys: Object.keys(data)
+        })
+        
         if (data.imageUrl) {
           console.log(`🖼️ Setting generated image URL: ${data.imageUrl}`)
           setGeneratedImages([data.imageUrl])
@@ -161,6 +170,11 @@ export default function NewText2Image() {
           // Alternative response format
           console.log(`🖼️ Setting generated image URL from result.sample: ${data.result.sample}`)
           setGeneratedImages([data.result.sample])
+          setGeneratedPrompts([prompt])
+        } else if (data.originalImageUrl) {
+          // Fallback to original URL
+          console.log(`🖼️ Setting generated image URL from originalImageUrl: ${data.originalImageUrl}`)
+          setGeneratedImages([data.originalImageUrl])
           setGeneratedPrompts([prompt])
         } else {
           console.error('❌ No image URL in response. Full response:', data)
