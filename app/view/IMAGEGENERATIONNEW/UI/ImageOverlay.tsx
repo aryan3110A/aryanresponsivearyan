@@ -71,7 +71,7 @@ export default function ImageOverlay({
     try {
       console.log("Starting download...")
 
-      // Create a temporary link element and trigger download
+       // Create a temporary link element and trigger download
       const link = document.createElement("a")
       link.href = imageUrl
       link.download = `${prompt.toLowerCase().replace(/[^a-z0-9]/g, "-").slice(0, 30)}-${new Date().toISOString().slice(0, 19).replace(/:/g, "-")}.png`
@@ -99,7 +99,7 @@ export default function ImageOverlay({
       {/* Desktop Layout - Properly Centered */}
       <div className="hidden md:flex fixed inset-0 bg:transparent backdrop-blur-3xl shadow-sm z-50 items-center justify-center md:py-10 lg:py-10">
         {/* Modal Container - Centered */}
-        <div className="relative w-full md:max-w-6xl lg:max-w-7xl h-full max-h-[90vh] bg-white/10 backdrop-blur-3xl shadow-3xl rounded-2xl overflow-hidden flex md:p-10 lg:p-10">
+        <div className="relative w-full md:w-auto md:max-w-6xl lg:w-auto gap-6 lg:max-w-7xl h-full max-h-[90vh] bg-white/10 backdrop-blur-3xl shadow-3xl rounded-2xl overflow-hidden flex md:p-10 lg:p-10">
           <button
             onClick={onClose}
             className="absolute top-6 right-6 p-2 text-white hover:bg-white/10 rounded-lg transition-colors z-10"
@@ -108,13 +108,13 @@ export default function ImageOverlay({
           </button>
           {/* Left Side - Image */}
           <div className="flex-1 flex items-center justify-center">
-            <div className="relative w-full h-full md:max-w-2xl lg:max-w-3xl max-h-full">
+            <div className="relative w-full h-full md:w-auto md:max-w-2xl lg:w-auto lg:max-w-3xl max-h-full">
               <Image
                 src={imageUrl || "/placeholder.svg"}
                 alt="Generated image"
                 width={1080}
                 height={1080}
-                className="w-full h-full object-contain rounded-3xl"
+                className="w-full h-full object-contain rounded-2xl"
               />
             </div>
           </div>

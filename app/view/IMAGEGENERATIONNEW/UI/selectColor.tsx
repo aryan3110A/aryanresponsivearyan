@@ -16,7 +16,7 @@ export default function SelectColor({
   customColor = "",
   setCustomColor,
 }: SelectColorProps) {
-  const [isOpen, setIsOpen] = useState(true)
+  const [isOpen, setIsOpen] = useState(false)
   const [selectedOption, setSelectedOption] = useState<string | null>(selectedColor ?? null)
 
   const options = [

@@ -12,7 +12,7 @@ export default function FontSelect({
   onFontSelect,
   selectedFont,
 }: FontSelectProps) {
-  const [isOpen, setIsOpen] = useState(true)
+  const [isOpen, setIsOpen] = useState(false)
   const [selectedOption, setSelectedOption] = useState<string | null>(selectedFont ?? null)
 
   const options = [

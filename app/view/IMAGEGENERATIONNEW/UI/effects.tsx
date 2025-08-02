@@ -16,7 +16,7 @@ export default function Effects({
 //   customEffect = "",
   setCustomEffect,
 }: SelectEffectProps) {
-  const [isOpen, setIsOpen] = useState(true)
+  const [isOpen, setIsOpen] = useState(false)
   const [selectedOption, setSelectedOption] = useState<string | null>(selectedEffect ?? null)
 
   const options = [

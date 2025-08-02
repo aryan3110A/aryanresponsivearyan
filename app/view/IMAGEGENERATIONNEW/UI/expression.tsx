@@ -16,7 +16,7 @@ export default function Expression({
 //   customExpression = "",
   setCustomExpression,
 }: SelectExpressionProps) {
-  const [isOpen, setIsOpen] = useState(true)
+  const [isOpen, setIsOpen] = useState(false)
   const [selectedOption, setSelectedOption] = useState<string | null>(selectedExpression ?? null)
 
   // Sync with props

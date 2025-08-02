@@ -375,7 +375,7 @@ export default function SettingsPanel({
                   "Gothic",
                   "Impressionist"
                 ]}
-                defaultOpen={true}
+                defaultOpen={false}
                 showBorderTop={true}
               />
             </div>

@@ -275,7 +275,7 @@ export default function SettingsPanel({
                   "PNG",
                   "SVG"
                 ]}
-                defaultOpen={true}
+                defaultOpen={false}
                 showBorderTop={true} />
             </div>
 
@@ -318,7 +318,7 @@ export default function SettingsPanel({
                   "Gothic",
                   "Ghibli"
                 ]}
-                defaultOpen={true}
+                defaultOpen={false}
                 showBorderTop={true}
               />
             </div>
