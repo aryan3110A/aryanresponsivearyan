@@ -28,22 +28,26 @@ export default function CategorySelector({ categories, onSelect }: CategorySelec
 
       {/* Categories Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {categories.map((category) => (
-          <div
-            key={category.id}
-            onClick={() => category.id === 'jewelry' ? onSelect(category) : null}
-            className={`group relative p-6 rounded-2xl border transition-all duration-300 ${
-              category.id === 'jewelry'
-                ? 'bg-gradient-to-br from-[#6C3BFF]/10 to-[#412399]/10 border-[#6C3BFF]/30 hover:border-[#6C3BFF]/50 cursor-pointer transform hover:scale-[1.02] hover:shadow-2xl hover:shadow-[#6C3BFF]/20'
-                : 'bg-gray-800/30 border-gray-700/50 cursor-not-allowed opacity-60'
-            }`}
-          >
-            {/* Coming Soon Badge */}
-            {category.id !== 'jewelry' && (
-              <div className="absolute top-4 right-4 px-3 py-1 bg-amber-500/20 border border-amber-500/30 rounded-full">
-                <span className="text-amber-300 text-xs font-medium">Coming Soon</span>
-              </div>
-            )}
+        {categories.map((category) => {
+          // Check if category is available (not containing "Coming soon" in description)
+          const isAvailable = !category.description.toLowerCase().includes('coming soon')
+
+          return (
+            <div
+              key={category.id}
+              onClick={() => isAvailable ? onSelect(category) : null}
+              className={`group relative p-6 rounded-2xl border transition-all duration-300 ${
+                isAvailable
+                  ? 'bg-gradient-to-br from-[#6C3BFF]/10 to-[#412399]/10 border-[#6C3BFF]/30 hover:border-[#6C3BFF]/50 cursor-pointer transform hover:scale-[1.02] hover:shadow-2xl hover:shadow-[#6C3BFF]/20'
+                  : 'bg-gray-800/30 border-gray-700/50 cursor-not-allowed opacity-60'
+              }`}
+            >
+              {/* Coming Soon Badge */}
+              {!isAvailable && (
+                <div className="absolute top-4 right-4 px-3 py-1 bg-amber-500/20 border border-amber-500/30 rounded-full">
+                  <span className="text-amber-300 text-xs font-medium">Coming Soon</span>
+                </div>
+              )}
 
             {/* Category Icon */}
             <div className="text-4xl mb-4">{category.icon}</div>
@@ -80,11 +84,12 @@ export default function CategorySelector({ categories, onSelect }: CategorySelec
             </div>
 
             {/* Active Category Indicator */}
-            {category.id === 'jewelry' && (
+            {isAvailable && (
               <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-[#6C3BFF]/5 to-[#412399]/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
             )}
           </div>
-        ))}
+          )
+        })}
       </div>
 
       {/* Info Section */}
@@ -98,7 +103,7 @@ export default function CategorySelector({ categories, onSelect }: CategorySelec
               </div>
               <h4 className="font-medium text-white mb-2">Upload Your Item</h4>
               <p className="text-sm text-gray-400 text-center">
-                Take a photo of your jewelry or product from any angle
+                Take a photo of your product from any angle
               </p>
             </div>
             <div className="flex flex-col items-center">

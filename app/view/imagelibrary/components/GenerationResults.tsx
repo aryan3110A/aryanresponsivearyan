@@ -11,6 +11,9 @@ interface GenerationResultsProps {
   uploadedImage: string
   userPrompt: string
   selectedModel: string
+  jewelryType: string
+  dimensions: string
+  modelImage: string | null
   isGenerating: boolean
   onGenerationComplete: (generatedSet: GeneratedSet) => void
   onBack: () => void
@@ -28,36 +31,69 @@ interface GenerationStep {
   prompt?: string
 }
 
-const GENERATION_STEPS: Omit<GenerationStep, 'status' | 'imageUrl' | 'prompt'>[] = [
+const JEWELRY_GENERATION_STEPS: Omit<GenerationStep, 'status' | 'imageUrl' | 'prompt'>[] = [
   {
     id: '1',
     type: 'classic',
-    title: 'Classic Product Showcase',
-    description: 'Professional studio shot with clean background and perfect lighting'
+    title: 'Model - Classic Elegance',
+    description: 'Professional model wearing the jewelry with elegant pose and studio lighting'
   },
   {
     id: '2',
     type: 'profile',
-    title: 'Profile Detail View',
-    description: 'Side angle showcasing the jewelry\'s profile and intricate details'
+    title: 'Model - Profile Showcase',
+    description: 'Side profile view of model highlighting jewelry details and craftsmanship'
   },
   {
     id: '3',
-    type: 'festive',
-    title: 'Festive Context',
-    description: 'Traditional setting with warm lighting and cultural ambiance'
+    type: 'lifestyle',
+    title: 'Model - Lifestyle Portrait',
+    description: 'Natural lifestyle shot with model in beautiful setting wearing the jewelry'
   },
   {
     id: '4',
-    type: 'lifestyle',
-    title: 'Lifestyle Shot',
-    description: 'Natural, candid pose in beautiful outdoor or elegant indoor setting'
+    type: 'festive',
+    title: 'Product - Clean Studio',
+    description: 'Professional product photography with clean background and perfect lighting'
   },
   {
     id: '5',
     type: 'artistic',
-    title: 'Artistic Detail',
-    description: 'Dramatic close-up with artistic lighting and shallow depth of field'
+    title: 'Product - Artistic Detail',
+    description: 'Dramatic close-up product shot with artistic lighting and composition'
+  }
+]
+
+const FASHION_GENERATION_STEPS: Omit<GenerationStep, 'status' | 'imageUrl' | 'prompt'>[] = [
+  {
+    id: '1',
+    type: 'classic',
+    title: 'Model - Fashion Portrait',
+    description: 'Professional model wearing/using the fashion item with elegant styling'
+  },
+  {
+    id: '2',
+    type: 'profile',
+    title: 'Model - Style Showcase',
+    description: 'Dynamic pose showcasing the fashion item in action or detailed view'
+  },
+  {
+    id: '3',
+    type: 'lifestyle',
+    title: 'Model - Lifestyle Scene',
+    description: 'Natural lifestyle shot with model in real-world setting using the fashion item'
+  },
+  {
+    id: '4',
+    type: 'festive',
+    title: 'Product - Cinematic Studio',
+    description: 'High-end cinematic product photography with dramatic lighting and composition'
+  },
+  {
+    id: '5',
+    type: 'artistic',
+    title: 'Product - Editorial Style',
+    description: 'Editorial fashion photography with artistic styling and premium presentation'
   }
 ]
 
@@ -66,66 +102,381 @@ export default function GenerationResults({
   uploadedImage,
   userPrompt,
   selectedModel,
+  jewelryType,
+  dimensions,
+  modelImage,
   isGenerating,
   onGenerationComplete,
   onBack
 }: GenerationResultsProps) {
+  // Get appropriate generation steps based on category
+  const isJewelry = category.id === 'jewelry'
+  const generationSteps = isJewelry ? JEWELRY_GENERATION_STEPS : FASHION_GENERATION_STEPS
+
   const [steps, setSteps] = useState<GenerationStep[]>(
-    GENERATION_STEPS.map(step => ({ ...step, status: 'pending' }))
+    generationSteps.map(step => ({ ...step, status: 'pending' }))
   )
   const [currentProcessingStep, setCurrentProcessingStep] = useState(0)
   const [allComplete, setAllComplete] = useState(false)
 
-  // Generate backend prompts for each shot type
+  // Advanced prompt engineering for jewelry and fashion photography
   const generateBackendPrompt = (userPrompt: string, type: GenerationStep['type']): string => {
-    const baseInstruction = `Using the provided image of the jewelry, generate a photorealistic image of a beautiful Indian model wearing this exact piece of jewelry. The jewelry in the generated image must be an identical, high-fidelity match to the one in the reference photo, capturing all its specific details, materials, and colors (${userPrompt}).`
 
-    const shotInstructions = {
-      classic: `
-Model & Pose: Model with an elegant, neutral expression, looking directly at the camera. Her hair is tied back in a neat bun to fully expose the jewelry.
-Camera Angle & Shot: A clean, close-up shot focusing on the face and jewelry.
-Lighting: Bright, even, professional studio lighting that minimizes shadows and highlights the jewelry's details.
-Background & Setting: A solid, neutral-colored studio background (light grey or beige).
-Overall Mood: Clean, professional, e-commerce.`,
-
-      profile: `
-Model & Pose: Model in a three-quarter or full profile view, looking away from the camera to showcase the jewelry's side profile and how it hangs. A gentle, serene expression.
-Camera Angle & Shot: Medium close-up, focusing on the side of the head, jawline, and neck.
-Lighting: Soft, diffused side-lighting to create gentle depth and dimension on the face and jewelry.
-Background & Setting: A soft, out-of-focus background with a hint of texture.
-Overall Mood: Elegant, graceful, detailed.`,
-
-      festive: `
-Model & Pose: Model smiling warmly, as if at a wedding or festival. She is dressed in a traditional, richly colored silk saree (e.g., deep green or maroon) that complements the jewelry.
-Camera Angle & Shot: A medium shot that includes her shoulders and neckline, showing how the jewelry pairs with an outfit.
-Lighting: Warm, golden hour lighting, mimicking the ambiance of an evening celebration.
-Background & Setting: A beautifully decorated, out-of-focus background with bokeh lights or floral decorations.
-Overall Mood: Festive, celebratory, traditional, vibrant.`,
-
-      lifestyle: `
-Model & Pose: Model in a natural, candid pose, perhaps laughing or tucking a strand of hair behind her ear. The pose should create a sense of movement and authenticity.
-Camera Angle & Shot: A slightly angled, lifestyle shot that feels spontaneous.
-Lighting: Bright, natural daylight, as if taken outdoors in a beautiful garden or on an elegant balcony.
-Background & Setting: A soft-focus natural environment with greenery.
-Overall Mood: Natural, authentic, effortless, beautiful.`,
-
-      artistic: `
-Model & Pose: A dramatic pose where the model's hand is gently touching her face or neck near the jewelry, drawing attention to it.
-Camera Angle & Shot: An artistic macro shot, extremely close-up on the jewelry itself, with parts of the model's face and skin providing context. Shallow depth of field.
-Lighting: Dramatic, high-contrast lighting that makes the stones and metals glint and sparkle.
-Background & Setting: A dark, minimalist background to make the jewelry pop.
-Overall Mood: Luxurious, artistic, dramatic, high-fashion.`
+    // Get item type specific details with wearability classification
+    const jewelryTypeDetails = {
+      earrings: 'earrings that frame the face beautifully',
+      necklaces: 'necklace that elegantly adorns the neckline',
+      bracelets: 'bracelet that gracefully wraps around the wrist',
+      rings: 'ring that elegantly adorns the finger',
+      pendants: 'pendant that hangs beautifully from a chain',
+      sets: 'jewelry set that creates a cohesive, elegant look'
     }
 
-    return `${baseInstruction}
+    // Fashion items with wearability classification
+    const fashionTypeDetails = {
+      handbags: {
+        description: 'handbag or purse',
+        wearable: false,
+        carryable: true,
+        positioning: 'carried elegantly by the model, positioned to showcase design and functionality'
+      },
+      shoes: {
+        description: 'footwear',
+        wearable: true,
+        carryable: false,
+        positioning: 'worn by the model, showcasing fit, style, and comfort in natural poses'
+      },
+      clothing: {
+        description: 'clothing item',
+        wearable: true,
+        carryable: false,
+        positioning: 'worn by the model, fitted perfectly to showcase design, fabric, and silhouette'
+      },
+      accessories: {
+        description: 'fashion accessory',
+        wearable: true,
+        carryable: false,
+        positioning: 'worn by the model as a stylish accent piece, enhancing the overall look'
+      },
+      activewear: {
+        description: 'activewear',
+        wearable: true,
+        carryable: false,
+        positioning: 'worn by the model in active or athletic poses, demonstrating functionality and style'
+      },
+      outerwear: {
+        description: 'outerwear piece',
+        wearable: true,
+        carryable: false,
+        positioning: 'worn by the model, showcasing fit, style, and layering capabilities'
+      }
+    }
 
-The composition for this shot should be:
-${shotInstructions[type]}
+    // Get item details and wearability info
+    const jewelryDetail = jewelryTypeDetails[jewelryType as keyof typeof jewelryTypeDetails] || 'jewelry piece'
+    const fashionDetail = fashionTypeDetails[jewelryType as keyof typeof fashionTypeDetails]
 
-Critical Rules:
-- The jewelry must be the absolute hero of the image.
-- The final output must be hyper-realistic, suitable for a high-end e-commerce catalog.
-- Avoid any digital or AI-generated artifacts.`
+    const itemDetail = isJewelry ? jewelryDetail : (fashionDetail?.description || 'fashion item')
+    const isWearable = isJewelry ? true : (fashionDetail?.wearable || false)
+    const isCarryable = isJewelry ? false : (fashionDetail?.carryable || false)
+    const itemPositioning = isJewelry ? 'worn elegantly by the model' : (fashionDetail?.positioning || 'styled with the model')
+
+    const dimensionInfo = dimensions ? ` (${dimensions})` : ''
+
+    // Enhanced model reference instructions for fashion
+    const modelReference = modelImage ? (
+      isJewelry
+        ? '\n- Use the provided model reference image as inspiration for model appearance and styling'
+        : `\n- CRITICAL: Use the provided model reference image as the EXACT base for the model's appearance, facial features, hair, and overall styling
+- The model in the generated image must look identical to the reference model provided
+- Maintain consistent facial features, hair color, hair style, skin tone, and body type
+- Ensure the model's pose and expression complement the reference while showcasing the ${itemDetail}`
+    ) : ''
+
+    // Base quality and technical specifications
+    const technicalSpecs = `
+TECHNICAL SPECIFICATIONS:
+- Ultra-high resolution, professional photography quality
+- Perfect focus and sharpness on ${isJewelry ? 'jewelry' : 'fashion item'} details
+- Accurate color reproduction and material representation
+- Professional lighting setup with no harsh shadows
+- Clean, artifact-free image generation${modelReference}`
+
+    // Model shots (3 shots with models) - Enhanced for fashion
+    const modelShots = {
+      classic: `
+SHOT TYPE: ${isJewelry ? 'Professional Model Portrait - Classic Elegance' : 'High-Fashion Model Photography - Editorial Portrait'}
+SUBJECT: Beautiful Indian model with the ${itemDetail}${dimensionInfo} ${itemPositioning}
+${isJewelry ? 'JEWELRY' : 'FASHION ITEM'} FOCUS: The ${userPrompt} must be IDENTICAL to the reference image in every detail - exact colors, materials, design elements, and proportions${modelReference}
+
+${isJewelry ? `MODEL SPECIFICATIONS:
+- Age: 22-28 years old, professional model appearance
+- Ethnicity: Indian/South Asian features${modelImage ? ' (match the reference model provided)' : ''}
+- Expression: Confident, elegant, slight smile
+- Hair: Styled to complement and not obstruct the jewelry${modelImage ? ' (similar to reference style)' : ''}
+- Makeup: Professional, enhances natural beauty without overpowering${modelImage ? ' (consistent with reference)' : ''}
+- Pose: Elegant, confident posture with jewelry prominently displayed${modelImage ? ' (inspired by reference pose)' : ''}
+
+JEWELRY STYLING:
+- Display: Jewelry positioned to catch light and show craftsmanship
+- Coordination: Minimal additional jewelry to avoid distraction
+- Focus: Primary attention on the featured jewelry piece` : `FASHION MODEL SPECIFICATIONS:
+- Age: 22-28 years old, professional fashion model appearance
+- Ethnicity: Indian/South Asian features${modelImage ? ' (MUST match the reference model exactly)' : ''}
+- Expression: ${isWearable ? 'Confident, fashion-forward, editorial expression' : 'Elegant, sophisticated, showcasing the accessory naturally'}
+- Hair: ${modelImage ? 'EXACT same hairstyle, color, and length as reference model' : 'Professional fashion styling that complements the item'}
+- Makeup: ${modelImage ? 'Identical makeup style and intensity as reference model' : 'High-fashion editorial makeup enhancing natural features'}
+- Body Type: ${modelImage ? 'Same body proportions and build as reference model' : 'Professional fashion model proportions'}
+- Pose: ${isWearable ? 'Fashion-forward pose showcasing how the item fits and moves' : 'Elegant pose highlighting the accessory as a statement piece'}${modelImage ? ' (maintaining reference model\'s signature poses and expressions)' : ''}
+
+FASHION STYLING & WARDROBE:
+- Primary Item: The ${itemDetail} is the HERO piece - all styling supports this
+- Outfit Coordination: ${isWearable ? 'Complementary clothing that enhances but doesn\'t compete with the main item' : 'Neutral, elegant outfit that makes the accessory the focal point'}
+- Color Palette: ${isWearable ? 'Colors that harmonize with the item while maintaining fashion-forward appeal' : 'Sophisticated, neutral tones that highlight the accessory'}
+- Styling Approach: ${isCarryable ? 'Model carrying/holding the item naturally and confidently' : 'Item integrated seamlessly into the overall look'}
+- Fashion Context: High-end editorial styling suitable for luxury fashion magazines
+- Fit & Proportion: ${isWearable ? 'Perfect fit showcasing the item\'s design and functionality' : 'Proportions that emphasize the accessory\'s impact on the overall look'}`}
+
+${isJewelry ? `CAMERA & COMPOSITION:
+- Shot type: Portrait/headshot focusing on jewelry area
+- Angle: Straight-on or slight 3/4 angle for optimal jewelry visibility
+- Framing: Close to medium shot highlighting the jewelry
+- Depth of field: Sharp focus on jewelry and model, subtle background blur
+
+LIGHTING SETUP:
+- Key light: Soft, diffused professional studio lighting
+- Fill light: Gentle fill to eliminate harsh shadows
+- Jewelry lighting: Specialized lighting to make metals shine and gems sparkle
+- Color temperature: Neutral white (5500K) for accurate color reproduction` : `FASHION PHOTOGRAPHY SETUP:
+- Shot type: ${isWearable ? 'Full body or 3/4 shot showcasing the item in context' : 'Portrait to medium shot highlighting the accessory'}
+- Angle: ${isWearable ? 'Dynamic angles that show fit, movement, and style' : 'Optimal angle to showcase the accessory\'s design and impact'}
+- Framing: ${isWearable ? 'Composition that shows the item\'s relationship to the body and overall outfit' : 'Framing that makes the accessory the clear focal point'}
+- Depth of field: Sharp focus on the fashion item and model, professional background blur
+
+FASHION LIGHTING:
+- Key light: High-end fashion photography lighting with dramatic direction
+- Fill light: Controlled fill maintaining fashion editorial aesthetic
+- Accent lighting: Specialized lighting to enhance textures and materials
+- Color temperature: Fashion photography standard (5500K-6500K) for editorial quality`}
+
+${isJewelry ? `BACKGROUND & SETTING:
+- Clean, professional studio background
+- Color: Neutral tones (soft white, light gray, or cream)
+- Texture: Smooth, non-distracting surface
+- Style: High-end jewelry photography aesthetic` : `FASHION BACKGROUND & SETTING:
+- Background: ${isWearable ? 'Professional fashion studio or elegant lifestyle setting' : 'Clean, sophisticated backdrop that enhances the accessory'}
+- Color: ${isWearable ? 'Neutral to complementary tones that enhance the fashion item' : 'Sophisticated neutrals that make the accessory pop'}
+- Texture: ${isWearable ? 'Smooth studio or textured lifestyle background as appropriate' : 'Clean, professional surface highlighting the accessory'}
+- Style: High-end fashion editorial photography aesthetic`}
+
+STYLING & WARDROBE:
+- Outfit: Elegant, complementary to jewelry without competing
+- Colors: Neutral or colors that enhance the jewelry
+- Style: Sophisticated, timeless fashion
+- Accessories: Minimal, jewelry is the hero piece`,
+
+      profile: `
+SHOT TYPE: ${isJewelry ? 'Professional Model Portrait - Profile Showcase' : 'High-Fashion Profile Photography - Style Detail'}
+SUBJECT: Beautiful Indian model in profile view with the ${itemDetail}${dimensionInfo} ${itemPositioning}
+${isJewelry ? 'JEWELRY' : 'FASHION ITEM'} FOCUS: The ${userPrompt} must be IDENTICAL to the reference image, showcasing side profile and design details${modelReference}
+
+${isJewelry ? `MODEL SPECIFICATIONS:
+- Age: 22-28 years old, professional model appearance
+- Ethnicity: Indian/South Asian features${modelImage ? ' (match the reference model provided)' : ''}
+- Expression: Serene, contemplative, looking away from camera
+- Hair: Styled away from jewelry side to show full profile${modelImage ? ' (similar to reference style)' : ''}
+- Makeup: Professional, emphasizing profile features${modelImage ? ' (consistent with reference)' : ''}
+- Pose: Elegant profile pose showcasing jewelry silhouette${modelImage ? ' (inspired by reference pose)' : ''}` : `FASHION MODEL SPECIFICATIONS:
+- Age: 22-28 years old, professional fashion model appearance
+- Ethnicity: Indian/South Asian features${modelImage ? ' (MUST match the reference model exactly)' : ''}
+- Expression: ${isWearable ? 'Confident, editorial profile expression' : 'Sophisticated, serene expression highlighting the accessory'}
+- Hair: ${modelImage ? 'EXACT same hairstyle and color as reference model' : `Styled to ${isWearable ? 'complement the fashion item' : 'showcase the accessory clearly'}`}
+- Makeup: ${modelImage ? 'Identical makeup style as reference model' : 'High-fashion profile makeup emphasizing bone structure'}
+- Body Type: ${modelImage ? 'Same proportions as reference model' : 'Professional fashion model proportions'}
+- Pose: ${isWearable ? 'Dynamic profile pose showing the item\'s fit and silhouette' : 'Elegant profile highlighting the accessory\'s impact'}${modelImage ? ' (maintaining reference model\'s signature style)' : ''}
+
+FASHION STYLING & WARDROBE:
+- Primary Focus: The ${itemDetail} is the HERO piece in profile view
+- Outfit Coordination: ${isWearable ? 'Complementary styling that shows the item\'s profile and fit' : 'Neutral outfit that makes the accessory the clear focal point'}
+- Profile Emphasis: ${isWearable ? 'Styling that showcases the item\'s silhouette and design lines' : 'Positioning that highlights the accessory\'s profile and impact'}
+- Fashion Context: High-end editorial profile photography suitable for luxury magazines`}
+
+CAMERA & COMPOSITION:
+- Shot type: Profile portrait emphasizing jewelry outline
+- Angle: Perfect 90-degree profile or slight 3/4 turn
+- Framing: Medium close-up capturing jewelry details
+- Depth of field: Sharp jewelry focus with artistic background blur
+
+LIGHTING SETUP:
+- Key light: Side lighting to create dimension and depth
+- Rim light: Subtle backlighting to separate subject from background
+- Jewelry accent: Specialized lighting to highlight jewelry contours
+- Shadow play: Gentle shadows to add artistic depth
+
+BACKGROUND & SETTING:
+- Artistic, softly blurred background
+- Color: Warm, complementary tones
+- Texture: Subtle, non-competing elements
+- Style: Fine art photography aesthetic
+
+STYLING & WARDROBE:
+- Outfit: Elegant neckline showcasing jewelry
+- Colors: Rich, sophisticated palette
+- Style: Timeless, artistic fashion
+- Hair styling: Sleek, away from jewelry side`,
+
+      lifestyle: `
+SHOT TYPE: ${isJewelry ? 'Lifestyle Model Photography - Natural Beauty' : 'Fashion Lifestyle Photography - Real-World Style'}
+SUBJECT: Beautiful Indian model in natural setting with the ${itemDetail}${dimensionInfo} ${itemPositioning}
+${isJewelry ? 'JEWELRY' : 'FASHION ITEM'} FOCUS: The ${userPrompt} must be IDENTICAL to reference, shown in authentic lifestyle context${modelReference}
+
+${isJewelry ? `MODEL SPECIFICATIONS:
+- Age: 22-28 years old, natural, approachable beauty
+- Ethnicity: Indian/South Asian features${modelImage ? ' (match the reference model provided)' : ''}
+- Expression: Genuine, warm, natural smile or laugh${modelImage ? ' (similar to reference expression)' : ''}
+- Hair: Natural, flowing style that moves with pose${modelImage ? ' (similar to reference style)' : ''}
+- Makeup: Natural, glowing skin with subtle enhancement${modelImage ? ' (consistent with reference)' : ''}
+- Pose: Candid, authentic movement showcasing jewelry naturally${modelImage ? ' (inspired by reference pose)' : ''}` : `FASHION LIFESTYLE MODEL SPECIFICATIONS:
+- Age: 22-28 years old, natural fashion model beauty
+- Ethnicity: Indian/South Asian features${modelImage ? ' (MUST match the reference model exactly)' : ''}
+- Expression: ${isWearable ? 'Genuine, confident, lifestyle-appropriate expression' : 'Natural, warm expression highlighting the accessory'}
+- Hair: ${modelImage ? 'EXACT same hairstyle and color as reference model' : `Natural, lifestyle-appropriate styling that ${isWearable ? 'complements the fashion item' : 'showcases the accessory'}`}
+- Makeup: ${modelImage ? 'Identical natural makeup as reference model' : 'Natural, glowing lifestyle makeup'}
+- Body Type: ${modelImage ? 'Same proportions as reference model' : 'Natural, healthy fashion model proportions'}
+- Pose: ${isWearable ? 'Authentic lifestyle poses showing the item in real-world use' : 'Natural, candid poses highlighting the accessory'}${modelImage ? ' (maintaining reference model\'s natural style)' : ''}
+
+FASHION LIFESTYLE STYLING:
+- Primary Focus: The ${itemDetail} integrated naturally into lifestyle context
+- Outfit Coordination: ${isWearable ? 'Real-world styling that shows how the item fits into daily life' : 'Natural, lifestyle outfit that makes the accessory shine'}
+- Lifestyle Context: ${isWearable ? 'Authentic scenarios where the item would naturally be worn' : 'Natural settings where the accessory enhances the lifestyle'}
+- Fashion Approach: Aspirational yet authentic lifestyle fashion photography`}
+
+CAMERA & COMPOSITION:
+- Shot type: Lifestyle portrait with environmental context
+- Angle: Natural, slightly candid perspective
+- Framing: Medium shot including some environment
+- Depth of field: Sharp subject with beautifully blurred background
+
+LIGHTING SETUP:
+- Natural lighting: Golden hour or soft daylight
+- Direction: Flattering natural light on face and jewelry
+- Quality: Soft, diffused light creating warm glow
+- Color: Warm, natural color temperature
+
+BACKGROUND & SETTING:
+- Natural environment: Garden, terrace, or elegant interior
+- Elements: Soft greenery, architectural details, or natural textures
+- Mood: Relaxed, luxurious lifestyle setting
+- Style: Aspirational yet approachable
+
+STYLING & WARDROBE:
+- Outfit: Casual elegance, lifestyle appropriate
+- Colors: Natural, earth tones or soft pastels
+- Style: Effortless sophistication
+- Overall look: Authentic, lived-in luxury`
+    }
+
+    // Product shots (2 shots without models)
+    const productShots = {
+      festive: `
+SHOT TYPE: ${isJewelry ? 'Professional Product Photography - Clean Studio' : 'Cinematic Product Photography - Studio'}
+SUBJECT: The ${itemDetail}${dimensionInfo} as hero product
+${isJewelry ? 'JEWELRY' : 'FASHION ITEM'} FOCUS: The ${userPrompt} must be identical to reference image in every detail
+
+${isJewelry ? `
+PRODUCT PRESENTATION:
+- Display: Jewelry elegantly positioned on professional display
+- Orientation: Optimal angle showing all key design elements
+- Positioning: Stable, secure placement highlighting craftsmanship
+- Scale: Appropriate size showing intricate details clearly
+
+LIGHTING SETUP:
+- Key light: Professional studio lighting eliminating shadows
+- Fill lights: Multiple soft lights for even illumination
+- Accent lights: Specialized jewelry lighting for sparkle and shine
+- Background light: Separate lighting for clean background
+
+TECHNICAL REQUIREMENTS:
+- No shadows or reflections on background
+- Perfect color accuracy for metals and gems
+- Sharp detail in all jewelry elements
+- Professional retouching quality` : `
+CINEMATIC PRESENTATION:
+- Display: Fashion item styled with premium presentation
+- Composition: Dynamic angles showcasing design and functionality
+- Styling: Professional fashion styling with attention to detail
+- Scale: Perfect proportions highlighting key features
+
+LIGHTING SETUP:
+- Cinematic lighting: Dramatic, high-end fashion photography lighting
+- Key light: Strong directional light creating depth and dimension
+- Fill light: Soft fill to maintain detail in shadows
+- Accent lights: Rim lighting to separate subject from background
+
+TECHNICAL REQUIREMENTS:
+- Cinematic color grading and contrast
+- Perfect material representation (fabric, leather, metal)
+- Sharp detail in textures and construction
+- High-end fashion photography quality`}`,
+
+      artistic: `
+SHOT TYPE: ${isJewelry ? 'Artistic Product Photography - Dramatic Detail' : 'Editorial Fashion Photography - Premium Style'}
+SUBJECT: The ${itemDetail}${dimensionInfo} in artistic composition
+${isJewelry ? 'JEWELRY' : 'FASHION ITEM'} FOCUS: The ${userPrompt} must be identical to reference, shown artistically
+
+${isJewelry ? `
+ARTISTIC PRESENTATION:
+- Composition: Dramatic, artistic arrangement
+- Focus: Extreme detail on jewelry craftsmanship
+- Perspective: Unique angle highlighting design elements
+- Styling: Sophisticated, gallery-worthy presentation
+
+LIGHTING SETUP:
+- Dramatic lighting: High contrast, directional lighting
+- Key light: Strong, focused light creating shadows and highlights
+- Accent lights: Specialized lighting making gems and metals gleam
+- Mood lighting: Atmospheric lighting for artistic effect
+
+ARTISTIC ELEMENTS:
+- Shadows: Dramatic shadows adding depth and mystery
+- Reflections: Controlled reflections enhancing jewelry beauty
+- Contrast: High contrast emphasizing jewelry details
+- Mood: Luxurious, sophisticated, gallery-worthy` : `
+EDITORIAL PRESENTATION:
+- Composition: High-fashion editorial styling
+- Focus: Premium fashion photography with artistic flair
+- Perspective: Dynamic angles showcasing fashion design
+- Styling: Editorial fashion magazine quality presentation
+
+LIGHTING SETUP:
+- Editorial lighting: Fashion photography lighting setup
+- Key light: Dramatic directional light for fashion effect
+- Fill light: Controlled fill maintaining fashion aesthetic
+- Background light: Atmospheric lighting for editorial mood
+
+EDITORIAL ELEMENTS:
+- Fashion styling: Professional editorial fashion styling
+- Color grading: High-end fashion magazine color treatment
+- Composition: Editorial layout and framing
+- Mood: Sophisticated, high-fashion, editorial quality`}`
+    }
+
+    // Select appropriate prompt based on shot type
+    const isModelShot = ['classic', 'profile', 'lifestyle'].includes(type)
+    const shotPrompt = isModelShot
+      ? modelShots[type as keyof typeof modelShots]
+      : productShots[type as keyof typeof productShots]
+
+    return `${technicalSpecs}
+
+${shotPrompt}
+
+CRITICAL REQUIREMENTS:
+- Jewelry must be IDENTICAL to reference image in all aspects
+- Professional photography quality suitable for luxury brand marketing
+- Perfect technical execution with no artifacts or imperfections
+- Color accuracy and material representation must be flawless
+- Final image must be suitable for high-end commercial use`
   }
 
   // Generate images one by one with proper queue management
@@ -140,6 +491,15 @@ Critical Rules:
 
         // Mark all steps as pending initially
         setSteps(prev => prev.map(step => ({ ...step, status: 'pending' })))
+
+        // Track successful generations for saving
+        const successfulGenerations: Array<{
+          id: string
+          url: string
+          prompt: string
+          type: 'classic' | 'profile' | 'festive' | 'lifestyle' | 'artistic'
+          description: string
+        }> = []
 
         // Process each image one by one
         for (let i = 0; i < steps.length; i++) {
@@ -167,20 +527,49 @@ Critical Rules:
 
             console.log(`📡 Calling ${apiEndpoint} for ${step.type}`)
 
+            // Determine if this is a model shot that needs the model reference
+            const isModelShot = ['classic', 'profile', 'lifestyle'].includes(step.type)
+
+            // Prepare API request body
+            interface APIRequestBody {
+              prompt: string
+              input_image: string
+              aspect_ratio: string
+              output_format: string
+              prompt_upsampling: boolean
+              safety_tolerance: number
+              model_reference_image?: string
+            }
+
+            const requestBody: APIRequestBody = {
+              prompt: backendPrompt,
+              input_image: uploadedImage,
+              aspect_ratio: '1:1',
+              output_format: 'png',
+              prompt_upsampling: true,
+              safety_tolerance: 2
+            }
+
+            // Add model reference image for model shots if available
+            if (isModelShot && modelImage) {
+              requestBody.model_reference_image = modelImage
+              console.log(`📸 Including model reference image for ${step.type} shot`)
+            }
+
+            console.log(`📡 API request for ${step.type}:`, {
+              hasPrompt: !!requestBody.prompt,
+              hasInputImage: !!requestBody.input_image,
+              hasModelReference: !!requestBody.model_reference_image,
+              isModelShot
+            })
+
             // Make API call for this single image
             const response = await fetch(apiEndpoint, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
               },
-              body: JSON.stringify({
-                prompt: backendPrompt,
-                input_image: uploadedImage,
-                aspect_ratio: '1:1',
-                output_format: 'png',
-                prompt_upsampling: true,
-                safety_tolerance: 2
-              }),
+              body: JSON.stringify(requestBody),
             })
 
             if (!response.ok) {
@@ -201,6 +590,15 @@ Critical Rules:
             }
 
             console.log(`✅ Successfully generated ${step.type}`)
+
+            // Add to successful generations for saving
+            successfulGenerations.push({
+              id: step.id,
+              url: imageUrl,
+              prompt: backendPrompt,
+              type: step.type,
+              description: step.description
+            })
 
             // Mark step as complete
             if (!isCancelled) {
@@ -243,32 +641,37 @@ Critical Rules:
           setAllComplete(true)
           console.log('🎉 All images generated successfully!')
 
-          // Save to Firestore - only save successful generations
+          // Save to Firestore - use tracked successful generations
           try {
-            // Filter out failed generations - only save steps with actual image URLs
-            const successfulSteps = steps.filter(step =>
-              step.status === 'complete' && step.imageUrl && !step.imageUrl.includes('picsum.photos')
-            )
+            console.log(`💾 Saving to Firestore: ${successfulGenerations.length} successful generations`)
+            console.log('🔥 Testing Firestore connection...')
 
-            if (successfulSteps.length > 0) {
+            if (successfulGenerations.length > 0) {
               const generatedSet: Omit<GeneratedSet, 'id'> = {
                 category: category.id,
                 originalImage: uploadedImage,
                 userPrompt,
-                generatedImages: successfulSteps.map(step => ({
-                  id: step.id,
-                  url: step.imageUrl!,
-                  prompt: step.prompt || generateBackendPrompt(userPrompt, step.type),
-                  type: step.type,
-                  description: step.description
-                })),
+                itemType: jewelryType,
+                dimensions,
+                modelImage: modelImage || undefined,
+                generatedImages: successfulGenerations,
                 model: selectedModel,
                 timestamp: new Date(),
                 storedInFirebase: true
               }
 
+              console.log('📝 Saving generated set to Firestore:', {
+                category: generatedSet.category,
+                userPrompt: generatedSet.userPrompt.substring(0, 50) + '...',
+                itemType: generatedSet.itemType,
+                dimensions: generatedSet.dimensions,
+                hasModelImage: !!generatedSet.modelImage,
+                imageCount: generatedSet.generatedImages.length,
+                model: generatedSet.model
+              })
+
               const docRef = await addDoc(collection(db, 'generatedSets'), generatedSet)
-              console.log(`✅ Generated set saved to Firestore: ${docRef.id} (${successfulSteps.length}/${steps.length} images)`)
+              console.log(`✅ Generated set saved to Firestore: ${docRef.id} (${successfulGenerations.length}/${steps.length} images)`)
 
               onGenerationComplete({ ...generatedSet, id: docRef.id })
             } else {
@@ -279,6 +682,9 @@ Critical Rules:
                 category: category.id,
                 originalImage: uploadedImage,
                 userPrompt,
+                itemType: jewelryType,
+                dimensions,
+                modelImage: modelImage || undefined,
                 generatedImages: [],
                 model: selectedModel,
                 timestamp: new Date(),
@@ -287,6 +693,10 @@ Critical Rules:
             }
           } catch (error) {
             console.error('❌ Error saving to Firestore:', error)
+            console.error('❌ Error details:', {
+              message: error instanceof Error ? error.message : 'Unknown error',
+              stack: error instanceof Error ? error.stack : undefined
+            })
           }
         }
 
@@ -313,7 +723,7 @@ Critical Rules:
     return () => {
       isCancelled = true
     }
-  }, [isGenerating, category.id, uploadedImage, userPrompt, selectedModel])
+  }, [isGenerating, category.id, uploadedImage, userPrompt, selectedModel, jewelryType, dimensions, modelImage])
 
   const downloadImage = async (imageUrl: string, filename: string) => {
     try {
@@ -487,7 +897,7 @@ Critical Rules:
         <div className="flex gap-4">
           <img
             src={uploadedImage}
-            alt="Original jewelry"
+            alt={`Original ${isJewelry ? 'jewelry' : 'fashion item'}`}
             className="w-32 h-32 object-contain bg-gray-900/50 rounded-lg"
           />
           <div className="flex-1">

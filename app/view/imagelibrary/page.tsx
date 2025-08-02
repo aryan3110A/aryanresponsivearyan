@@ -26,6 +26,9 @@ export interface GeneratedSet {
   category: string
   originalImage: string
   userPrompt: string
+  itemType: string
+  dimensions: string
+  modelImage?: string // Optional model reference image
   detectedJewelryType?: string // AI will detect this
   generatedImages: {
     id: string
@@ -56,14 +59,15 @@ const CATEGORIES: Category[] = [
   {
     id: 'fashion',
     name: 'Fashion & Accessories',
-    description: 'Coming soon - Upload fashion items and accessories for professional product photography',
+    description: 'Upload fashion items and accessories for professional product photography with cinematic styling and editorial quality results',
     icon: '👗',
     examples: [
       'Handbags & Purses',
-      'Scarves & Shawls',
-      'Watches',
-      'Sunglasses',
-      'Fashion Accessories'
+      'Shoes & Footwear',
+      'Clothing & Apparel',
+      'Fashion Accessories',
+      'Activewear & Sportswear',
+      'Outerwear & Coats'
     ]
   },
   {
@@ -87,6 +91,9 @@ export default function ImageLibrary() {
   const [uploadedImage, setUploadedImage] = useState<string | null>(null)
   const [userPrompt, setUserPrompt] = useState('')
   const [selectedModel, setSelectedModel] = useState('flux-kontext-pro')
+  const [itemType, setItemType] = useState('')
+  const [dimensions, setDimensions] = useState('')
+  const [modelImage, setModelImage] = useState<string | null>(null)
   const [isGenerating, setIsGenerating] = useState(false)
   const [generatedSets, setGeneratedSets] = useState<GeneratedSet[]>([])
   const [, setCurrentGeneratedSet] = useState<GeneratedSet | null>(null)
@@ -104,13 +111,27 @@ export default function ImageLibrary() {
         const sets: GeneratedSet[] = []
         querySnapshot.forEach((doc) => {
           const data = doc.data()
-          sets.push({
+          const set = {
             id: doc.id,
             ...data,
             timestamp: data.timestamp?.toDate() || new Date()
-          } as GeneratedSet)
+          } as GeneratedSet
+
+          // Debug logging for each set
+          console.log('📄 Loaded set:', {
+            id: set.id,
+            userPrompt: set.userPrompt?.substring(0, 50) + '...',
+            category: set.category,
+            itemType: set.itemType,
+            imageCount: set.generatedImages?.length || 0,
+            hasImages: (set.generatedImages?.length || 0) > 0,
+            timestamp: set.timestamp
+          })
+
+          sets.push(set)
         })
         setGeneratedSets(sets)
+        console.log(`✅ Total sets loaded: ${sets.length}`)
       },
       (error) => {
         console.error('❌ Error loading generated sets:', error)
@@ -130,9 +151,12 @@ export default function ImageLibrary() {
     setCurrentStep('generate')
   }
 
-  const handleGenerate = async (prompt: string, model: string) => {
+  const handleGenerate = async (prompt: string, model: string, itemTypeId: string, dimensionsValue: string, modelImageUrl?: string) => {
     setUserPrompt(prompt)
     setSelectedModel(model)
+    setItemType(itemTypeId)
+    setDimensions(dimensionsValue)
+    setModelImage(modelImageUrl || null)
     setIsGenerating(true)
     setCurrentStep('results')
 
@@ -346,6 +370,9 @@ export default function ImageLibrary() {
             uploadedImage={uploadedImage!}
             userPrompt={userPrompt}
             selectedModel={selectedModel}
+            jewelryType={itemType}
+            dimensions={dimensions}
+            modelImage={modelImage}
             isGenerating={isGenerating}
             onGenerationComplete={handleGenerationComplete}
             onBack={() => setCurrentStep('generate')}
