@@ -85,6 +85,7 @@ export default function ImageToImage() {
     if (!prompt.trim()) return
 
     setIsGenerating(true)
+    setGeneratedImages([]) // Clear previous images
     
     try {
       // Use enhanced prompt with all settings
@@ -92,16 +93,16 @@ export default function ImageToImage() {
       const modelName = currentSettings?.model || selectedModel
       const modelId = modelIdMap[modelName]
       
-              console.log("🚀 Starting image-to-image generation...")
-        console.log("📝 Enhanced prompt:", finalPrompt)
-        console.log("🎯 Selected model:", modelName)
-        console.log("🆔 Model ID:", modelId)
-        console.log("📸 Uploaded image:", uploadedImage ? "Yes" : "No")
-        console.log("⚙️ Using settings:", currentSettings)
+      console.log("🚀 Starting progressive image-to-image generation...")
+      console.log("📝 Enhanced prompt:", finalPrompt)
+      console.log("🎯 Selected model:", modelName)
+      console.log("🆔 Model ID:", modelId)
+      console.log("📸 Uploaded image:", uploadedImage ? "Yes" : "No")
+      console.log("⚙️ Using settings:", currentSettings)
 
-        // Check if it's a Flux model (ID 6 for Max, ID 7 for Pro)
-        if (modelId === 6 || modelId === 7) {
-          console.log(`🎯 Using Flux Kontext ${modelId === 6 ? 'Max' : 'Pro'} (ID: ${modelId})`)
+      // Check if it's a Flux model (ID 6 for Max, ID 7 for Pro)
+      if (modelId === 6 || modelId === 7) {
+        console.log(`🎯 Using Flux Kontext ${modelId === 6 ? 'Max' : 'Pro'} (ID: ${modelId})`)
         
         if (!uploadedImage) {
           alert("Please upload an image for image-to-image generation.")
@@ -122,6 +123,7 @@ export default function ImageToImage() {
         console.log(`🎯 Using Flux aspect ratio: ${fluxAspectRatio}`)
 
         try {
+          // Use the regular generate-image endpoint
           const response = await fetch('/api/generate-image', {
             method: 'POST',
             headers: {
@@ -158,9 +160,12 @@ export default function ImageToImage() {
           } else {
             throw new Error("No image URLs received from Flux API")
           }
+          
         } catch (error) {
           console.error(`❌ Flux API failed:`, error)
-          throw error
+          alert(`Generation failed: ${error}`)
+        } finally {
+          setIsGenerating(false)
         }
       } else {
         // Handle regular models (existing logic)

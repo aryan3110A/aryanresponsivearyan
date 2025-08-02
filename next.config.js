@@ -71,6 +71,21 @@ const nextConfig = {
       },
       {
         protocol: 'https',
+        hostname: 'delivery-eu1.bfl.ai',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'delivery-eu4.bfl.ai',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'delivery-*.bfl.ai',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
         hostname: 'www.wildmindai.com',
         pathname: '/core/**',  // or '/**' if you serve assets elsewhere
       },
