@@ -353,3 +353,128 @@ export async function migrateImageToStorage(
     }
   }
 }
+
+/**
+ * Downloads a video from a URL and uploads it to Firebase Storage
+ */
+export async function downloadAndStoreVideo(
+  videoUrl: string,
+  fileName: string,
+  folder: string = 'generated-videos'
+): Promise<ImageUploadResult> {
+  try {
+    console.log('📥 Downloading video from:', videoUrl)
+
+    // Download the video with proper headers
+    const response = await fetch(videoUrl, {
+      method: 'GET',
+      headers: {
+        'Accept': 'video/*',
+        'User-Agent': 'Mozilla/5.0 (compatible; WildMind/1.0)'
+      }
+    })
+
+    if (!response.ok) {
+      throw new Error(`Failed to download video: ${response.status} ${response.statusText}`)
+    }
+
+    const blob = await response.blob()
+    console.log('✅ Video downloaded, size:', blob.size, 'bytes, type:', blob.type)
+
+    // Validate blob
+    if (blob.size === 0) {
+      throw new Error('Downloaded video is empty')
+    }
+
+    if (!blob.type.startsWith('video/')) {
+      console.warn('⚠️ Blob type is not video:', blob.type, 'but continuing...')
+    }
+
+    // Create a reference to Firebase Storage
+    const timestamp = Date.now()
+    const sanitizedFileName = fileName.replace(/[^a-zA-Z0-9.-]/g, '_')
+    const storagePath = `${folder}/${timestamp}_${sanitizedFileName}`
+
+    console.log('📤 Uploading video to Firebase Storage:', storagePath)
+    console.log('🔧 Storage config check - Project ID:', process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID)
+
+    const storageRef = ref(storage, storagePath)
+
+    // Upload with metadata
+    const metadata = {
+      contentType: blob.type || 'video/mp4',
+      customMetadata: {
+        'originalUrl': videoUrl,
+        'uploadedAt': new Date().toISOString(),
+        'source': 'minimax-api',
+        'fileType': 'video'
+      }
+    }
+
+    // Upload the blob to Firebase Storage
+    const uploadResult = await uploadBytes(storageRef, blob, metadata)
+    console.log('✅ Video upload successful:', uploadResult.metadata.fullPath)
+    console.log('📊 Upload metadata:', uploadResult.metadata)
+
+    // Get the download URL
+    const downloadURL = await getDownloadURL(uploadResult.ref)
+    console.log('🔗 Firebase Storage URL:', downloadURL)
+
+    // Validate the URL format
+    if (!downloadURL.includes('firebasestorage.googleapis.com')) {
+      console.warn('⚠️ Unexpected Firebase Storage URL format:', downloadURL)
+    }
+
+    // Test the URL accessibility
+    try {
+      const testResponse = await fetch(downloadURL, { method: 'HEAD' })
+      if (testResponse.ok) {
+        console.log('✅ Firebase Storage URL is accessible')
+      } else {
+        console.warn('⚠️ Firebase Storage URL returned status:', testResponse.status)
+      }
+    } catch (testError) {
+      console.warn('⚠️ Firebase Storage URL test failed:', testError)
+    }
+
+    return {
+      success: true,
+      url: downloadURL,
+      path: storagePath
+    }
+
+  } catch (error) {
+    console.error('❌ Error storing video:', error)
+
+    // Provide more specific error messages
+    let errorMessage = 'Unknown error occurred'
+
+    if (error instanceof Error) {
+      errorMessage = error.message
+
+      // Check for specific Firebase Storage errors
+      if (error.message.includes('storage/unauthorized')) {
+        errorMessage = 'Firebase Storage: Unauthorized access. Please check storage rules.'
+      } else if (error.message.includes('storage/unknown')) {
+        errorMessage = 'Firebase Storage: Configuration error. Please check Firebase setup.'
+      } else if (error.message.includes('storage/quota-exceeded')) {
+        errorMessage = 'Firebase Storage: Storage quota exceeded.'
+      } else if (error.message.includes('Failed to fetch')) {
+        errorMessage = 'Network error: Unable to download video from source.'
+      }
+    }
+
+    return {
+      success: false,
+      error: errorMessage
+    }
+  }
+}
+
+/**
+ * Generates a unique filename for videos
+ */
+export function generateVideoFileName(fileId: string, extension: string = 'mp4'): string {
+  const timestamp = Date.now()
+  return `video_${fileId}_${timestamp}.${extension}`
+}

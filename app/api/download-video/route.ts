@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { promises as fs } from 'fs'
-import path from 'path'
+import { downloadAndStoreVideo, generateVideoFileName } from '../../../lib/firebaseStorage'
 
 const MINIMAX_API_BASE = 'https://api.minimax.io/v1'
 const API_KEY = process.env.NEXT_PUBLIC_MINMAX_API_KEY
@@ -60,50 +59,6 @@ async function getFileDownloadUrl(fileId: string, groupId: string) {
   }
 }
 
-// Helper function to download and save video to static files
-async function downloadAndSaveVideo(downloadUrl: string, filename: string): Promise<string> {
-  try {
-    console.log('Downloading video from:', downloadUrl)
-
-    const response = await fetch(downloadUrl, {
-      method: 'GET',
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-      }
-    })
-
-    if (!response.ok) {
-      throw new Error(`Failed to download video: ${response.status} ${response.statusText}`)
-    }
-
-    const contentLength = response.headers.get('content-length')
-    console.log('Video content length:', contentLength)
-
-    const buffer = await response.arrayBuffer()
-    console.log('Downloaded buffer size:', buffer.byteLength)
-
-    if (buffer.byteLength === 0) {
-      throw new Error('Downloaded video file is empty')
-    }
-
-    // Create static/videos directory if it doesn't exist
-    const videosDir = path.join(process.cwd(), 'public', 'static', 'videos')
-    await fs.mkdir(videosDir, { recursive: true })
-
-    // Save video file
-    const filePath = path.join(videosDir, filename)
-    await fs.writeFile(filePath, Buffer.from(buffer))
-
-    console.log('Video saved to:', filePath, 'Size:', buffer.byteLength, 'bytes')
-
-    // Return the public URL
-    return `/static/videos/${filename}`
-  } catch (error) {
-    console.error('Error saving video:', error)
-    throw error
-  }
-}
-
 export async function POST(request: NextRequest) {
   try {
     if (!API_KEY) {
@@ -134,19 +89,36 @@ export async function POST(request: NextRequest) {
 
       console.log('Download URL received:', downloadUrl)
 
-      // Step 4: Download and save video to static files
-      const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, "-")
-      const filename = `video-${file_id}-${timestamp}.mp4`
-      const localVideoUrl = await downloadAndSaveVideo(downloadUrl, filename)
+      // Step 4: Download and store video to Firebase Storage
+      const fileName = generateVideoFileName(file_id)
+      console.log('📤 Storing video to Firebase Storage:', fileName)
+      
+      const storageResult = await downloadAndStoreVideo(downloadUrl, fileName, 'generated-videos')
 
-      console.log('Video saved locally:', localVideoUrl)
+      if (storageResult.success && storageResult.url) {
+        console.log('✅ Video stored in Firebase Storage:', storageResult.url)
 
-      return NextResponse.json({
-        success: true,
-        video_urls: [localVideoUrl],
-        file_id: file_id,
-        message: 'Video downloaded and saved successfully'
-      })
+        return NextResponse.json({
+          success: true,
+          video_urls: [storageResult.url],
+          file_id: file_id,
+          storage_path: storageResult.path,
+          message: 'Video downloaded and stored in Firebase Storage successfully'
+        })
+      } else {
+        console.error('❌ Failed to store video in Firebase Storage:', storageResult.error)
+        
+        // Fallback: return the original download URL if Firebase Storage fails
+        console.log('⚠️ Using original download URL as fallback')
+        return NextResponse.json({
+          success: true,
+          video_urls: [downloadUrl],
+          file_id: file_id,
+          note: 'Video stored using original URL due to Firebase Storage issues',
+          error: storageResult.error
+        })
+      }
+
     } catch (fileError) {
       console.error('File download failed:', fileError)
 
