@@ -3,10 +3,17 @@ import { NextRequest, NextResponse } from 'next/server'
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
-    const imageUrl = searchParams.get('url')
+    let imageUrl = searchParams.get('url')
     
     if (!imageUrl) {
       return NextResponse.json({ error: 'Missing image URL' }, { status: 400 })
+    }
+    
+    // Decode the URL if it's encoded
+    try {
+      imageUrl = decodeURIComponent(imageUrl)
+    } catch {
+      console.warn('Failed to decode URL, using as-is:', imageUrl)
     }
     
     // Validate that it's a Firebase Storage URL, BFL API URL, or ngrok URL

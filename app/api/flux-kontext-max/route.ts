@@ -147,23 +147,43 @@ export async function POST(request: NextRequest) {
     })
 
     // Call BFL API
-    const bflResponse = await fetch('https://api.bfl.ai/v1/flux-kontext-max', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-key': process.env.FLUX_API_KEY!,
-      },
-      body: JSON.stringify(requestBody),
-    })
-    // hello
+    let bflResponse: Response
+    try {
+      console.log('🌐 Calling BFL API endpoint: https://api.bfl.ai/v1/flux-kontext-max')
+      console.log('🔑 API Key present:', !!process.env.FLUX_API_KEY)
+      console.log('📦 Request body size:', JSON.stringify(requestBody).length, 'bytes')
+      
+      // Test if the API is reachable first
+      console.log('🔍 Testing BFL API connectivity...')
+      const testResponse = await fetch('https://api.bfl.ai/v1/health', { 
+        method: 'GET',
+        headers: { 'x-key': process.env.FLUX_API_KEY! }
+      })
+      console.log('🏥 BFL API health check status:', testResponse.status)
+      
+      bflResponse = await fetch('https://api.bfl.ai/v1/flux-kontext-max', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-key': process.env.FLUX_API_KEY!,
+        },
+        body: JSON.stringify(requestBody),
+      })
 
-    if (!bflResponse.ok) {
-      const errorData = await bflResponse.text()
-      console.error('BFL API Error:', bflResponse.status, errorData)
+      if (!bflResponse.ok) {
+        const errorData = await bflResponse.text()
+        console.error('BFL API Error:', bflResponse.status, errorData)
 
+        return NextResponse.json(
+          { error: `BFL API error: ${bflResponse.status} - ${errorData}` },
+          { status: bflResponse.status }
+        )
+      }
+    } catch (error) {
+      console.error('Flux Kontext Max API Error:', error)
       return NextResponse.json(
-        { error: `BFL API error: ${bflResponse.status} - ${errorData}` },
-        { status: bflResponse.status }
+        { error: `Flux API network error: ${error}` },
+        { status: 500 }
       )
     }
 

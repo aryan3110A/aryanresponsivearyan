@@ -71,7 +71,11 @@ export async function POST(request: Request) {
       const fluxEndpoint = modelId === 6 ? '/api/flux-kontext-max' : '/api/flux-kontext-pro'
       const modelName = modelId === 6 ? 'Flux Kontext Max' : 'Flux Kontext Pro'
       console.log(`🎯 Using ${modelName} (ID: ${modelId})`)
+<<<<<<< HEAD
       return await callFluxAPI(fluxEndpoint, modelName, prompt, width, height, num_images, input_image, aspect_ratio)
+=======
+      return await callFluxAPI(fluxEndpoint, modelName, prompt, width, height, num_images, input_image)
+>>>>>>> 2a829ce5d0e8143d74d5a10239b862c5beeddeb3
     }
 
     // For all other models, check if they exist in backend endpoints
@@ -98,6 +102,7 @@ export async function POST(request: Request) {
 }
 
 // Helper function to call Flux APIs
+<<<<<<< HEAD
 async function callFluxAPI(endpoint: string, modelName: string, prompt: string, width: number, height: number, num_images: number, input_image?: string, aspect_ratio?: string) {
   console.log(`📡 Calling ${modelName} endpoint: ${endpoint}`)
   console.log(`🖼️ Generating ${num_images} image(s)`)
@@ -177,6 +182,68 @@ async function callFluxAPI(endpoint: string, modelName: string, prompt: string, 
       } else {
         throw new Error(`Unknown Flux endpoint: ${endpoint}`)
       }
+=======
+async function callFluxAPI(endpoint: string, modelName: string, prompt: string, width: number, height: number, num_images: number, input_image?: string) {
+  console.log(`📡 Calling ${modelName} endpoint: ${endpoint}`)
+  console.log(`📸 Input image provided: ${!!input_image}`)
+  
+  try {
+    // Call Flux API directly by importing the route handlers
+    if (endpoint === '/api/flux-kontext-max') {
+      const { POST: fluxMaxHandler } = await import('../flux-kontext-max/route')
+      
+      // Create a proper NextRequest with the body
+      const requestBody = {
+        prompt,
+        aspect_ratio: `${width || 768}:${height || 768}`,
+        output_format: 'png',
+        prompt_upsampling: false,
+        safety_tolerance: 2,
+        seed: Math.floor(Math.random() * 1000000),
+        ...(input_image && { input_image })
+      }
+      
+      console.log(`📤 Sending to Flux Max:`, {
+        hasInputImage: !!input_image,
+        promptLength: prompt.length,
+        aspectRatio: requestBody.aspect_ratio
+      })
+      
+      const request = new NextRequest('http://localhost/api/flux-kontext-max', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(requestBody)
+      })
+      return await fluxMaxHandler(request)
+    } else if (endpoint === '/api/flux-kontext-pro') {
+      const { POST: fluxProHandler } = await import('../flux-kontext-pro/route')
+      
+      // Create a proper NextRequest with the body
+      const requestBody = {
+        prompt,
+        aspect_ratio: `${width || 768}:${height || 768}`,
+        output_format: 'png',
+        prompt_upsampling: false,
+        safety_tolerance: 2,
+        seed: Math.floor(Math.random() * 1000000),
+        ...(input_image && { input_image })
+      }
+      
+      console.log(`📤 Sending to Flux Pro:`, {
+        hasInputImage: !!input_image,
+        promptLength: prompt.length,
+        aspectRatio: requestBody.aspect_ratio
+      })
+      
+      const request = new NextRequest('http://localhost/api/flux-kontext-pro', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(requestBody)
+      })
+      return await fluxProHandler(request)
+    } else {
+      throw new Error(`Unknown Flux endpoint: ${endpoint}`)
+>>>>>>> 2a829ce5d0e8143d74d5a10239b862c5beeddeb3
     }
     
     // Return all generated images
@@ -190,6 +257,13 @@ async function callFluxAPI(endpoint: string, modelName: string, prompt: string, 
   } catch (error) {
     console.error(`❌ ${modelName} API error:`, error)
     console.log(`🔄 ${modelName} failed, falling back to Stable Turbo`)
+    
+    // For image-to-image, we need to handle the case where Flux API fails
+    if (input_image) {
+      console.log(`⚠️ Image-to-image requested but Flux API failed. Using Stable Turbo for text-to-image instead.`)
+      // Note: Stable Turbo doesn't support image-to-image, so we'll generate text-to-image
+    }
+    
     return await handleRegularModel(prompt, "Stable Turbo", width, height, num_images)
   }
 }
