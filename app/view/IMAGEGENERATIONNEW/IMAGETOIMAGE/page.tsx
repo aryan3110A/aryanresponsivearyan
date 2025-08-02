@@ -21,6 +21,8 @@ const modelIdMap: Record<string, number> = {
 }
 
 // Settings interface to match the text-to-image page
+
+//hello
 interface SettingsData {
   model: string;
   style: string | null;
