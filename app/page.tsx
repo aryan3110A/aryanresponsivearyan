@@ -1,5 +1,6 @@
 import React from 'react'
-import InpaintFluxAPI from './view/inpaint-fluxapi/page';
+import ImageLibrary from './view/imagelibrary/page';
+// import InpaintFluxAPI from './view/inpaint-fluxapi/page'
 // import TextToMusic from './view/musicgeneration/texttomusic/page'
 // import Main from './view/landingPage/page';
 // import InChatHistory from './view/inchatHistory/page';
@@ -12,8 +13,8 @@ const Page: React.FC = () => {
     {/* comment */}
     {/* comment */}
 
-      <InpaintFluxAPI/>
-      {/* <ImageLibrary/> */}
+      {/* <InpaintFluxAPI/> */}
+      <ImageLibrary/>
       {/* <InChatHistory/> */}
       {/* <TextToMusic /> */}
       

@@ -84,12 +84,12 @@ export default function ImageUploader({ category, onImageUpload, onBack }: Image
     try {
       setIsUploading(true)
 
-      // Convert base64 to blob and upload to Firebase Storage
+      // Convert base64 to blob and upload directly to Firebase Storage
       const response = await fetch(uploadedImage)
       const blob = await response.blob()
       const file = new File([blob], 'reference-image.jpg', { type: 'image/jpeg' })
 
-      console.log('📤 Uploading reference image to Firebase Storage...')
+      console.log('📤 Uploading reference image directly to Firebase Storage...')
       const uploadResult = await uploadToFirebaseStorage(file, 'reference-images')
 
       if (uploadResult.success && uploadResult.url) {
