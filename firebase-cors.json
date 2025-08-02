@@ -12,7 +12,17 @@
       "X-Requested-With",
       "Authorization",
       "Content-Length",
-      "Cache-Control"
+      "Cache-Control",
+      "ETag",
+      "Last-Modified",
+      "x-goog-generation",
+      "x-goog-metageneration",
+      "x-goog-stored-content-encoding",
+      "x-goog-stored-content-length",
+      "x-goog-storage-class",
+      "x-goog-hash",
+      "x-goog-updated",
+      "x-goog-resumable"
     ]
   }
-]
+] 
