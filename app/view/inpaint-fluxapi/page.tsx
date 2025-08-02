@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import Image from 'next/image'
 import { Upload, Download, Settings, RotateCcw, Brush, Eraser, Square, MousePointer, Sparkles, Zap, Maximize, X } from 'lucide-react'
 
@@ -15,6 +15,17 @@ interface InpaintSettings {
   guidance: number
   output_format: 'jpeg' | 'png'
   safety_tolerance: number
+}
+
+interface SavedState {
+  originalImage: string | null
+  maskImage: string | null
+  resultImage: string | null
+  settings: InpaintSettings
+  brushSize: number
+  selectionMode: 'brush' | 'rectangle' | 'lasso'
+  canvasData: string | null
+  timestamp: number
 }
 
 export default function InpaintFluxAPI() {
@@ -50,6 +61,10 @@ export default function InpaintFluxAPI() {
   const [showSettings, setShowSettings] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [generationStatus, setGenerationStatus] = useState<string>('')
+  
+  // Download options state
+  const [showDownloadOptions, setShowDownloadOptions] = useState(false)
+  const [pendingDownload, setPendingDownload] = useState<{ imageDataUrl: string, filename: string } | null>(null)
 
   // Settings
   const [settings, setSettings] = useState<InpaintSettings>({
@@ -64,6 +79,89 @@ export default function InpaintFluxAPI() {
     output_format: 'jpeg',
     safety_tolerance: 2
   })
+
+  // State preservation functions
+  const saveState = () => {
+    try {
+      const canvas = canvasRef.current
+      const canvasData = canvas ? canvas.toDataURL() : null
+      
+      const state: SavedState = {
+        originalImage,
+        maskImage,
+        resultImage,
+        settings,
+        brushSize,
+        selectionMode,
+        canvasData,
+        timestamp: Date.now()
+      }
+      
+      localStorage.setItem('inpaint-fluxapi-state', JSON.stringify(state))
+      console.log('✅ State saved to localStorage')
+    } catch (error) {
+      console.error('❌ Failed to save state:', error)
+    }
+  }
+
+  const loadState = () => {
+    try {
+      const savedState = localStorage.getItem('inpaint-fluxapi-state')
+      if (savedState) {
+        const state: SavedState = JSON.parse(savedState)
+        
+        // Check if state is not too old (24 hours)
+        const isRecent = Date.now() - state.timestamp < 24 * 60 * 60 * 1000
+        
+        if (isRecent) {
+          setOriginalImage(state.originalImage)
+          setMaskImage(state.maskImage)
+          setResultImage(state.resultImage)
+          setSettings(state.settings)
+          setBrushSize(state.brushSize)
+          setSelectionMode(state.selectionMode)
+          
+          // Restore canvas data
+          if (state.canvasData && canvasRef.current) {
+            const img = new window.Image()
+            img.onload = () => {
+              const canvas = canvasRef.current
+              if (canvas) {
+                const ctx = canvas.getContext('2d')
+                if (ctx) {
+                  ctx.clearRect(0, 0, canvas.width, canvas.height)
+                  ctx.drawImage(img, 0, 0)
+                }
+              }
+            }
+            img.src = state.canvasData
+          }
+          
+          console.log('✅ State restored from localStorage')
+          return true
+        } else {
+          localStorage.removeItem('inpaint-fluxapi-state')
+          console.log('🕒 Saved state is too old, cleared')
+        }
+      }
+    } catch (error) {
+      console.error('❌ Failed to load state:', error)
+      localStorage.removeItem('inpaint-fluxapi-state')
+    }
+    return false
+  }
+
+  // Auto-save state when important changes occur
+  useEffect(() => {
+    if (originalImage || maskImage || resultImage) {
+      saveState()
+    }
+  }, [originalImage, maskImage, resultImage, settings, brushSize, selectionMode])
+
+  // Load state on component mount
+  useEffect(() => {
+    loadState()
+  }, [])
 
   // Helper function to draw smooth lines
   const drawLine = (ctx: CanvasRenderingContext2D, fromX: number, fromY: number, toX: number, toY: number) => {
@@ -108,33 +206,51 @@ export default function InpaintFluxAPI() {
   // Marching ants animation
   const [marchingAntsOffset, setMarchingAntsOffset] = useState(0)
 
-  // Utility function for proper image downloads
-  const downloadImage = async (imageDataUrl: string, filename: string) => {
-    try {
-      // Convert data URL to blob for proper download
-      const response = await fetch(imageDataUrl)
-      const blob = await response.blob()
-      const url = window.URL.createObjectURL(blob)
+  // Function to show download options
+  const showDownloadOptionsModal = (imageDataUrl: string, filename: string) => {
+    setPendingDownload({ imageDataUrl, filename })
+    setShowDownloadOptions(true)
+  }
 
-      const link = document.createElement('a')
-      link.href = url
-      link.download = filename
-      link.style.display = 'none'
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
-
-      // Clean up the blob URL
-      window.URL.revokeObjectURL(url)
-
-      console.log(`✅ Downloaded: ${filename}`)
-    } catch (error) {
-      console.error('❌ Download failed:', error)
-      // Fallback to simple download
+  // Enhanced download function with options
+  const downloadImage = (imageDataUrl: string, filename: string, openInNewTab = false) => {
+    if (openInNewTab) {
+      // Save state before opening new tab
+      saveState()
+      
+      // Open image in new tab
+      const newWindow = window.open(imageDataUrl, '_blank')
+      if (newWindow) {
+        newWindow.focus()
+        console.log(`✅ Opened image in new tab: ${filename}`)
+      } else {
+        console.log(`❌ Failed to open new tab, falling back to download`)
+        // Fallback to direct download if popup is blocked
+        const link = document.createElement('a')
+        link.href = imageDataUrl
+        link.download = filename
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+      }
+    } else {
+      // Direct download
       const link = document.createElement('a')
       link.href = imageDataUrl
       link.download = filename
+      document.body.appendChild(link)
       link.click()
+      document.body.removeChild(link)
+      console.log(`✅ Downloaded: ${filename}`)
+    }
+  }
+
+  // Function to handle download choice
+  const handleDownloadChoice = (openInNewTab: boolean) => {
+    if (pendingDownload) {
+      downloadImage(pendingDownload.imageDataUrl, pendingDownload.filename, openInNewTab)
+      setShowDownloadOptions(false)
+      setPendingDownload(null)
     }
   }
 
@@ -145,6 +261,27 @@ export default function InpaintFluxAPI() {
     }, 100)
     return () => clearInterval(interval)
   }, [])
+
+  // Keyboard support for fullscreen modal
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && showFullscreen) {
+        setShowFullscreen(false)
+      }
+    }
+
+    if (showFullscreen) {
+      document.addEventListener('keydown', handleKeyDown)
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'unset'
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown)
+      document.body.style.overflow = 'unset'
+    }
+  }, [showFullscreen])
 
   // Professional selection drawing functions
   const drawMarchingAnts = (ctx: CanvasRenderingContext2D, path: Path2D) => {
@@ -158,7 +295,11 @@ export default function InpaintFluxAPI() {
   }
 
   const drawRectangleSelection = (ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number) => {
-    // Draw selection rectangle with marching ants
+    // Fill the rectangle with cyan color for inpainting
+    ctx.fillStyle = 'rgba(0, 255, 255, 0.8)'
+    ctx.fillRect(x, y, width, height)
+    
+    // Draw selection rectangle with marching ants border
     ctx.strokeStyle = '#00ffff'
     ctx.lineWidth = 2
     ctx.setLineDash([5, 5])
@@ -275,7 +416,7 @@ export default function InpaintFluxAPI() {
                 const b = paintedPixels[paintedIndex + 2]
                 const a = paintedPixels[paintedIndex + 3]
 
-                // Detect cyan painted areas
+                // Detect cyan painted areas (including rectangle selections)
                 const isCyan = a > 50 && g > 150 && b > 150 && r < 150
 
                 if (isCyan) {
@@ -876,17 +1017,14 @@ export default function InpaintFluxAPI() {
                               setIsSelecting(false)
                               setIsDrawingLasso(false)
 
-                              // Create a professional test rectangle with marching ants
+                              // Create a professional test rectangle with cyan fill
                               const centerX = canvas.width / 2
                               const centerY = canvas.height / 2
                               const rectSize = Math.min(canvas.width, canvas.height) / 3
                               const x = centerX - rectSize/2
                               const y = centerY - rectSize/2
 
-                              // Set rectangle selection
-                              setSelectionStart({ x, y })
-
-                              // Draw professional rectangle selection
+                              // Draw professional rectangle selection with cyan fill
                               drawRectangleSelection(ctx, x, y, rectSize, rectSize)
 
                               // Generate BFL-compliant mask immediately
@@ -894,6 +1032,7 @@ export default function InpaintFluxAPI() {
                               console.log('🧪 Professional test selection created:', {
                                 originalDimensions: `${originalImg.naturalWidth}x${originalImg.naturalHeight}`,
                                 selectionSize: `${rectSize}x${rectSize}`,
+                                hasCyanFill: true,
                                 hasMarchingAnts: true
                               })
                             }
@@ -947,7 +1086,7 @@ export default function InpaintFluxAPI() {
                             <Maximize className="w-4 h-4 text-white" />
                           </button>
                           <button
-                            onClick={() => downloadImage(originalImage, 'original-image.jpg')}
+                            onClick={() => showDownloadOptionsModal(originalImage, 'original-image.jpg')}
                             className="p-2 bg-black/50 hover:bg-black/70 rounded-lg transition-colors"
                             title="Download Original"
                           >
@@ -1089,10 +1228,33 @@ export default function InpaintFluxAPI() {
                               // Apply the selection
                               const ctx = canvas.getContext('2d')
                               if (ctx) {
+                                // Clear previous selections
                                 ctx.clearRect(0, 0, canvas.width, canvas.height)
-                                drawRectangleSelection(ctx, Math.min(selectionStart.x, x), Math.min(selectionStart.y, y), Math.abs(width), Math.abs(height))
+                                
+                                // Draw the final rectangle selection with cyan fill
+                                const finalX = Math.min(selectionStart.x, x)
+                                const finalY = Math.min(selectionStart.y, y)
+                                const finalWidth = Math.abs(width)
+                                const finalHeight = Math.abs(height)
+                                
+                                drawRectangleSelection(ctx, finalX, finalY, finalWidth, finalHeight)
+                                
+                                console.log('✅ Rectangle selection applied:', {
+                                  x: finalX,
+                                  y: finalY,
+                                  width: finalWidth,
+                                  height: finalHeight,
+                                  area: finalWidth * finalHeight
+                                })
                               }
                               generateMask()
+                            } else {
+                              // Selection too small, clear it
+                              const ctx = canvas.getContext('2d')
+                              if (ctx) {
+                                ctx.clearRect(0, 0, canvas.width, canvas.height)
+                              }
+                              console.log('⚠️ Rectangle selection too small, cleared')
                             }
                           }
                           setIsSelecting(false)
@@ -1385,7 +1547,7 @@ export default function InpaintFluxAPI() {
                       <Maximize className="w-4 h-4 text-white" />
                     </button>
                     <button
-                      onClick={() => downloadImage(resultImage, 'inpainted-result.jpg')}
+                      onClick={() => showDownloadOptionsModal(resultImage, 'inpainted-result.jpg')}
                       className="p-2 bg-black/50 hover:bg-black/70 rounded-lg transition-colors"
                       title="Download Result"
                     >
@@ -1531,20 +1693,19 @@ export default function InpaintFluxAPI() {
 
         {/* Fullscreen Modal */}
         {showFullscreen && fullscreenImage && (
-          <div className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <div className="relative max-w-full max-h-full">
-              <Image
+          <div className="fixed inset-0 bg-black/95 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div className="relative w-full h-full flex items-center justify-center">
+              <img
                 src={fullscreenImage}
                 alt="Fullscreen"
-                width={1920}
-                height={1080}
-                className="max-w-full max-h-full object-contain"
+                className="max-w-full max-h-full object-contain rounded-lg shadow-2xl"
+                style={{ maxWidth: '95vw', maxHeight: '95vh' }}
               />
 
               {/* Close button */}
               <button
                 onClick={() => setShowFullscreen(false)}
-                className="absolute top-4 right-4 p-3 bg-black/50 hover:bg-black/70 rounded-full transition-colors"
+                className="absolute top-4 right-4 p-3 bg-black/70 hover:bg-black/90 rounded-full transition-colors backdrop-blur-sm"
               >
                 <X className="w-6 h-6 text-white" />
               </button>
@@ -1552,13 +1713,19 @@ export default function InpaintFluxAPI() {
               {/* Download button */}
               <button
                 onClick={() => {
-                  const filename = fullscreenImage === originalImage ? 'original-image.jpg' : 'inpainted-result.jpg'
-                  downloadImage(fullscreenImage, filename)
+                  const filename = fullscreenImage === originalImage ? 'original-image.jpg' : 
+                                 fullscreenImage === resultImage ? 'inpainted-result.jpg' : 'image.jpg'
+                  showDownloadOptionsModal(fullscreenImage, filename)
                 }}
-                className="absolute top-4 left-4 p-3 bg-black/50 hover:bg-black/70 rounded-full transition-colors"
+                className="absolute top-4 left-4 p-3 bg-black/70 hover:bg-black/90 rounded-full transition-colors backdrop-blur-sm"
               >
                 <Download className="w-6 h-6 text-white" />
               </button>
+
+              {/* ESC key hint */}
+              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-white/60 text-sm">
+                Press ESC or click outside to close
+              </div>
             </div>
 
             {/* Click outside to close */}
@@ -1566,6 +1733,47 @@ export default function InpaintFluxAPI() {
               className="absolute inset-0 -z-10"
               onClick={() => setShowFullscreen(false)}
             />
+          </div>
+        )}
+
+        {/* Download Options Modal */}
+        {showDownloadOptions && pendingDownload && (
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div className="bg-gray-900 border border-gray-700 rounded-xl p-6 max-w-md w-full">
+              <div className="text-center mb-6">
+                <h3 className="text-xl font-bold text-white mb-2">Download Options</h3>
+                <p className="text-gray-400 text-sm">Choose how you&apos;d like to download the image</p>
+              </div>
+
+              <div className="space-y-4">
+                <button
+                  onClick={() => handleDownloadChoice(false)}
+                  className="w-full py-3 bg-[#6C3BFF] hover:bg-[#5A2FE8] text-white rounded-lg transition-colors font-medium"
+                >
+                  <Download className="w-4 h-4 inline mr-2" />
+                  Download Directly
+                </button>
+
+                <button
+                  onClick={() => handleDownloadChoice(true)}
+                  className="w-full py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors font-medium"
+                >
+                  <Maximize className="w-4 h-4 inline mr-2" />
+                  Open in New Tab
+                  <span className="block text-xs text-gray-400 mt-1">(State will be saved)</span>
+                </button>
+
+                <button
+                  onClick={() => {
+                    setShowDownloadOptions(false)
+                    setPendingDownload(null)
+                  }}
+                  className="w-full py-2 text-gray-400 hover:text-white transition-colors"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
           </div>
         )}
       </div>
