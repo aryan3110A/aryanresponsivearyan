@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect, useCallback } from 'react'
 import Image from 'next/image'
 import { Upload, Download, Settings, RotateCcw, Brush, Eraser, Square, MousePointer, Sparkles, Zap, Maximize, X } from 'lucide-react'
 
@@ -81,7 +81,7 @@ export default function InpaintFluxAPI() {
   })
 
   // State preservation functions
-  const saveState = () => {
+  const saveState = useCallback(() => {
     try {
       const canvas = canvasRef.current
       const canvasData = canvas ? canvas.toDataURL() : null
@@ -102,7 +102,7 @@ export default function InpaintFluxAPI() {
     } catch (error) {
       console.error('❌ Failed to save state:', error)
     }
-  }
+  }, [originalImage, maskImage, resultImage, settings, brushSize, selectionMode])
 
   const loadState = () => {
     try {
@@ -156,7 +156,7 @@ export default function InpaintFluxAPI() {
     if (originalImage || maskImage || resultImage) {
       saveState()
     }
-  }, [originalImage, maskImage, resultImage, settings, brushSize, selectionMode])
+  }, [originalImage, maskImage, resultImage, settings, brushSize, selectionMode, saveState])
 
   // Load state on component mount
   useEffect(() => {
@@ -1695,11 +1695,14 @@ export default function InpaintFluxAPI() {
         {showFullscreen && fullscreenImage && (
           <div className="fixed inset-0 bg-black/95 backdrop-blur-sm z-50 flex items-center justify-center p-4">
             <div className="relative w-full h-full flex items-center justify-center">
-              <img
+              <Image
                 src={fullscreenImage}
                 alt="Fullscreen"
+                width={1920}
+                height={1080}
                 className="max-w-full max-h-full object-contain rounded-lg shadow-2xl"
                 style={{ maxWidth: '95vw', maxHeight: '95vh' }}
+                unoptimized
               />
 
               {/* Close button */}
