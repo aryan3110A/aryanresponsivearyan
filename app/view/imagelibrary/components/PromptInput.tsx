@@ -142,7 +142,7 @@ export default function PromptInput({ category, uploadedImage, onGenerate, onBac
   const [customDimensions, setCustomDimensions] = useState('')
   const [modelImage, setModelImage] = useState<string | null>(null)
   const [isUploadingModel, setIsUploadingModel] = useState(false)
-  const [isGenerating, setIsGenerating] = useState(false)
+  const [isGenerating] = useState(false)
 
   // Get the appropriate type list based on category
   const itemTypes = category.id === 'jewelry' ? JEWELRY_TYPES : FASHION_TYPES
@@ -220,11 +220,245 @@ export default function PromptInput({ category, uploadedImage, onGenerate, onBac
 
   const handleGenerate = () => {
     if (!prompt.trim() || !selectedJewelryType) return
+    
+    onGenerate(prompt.trim(), selectedModel, selectedJewelryType.id, selectedDimensions, modelImage || undefined)
+  }
 
-    const dimensions = selectedDimensions === 'custom' ? customDimensions : selectedDimensions
+  const testPrompt = () => {
+    if (!prompt.trim() || !selectedJewelryType) {
+      alert('Please fill in the description and select jewelry type to test prompts.')
+      return
+    }
 
-    setIsGenerating(true)
-    onGenerate(prompt.trim(), selectedModel, selectedJewelryType.id, dimensions, modelImage || undefined)
+    console.log('🧪 TESTING PROMPT GENERATION')
+    console.log('='.repeat(50))
+    
+    console.log('📋 Input Parameters:')
+    console.log('- Category:', category.id)
+    console.log('- Item Type:', selectedJewelryType.id)
+    console.log('- User Prompt:', prompt.trim())
+    console.log('- Dimensions:', selectedDimensions)
+    console.log('- Model Image:', modelImage ? 'Provided' : 'Not provided')
+    console.log('- Selected Model:', selectedModel)
+
+    // Create item data for prompt generation
+    const itemData = {
+      description: prompt.trim(),
+      itemType: selectedJewelryType.id,
+      category: category.id,
+      brandAesthetic: 'luxury' as const
+    }
+
+    // Photography Style Configuration (copied from GenerationResults)
+      const MODEL_PHOTOGRAPHY_STYLES = {
+    studio_portrait: {
+      id: 'studio_portrait',
+      name: 'Studio Portrait',
+      angle: 'front-facing portrait',
+      prompt_template: `Model wearing {item} identical to reference image, natural pose, studio lighting, {description}, exact product match`
+    },
+    lifestyle_candid: {
+      id: 'lifestyle_candid',
+      name: 'Lifestyle Candid',
+      angle: 'three-quarter angle',
+      prompt_template: `Model wearing {item} identical to reference image, natural setting, {description}, lifestyle photo, exact product match`
+    },
+    artistic_profile: {
+      id: 'artistic_profile',
+      name: 'Artistic Profile',
+      angle: 'side profile',
+      prompt_template: `Model wearing {item} identical to reference image, side view, {description}, fashion photo, exact product match`
+    }
+  }
+
+    const PRODUCT_PHOTOGRAPHY_STYLES = {
+      professional_showcase: {
+        id: 'professional_showcase',
+        name: 'Professional Showcase',
+        prompt_template: `Product photography, {description}, clean background, no model`
+      },
+      creative_display: {
+        id: 'creative_display',
+        name: 'Creative Display',
+        prompt_template: `Product photo, {description}, artistic background, no model`
+      },
+      minimalist_hero: {
+        id: 'minimalist_hero',
+        name: 'Minimalist Hero',
+        prompt_template: `Product photo, {description}, simple background, no model`
+      }
+    }
+
+    const BRAND_AESTHETICS = {
+      luxury: {
+        id: 'luxury',
+        descriptor: 'luxury',
+        lighting: 'soft lighting',
+        background: 'elegant background',
+        mood: 'refined',
+        quality: 'premium'
+      },
+      casual: {
+        id: 'casual',
+        descriptor: 'casual',
+        lighting: 'natural lighting',
+        background: 'modern background',
+        mood: 'friendly',
+        quality: 'authentic'
+      }
+    }
+
+      const CATEGORY_ENHANCEMENTS = {
+    jewelry: {
+      model_addition: ', jewelry detail, close-up shot, elegant styling',
+      product_addition: ', jewelry detail, premium presentation'
+    },
+    fashion: {
+      model_addition: ', fashion styling, full body pose, natural wear',
+      product_addition: ', fabric detail, clean presentation'
+    },
+    shoes: {
+      model_addition: ', footwear styling, full body pose, natural walking stance',
+      product_addition: ', shoe detail, professional showcase'
+    },
+    accessories: {
+      model_addition: ', accessory styling, natural pose, lifestyle integration',
+      product_addition: ', accessory detail, elegant display'
+    }
+  }
+
+    const generatePrompts = (itemData: {
+      description: string
+      itemType: string
+      category: string
+      brandAesthetic: 'luxury' | 'casual'
+    }, hasModelImage = false) => {
+      const { description, itemType, brandAesthetic = 'luxury' } = itemData
+      const prompts: any[] = []
+
+      if (hasModelImage) {
+        Object.values(MODEL_PHOTOGRAPHY_STYLES).forEach(style => {
+          const prompt = style.prompt_template
+            .replace('{description}', description)
+            .replace('{item}', itemType)
+          prompts.push({
+            type: 'model',
+            style: style.id,
+            angle: style.angle,
+            prompt: `${prompt}, ${BRAND_AESTHETICS[brandAesthetic].lighting}, ${BRAND_AESTHETICS[brandAesthetic].background}, professional photo`,
+            metadata: {
+              category: 'model_photography',
+              style_name: style.name,
+              brand: brandAesthetic
+            }
+          })
+        })
+      }
+
+      Object.values(PRODUCT_PHOTOGRAPHY_STYLES).forEach(style => {
+        const prompt = style.prompt_template
+          .replace('{description}', description)
+        prompts.push({
+          type: 'product',
+          style: style.id,
+          prompt: `${prompt}, ${BRAND_AESTHETICS[brandAesthetic].lighting}, ${BRAND_AESTHETICS[brandAesthetic].background}, no human models, professional photo`,
+          metadata: {
+            category: 'product_photography',
+            style_name: style.name,
+            brand: brandAesthetic
+          }
+        })
+      })
+
+      return prompts
+    }
+
+    // Generate prompts using the new system
+    const generatedPrompts = generatePrompts(itemData, !!modelImage)
+    
+    // Add category-specific enhancements
+    const enhancedPrompts = generatedPrompts.map(promptObj => {
+      const enhancement = CATEGORY_ENHANCEMENTS[category.id as keyof typeof CATEGORY_ENHANCEMENTS]
+      if (enhancement) {
+        const addition = promptObj.type === 'model' ? enhancement.model_addition : enhancement.product_addition
+        promptObj.prompt += addition
+      }
+      return promptObj
+    })
+
+    console.log('\n🎨 Generated Prompts:')
+    console.log('='.repeat(50))
+
+    // Define the steps that would be generated
+    const steps = [
+      { id: '1', type: 'classic', title: 'Model - Classic Elegance', description: 'Professional model wearing the jewelry with elegant pose and studio lighting' },
+      { id: '2', type: 'profile', title: 'Model - Profile Showcase', description: 'Side profile view of model highlighting jewelry details and craftsmanship' },
+      { id: '3', type: 'lifestyle', title: 'Model - Lifestyle Portrait', description: 'Natural lifestyle shot with model in beautiful setting wearing the jewelry' },
+      { id: '4', type: 'festive', title: 'Product - Clean Studio', description: 'Professional product photography with clean background and perfect lighting' },
+      { id: '5', type: 'artistic', title: 'Product - Artistic Detail', description: 'Dramatic close-up product shot with artistic lighting and composition' }
+    ]
+
+    // Show each step and its corresponding prompt
+    steps.forEach((step, index) => {
+      const isModelShot = ['classic', 'profile', 'lifestyle'].includes(step.type)
+      
+      let selectedPrompt
+      if (isModelShot) {
+        const modelPrompts = enhancedPrompts.filter(p => p.type === 'model')
+        if (step.type === 'classic') selectedPrompt = modelPrompts[0]
+        else if (step.type === 'profile') selectedPrompt = modelPrompts[1]
+        else if (step.type === 'lifestyle') selectedPrompt = modelPrompts[2]
+      } else {
+        const productPrompts = enhancedPrompts.filter(p => p.type === 'product')
+        if (step.type === 'festive') selectedPrompt = productPrompts[0]
+        else if (step.type === 'artistic') selectedPrompt = productPrompts[1]
+      }
+
+      if (!selectedPrompt) {
+        selectedPrompt = enhancedPrompts[0]
+      }
+
+      // Generate the final prompt with technical specifications
+      const isJewelry = category.id === 'jewelry'
+      const dimensionInfo = selectedDimensions ? ` (${selectedDimensions})` : ''
+      
+      const modelReference = modelImage ? (
+        isJewelry
+          ? '\n- Use model reference for styling'
+          : `\n- Use model reference for styling`
+      ) : ''
+
+      const technicalSpecs = `
+TECHNICAL SPECIFICATIONS:
+- High resolution photo
+- Focus on ${isJewelry ? 'jewelry' : 'fashion item'} details
+- Accurate colors
+- Professional lighting${modelReference}`
+
+      const finalPrompt = `${technicalSpecs}
+
+${selectedPrompt.prompt}
+
+REQUIREMENTS:
+- ${isJewelry ? 'Jewelry' : 'Fashion item'} must match reference image EXACTLY
+- Product identity, colors, materials, and design must be identical to uploaded image
+- Professional photo quality
+- ${isModelShot ? 'Model wears item naturally with full body pose for shoes/bags, close-up for jewelry' : 'NO HUMAN MODEL - Product only'}
+- ${dimensionInfo ? `Dimensions: ${dimensionInfo}` : ''}
+- Style: ${selectedPrompt.metadata.style_name}
+- CRITICAL: Maintain exact product identity from reference image`
+
+      console.log(`\n📸 Step ${index + 1}: ${step.title}`)
+      console.log(`Type: ${step.type} (${isModelShot ? 'Model Shot' : 'Product Shot'})`)
+      console.log(`Style: ${selectedPrompt.metadata.style_name}`)
+      console.log(`Category Enhancement: ${CATEGORY_ENHANCEMENTS[category.id as keyof typeof CATEGORY_ENHANCEMENTS] ? 'Applied' : 'Standard'}`)
+      console.log('\n🔤 PROMPT:')
+      console.log(finalPrompt)
+      console.log('\n' + '='.repeat(50))
+    })
+
+    console.log('\n✅ Prompt testing completed! Check the console above for all 5 prompts.')
+    alert('Prompt testing completed! Check the browser console to see all 5 generated prompts.')
   }
 
   const addSuggestion = (suggestion: string) => {
@@ -466,6 +700,8 @@ export default function PromptInput({ category, uploadedImage, onGenerate, onBac
                 <Image
                   src={modelImage}
                   alt="Model reference"
+                  width={400}
+                  height={128}
                   className="w-full h-32 object-cover rounded-lg"
                 />
                 <button
@@ -544,6 +780,16 @@ export default function PromptInput({ category, uploadedImage, onGenerate, onBac
               ))}
             </div>
           </div>
+
+          {/* Test Prompt Button */}
+          <button
+            onClick={testPrompt}
+            disabled={!prompt.trim() || !selectedJewelryType}
+            className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-gray-800/50 hover:bg-gray-700/50 disabled:cursor-not-allowed text-white rounded-lg transition-all transform hover:scale-[1.02] font-medium mb-4"
+          >
+            <Wand2 className="w-5 h-5" />
+            Test Prompts
+          </button>
 
           {/* Generate Button */}
           <button

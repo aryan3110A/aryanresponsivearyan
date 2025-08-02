@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { collection, query, orderBy, onSnapshot, deleteDoc, doc, getDoc } from 'firebase/firestore'
 import { db } from '@/lib/firebase'
 import { deleteObject, ref } from 'firebase/storage'
@@ -163,10 +163,10 @@ export default function ImageLibrary() {
     // The actual generation will be handled by the GenerationResults component
   }
 
-  const handleGenerationComplete = (generatedSet: GeneratedSet) => {
+  const handleGenerationComplete = useCallback((generatedSet: GeneratedSet) => {
     setCurrentGeneratedSet(generatedSet)
     setIsGenerating(false)
-  }
+  }, [])
 
   const resetToStart = () => {
     setCurrentStep('category')
