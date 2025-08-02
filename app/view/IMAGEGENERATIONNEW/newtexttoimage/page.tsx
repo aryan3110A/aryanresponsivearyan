@@ -147,14 +147,16 @@ export default function NewText2Image() {
 
         const data = await response.json()
         console.log(`✅ Flux ${modelId === 6 ? 'Max' : 'Pro'} generation successful:`, {
-          hasImageUrl: !!data.imageUrl,
+          hasImageUrls: !!data.image_urls,
+          imageUrlsCount: data.image_urls?.length || 0,
           model: data.metadata?.model || data.model,
-          imageUrl: data.imageUrl,
+          imageUrls: data.image_urls,
           fullResponse: data
         })
         
         // Debug: Log the exact response structure
         console.log('🔍 DEBUG - Response structure:', {
+          hasImageUrls: !!data.image_urls,
           hasImageUrl: !!data.imageUrl,
           hasSuccess: !!data.success,
           hasResult: !!data.result,
@@ -162,7 +164,11 @@ export default function NewText2Image() {
           keys: Object.keys(data)
         })
         
-        if (data.imageUrl) {
+        if (data.image_urls && data.image_urls.length > 0) {
+          console.log(`🖼️ Setting generated image URLs: ${data.image_urls}`)
+          setGeneratedImages(data.image_urls)
+          setGeneratedPrompts(Array(data.image_urls.length).fill(prompt)) // Store the original input prompt
+        } else if (data.imageUrl) {
           console.log(`🖼️ Setting generated image URL: ${data.imageUrl}`)
           setGeneratedImages([data.imageUrl])
           setGeneratedPrompts([prompt]) // Store the original input prompt
