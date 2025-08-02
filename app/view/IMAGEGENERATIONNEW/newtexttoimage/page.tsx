@@ -39,7 +39,7 @@ export default function NewText2Image() {
 
   const [selectedModel, setSelectedModel] = useState("")
   const [selectedStyle, setSelectedStyle] = useState<string | null>(null)
-  const [selectedAspectRatio, setSelectedAspectRatio] = useState("1:1")
+  const [selectedAspectRatio, setSelectedAspectRatio] = useState("16:9")
   const [selectedQuality, setSelectedQuality] = useState("HD")
   const [numberOfImages, setNumberOfImages] = useState(1)
   const [selectedColor, setSelectedColor] = useState<string | null>(null)

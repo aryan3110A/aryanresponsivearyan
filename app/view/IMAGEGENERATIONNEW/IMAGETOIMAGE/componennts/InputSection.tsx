@@ -243,10 +243,16 @@ export default function InputSection({
         </div>
       )}
 
-      {/* Loading State */}
+      {/* Enhanced Loading State with Progress */}
       {isGenerating && (
-        <div className="flex items-center justify-center py-8 xs:py-12 lg:py-16">
-          <div className="animate-spin rounded-full h-8 w-8 xs:h-12 xs:w-12 lg:h-16 lg:w-16 border-b-2 border-white"></div>
+        <div className="flex flex-col items-center justify-center py-8 xs:py-12 lg:py-16">
+          <div className="animate-spin rounded-full h-8 w-8 xs:h-12 xs:w-12 lg:h-16 lg:w-16 border-b-2 border-white mb-4"></div>
+          <div className="text-white text-sm xs:text-base text-center">
+            <div>Generating with {selectedModel}</div>
+            <div className="text-gray-400 text-xs xs:text-sm mt-1">
+              {selectedAspectRatio} • {selectedQuality} • {numberOfImages} image{numberOfImages > 1 ? 's' : ''}
+            </div>
+          </div>
         </div>
       )}
 

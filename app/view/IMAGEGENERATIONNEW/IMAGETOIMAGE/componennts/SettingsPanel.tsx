@@ -21,6 +21,7 @@ interface SettingsPanelProps {
   setSelectedQuality: (quality: string) => void
   numberOfImages: number
   setNumberOfImages: (number: number) => void
+  onSave?: (settingsData: any) => void
 }
 
 export default function SettingsPanel({
@@ -36,6 +37,7 @@ export default function SettingsPanel({
   setSelectedQuality,
   numberOfImages,
   setNumberOfImages,
+  onSave,
 }: SettingsPanelProps) {
   const [isModelsOpen, setIsModelsOpen] = useState(false)
   const toggleButtonRef = useRef<HTMLButtonElement>(null)
@@ -67,6 +69,41 @@ export default function SettingsPanel({
   const [selectedFont, setSelectedFont] = useState<string>("");
 
   const [promptEnhance, setPromptEnhance] = useState("Auto");
+
+  // Function to get aspect ratios based on selected model
+  const getAspectRatiosForModel = (model: string) => {
+    // Flux models only support aspect ratios between 21:9 and 9:21
+    if (model === "Flux.1 KONTEXT MAX" || model === "Flux.1 KONTEXT PRO") {
+      return [
+        { label: "21:9", icon: "▬" },
+        { label: "16:9", icon: "▭" },
+        { label: "9:16", icon: "▬" },
+        { label: "9:21", icon: "▬" }
+      ]
+    }
+    
+    // All other models support all aspect ratios
+    return [
+      { label: "1:1", icon: "⬜" },
+      { label: "16:9", icon: "▭" },
+      { label: "9:16", icon: "▬" },
+      { label: "4:3", icon: "▭" }
+    ]
+  }
+
+  // Get current aspect ratios based on selected model
+  const currentAspectRatios = getAspectRatiosForModel(selectedModel)
+
+  // Update selected aspect ratio if current one is not supported by the model
+  const updateAspectRatioIfNeeded = (newModel: string) => {
+    const supportedRatios = getAspectRatiosForModel(newModel)
+    const isCurrentRatioSupported = supportedRatios.some(ratio => ratio.label === selectedAspectRatio)
+    
+    if (!isCurrentRatioSupported) {
+      // Default to first supported ratio
+      setSelectedAspectRatio(supportedRatios[0].label)
+    }
+  }
 
   const handleReset = () => {
     setIsModelsOpen(false);
@@ -102,18 +139,39 @@ export default function SettingsPanel({
 
   const handleModelSelect = (model: string) => {
     setSelectedModel(model)
+    updateAspectRatioIfNeeded(model)
     setIsModelsOpen(false) // Close the models panel after selection
   }
 
   const handleSave = () => {
-    // Handle save logic here
-    console.log("Settings saved:", {
+    // Create settings data object
+    const settingsData = {
       model: selectedModel,
       style: selectedStyle,
-      quality: selectedQuality,
       aspectRatio: selectedAspectRatio,
-      numberOfImages,
-    })
+      quality: selectedQuality,
+      numberOfImages: numberOfImages,
+      color: selectedColor,
+      customColor: customColor,
+      effect: selectedEffect,
+      customEffect: customEffect,
+      lightning: selectedLightning,
+      customLightning: customLightning,
+      cameraAngle: selectedCameraAngle,
+      visualIntensity: visualIntensity,
+      visualIntensityEnabled: visualIntensityEnabled,
+      socialPlatform: selectedSocialPlatform,
+      socialFormat: selectedSocialFormat,
+      contentType: selectedContentType,
+      promptEnhance: promptEnhance
+    }
+    
+    // Call the onSave callback if provided
+    if (onSave) {
+      onSave(settingsData)
+    }
+    
+    console.log("Settings saved:", settingsData)
     onClose()
   }
 
@@ -309,7 +367,11 @@ export default function SettingsPanel({
 
             {/* Aspect Ratio Section */}
             <div className="mb-6">
-              <AspectRatio onAspectRatioSelect={setSelectedAspectRatio} selectedAspectRatio={selectedAspectRatio} />
+              <AspectRatio 
+                onAspectRatioSelect={setSelectedAspectRatio} 
+                selectedAspectRatio={selectedAspectRatio}
+                ratios={currentAspectRatios}
+              />
             </div>
 
             {/* Number of Images Section */}

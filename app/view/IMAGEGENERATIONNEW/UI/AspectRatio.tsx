@@ -15,13 +15,13 @@ interface AspectRatioProps {
 
 export default function AspectRatio({ 
   onAspectRatioSelect, 
-  selectedAspectRatio = "1:1",
+  selectedAspectRatio = "16:9",
   title = "Frame Size",
   ratios = [
-    { label: "2:3", icon: "▬" },
-    { label: "1:1", icon: "⬜" },
+    { label: "21:9", icon: "▬" },
     { label: "16:9", icon: "▭" },
-    { label: "Custom", icon: "⚏" }
+    { label: "9:16", icon: "▬" },
+    { label: "9:21", icon: "▬" }
   ],
   className = ""
 }: AspectRatioProps) {

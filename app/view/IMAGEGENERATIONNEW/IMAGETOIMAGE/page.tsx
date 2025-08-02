@@ -20,6 +20,28 @@ const modelIdMap: Record<string, number> = {
   "Flux.1 KONTEXT PRO": 7,
 }
 
+// Settings interface to match the text-to-image page
+interface SettingsData {
+  model: string;
+  style: string | null;
+  aspectRatio: string;
+  quality: string;
+  numberOfImages: number;
+  color: string | null;
+  customColor: string;
+  effect: string | null;
+  customEffect: string;
+  lightning: string | null;
+  customLightning: string;
+  cameraAngle: string | null;
+  visualIntensity: number;
+  visualIntensityEnabled: boolean;
+  socialPlatform: string | null;
+  socialFormat: string | null;
+  contentType: string | null;
+  promptEnhance: string;
+}
+
 export default function ImageToImage() {
   const [prompt, setPrompt] = useState("")
   const [generatedImages, setGeneratedImages] = useState<string[]>([])
@@ -27,10 +49,35 @@ export default function ImageToImage() {
   const [isGenerating, setIsGenerating] = useState(false)
   const [selectedModel, setSelectedModel] = useState("Flux.1 KONTEXT MAX")
   const [selectedStyle, setSelectedStyle] = useState<string | null>(null)
-  const [selectedAspectRatio, setSelectedAspectRatio] = useState("1:1")
+  const [selectedAspectRatio, setSelectedAspectRatio] = useState("16:9")
   const [selectedQuality, setSelectedQuality] = useState("HD")
   const [numberOfImages, setNumberOfImages] = useState(1)
   const [uploadedImage, setUploadedImage] = useState<File | null>(null)
+  
+
+  
+  const [currentSettings, setCurrentSettings] = useState<SettingsData | null>(null)
+
+  const buildEnhancedPrompt = (basePrompt: string, settings: SettingsData) => {
+    let enhancedPrompt = basePrompt
+    if (settings?.style) enhancedPrompt += `, ${settings.style} style`
+    if (settings?.color) enhancedPrompt += `, ${settings.color} color scheme`
+    else if (settings?.customColor) enhancedPrompt += `, ${settings.customColor} color`
+    if (settings?.effect) enhancedPrompt += `, ${settings.effect} effect`
+    else if (settings?.customEffect) enhancedPrompt += `, ${settings.customEffect}`
+    if (settings?.lightning) enhancedPrompt += `, ${settings.lightning} lighting`
+    else if (settings?.customLightning) enhancedPrompt += `, ${settings.customLightning} lighting`
+    if (settings?.cameraAngle) enhancedPrompt += `, ${settings.cameraAngle} view`
+    if (settings?.visualIntensityEnabled) {
+      const level = settings.visualIntensity > 1.5 ? "high detail" : settings.visualIntensity > 1.0 ? "detailed" : "soft detail"
+      enhancedPrompt += `, ${level}`
+    }
+    if (settings?.quality === "4K") enhancedPrompt += ", ultra high resolution, 4K quality"
+    else if (settings?.quality === "HD") enhancedPrompt += ", high resolution, HD quality"
+
+    console.log("Enhanced prompt:", enhancedPrompt)
+    return enhancedPrompt
+  }
 
   const handleGenerate = async () => {
     if (!prompt.trim()) return
@@ -38,19 +85,21 @@ export default function ImageToImage() {
     setIsGenerating(true)
     
     try {
-      // Prepare the final prompt with style if selected
-      const finalPrompt = selectedStyle ? `${prompt}, ${selectedStyle} style` : prompt
-      const modelId = modelIdMap[selectedModel]
+      // Use enhanced prompt with all settings
+      const finalPrompt = currentSettings ? buildEnhancedPrompt(prompt, currentSettings) : prompt
+      const modelName = currentSettings?.model || selectedModel
+      const modelId = modelIdMap[modelName]
       
-      console.log("🚀 Starting image-to-image generation...")
-      console.log("📝 Prompt:", finalPrompt)
-      console.log("🎯 Selected model:", selectedModel)
-      console.log("🆔 Model ID:", modelId)
-      console.log("📸 Uploaded image:", uploadedImage ? "Yes" : "No")
+              console.log("🚀 Starting image-to-image generation...")
+        console.log("📝 Enhanced prompt:", finalPrompt)
+        console.log("🎯 Selected model:", modelName)
+        console.log("🆔 Model ID:", modelId)
+        console.log("📸 Uploaded image:", uploadedImage ? "Yes" : "No")
+        console.log("⚙️ Using settings:", currentSettings)
 
-      // Check if it's a Flux model (ID 6 for Max, ID 7 for Pro)
-      if (modelId === 6 || modelId === 7) {
-        console.log(`🎯 Using Flux Kontext ${modelId === 6 ? 'Max' : 'Pro'} (ID: ${modelId})`)
+        // Check if it's a Flux model (ID 6 for Max, ID 7 for Pro)
+        if (modelId === 6 || modelId === 7) {
+          console.log(`🎯 Using Flux Kontext ${modelId === 6 ? 'Max' : 'Pro'} (ID: ${modelId})`)
         
         if (!uploadedImage) {
           alert("Please upload an image for image-to-image generation.")
@@ -61,16 +110,14 @@ export default function ImageToImage() {
         // Convert uploaded image to base64
         const base64Image = await fileToBase64(uploadedImage)
         
-        const aspectRatio = selectedAspectRatio
-        const quality = selectedQuality
-        let width = 768, height = 768
-        if (aspectRatio === "16:9") {
-          width = quality === "4K" ? 1920 : 1024
-          height = quality === "4K" ? 1080 : 576
-        } else if (aspectRatio === "9:16") {
-          width = quality === "4K" ? 1080 : 576
-          height = quality === "4K" ? 1920 : 1024
-        }
+        // For Flux models, we need to use aspect ratios between 21:9 and 9:21
+        // All our aspect ratios are now Flux-compatible
+        const aspectRatio = currentSettings?.aspectRatio || selectedAspectRatio
+        const fluxAspectRatio = aspectRatio
+
+        // For Flux models, we don't need to calculate width/height
+        // The API will handle the resolution based on the aspect ratio
+        console.log(`🎯 Using Flux aspect ratio: ${fluxAspectRatio}`)
 
         try {
           const response = await fetch('/api/generate-image', {
@@ -81,8 +128,9 @@ export default function ImageToImage() {
             body: JSON.stringify({
               prompt: finalPrompt,
               modelId: modelId,
-              aspect_ratio: `${width}:${height}`,
+              aspect_ratio: fluxAspectRatio,
               input_image: base64Image,
+              num_images: numberOfImages,
               output_format: 'png',
               prompt_upsampling: false,
               safety_tolerance: 2,
@@ -98,14 +146,15 @@ export default function ImageToImage() {
 
           const data = await response.json()
           console.log(`✅ Flux ${modelId === 6 ? 'Max' : 'Pro'} generation successful:`, { 
-            hasImageUrl: !!data.imageUrl,
+            hasImageUrls: !!data.image_urls,
+            imageCount: data.image_urls?.length,
             model: data.metadata?.model 
           })
           
-          if (data.imageUrl) {
-            setGeneratedImages([data.imageUrl])
+          if (data.image_urls && data.image_urls.length > 0) {
+            setGeneratedImages(data.image_urls)
           } else {
-            throw new Error("No image URL received from Flux API")
+            throw new Error("No image URLs received from Flux API")
           }
         } catch (error) {
           console.error(`❌ Flux API failed:`, error)
@@ -192,6 +241,11 @@ export default function ImageToImage() {
     })
   }
 
+  const handleSettingsSave = (settingsData: SettingsData) => {
+    setCurrentSettings(settingsData)
+    console.log("Settings saved:", settingsData)
+  }
+
   const handleSettingsToggle = () => {
     setIsSettingsOpen(!isSettingsOpen)
   }
@@ -244,6 +298,7 @@ export default function ImageToImage() {
         setSelectedQuality={setSelectedQuality}
         numberOfImages={numberOfImages}
         setNumberOfImages={setNumberOfImages}
+        onSave={handleSettingsSave}
       />
       
     </div>

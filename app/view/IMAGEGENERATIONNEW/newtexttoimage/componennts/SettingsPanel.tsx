@@ -126,7 +126,42 @@ export default function SettingsPanel({
   const [privateMode, setPrivateMode] = useState(false);
   // Remove these duplicate states - use props instead
   // const [selectedContentType, setSelectedContentType] = useState<string | null>(null);
-  // const [promptEnhance, setPromptEnhance] = useState("Auto");
+  //   const [promptEnhance, setPromptEnhance] = useState("Auto");
+
+  // Function to get aspect ratios based on selected model
+  const getAspectRatiosForModel = (model: string) => {
+    // Flux models only support aspect ratios between 21:9 and 9:21
+    if (model === "Flux.1 KONTEXT MAX" || model === "Flux.1 KONTEXT PRO") {
+      return [
+        { label: "21:9", icon: "▬" },
+        { label: "16:9", icon: "▭" },
+        { label: "9:16", icon: "▬" },
+        { label: "9:21", icon: "▬" }
+      ]
+    }
+    
+    // All other models support all aspect ratios
+    return [
+      { label: "1:1", icon: "⬜" },
+      { label: "16:9", icon: "▭" },
+      { label: "9:16", icon: "▬" },
+      { label: "4:3", icon: "▭" }
+    ]
+  }
+
+  // Get current aspect ratios based on selected model
+  const currentAspectRatios = getAspectRatiosForModel(selectedModel)
+
+  // Update selected aspect ratio if current one is not supported by the model
+  const updateAspectRatioIfNeeded = (newModel: string) => {
+    const supportedRatios = getAspectRatiosForModel(newModel)
+    const isCurrentRatioSupported = supportedRatios.some(ratio => ratio.label === selectedAspectRatio)
+    
+    if (!isCurrentRatioSupported) {
+      // Default to first supported ratio
+      setSelectedAspectRatio(supportedRatios[0].label)
+    }
+  }
 
   const handleReset = () => {
     setIsModelsOpen(false);
@@ -276,6 +311,7 @@ export default function SettingsPanel({
                   onModelSelect={(model: string) => {
                     console.log('SettingsPanel - Received model from ModelsPresetPanel:', model)
                     setSelectedModel(model)
+                    updateAspectRatioIfNeeded(model)
                     setIsModelsOpen(false)
                   }}
                   excludeRef={toggleButtonRef}
@@ -291,6 +327,7 @@ export default function SettingsPanel({
                   onModelSelect={(model: string) => {
                     console.log('SettingsPanel - Received model from ModelsPresetPanel:', model)
                     setSelectedModel(model)
+                    updateAspectRatioIfNeeded(model)
                     setIsModelsOpen(false)
                   }}
                   excludeRef={toggleButtonRef}
@@ -388,6 +425,7 @@ export default function SettingsPanel({
                 onAspectRatioSelect={setSelectedAspectRatio}
                 selectedAspectRatio={selectedAspectRatio}
                 title="Frame Size"
+                ratios={currentAspectRatios}
               />
             </div>
 

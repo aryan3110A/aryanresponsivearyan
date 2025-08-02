@@ -72,6 +72,31 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Validate aspect ratio format for Flux API
+    if (aspect_ratio) {
+      const aspectRatioRegex = /^\d+:\d+$/
+      if (!aspectRatioRegex.test(aspect_ratio)) {
+        return NextResponse.json(
+          { error: 'Invalid aspect ratio format. Must be in format "width:height"' },
+          { status: 400 }
+        )
+      }
+      
+      const [width, height] = aspect_ratio.split(':').map(Number)
+      if (isNaN(width) || isNaN(height) || width <= 0 || height <= 0) {
+        return NextResponse.json(
+          { error: 'Invalid aspect ratio values. Width and height must be positive numbers' },
+          { status: 400 }
+        )
+      }
+      
+      // Check if aspect ratio is within Flux API limits (between 21:9 and 9:21)
+      const ratio = width / height
+      if (ratio < 9/21 || ratio > 21/9) {
+        console.warn(`⚠️ Aspect ratio ${aspect_ratio} is outside Flux API recommended range (21:9 to 9:21). Using anyway.`)
+      }
+    }
+
     // Prepare request body for BFL API
     const requestBody: {
       prompt: string
