@@ -10,11 +10,11 @@ interface FeatureItem {
 
 const brandingFeatures: FeatureItem[] = [
   { title: "Logo Generation", href: BRANDINGKIT.LOGOGENERATION, icon: "🏢" },
+  { title: "Mockups Generation", href:  BRANDINGKIT.MOCKUPEGNERATION, icon: "📱" },
+  { title: "Product with Model Poses", href:  BRANDINGKIT.PRODUCTWITHMODELPOSEEGNERATION, icon: "🧍" },
   { title: "Product Generation", href: BRANDINGKIT.PRODUCT_GENERATION, icon: "📦" },
   { title: "Add Music in Image", href:  BRANDINGKIT.ADDMUSICINIMAGEGNERATION, icon: "🎵" },
   { title: "Add Music in Video", href:  BRANDINGKIT.ADDMUSICINVIDEOGNERATION, icon: "🎶" },
-  { title: "Mockups Generation", href:  BRANDINGKIT.MOCKUPEGNERATION, icon: "📱" },
-  { title: "Product with Model Poses", href:  BRANDINGKIT.PRODUCTWITHMODELPOSEEGNERATION, icon: "🧍" },
 ]
 
 export default function BrandingKit() {
