@@ -45,6 +45,7 @@ export async function POST(request: NextRequest) {
     const {
       prompt,
       input_image,
+      model_reference_image,
       seed,
       aspect_ratio,
       output_format = 'png',
@@ -71,52 +72,43 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Validate aspect ratio format for Flux API
-    if (aspect_ratio) {
-      const aspectRatioRegex = /^\d+:\d+$/
-      if (!aspectRatioRegex.test(aspect_ratio)) {
-        return NextResponse.json(
-          { error: 'Invalid aspect ratio format. Must be in format "width:height"' },
-          { status: 400 }
-        )
-      }
-      
-      const [width, height] = aspect_ratio.split(':').map(Number)
-      if (isNaN(width) || isNaN(height) || width <= 0 || height <= 0) {
-        return NextResponse.json(
-          { error: 'Invalid aspect ratio values. Width and height must be positive numbers' },
-          { status: 400 }
-        )
-      }
-      
-      // Check if aspect ratio is within Flux API limits (between 21:9 and 9:21)
-      const ratio = width / height
-      if (ratio < 9/21 || ratio > 21/9) {
-        console.warn(`⚠️ Aspect ratio ${aspect_ratio} is outside Flux API recommended range (21:9 to 9:21). Using anyway.`)
+    // Determine which image to use as primary input based on shot type
+    let primaryInputImage = input_image
+    let enhancedPrompt = prompt
+
+    // If model reference is provided, use it for model shots
+    if (model_reference_image) {
+      // Check if this is a model shot based on prompt content
+      const isModelShot = prompt.toLowerCase().includes('model') &&
+                         (prompt.toLowerCase().includes('portrait') ||
+                          prompt.toLowerCase().includes('wearing') ||
+                          prompt.toLowerCase().includes('elegant') ||
+                          prompt.toLowerCase().includes('lifestyle'))
+
+      if (isModelShot) {
+        console.log('📸 Using model reference as primary input for model shot')
+        primaryInputImage = model_reference_image
+
+        // Enhance prompt to reference the jewelry image
+        enhancedPrompt = `${prompt}\n\nIMPORTANT: The model should be wearing jewelry identical to the reference jewelry image provided. Ensure the jewelry details, materials, colors, and design elements match exactly the jewelry shown in the reference.`
+      } else {
+        console.log('🎨 Using jewelry image as primary input for product shot')
+        // For product shots, keep jewelry image as primary
+        primaryInputImage = input_image
       }
     }
 
     // Prepare request body for BFL API
-    const requestBody: {
-      prompt: string
-      output_format: string
-      prompt_upsampling: boolean
-      safety_tolerance: number
-      input_image?: string
-      seed?: number
-      aspect_ratio?: string
-      webhook_url?: string
-      webhook_secret?: string
-    } = {
-      prompt,
+    const requestBody: any = {
+      prompt: enhancedPrompt,
       output_format,
       prompt_upsampling,
       safety_tolerance
     }
 
-    // Add optional fields
-    if (input_image) {
-      requestBody.input_image = input_image
+    // Add primary input image
+    if (primaryInputImage) {
+      requestBody.input_image = primaryInputImage
     }
 
     if (seed) {
@@ -136,8 +128,10 @@ export async function POST(request: NextRequest) {
     }
 
     console.log('🚀 Calling Flux Kontext Max API:', {
-      prompt: prompt.substring(0, 100) + '...',
+      prompt: enhancedPrompt.substring(0, 100) + '...',
       hasInputImage: !!input_image,
+      hasModelReference: !!model_reference_image,
+      usingPrimaryImage: !!primaryInputImage,
       aspectRatio: aspect_ratio,
       seed,
       promptUpsampling: prompt_upsampling,

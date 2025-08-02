@@ -87,14 +87,30 @@ export default function LibraryGrid({
       set.category.toLowerCase().includes(searchQuery.toLowerCase())
 
     // Filter out sets with only placeholder images or no images
-    const hasRealImages = set.generatedImages.length > 0 &&
-      set.generatedImages.some(img =>
-        !img.url.includes('picsum.photos') &&
-        !img.url.includes('placeholder') &&
-        img.url.trim() !== ''
+    // Be more lenient for existing projects that might have valid images
+    const hasImages = set.generatedImages.length > 0
+    const hasPlaceholderOnly = set.generatedImages.length > 0 &&
+      set.generatedImages.every(img =>
+        img.url.includes('picsum.photos') ||
+        img.url.includes('placeholder') ||
+        img.url.trim() === ''
       )
 
-    return matchesSearch && hasRealImages
+    // Show sets that have images and are not placeholder-only
+    const shouldShow = hasImages && !hasPlaceholderOnly
+
+    // Debug logging for filtering
+    if (!shouldShow) {
+      console.log('🔍 Filtering out set:', {
+        id: set.id,
+        userPrompt: set.userPrompt.substring(0, 50) + '...',
+        hasImages,
+        hasPlaceholderOnly,
+        imageUrls: set.generatedImages.map(img => img.url.substring(0, 50) + '...')
+      })
+    }
+
+    return matchesSearch && shouldShow
   })
 
   const formatDate = (timestamp: Date) => {
@@ -447,28 +463,73 @@ export default function LibraryGrid({
             </div>
 
             <div className="p-6">
-              {/* Original Reference Image */}
-              {selectedSet.originalImage && (
-                <div className="mb-8 p-4 bg-gray-700/30 rounded-lg">
-                  <h3 className="text-lg font-semibold text-white mb-4">Original Reference</h3>
-                  <div className="flex gap-4">
-                    <SafeLibraryImage
-                      src={selectedSet.originalImage}
-                      alt="Original reference"
-                      className="w-32 h-32 rounded-lg flex-shrink-0"
-                    />
-                    <div className="flex-1">
-                      <p className="text-gray-300 mb-2"><strong>User Description:</strong></p>
-                      <p className="text-gray-400 text-sm mb-3">{selectedSet.userPrompt}</p>
-                      <div className="flex items-center gap-4 text-xs text-gray-500">
-                        <span>Model: {selectedSet.model}</span>
-                        <span>•</span>
-                        <span>Generated: {formatDate(selectedSet.timestamp)}</span>
+              {/* Reference Images */}
+              <div className="mb-8 p-4 bg-gray-700/30 rounded-lg">
+                <h3 className="text-lg font-semibold text-white mb-4">Reference Images</h3>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Original Jewelry Reference */}
+                  {selectedSet.originalImage && (
+                    <div>
+                      <h4 className="text-md font-medium text-white mb-3">Jewelry Reference</h4>
+                      <div className="flex gap-4">
+                        <SafeLibraryImage
+                          src={selectedSet.originalImage}
+                          alt="Original jewelry reference"
+                          className="w-24 h-24 rounded-lg flex-shrink-0"
+                        />
+                        <div className="flex-1">
+                          <p className="text-gray-300 mb-2"><strong>Description:</strong></p>
+                          <p className="text-gray-400 text-sm mb-3">{selectedSet.userPrompt}</p>
+                        </div>
                       </div>
                     </div>
+                  )}
+
+                  {/* Model Reference */}
+                  {selectedSet.modelImage && (
+                    <div>
+                      <h4 className="text-md font-medium text-white mb-3">Model Reference</h4>
+                      <div className="flex gap-4">
+                        <SafeLibraryImage
+                          src={selectedSet.modelImage}
+                          alt="Model reference"
+                          className="w-24 h-24 rounded-lg flex-shrink-0"
+                        />
+                        <div className="flex-1">
+                          <p className="text-gray-300 mb-2"><strong>Model Style:</strong></p>
+                          <p className="text-gray-400 text-sm">Custom model reference provided</p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Project Details */}
+                <div className="mt-4 pt-4 border-t border-gray-600">
+                  {(selectedSet.itemType || selectedSet.dimensions) && (
+                    <div className="grid grid-cols-2 gap-4 mb-3">
+                      {selectedSet.itemType && (
+                        <div>
+                          <p className="text-xs text-gray-500 mb-1">Item Type:</p>
+                          <p className="text-sm text-gray-300 capitalize">{selectedSet.itemType}</p>
+                        </div>
+                      )}
+                      {selectedSet.dimensions && (
+                        <div>
+                          <p className="text-xs text-gray-500 mb-1">Dimensions:</p>
+                          <p className="text-sm text-gray-300">{selectedSet.dimensions}</p>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  <div className="flex items-center gap-4 text-xs text-gray-500">
+                    <span>Model: {selectedSet.model}</span>
+                    <span>•</span>
+                    <span>Generated: {formatDate(selectedSet.timestamp)}</span>
                   </div>
                 </div>
-              )}
+              </div>
 
               {/* Generated Images */}
               <h3 className="text-lg font-semibold text-white mb-4">Generated Images ({selectedSet.generatedImages.length})</h3>

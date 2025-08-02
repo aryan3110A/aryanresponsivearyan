@@ -1,28 +1,33 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { uploadToFirebaseStorage } from '@/lib/firebaseStorage'
-import { testFirebaseStorage } from '@/lib/firebase'
 
 export async function POST(request: NextRequest) {
   try {
-    console.log('🚀 Upload API called')
-    
+    console.log('📤 Image upload API called')
+
     // Test Firebase Storage connection first
-    const firebaseTest = await testFirebaseStorage()
-    console.log('🔥 Firebase Storage test result:', firebaseTest)
-    
-    if (!firebaseTest.success) {
-      console.error('❌ Firebase Storage connection failed:', firebaseTest.error)
-      return NextResponse.json(
-        { error: `Firebase Storage connection failed: ${firebaseTest.error}` },
-        { status: 500 }
-      )
+    try {
+      const { testFirebaseStorage } = await import('@/lib/firebase')
+      const storageTest = await testFirebaseStorage()
+      console.log('🔥 Firebase Storage test result:', storageTest)
+
+      if (!storageTest.success) {
+        console.error('❌ Firebase Storage not properly configured:', storageTest.error)
+        return NextResponse.json(
+          { error: `Firebase Storage error: ${storageTest.error}` },
+          { status: 500 }
+        )
+      }
+    } catch (storageTestError) {
+      console.error('❌ Firebase Storage test failed:', storageTestError)
     }
 
+    // Get the form data
     const formData = await request.formData()
     const file = formData.get('file') as File
 
     if (!file) {
-      console.error('❌ No file provided in request')
+      console.error('❌ No file provided in form data')
       return NextResponse.json(
         { error: 'No file provided' },
         { status: 400 }
@@ -32,72 +37,125 @@ export async function POST(request: NextRequest) {
     console.log('📁 File received:', {
       name: file.name,
       size: file.size,
-      type: file.type
+      type: file.type,
+      lastModified: file.lastModified
     })
 
     // Validate file type
     if (!file.type.startsWith('image/')) {
       console.error('❌ Invalid file type:', file.type)
       return NextResponse.json(
-        { error: 'File must be an image' },
+        { error: `File must be an image. Received: ${file.type}` },
         { status: 400 }
       )
     }
 
-    // Validate file size (max 10MB)
+    // Validate file size (10MB limit)
     if (file.size > 10 * 1024 * 1024) {
       console.error('❌ File too large:', file.size, 'bytes')
       return NextResponse.json(
-        { error: 'File size must be less than 10MB' },
+        { error: `File size must be less than 10MB. Received: ${(file.size / 1024 / 1024).toFixed(2)}MB` },
         { status: 400 }
       )
     }
 
-    console.log('📤 Starting server-side upload to Firebase Storage:', file.name, file.size, 'bytes')
+    if (file.size === 0) {
+      console.error('❌ Empty file received')
+      return NextResponse.json(
+        { error: 'File is empty' },
+        { status: 400 }
+      )
+    }
+
+    console.log('✅ File validation passed, uploading to Firebase Storage...')
 
     // Upload to Firebase Storage
-    const uploadResult = await uploadToFirebaseStorage(file, 'reference-images')
+    const uploadResult = await uploadToFirebaseStorage(file, 'model-references')
 
-    console.log('📊 Upload result:', uploadResult)
+    console.log('📤 Upload result:', {
+      success: uploadResult.success,
+      hasUrl: !!uploadResult.url,
+      hasPath: !!uploadResult.path,
+      error: uploadResult.error
+    })
 
-    if (uploadResult.success && uploadResult.url) {
-      console.log('✅ Server-side upload successful:', uploadResult.url)
-      return NextResponse.json({
-        success: true,
-        url: uploadResult.url,
-        path: uploadResult.path
-      })
-    } else {
-      console.error('❌ Server-side upload failed:', uploadResult.error)
+    if (!uploadResult.success) {
+      console.error('❌ Upload failed:', uploadResult.error)
       return NextResponse.json(
         { error: uploadResult.error || 'Upload failed' },
         { status: 500 }
       )
     }
 
-  } catch (error) {
-    console.error('❌ Server-side upload error:', error)
-    
-    // Provide more detailed error information
-    let errorMessage = 'Unknown error occurred'
-    if (error instanceof Error) {
-      errorMessage = error.message
-      
-      // Check for specific Firebase errors
-      if (error.message.includes('storage/unauthorized')) {
-        errorMessage = 'Firebase Storage: Unauthorized access. Please check storage rules.'
-      } else if (error.message.includes('storage/unknown')) {
-        errorMessage = 'Firebase Storage: Configuration error. Please check Firebase setup.'
-      } else if (error.message.includes('storage/quota-exceeded')) {
-        errorMessage = 'Firebase Storage: Storage quota exceeded.'
-      } else if (error.message.includes('storage/bucket-not-found')) {
-        errorMessage = 'Firebase Storage: Bucket not found. Please check storage bucket configuration.'
-      }
+    if (!uploadResult.url) {
+      console.error('❌ Upload succeeded but no URL returned')
+      return NextResponse.json(
+        { error: 'Upload succeeded but no download URL was generated' },
+        { status: 500 }
+      )
     }
-    
+
+    console.log('✅ Image uploaded successfully:', uploadResult.url)
+
+    return NextResponse.json({
+      success: true,
+      imageUrl: uploadResult.url,
+      path: uploadResult.path,
+      fileName: file.name,
+      fileSize: file.size
+    })
+
+  } catch (error) {
+    console.error('❌ Error in upload API:', error)
+
+    // Provide more detailed error information
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
+    const errorStack = error instanceof Error ? error.stack : undefined
+
+    console.error('❌ Error details:', {
+      message: errorMessage,
+      stack: errorStack
+    })
+
     return NextResponse.json(
-      { error: errorMessage },
+      {
+        error: 'Internal server error',
+        details: errorMessage,
+        timestamp: new Date().toISOString()
+      },
       { status: 500 }
     )
   }
-} 
+}
+
+// Test endpoint
+export async function GET() {
+  try {
+    // Test Firebase Storage connection
+    const { testFirebaseStorage } = await import('@/lib/firebase')
+    const storageTest = await testFirebaseStorage()
+
+    return NextResponse.json({
+      message: 'Image upload API is working',
+      timestamp: new Date().toISOString(),
+      maxFileSize: '10MB',
+      supportedTypes: ['image/jpeg', 'image/png', 'image/webp', 'image/gif'],
+      firebaseStorage: {
+        connected: storageTest.success,
+        bucket: storageTest.bucket,
+        error: storageTest.error
+      }
+    })
+  } catch (error) {
+    return NextResponse.json({
+      message: 'Image upload API is working',
+      timestamp: new Date().toISOString(),
+      maxFileSize: '10MB',
+      supportedTypes: ['image/jpeg', 'image/png', 'image/webp', 'image/gif'],
+      firebaseStorage: {
+        connected: false,
+        error: error instanceof Error ? error.message : 'Unknown error'
+      }
+    })
+  }
+}
