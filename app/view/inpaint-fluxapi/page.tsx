@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react'
 import Image from 'next/image'
 import { Upload, Download, Settings, RotateCcw, Brush, Eraser, Square, MousePointer, Sparkles, Zap, Maximize, X } from 'lucide-react'
+import { HoverBorderGradient } from "../Core/hover-border-gradient"
 
 interface InpaintSettings {
   use_finetune: boolean
@@ -1475,10 +1476,10 @@ export default function InpaintFluxAPI() {
             </div>
 
             {/* Generate Button */}
-            <button
-              onClick={handleGenerate}
-              disabled={!originalImage || !maskImage || !settings.prompt.trim() || isGenerating}
-              className="w-full py-4 bg-gradient-to-r from-[#6C3BFF] to-[#412399] hover:from-[#5A2FE6] hover:to-[#351F7A] disabled:opacity-50 disabled:cursor-not-allowed rounded-xl font-semibold text-white transition-all flex items-center justify-center gap-2"
+            <HoverBorderGradient
+              onClick={!originalImage || !maskImage || !settings.prompt.trim() || isGenerating ? undefined : handleGenerate}
+              backgroundColor="bg-[#006aff]"
+              className="w-full py-4 font-semibold text-white transition-all flex items-center justify-center gap-2"
             >
               {isGenerating ? (
                 <>
@@ -1491,7 +1492,7 @@ export default function InpaintFluxAPI() {
                   Generate Inpainting
                 </>
               )}
-            </button>
+            </HoverBorderGradient>
 
             {/* Mask Preview */}
             {maskImage && (

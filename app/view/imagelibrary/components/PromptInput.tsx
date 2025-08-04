@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import { Category } from '../page'
 import { ArrowLeft, Sparkles, Upload, Wand2, X } from 'lucide-react'
 import Image from 'next/image'
+import { HoverBorderGradient } from "../../Core/hover-border-gradient"
 
 interface PromptInputProps {
   category: Category
@@ -792,10 +793,10 @@ REQUIREMENTS:
           </button>
 
           {/* Generate Button */}
-          <button
-            onClick={handleGenerate}
-            disabled={!prompt.trim() || !selectedJewelryType || isGenerating}
-            className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-gradient-to-r from-[#6C3BFF] to-[#412399] hover:from-[#5A2FE6] hover:to-[#3A1F8A] disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed text-white rounded-lg transition-all transform hover:scale-[1.02] font-medium"
+          <HoverBorderGradient
+            onClick={!prompt.trim() || !selectedJewelryType || isGenerating ? undefined : handleGenerate}
+                              backgroundColor="bg-[#006aff]"
+            className={`w-full flex items-center justify-center gap-3 px-6 py-4 font-medium ${(!prompt.trim() || !selectedJewelryType || isGenerating) ? 'cursor-not-allowed' : 'cursor-pointer'}`}
           >
             {isGenerating ? (
               <>
@@ -808,7 +809,7 @@ REQUIREMENTS:
                 Generate 5 Professional Photos
               </>
             )}
-          </button>
+          </HoverBorderGradient>
 
           {(!prompt.trim() || !selectedJewelryType) && (
             <p className="text-sm text-amber-400 text-center">

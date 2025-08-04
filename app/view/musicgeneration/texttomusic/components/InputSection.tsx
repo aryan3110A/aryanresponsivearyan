@@ -5,6 +5,7 @@ import Image from "next/image"
 import { useState, useRef } from "react"
 import { AttachmentsDropdown, UploadComponent, ImageOverlay } from "../../UI"
 import { Download, Bookmark, Heart, Sparkles, Settings } from "lucide-react"
+import { HoverBorderGradient } from "../../../Core/hover-border-gradient"
 
 interface InputSectionProps {
   prompt: string
@@ -313,10 +314,10 @@ export default function InputSection({
                   <Image src="/newt2image/enhancer.png" alt="enhancer" width={24} height={24} />
                   <span className="text-white text-sm font-medium">Enhance</span>
                 </button>
-                <button
-                  onClick={onGenerate}
-                  disabled={!prompt.trim() || !lyrics.trim() || isGenerating}
-                  className="flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-[#6C3BFF] to-[#412399] hover:from-[#5A2FE6] hover:to-[#351F7A] disabled:opacity-50 disabled:cursor-not-allowed transition-all text-white rounded-xl font-semibold text-base shadow-lg"
+                <HoverBorderGradient
+                  onClick={!prompt.trim() || !lyrics.trim() || isGenerating ? undefined : onGenerate}
+                  backgroundColor="bg-[#006aff]"
+                  className="flex items-center gap-3 px-8 py-4 font-semibold text-base shadow-lg"
                 >
                   {isGenerating ? (
                     <>
@@ -329,7 +330,7 @@ export default function InputSection({
                       <span>Generate Music</span>
                     </>
                   )}
-                </button>
+                </HoverBorderGradient>
               </div>
             </div>
           </div>
@@ -462,10 +463,10 @@ export default function InputSection({
                   <Image src="/newt2image/enhancer.png" alt="enhancer" width={20} height={20} />
                   <span className="text-white text-sm font-medium">Enhance</span>
                 </button>
-                <button
-                  onClick={onGenerate}
-                  disabled={!prompt.trim() || !lyrics.trim() || isGenerating}
-                  className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#6C3BFF] to-[#412399] hover:from-[#5A2FE6] hover:to-[#351F7A] disabled:opacity-50 disabled:cursor-not-allowed transition-all text-white rounded-lg font-semibold text-sm shadow-lg flex-1"
+                <HoverBorderGradient
+                  onClick={!prompt.trim() || !lyrics.trim() || isGenerating ? undefined : onGenerate}
+                  backgroundColor="bg-[#006aff]"
+                  className="flex items-center gap-2 px-6 py-3 font-semibold text-sm shadow-lg flex-1"
                 >
                   {isGenerating ? (
                     <>
@@ -478,7 +479,7 @@ export default function InputSection({
                       <span>Generate Music</span>
                     </>
                   )}
-                </button>
+                </HoverBorderGradient>
                 <button
                   onClick={onSettingsToggle}
                   className="p-3 bg-[#1F1F1F] backdrop-blur-sm rounded-lg hover:bg-gradient-to-b from-[#6C3BFF] to-[#412399] transition-colors border border-[#8E8E8E]"

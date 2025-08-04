@@ -4,7 +4,7 @@ import Image from "next/image"
 import { useState, useRef } from "react"
 import { ImageOverlay } from "../../UI"
 import { Download, Bookmark, Heart, Sparkles } from "lucide-react"
-// import { HoverBorderGradient } from "../../../Core/hover-border-gradient"
+import { HoverBorderGradient } from "../../../Core/hover-border-gradient"
 
 interface InputSectionProps {
   prompt: string
@@ -127,13 +127,13 @@ export default function InputSection({
               <button className="p-2 hover:bg-gray-700/50 rounded-lg transition-colors border border-white/10">
                 <Image src="/newt2image/enhancer.png" alt="enhancer" width={28} height={28} />
               </button>
-              <button
-                onClick={onGenerate}
-                disabled={!prompt.trim() || isGenerating}
-                className="bg-gradient-to-b from-[#6C3BFF] to-[#412399] transition-colors text-white px-12 py-3 rounded-2xl font-medium text-base"
-              >
-                {isGenerating ? "Generating..." : "Generate"}
-              </button>
+                              <HoverBorderGradient
+                  onClick={!prompt.trim() || isGenerating ? undefined : onGenerate}
+                  backgroundColor="bg-[#006aff]"
+                  className={`px-12 py-3 font-medium text-base ${(!prompt.trim() || isGenerating) ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+                >
+                  {isGenerating ? "Generating..." : "Generate"}
+                </HoverBorderGradient>
             </div>
           </div>
         </div>
@@ -191,6 +191,7 @@ export default function InputSection({
           >
             {isGenerating ? "Generating..." : "Generate"}
           </button>
+          
 
           <button
             onClick={handleSettingsClick}
