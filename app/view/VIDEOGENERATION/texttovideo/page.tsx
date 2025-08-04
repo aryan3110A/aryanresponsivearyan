@@ -5,10 +5,10 @@ import { Header } from "../UI"
 import InputSection from "./componennts/InputSection"
 import SettingsPanel from "./componennts/SettingsPanel"
 // import BackgroundShapes from "./componennts/BackgroundShapes"
-import Image from 'next/image'
 import NavigationFull from "../../Core/NavigationFull"
 import Footer from "../../Core/Footer"
-import { CAMERA_MOVEMENTS, CameraMovement, getModelType, getApiModelName, supportsCameraMovements, getApiResolution } from "./componennts/videoModels"
+import Particles from "../../Core/Particals"
+import { CAMERA_MOVEMENTS, CameraMovement, getModelType, getApiModelName, supportsCameraMovements, supportsSubjectReference, getApiResolution } from "./componennts/videoModels"
 
 export default function NewTextToVideo() {
   const [prompt, setPrompt] = useState("")
@@ -224,9 +224,18 @@ export default function NewTextToVideo() {
   return (
     <>
     <div className="min-h-screen bg-black text-white relative overflow-hidden">
-      {/* Background Image */}
+      {/* Background Particles */}
       <div className="absolute inset-0 w-full h-full z-0">
-        <Image src="/newt2image/bg.png" alt="background" width={1920} height={1080} className="w-auto h-auto  md:-mt-48  object-contain " />
+        <Particles
+          particleColors={['#ffffff', '#ffffff']}
+          particleCount={200}
+          particleSpread={10}
+          speed={0.1}
+          particleBaseSize={100}
+          moveParticlesOnHover={true}
+          alphaParticles={false}
+          disableRotation={false}
+        />
       </div>
       <NavigationFull />
       {/* <BackgroundShapes /> */}
