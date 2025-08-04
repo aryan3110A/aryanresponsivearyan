@@ -586,7 +586,7 @@ REQUIREMENTS:
     return () => {
       isCancelled = true
     }
-  }, [isGenerating, category.id, uploadedImage, userPrompt, selectedModel, onGenerationComplete])
+  }, [isGenerating, category.id, uploadedImage, userPrompt, selectedModel, onGenerationComplete, dimensions, generateBackendPrompt, jewelryType, modelImage, steps])
 
   const downloadImage = async (imageUrl: string, filename: string) => {
     try {

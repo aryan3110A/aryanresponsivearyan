@@ -5,7 +5,6 @@ import { Header } from "../UI"
 import InputSection from "./componennts/InputSection"
 import SettingsPanel from "./componennts/SettingsPanel"
 // import BackgroundShapes from "./componennts/BackgroundShapes"
-import Image from 'next/image'
 import NavigationFull from "../../Core/NavigationFull"
 import Footer from "../../Core/Footer"
 import Particles from "../../Core/Particals"

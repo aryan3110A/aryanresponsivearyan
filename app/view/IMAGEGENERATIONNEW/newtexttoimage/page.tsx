@@ -4,7 +4,6 @@ import { useState } from "react"
 import { Header } from "../UI"
 import InputSection from "./componennts/InputSection"
 import SettingsPanel from "./componennts/SettingsPanel"
-import Image from 'next/image'
 import NavigationFull from "../../Core/NavigationFull"
 import Footer from "../../Core/Footer"
 import Particles from "../../Core/Particals"
