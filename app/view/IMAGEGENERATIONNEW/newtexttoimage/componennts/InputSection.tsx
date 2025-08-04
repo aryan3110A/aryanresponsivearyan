@@ -241,7 +241,8 @@ export default function InputSection({
             <div className="relative bg-transparent backdrop-blur-sm border border-gray-700/30 rounded-xl p-6 lg:p-8 min-h-[400px] overflow-hidden">
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 lg:gap-6">
                 {generatedImages.map((image, index) => (
-                  <div
+                  <div 
+                    onClick={() => handleInfo(image, index)}
                     key={index}
                     className="relative bg-gray-900/50 rounded-xl overflow-hidden group cursor-pointer"
                     onMouseEnter={() => setHoveredImageIndex(index)}
@@ -326,6 +327,7 @@ export default function InputSection({
                   console.log(`🖼️ Rendering image ${index}: ${image}`)
                   return (
                     <div
+                      onClick={() => handleInfo(image, index)}
                       key={index}
                       className="flex-shrink-0 w-[calc(100vw-6rem)] xs:w-[calc(100vw-8rem)] sm:w-[calc(100vw-12rem)] md:w-[calc(50vw-4rem)] max-w-sm"
                       style={{ scrollSnapAlign: "start" }}

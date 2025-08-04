@@ -297,7 +297,7 @@ export default function NewText2Image() {
         </div>
         <NavigationFull />
         <div className="relative z-10">
-          <Header title="Text to Image Generator" />
+          <Header title="Text to Image" />
           <main className="container mx-auto lg:px-8 xl:px-12 2xl:px-16">
             <InputSection
               prompt={prompt}

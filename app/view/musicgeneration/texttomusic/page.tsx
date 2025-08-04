@@ -133,7 +133,7 @@ export default function TextToMusic() {
         <Header title="Text To Music" />
         <main className="container mx-auto lg:px-8 xl:px-12 2xl:px-16">
           {/* Centered Input Box with Generate and Settings Buttons */}
-          <div className="flex items-center justify-center min-h-[60vh] px-4">
+          <div className="flex items-center justify-center min-h-[10vh] px-4">
             <div className="flex items-center w-full max-w-4xl bg-gray-800 rounded-xl p-2 border border-gray-600">
               {/* Add Button */}
               <button className="flex items-center justify-center w-10 h-10 rounded-lg border border-white/20 hover:bg-white/10 transition-colors mr-3">

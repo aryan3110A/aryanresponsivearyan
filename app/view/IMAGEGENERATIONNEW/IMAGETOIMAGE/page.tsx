@@ -268,7 +268,7 @@ export default function ImageToImage() {
       {/* <BackgroundShapes /> */}
 
       <div className="relative z-10">
-        <Header title="Image to Image Generator" />
+        <Header title="Image to Image " />
 
         <main className="container mx-auto  lg:px-8 xl:px-12 2xl:px-16">
           <InputSection

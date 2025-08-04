@@ -31,7 +31,7 @@ const models = [
     shortName: "S",
     image: "/imagegenerationnew/models/model1.png",
     description:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since",
+      "Stable Diffusion XL 1.0 is an image generation model that excels in producing highly detailed and photorealistic 1024x1024 px image compared to its predecessor, Stable Diffusion 2.1 and Stable Diffusion 1.5",
     tokenCost: 20,
   },
   {

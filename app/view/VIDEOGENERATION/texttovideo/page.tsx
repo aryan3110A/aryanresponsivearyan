@@ -8,7 +8,7 @@ import SettingsPanel from "./componennts/SettingsPanel"
 import Image from 'next/image'
 import NavigationFull from "../../Core/NavigationFull"
 import Footer from "../../Core/Footer"
-import { CAMERA_MOVEMENTS, CameraMovement, getModelType, getApiModelName, supportsCameraMovements, supportsSubjectReference, getApiResolution } from "./componennts/videoModels"
+import { CAMERA_MOVEMENTS, CameraMovement, getModelType, getApiModelName, supportsCameraMovements, getApiResolution } from "./componennts/videoModels"
 
 export default function NewTextToVideo() {
   const [prompt, setPrompt] = useState("")
@@ -232,17 +232,17 @@ export default function NewTextToVideo() {
       {/* <BackgroundShapes /> */}
 
       <div className="relative z-10">
-        <Header title="Text to VIDEO Generator" />
+        <Header title="Text To Video" />
 
         {/* Debug Info - Remove in production */}
-        <div className="fixed top-20 right-4 bg-black/80 text-white p-4 rounded-lg text-xs z-50 max-w-xs">
+        {/* <div className="fixed top-20 right-4 bg-black/80 text-white p-4 rounded-lg text-xs z-50 max-w-xs">
           <div className="font-bold mb-2">Debug Info:</div>
           <div>Model: {selectedModel}</div>
           <div>Type: {getModelType(selectedModel)}</div>
           <div>FirstFrame: {firstFrameImage ? '✅' : '❌'}</div>
           <div>Subject: {subjectImage ? '✅' : '❌'}</div>
           <div>Supports Subject Ref: {supportsSubjectReference(selectedModel) ? '✅' : '❌'}</div>
-        </div>
+        </div> */}
 
         <main className="container mx-auto  lg:px-8 xl:px-12 2xl:px-16">
           <InputSection
