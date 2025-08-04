@@ -29,7 +29,7 @@ interface InputSectionProps {
 export default function InputSection({
   generatedPrompt,
   onGenerate,
-  onSettingsToggle,
+  // onSettingsToggle,
   isGenerating,
   generatedImages,
   selectedFont,
@@ -197,12 +197,12 @@ export default function InputSection({
             </div>
           </div>
         </div>
-        <button
+        {/* <button
           onClick={onSettingsToggle}
           className="p-3 bg-[#1F1F1F] backdrop-blur-sm rounded-2xl hover:bg-gradient-to-b from-[#6C3BFF] to-[#412399] transition-colors border border-[#8E8E8E]"
         >
           <Image src="/mockupgeneration/setting.png" alt="Settings" width={32} height={32} className="w-12 h-12" />
-        </button>
+        </button> */}
       </div>
       {/* Mobile & Tablet Layout */}
       <div className="xl:hidden w-full px-0 ">
@@ -266,24 +266,24 @@ export default function InputSection({
                     className="w-full bg-[#ffffff]/10 border border-[#8E8E8E]/50 rounded-lg px-3 py-2 text-white placeholder-white/60 outline-none focus:border-[#6C3BFF] transition-all duration-300 text-sm"
                   />
                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="flex items-center gap-3 xs:gap-4 justify-end w-full">
-          <button
+              </div><button
             onClick={onGenerate}
             disabled={isGenerating || !logoFile || !businessName.trim()}
             className="bg-gradient-to-b from-[#6C3BFF] to-[#412399] transition-colors text-white px-2  py-2.5 xs:py-3 rounded-lg xs:rounded-xl font-medium text-sm xs:text-base flex-1 max-w-[32%] "
           >
             {isGenerating ? "Generating..." : "Generate"}
           </button>
-          <button
+            </div>
+          </div>
+        </div>
+        <div className="flex items-center gap-3 xs:gap-4 justify-end w-full">
+          
+          {/* <button
             onClick={onSettingsToggle}
             className="p-2  bg-[#1F1F1F] backdrop-blur-sm rounded-lg xs:rounded-xl hover:bg-gradient-to-b from-[#6C3BFF] to-[#412399] transition-colors border border-[#8E8E8E] flex-shrink-0"
           >
             <Image src="/mockupgeneration/setting.png" alt="Settings" width={24} height={24} className="w-5 h-5 xs:w-6 xs:h-6 sm:w-7 sm:h-7" />
-          </button>
+          </button> */}
         </div>
       </div>
       {/* Upload Modal */}

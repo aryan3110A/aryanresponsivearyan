@@ -1,16 +1,8 @@
 import React from "react";
-// import Navigation from "./components/Navigation";
-import ArtGallery from "./components/ArtGallery";
 import Cards from "./components/Cards";
-
-import StartUsingAi from "./components/start-using-ai";
-import DiscordLanding from "./components/discord-landing";
 import Header from "./components/Header";
-import Footer from "../Core/Footer";
-import Commingsoon from "./components/Commingsoon";
-import { PartnersSection } from "./components/partners-section";
-import { Testimonials } from "./components/Testimonials";
 import NAV_LAND from "./components/NAV_LAND";
+import FeatuesAll from "./components/FeatuesAll";
 
 const Main = () => {
   return (
@@ -31,33 +23,38 @@ const Main = () => {
         </div>
       </div>
 
+
+
       <div className="relative z-[30]">
-        <ArtGallery />
+        {/* <ArtGallery /> */}
+        {/* <SocialMediaSuite /> */}
+        <FeatuesAll />
+
       </div>
 
-      <div className="relative z-[40]">
+      {/* <div className="relative z-[40]">
         <DiscordLanding />
-      </div>
+      </div> */}
 
-      <div className="relative z-[50]">
+      {/* <div className="relative z-[50]">
         <Commingsoon />
-      </div>
+      </div> */}
 
-      <div className="relative z-[60]">
+      {/* <div className="relative z-[60]">
         <Testimonials />
-      </div>
+      </div> */}
 
-      <div className="relative z-[70]">
+      {/* <div className="relative z-[70]">
         <PartnersSection />
-      </div>
+      </div> */}
 
-      <div className="relative z-[80]">
+      {/* <div className="relative z-[80]">
         <StartUsingAi />
-      </div>
+      </div> */}
 
-      <div className="relative z-[90]">
+      {/* <div className="relative z-[90]">
         <Footer />
-      </div>
+      </div> */}
     </div>
   );
 };
