@@ -2,8 +2,9 @@
 
 import Image from "next/image"
 import { useState, useRef } from "react"
-import { AttachmentsDropdown, UploadComponent, ImageOverlay } from "../../UI"
+import { ImageOverlay } from "../../UI"
 import { Download, Bookmark, Heart, Sparkles } from "lucide-react"
+// import { HoverBorderGradient } from "../../../Core/hover-border-gradient"
 
 interface InputSectionProps {
   prompt: string
@@ -34,7 +35,6 @@ export default function InputSection({
   selectedAspectRatio,
   numberOfImages,
 }: InputSectionProps) {
-  const [showUploadComponent, setShowUploadComponent] = useState(false)
   const [hoveredImageIndex, setHoveredImageIndex] = useState<number | null>(null)
   const [likedImages, setLikedImages] = useState<Set<number>>(new Set())
   const [bookmarkedImages, setBookmarkedImages] = useState<Set<number>>(new Set())
@@ -42,20 +42,8 @@ export default function InputSection({
     url: string
     index: number
   } | null>(null)
+  const [isSettingsRotating, setIsSettingsRotating] = useState(false)
   const scrollContainerRef = useRef<HTMLDivElement>(null)
-
-  const handleChooseFromLibrary = () => {
-    console.log("Choose from library clicked")
-  }
-
-  const handleUploadFromDevices = () => {
-    setShowUploadComponent(true)
-    console.log("Upload from devices clicked")
-  }
-
-  const handleFilesSelected = (files: File[]) => {
-    console.log("Files selected:", files)
-  }
 
   const handleDownload = async (imageUrl: string, index: number) => {
     try {
@@ -112,16 +100,20 @@ export default function InputSection({
     setSelectedImageForOverlay(null)
   }
 
+  const handleSettingsClick = () => {
+    setIsSettingsRotating(true)
+    onSettingsToggle()
+    // Reset rotation after animation completes
+    setTimeout(() => setIsSettingsRotating(false), 1000)
+  }
+
   return (
     <div className="flex flex-col items-center w-full space-y-6 mb:space-y-4 lg:space-y-12">
       {/* Desktop Layout - Input with buttons inline */}
       <div className="hidden xl:flex items-center gap-4 w-full md:max-w-6xl lg:max-w-7xl px-4">
         <div className="flex-1 relative">
           <div className="flex items-center bg-[#ffffff]/5 hover:bg-[#ffffff]/20 backdrop-blur-sm border border-[#8E8E8E] rounded-2xl lg:rounded-3xl p-4 transition-all duration-300 ease-in-out">
-            <AttachmentsDropdown
-              onChooseFromLibrary={handleChooseFromLibrary}
-              onUploadFromDevices={handleUploadFromDevices}
-            />
+            
 
             <input
               type="text"
@@ -147,10 +139,16 @@ export default function InputSection({
         </div>
 
         <button
-          onClick={onSettingsToggle}
-          className="p-3 bg-[#1F1F1F] backdrop-blur-sm rounded-2xl hover:bg-gradient-to-b from-[#6C3BFF] to-[#412399] transition-colors border border-[#8E8E8E]"
+          onClick={handleSettingsClick}
+          className="p-3 bg-[#1F1F1F] backdrop-blur-sm rounded-2xl hover:bg-gradient-to-b from-[#6C3BFF] to-[#412399] transition-all duration-300 border border-[#8E8E8E]"
         >
-          <Image src="/mockupgeneration/setting.png" alt="Settings" width={32} height={32} className="w-12 h-12" />
+          <Image 
+            src="/mockupgeneration/setting.png" 
+            alt="Settings" 
+            width={32} 
+            height={32} 
+            className={`w-12 h-12 transition-transform duration-300 ${isSettingsRotating ? 'rotate-45' : ''}`} 
+          />
         </button>
         
 
@@ -161,10 +159,7 @@ export default function InputSection({
         {/* Input Field Only - Full Width Responsive */}
         <div className="w-full mb-4">
           <div className="flex items-center bg-[#ffffff]/5 hover:bg-[#ffffff]/20 backdrop-blur-sm border border-[#8E8E8E] rounded-xl sm:rounded-2xl p-2 xs:p-4 transition-all duration-300 ease-in-out">
-            <AttachmentsDropdown
-              onChooseFromLibrary={handleChooseFromLibrary}
-              onUploadFromDevices={handleUploadFromDevices}
-            />
+      
 
             <input
               type="text"
@@ -198,15 +193,15 @@ export default function InputSection({
           </button>
 
           <button
-            onClick={onSettingsToggle}
-            className="p-2  bg-[#1F1F1F] backdrop-blur-sm rounded-lg xs:rounded-xl hover:bg-gradient-to-b from-[#6C3BFF] to-[#412399] transition-colors border border-[#8E8E8E] flex-shrink-0"
+            onClick={handleSettingsClick}
+            className="p-2 bg-[#1F1F1F] backdrop-blur-sm rounded-lg xs:rounded-xl hover:bg-gradient-to-b from-[#6C3BFF] to-[#412399] transition-all duration-300 border border-[#8E8E8E] flex-shrink-0"
           >
             <Image
               src="/mockupgeneration/setting.png"
               alt="Settings"
               width={24}
               height={24}
-              className="w-5 h-5 xs:w-6 xs:h-6 sm:w-7 sm:h-7"
+                             className={`w-5 h-5 xs:w-6 xs:h-6 sm:w-7 sm:h-7 transition-transform duration-300 ${isSettingsRotating ? 'rotate-45' : ''}`}
             />
           </button>
           
@@ -214,23 +209,7 @@ export default function InputSection({
         </div>
       </div>
 
-      {/* Upload Component Modal */}
-      {showUploadComponent && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-gray-900/95 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6 w-full max-w-md mx-4">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-white font-medium text-lg">Upload Files</h3>
-              <button
-                onClick={() => setShowUploadComponent(false)}
-                className="p-2 hover:bg-gray-800/50 rounded-lg transition-colors"
-              >
-                <span className="text-white text-xl">×</span>
-              </button>
-            </div>
-            <UploadComponent onFilesSelected={handleFilesSelected} />
-          </div>
-        </div>
-      )}
+      
 
       {/* Enhanced Loading State with Progress */}
       {isGenerating && (

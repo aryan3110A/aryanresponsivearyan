@@ -51,6 +51,7 @@ export default function InputSection({
   } | null>(null)
   const [isUploading, setIsUploading] = useState(false)
   const [uploadProgress, setUploadProgress] = useState(0)
+  const [isSettingsRotating, setIsSettingsRotating] = useState(false)
   const scrollContainerRef = useRef<HTMLDivElement>(null)
 
   // Helper function to check if the content is a video
@@ -67,8 +68,6 @@ export default function InputSection({
   const handleChooseFromLibrary = () => {
     console.log("Choose from library clicked")
   }
-
-
 
   const handleUploadFromDevices = () => {
     setShowUploadComponent(true)
@@ -219,6 +218,13 @@ export default function InputSection({
     setSelectedImageForOverlay(null)
   }
 
+  const handleSettingsClick = () => {
+    setIsSettingsRotating(true)
+    onSettingsToggle()
+    // Reset rotation after animation completes
+    setTimeout(() => setIsSettingsRotating(false), 1000)
+  }
+
   return (
     <div className="flex flex-col items-center w-full space-y-6 mb:space-y-4 lg:space-y-12">
       {/* Desktop Layout - Input with buttons inline */}
@@ -259,10 +265,16 @@ export default function InputSection({
         </div>
 
         <button
-          onClick={onSettingsToggle}
-          className="p-3 bg-[#1F1F1F] backdrop-blur-sm rounded-2xl hover:bg-gradient-to-b from-[#6C3BFF] to-[#412399] transition-colors border border-[#8E8E8E]"
+          onClick={handleSettingsClick}
+          className="p-3 bg-[#1F1F1F] backdrop-blur-sm rounded-2xl hover:bg-gradient-to-b from-[#6C3BFF] to-[#412399] transition-all duration-300 border border-[#8E8E8E]"
         >
-          <Image src="/mockupgeneration/setting.png" alt="Settings" width={32} height={32} className="w-12 h-12" />
+          <Image 
+            src="/mockupgeneration/setting.png" 
+            alt="Settings" 
+            width={32} 
+            height={32} 
+            className={`w-12 h-12 transition-transform duration-300 ${isSettingsRotating ? 'rotate-45' : ''}`} 
+          />
         </button>
       </div>
 
@@ -313,15 +325,15 @@ export default function InputSection({
           </button>
 
           <button
-            onClick={onSettingsToggle}
-            className="p-2  bg-[#1F1F1F] backdrop-blur-sm rounded-lg xs:rounded-xl hover:bg-gradient-to-b from-[#6C3BFF] to-[#412399] transition-colors border border-[#8E8E8E] flex-shrink-0"
+            onClick={handleSettingsClick}
+            className="p-2 bg-[#1F1F1F] backdrop-blur-sm rounded-lg xs:rounded-xl hover:bg-gradient-to-b from-[#6C3BFF] to-[#412399] transition-all duration-300 border border-[#8E8E8E] flex-shrink-0"
           >
             <Image
               src="/mockupgeneration/setting.png"
               alt="Settings"
               width={24}
               height={24}
-              className="w-5 h-5 xs:w-6 xs:h-6 sm:w-7 sm:h-7"
+              className={`w-5 h-5 xs:w-6 xs:h-6 sm:w-7 sm:h-7 transition-transform duration-300 ${isSettingsRotating ? 'rotate-45' : ''}`}
             />
           </button>
         </div>
