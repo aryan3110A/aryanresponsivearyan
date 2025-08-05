@@ -8,7 +8,7 @@ import SettingsPanel from "./componennts/SettingsPanel"
 import NavigationFull from "../../Core/NavigationFull"
 import Footer from "../../Core/Footer"
 import StableBackground from "../../Core/StableBackground"
-import { CAMERA_MOVEMENTS, CameraMovement, getModelType, getApiModelName, supportsCameraMovements, supportsSubjectReference, getApiResolution } from "./componennts/videoModels"
+import { CAMERA_MOVEMENTS, CameraMovement, getModelType, getApiModelName, supportsCameraMovements, getApiResolution } from "./componennts/videoModels"
 
 export default function NewTextToVideo() {
   const [prompt, setPrompt] = useState("")
