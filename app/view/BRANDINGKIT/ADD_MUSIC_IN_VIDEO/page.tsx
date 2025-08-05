@@ -8,7 +8,7 @@ import SettingsPanel from "./componennts/SettingsPanel"
 
 import NavigationFull from "../../Core/NavigationFull"
 import Footer from "../../Core/Footer"
-import StableBackground from "../../Core/StableBackground"
+import { WavyBackground } from "../UI"
 import ImageOverlay from "./componennts/ImageOverlay"
 
 export default function AddMusicInVideo() {
@@ -111,16 +111,22 @@ export default function AddMusicInVideo() {
         musicType="Classic"
       />
     )}
-    <div className="min-h-screen bg-black text-white relative overflow-hidden">
-      {/* Background Particles */}
-      <StableBackground />
+    <WavyBackground 
+      colors={["#38bdf8", "#818cf8", "#c084fc", "#e879f9", "#22d3ee"]}
+      waveWidth={50}
+      backgroundFill="black"
+      blur={10}
+      speed="fast"
+      waveOpacity={0.5}
+      containerClassName="min-h-screen"
+    >
       <NavigationFull />
       {/* <BackgroundShapes /> */}
 
-      <div className="relative z-10">
+      <div className="relative z-10 w-full">
         <Header title="Add Music In Video" />
 
-        <main className="container mx-auto  lg:px-8 xl:px-12 2xl:px-16">
+        <main className="container mx-auto lg:px-8 xl:px-12 2xl:px-16">
           
           <InputSection
             prompt={prompt}
@@ -140,8 +146,7 @@ export default function AddMusicInVideo() {
         isOpen={isSettingsOpen}
         onClose={() => setIsSettingsOpen(false)}
       />
-      
-    </div>
+    </WavyBackground>
     <Footer />
     </>
   )

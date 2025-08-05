@@ -116,7 +116,7 @@ export default function InputSection({
       {/* Desktop Layout - Input with buttons inline */}
       <div className="hidden xl:flex items-center gap-4 w-full md:max-w-6xl lg:max-w-7xl px-4">
         <div className="flex-1 relative">
-          <div className="flex items-center bg-[#ffffff]/5 hover:bg-[#ffffff]/20 backdrop-blur-sm border border-[#8E8E8E] rounded-full p-4 transition-all duration-300 ease-in-out">
+          <div className="flex items-center bg-white/10 hover:bg-white/15 backdrop-blur-xl border-2 border-white/20 hover:border-white/30 rounded-full p-4 transition-all duration-300 ease-in-out shadow-2xl shadow-black/20">
             <AttachmentsDropdown
               onChooseFromLibrary={handleChooseFromLibrary}
               onUploadFromDevices={handleUploadFromDevices}
@@ -127,17 +127,17 @@ export default function InputSection({
               placeholder="Type a prompt..."
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
-              className="flex-1 bg-transparent text-white placeholder-white outline-none text-lg ml-4"
+              className="flex-1 bg-transparent text-white placeholder-white/70 outline-none text-lg ml-4 font-medium"
               onKeyDown={(e) => e.key === "Enter" && onGenerate()}
             />
             <div className="flex items-center gap-4">
-              <button className="p-2 hover:bg-gray-700/50 rounded-full transition-colors border border-white/10">
+              <button className="p-2 hover:bg-white/20 rounded-full transition-all duration-200 border border-white/20 hover:border-white/40 backdrop-blur-sm">
                 <Image src="/newt2image/enhancer.png" alt="enhancer" width={28} height={28} />
               </button>
               <HoverBorderGradient
                 onClick={!prompt.trim() || isGenerating ? undefined : onGenerate}
-                backgroundColor="bg-[#006aff]"
-                className="px-12 py-3 font-medium text-base rounded-full"
+                backgroundColor="bg-gradient-to-r from-blue-500 to-purple-600"
+                className="px-12 py-3 font-semibold text-base rounded-full shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 transition-all duration-200"
               >
                 {isGenerating ? "Generating..." : "Generate"}
               </HoverBorderGradient>
@@ -147,7 +147,7 @@ export default function InputSection({
 
         <button
           onClick={onSettingsToggle}
-          className="p-3 bg-[#1F1F1F] backdrop-blur-sm rounded-full hover:bg-transparent transition-colors border border-[#8E8E8E]"
+          className="p-3 bg-white/10 backdrop-blur-xl rounded-full hover:bg-white/20 transition-all duration-200 border-2 border-white/20 hover:border-white/40 shadow-lg shadow-black/20"
         >
           <Image src="/mockupgeneration/setting.png" alt="Settings" width={32} height={32} className="w-12 h-12" />
         </button>
@@ -157,7 +157,7 @@ export default function InputSection({
       <div className="xl:hidden w-full px-0 ">
         {/* Input Field Only - Full Width Responsive */}
         <div className="w-full mb-4">
-          <div className="flex items-center bg-[#ffffff]/5 hover:bg-[#ffffff]/20 backdrop-blur-sm border border-[#8E8E8E] rounded-full p-2 xs:p-4 transition-all duration-300 ease-in-out">
+          <div className="flex items-center bg-white/10 hover:bg-white/15 backdrop-blur-xl border-2 border-white/20 hover:border-white/30 rounded-full p-2 xs:p-4 transition-all duration-300 ease-in-out shadow-2xl shadow-black/20">
             <AttachmentsDropdown
               onChooseFromLibrary={handleChooseFromLibrary}
               onUploadFromDevices={handleUploadFromDevices}
@@ -168,11 +168,11 @@ export default function InputSection({
               placeholder="Type a prompt..."
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
-              className="flex-1 bg-transparent text-white placeholder-white outline-none text-sm xs:text-base sm:text-lg ml-2 mr-1 xs:ml-3"
+              className="flex-1 bg-transparent text-white placeholder-white/70 outline-none text-sm xs:text-base sm:text-lg ml-2 mr-1 xs:ml-3 font-medium"
               onKeyDown={(e) => e.key === "Enter" && onGenerate()}
             />
 
-            <button className="p-2 hover:bg-gray-700/50 rounded-full transition-colors border border-white/10 md:ml-2">
+            <button className="p-2 hover:bg-white/20 rounded-full transition-all duration-200 border border-white/20 hover:border-white/40 backdrop-blur-sm md:ml-2">
               <Image
                 src="/newt2image/enhancer.png"
                 alt="enhancer"
@@ -188,15 +188,15 @@ export default function InputSection({
         <div className="flex items-center gap-3 xs:gap-4 justify-end w-full">
           <HoverBorderGradient
             onClick={!prompt.trim() || isGenerating ? undefined : onGenerate}
-            backgroundColor="bg-[#006aff]"
-            className="px-2 py-2.5 xs:py-3 rounded-full font-medium text-sm xs:text-base flex-1 max-w-[32%]"
+            backgroundColor="bg-gradient-to-r from-blue-500 to-purple-600"
+            className="px-2 py-2.5 xs:py-3 rounded-full font-semibold text-sm xs:text-base flex-1 max-w-[32%] shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 transition-all duration-200"
           >
             {isGenerating ? "Generating..." : "Generate"}
           </HoverBorderGradient>
 
           <button
             onClick={onSettingsToggle}
-            className="p-2 bg-[#1F1F1F] backdrop-blur-sm rounded-full hover:bg-transparent transition-colors border border-[#8E8E8E] flex-shrink-0"
+            className="p-2 bg-white/10 backdrop-blur-xl rounded-full hover:bg-white/20 transition-all duration-200 border-2 border-white/20 hover:border-white/40 shadow-lg shadow-black/20 flex-shrink-0"
           >
             <Image
               src="/mockupgeneration/setting.png"
@@ -230,7 +230,10 @@ export default function InputSection({
       {/* Loading State */}
       {isGenerating && (
         <div className="flex items-center justify-center py-8 xs:py-12 lg:py-16">
-          <div className="animate-spin rounded-full h-8 w-8 xs:h-12 xs:w-12 lg:h-16 lg:w-16 border-b-2 border-white"></div>
+          <div className="flex flex-col items-center gap-4">
+          <div className="animate-spin rounded-full h-8 w-8 xs:h-12 xs:w-12 lg:h-16 lg:w-16 border-2 border-white/20 border-t-blue-500 border-r-purple-500"></div>
+          <div className="text-white/80 text-sm xs:text-base font-medium">Creating your masterpiece...</div>
+        </div>
         </div>
       )}
 
@@ -246,12 +249,12 @@ export default function InputSection({
               <span className="text-white text-sm font-medium">{prompt}</span>
             </div>
 
-            <div className="relative bg-transparent backdrop-blur-sm border border-gray-700/30 rounded-xl p-6 lg:p-8 min-h-[400px] overflow-hidden">
+            <div className="relative bg-white/5 backdrop-blur-xl border-2 border-white/10 rounded-xl p-6 lg:p-8 min-h-[400px] overflow-hidden shadow-2xl shadow-black/20">
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 lg:gap-6">
                 {generatedImages.map((image, index) => (
                   <div
                     key={index}
-                    className="relative aspect-square bg-gray-900/50 rounded-xl overflow-hidden group cursor-pointer"
+                    className="relative aspect-square bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden group cursor-pointer hover:bg-white/10 transition-all duration-200"
                     onMouseEnter={() => setHoveredImageIndex(index)}
                     onMouseLeave={() => setHoveredImageIndex(null)}
                   >
