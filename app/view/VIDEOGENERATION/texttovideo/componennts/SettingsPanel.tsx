@@ -152,7 +152,7 @@ export default function SettingsPanel({
           </div>
 
           {/* Content */}
-          <div className="flex-1 overflow-y-auto px-4 space-y-6 scrollbar-hide pb-6">
+          <div className="flex-1 overflow-y-auto px-4 space-y-6 scrollbar-hide pb-24">
             <style jsx>{`
               .scrollbar-hide {
                 -ms-overflow-style: none;
@@ -314,32 +314,31 @@ export default function SettingsPanel({
               />
             </div>
 
-            {/* Save Button */}
-            <div className="mb-6 px-2 md:px-6">
-              <button
-                onClick={handleSave}
-                className="w-full bg-gradient-to-r from-[#6C3BFF] to-[#412399] hover:from-[#5A2FE6] hover:to-[#3A1F8A] text-white py-4 rounded-lg font-medium text-lg transition-all"
-              >
-                Save
-              </button>
-              {/* Settings Summary */}
-              <div className="bg-white/10 backdrop-blur-3xl hover:bg-white/20 rounded-lg p-4 space-y-2 text-sm text-gray-300 mt-6">
-                <div className="text-white font-medium mb-3">Video Settings Summary</div>
-                <div>Model : <span className="text-[#5AD7FF]">{selectedModel}</span></div>
-                <div>Duration : <span className="text-[#5AD7FF]">{selectedDuration}s</span></div>
-                <div>Aspect Ratio : <span className="text-[#5AD7FF]">{selectedAspectRatio}</span></div>
-                <div>Quality : <span className="text-[#5AD7FF]">{selectedQuality}</span></div>
-                <div>Camera Movements : <span className="text-[#5AD7FF]">{selectedCameraMovements.length > 0 ? `${selectedCameraMovements.length} selected` : "None"}</span></div>
-                <div>First Frame Image : <span className="text-[#5AD7FF]">{firstFrameImage ? "Uploaded" : "None"}</span></div>
-                <div>Private Mode : <span className="text-[#5AD7FF]">{privateMode ? "Enabled" : "Disabled"}</span></div>
-                <div>Prompt Enhancer : <span className="text-[#5AD7FF]">{promptEnhance}</span></div>
-              </div>
+            {/* Settings Summary */}
+            <div className="bg-white/10 backdrop-blur-3xl hover:bg-white/20 rounded-lg p-4 space-y-2 text-sm text-gray-300 mb-6">
+              <div className="text-white font-medium mb-3">Video Settings Summary</div>
+              <div>Model : <span className="text-[#5AD7FF]">{selectedModel}</span></div>
+              <div>Duration : <span className="text-[#5AD7FF]">{selectedDuration}s</span></div>
+              <div>Aspect Ratio : <span className="text-[#5AD7FF]">{selectedAspectRatio}</span></div>
+              <div>Quality : <span className="text-[#5AD7FF]">{selectedQuality}</span></div>
+              <div>Camera Movements : <span className="text-[#5AD7FF]">{selectedCameraMovements.length > 0 ? `${selectedCameraMovements.length} selected` : "None"}</span></div>
+              <div>First Frame Image : <span className="text-[#5AD7FF]">{firstFrameImage ? "Uploaded" : "None"}</span></div>
+              <div>Private Mode : <span className="text-[#5AD7FF]">{privateMode ? "Enabled" : "Disabled"}</span></div>
+              <div>Prompt Enhancer : <span className="text-[#5AD7FF]">{promptEnhance}</span></div>
             </div>
+          </div>
+
+          {/* Floating Save Button */}
+          <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent flex justify-center">
+            <button
+              onClick={handleSave}
+              className="w-32 bg-[#006aff] hover:bg-[#0052cc] text-white py-3 px-6 rounded-full font-medium text-sm transition-all shadow-lg"
+            >
+              Save
+            </button>
           </div>
         </div>
       </div>
-
-
 
     </>
   )

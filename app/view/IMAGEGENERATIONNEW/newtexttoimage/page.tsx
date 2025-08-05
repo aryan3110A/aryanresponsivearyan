@@ -1,12 +1,12 @@
 "use client"
 
-import { useState } from "react"
+import React, { useState, useMemo, useCallback } from "react"
 import { Header } from "../UI"
 import InputSection from "./componennts/InputSection"
 import SettingsPanel from "./componennts/SettingsPanel"
 import NavigationFull from "../../Core/NavigationFull"
 import Footer from "../../Core/Footer"
-import Particles from "../../Core/Particals"
+import StableBackground from "../../Core/StableBackground"
 
 interface SettingsData {
   model: string;
@@ -96,7 +96,7 @@ export default function NewText2Image() {
     return enhancedPrompt
   }
 
-  const handleGenerate = async () => {
+  const handleGenerate = useCallback(async () => {
     if (!prompt.trim()) return
     setIsGenerating(true)
 
@@ -282,50 +282,54 @@ export default function NewText2Image() {
     } finally {
       setIsGenerating(false)
     }
-  }
+  }, [prompt, currentSettings, selectedModel, modelIdMap, modelSlugMap, numberOfImages])
 
   const handleSettingsSave = (settingsData: SettingsData) => setCurrentSettings(settingsData)
-  const handleSettingsToggle = () => setIsSettingsOpen(!isSettingsOpen)
+  const handleSettingsToggle = useCallback(() => setIsSettingsOpen(i => !i), [])
   
 
+  // Memoize the content to prevent unnecessary re-renders
+  const content = useMemo(() => (
+    <div className="relative z-10">
+      <Header title="Text to Image Generator" />
+      <main className="container mx-auto lg:px-8 xl:px-12 2xl:px-16">
+        <InputSection
+          prompt={prompt}
+          setPrompt={setPrompt}
+          onGenerate={handleGenerate}
+          onSettingsToggle={handleSettingsToggle}
+          isGenerating={isGenerating}
+          generatedImages={generatedImages}
+          generatedPrompts={generatedPrompts}
+          selectedModel={selectedModel}
+          selectedStyle={selectedStyle}
+          selectedQuality={selectedQuality}
+          selectedAspectRatio={selectedAspectRatio}
+          numberOfImages={numberOfImages}
+        />
+      </main>
+    </div>
+  ), [
+    prompt,
+    isGenerating,
+    generatedImages,
+    generatedPrompts,
+    selectedModel,
+    selectedStyle,
+    selectedQuality,
+    selectedAspectRatio,
+    numberOfImages,
+    handleGenerate,
+    handleSettingsToggle,
+  ]);
 
   return (
     <>
       <div className="min-h-screen bg-black text-white relative overflow-hidden">
-        <div className="absolute inset-0 w-full h-full z-0">
-          <Particles
-            particleColors={['#ffffff', '#ffffff']}
-            particleCount={200}
-            particleSpread={10}
-            speed={0.1}
-            particleBaseSize={100}
-            moveParticlesOnHover={true}
-            alphaParticles={false}
-            disableRotation={false}
-          />
-        </div>
+        {/* Stable background that doesn't re-render with input changes */}
+        <StableBackground />
         <NavigationFull />
-        <div className="relative z-10">
-          <Header title="Text to Image Generator" />
-          <main className="container mx-auto lg:px-8 xl:px-12 2xl:px-16">
-            <InputSection
-              prompt={prompt}
-              setPrompt={setPrompt}
-              onGenerate={handleGenerate}
-              onSettingsToggle={handleSettingsToggle}
-              isGenerating={isGenerating}
-              generatedImages={generatedImages}
-              generatedPrompts={generatedPrompts}
-              selectedModel={selectedModel}
-              selectedStyle={selectedStyle}
-              selectedQuality={selectedQuality}
-              selectedAspectRatio={selectedAspectRatio}
-              numberOfImages={numberOfImages}
-
-
-            />
-          </main>
-        </div>
+        {content}
 
         <SettingsPanel
           isOpen={isSettingsOpen}

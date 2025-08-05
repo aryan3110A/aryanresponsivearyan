@@ -1,13 +1,14 @@
 "use client"
 
-import { useState } from "react"
+import React, { useState } from "react"
 import { Header } from "../UI"
 import InputSection from "./componennts/InputSection"
 import SettingsPanel from "./componennts/SettingsPanel"
 // import BackgroundShapes from "./componennts/BackgroundShapes"
-import Image from 'next/image'
+
 import NavigationFull from "../../Core/NavigationFull"
 import Footer from "../../Core/Footer"
+import StableBackground from "../../Core/StableBackground"
 
 export default function AddMusicToVideo() {
   const [prompt, setPrompt] = useState("")
@@ -100,10 +101,8 @@ export default function AddMusicToVideo() {
   return (
     <>
     <div className="min-h-screen bg-black text-white relative overflow-hidden">
-      {/* Background Image */}
-      <div className="absolute inset-0 w-full h-full z-0">
-        <Image src="/newt2image/bg.png" alt="background" width={1920} height={1080} className="w-auto h-auto  md:-mt-48  object-contain " />
-      </div>
+      {/* Background Particles */}
+      <StableBackground />
       <NavigationFull />
       {/* <BackgroundShapes /> */}
 

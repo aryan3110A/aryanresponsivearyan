@@ -1,13 +1,13 @@
 "use client"
 
-import { useState } from "react"
+import React, { useState } from "react"
 import { Header } from "../UI"
 import InputSection from "./componennts/InputSection"
 import SettingsPanel from "./componennts/SettingsPanel"
 // import BackgroundShapes from "./componennts/BackgroundShapes"
 import NavigationFull from "../../Core/NavigationFull"
 import Footer from "../../Core/Footer"
-import Particles from "../../Core/Particals"
+import StableBackground from "../../Core/StableBackground"
 import { CAMERA_MOVEMENTS, CameraMovement, getModelType, getApiModelName, supportsCameraMovements, supportsSubjectReference, getApiResolution } from "./componennts/videoModels"
 
 export default function NewTextToVideo() {
@@ -225,18 +225,7 @@ export default function NewTextToVideo() {
     <>
     <div className="min-h-screen bg-black text-white relative overflow-hidden">
       {/* Background Particles */}
-      <div className="absolute inset-0 w-full h-full z-0">
-        <Particles
-          particleColors={['#ffffff', '#ffffff']}
-          particleCount={200}
-          particleSpread={10}
-          speed={0.1}
-          particleBaseSize={100}
-          moveParticlesOnHover={true}
-          alphaParticles={false}
-          disableRotation={false}
-        />
-      </div>
+      <StableBackground />
       <NavigationFull />
       {/* <BackgroundShapes /> */}
 

@@ -95,7 +95,7 @@ export default function SettingsPanel(props: SettingsPanelProps) {
             </button>
           </div>
           {/* Content */}
-          <div className="flex-1 overflow-y-auto px-4 space-y-6 scrollbar-hide pb-6">
+          <div className="flex-1 overflow-y-auto px-4 space-y-6 scrollbar-hide pb-24">
             <style jsx>{`
               .scrollbar-hide {
                 -ms-overflow-style: none;
@@ -168,21 +168,8 @@ export default function SettingsPanel(props: SettingsPanelProps) {
                 setPromptEnhance={setPromptEnhance}
               />
             </div>
-            {/* Save Button */}
-            <div className="mb-6 px-2 md:px-6">
-              <button className="w-full flex items-center justify-center gap-2 py-4 rounded-lg bg-gradient-to-r from-[#6C3BFF] to-[#412399] hover:from-[#5A2FE6] hover:to-[#3A1F8A] text-white font-semibold text-lg transition-all"
-                onClick={() => setShowSummary(true)}>
-                Save
-                <span className="flex items-center ml-2 text-base font-medium">
-                  (
-                  <Image src="/BRANDINGKIT/PRODUCT_WITH_MODEL_POSE/coins.svg" alt="Tokens" width={24} height={24} className="mx-1" />
-                  100
-                  )
-                </span>
-              </button>
-            </div>
             {/* Summary Section */}
-            <div className="bg-white/10 backdrop-blur-3xl rounded-lg p-4 space-y-2 text-sm text-gray-300 mt-2 mb-6 mx-2 md:mx-6">
+            <div className="bg-white/10 backdrop-blur-3xl rounded-lg p-4 space-y-2 text-sm text-gray-300 mb-6">
               <div className="flex justify-between">
                 <span className="font-semibold text-white">Number of Images:</span>
                 <span className="text-white">{showSummary ? props.numberOfImages : ''}</span>
@@ -206,9 +193,24 @@ export default function SettingsPanel(props: SettingsPanelProps) {
             </div>
 
           </div>
+
+          {/* Floating Save Button */}
+          <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent flex justify-center">
+            <button
+              onClick={() => setShowSummary(true)}
+              className="w-32 bg-[#006aff] hover:bg-[#0052cc] text-white py-3 px-6 rounded-full font-medium text-sm transition-all shadow-lg flex items-center justify-center gap-2"
+            >
+              Save
+              <span className="flex items-center ml-1 text-xs">
+                (
+                <Image src="/BRANDINGKIT/PRODUCT_WITH_MODEL_POSE/coins.svg" alt="Tokens" width={16} height={16} className="mx-1" />
+                100
+                )
+              </span>
+            </button>
+          </div>
         </div>
       </div>
-
 
     </>
   )

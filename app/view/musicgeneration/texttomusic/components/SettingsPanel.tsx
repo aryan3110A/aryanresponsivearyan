@@ -117,7 +117,7 @@ export default function SettingsPanel({
           </div>
 
           {/* Content */}
-          <div className="flex-1 overflow-y-auto px-4 space-y-6 scrollbar-hide pb-6">
+          <div className="flex-1 overflow-y-auto px-4 space-y-6 scrollbar-hide pb-24">
             <style jsx>{`
               .scrollbar-hide {
                 -ms-overflow-style: none;
@@ -358,27 +358,27 @@ export default function SettingsPanel({
               </div>
             </div>
               
-            {/* Save Button */}
-            <div className="mb-6 px-2 md:px-6">
-              <button
-                onClick={handleSave}
-                className="w-full bg-gradient-to-r from-[#6C3BFF] to-[#412399] hover:from-[#5A2FE6] hover:to-[#3A1F8A] text-white py-4 rounded-lg font-medium text-lg transition-all"
-              >
-                Save
-              </button>
-
-              {/* Summary Section */}
-              <div className="bg-white/10 backdrop-blur-3xl hover:bg-white/20 rounded-lg p-4 space-y-2 text-sm text-gray-300 mt-6">
-                <div className="text-white font-medium mb-3">Music Generation Settings</div>
-                <div>Model: <span className="text-[#5AD7FF]">{selectedModel}</span></div>
-                <div>Sample Rate: <span className="text-[#5AD7FF]">44100Hz (Fixed)</span></div>
-                <div>Bitrate: <span className="text-[#5AD7FF]">256k (Fixed)</span></div>
-                <div>Format: <span className="text-[#5AD7FF]">MP3 (Fixed)</span></div>
-                <div>Output Format: <span className="text-[#5AD7FF]">{outputFormat.toUpperCase()}</span></div>
-                <div>Lyrics Length: <span className="text-[#5AD7FF]">{lyrics.length}/600</span></div>
-                <div>Song Structure: <span className="text-[#5AD7FF]">{songStructure.length} sections</span></div>
-              </div>
+            {/* Summary Section */}
+            <div className="bg-white/10 backdrop-blur-3xl hover:bg-white/20 rounded-lg p-4 space-y-2 text-sm text-gray-300 mb-6">
+              <div className="text-white font-medium mb-3">Music Generation Settings</div>
+              <div>Model: <span className="text-[#5AD7FF]">{selectedModel}</span></div>
+              <div>Sample Rate: <span className="text-[#5AD7FF]">44100Hz (Fixed)</span></div>
+              <div>Bitrate: <span className="text-[#5AD7FF]">256k (Fixed)</span></div>
+              <div>Format: <span className="text-[#5AD7FF]">MP3 (Fixed)</span></div>
+              <div>Output Format: <span className="text-[#5AD7FF]">{outputFormat.toUpperCase()}</span></div>
+              <div>Lyrics Length: <span className="text-[#5AD7FF]">{lyrics.length}/600</span></div>
+              <div>Song Structure: <span className="text-[#5AD7FF]">{songStructure.length} sections</span></div>
             </div>
+          </div>
+
+          {/* Floating Save Button */}
+          <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent flex justify-center">
+            <button
+              onClick={handleSave}
+              className="w-32 bg-[#006aff] hover:bg-[#0052cc] text-white py-3 px-6 rounded-full font-medium text-sm transition-all shadow-lg"
+            >
+              Save
+            </button>
           </div>
         </div>
       </div>

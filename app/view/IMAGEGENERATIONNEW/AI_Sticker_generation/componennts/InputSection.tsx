@@ -119,7 +119,7 @@ export default function InputSection({
       {/* Desktop Layout - Input with buttons inline */}
       <div className="hidden xl:flex items-center gap-4 w-full md:max-w-6xl lg:max-w-7xl px-4">
         <div className="flex-1 relative">
-          <div className="flex items-center bg-[#ffffff]/5 hover:bg-[#ffffff]/20 backdrop-blur-sm border border-[#8E8E8E] rounded-2xl lg:rounded-3xl p-4 transition-all duration-300 ease-in-out">
+          <div className="flex items-center bg-[#ffffff]/5 hover:bg-[#ffffff]/20 backdrop-blur-sm border border-[#8E8E8E] rounded-full p-4 transition-all duration-300 ease-in-out">
             <AttachmentsDropdown
               onChooseFromLibrary={handleChooseFromLibrary}
               onUploadFromDevices={handleUploadFromDevices}
@@ -134,13 +134,13 @@ export default function InputSection({
               onKeyDown={(e) => e.key === "Enter" && onGenerate()}
             />
             <div className="flex items-center gap-4">
-              <button className="p-2 hover:bg-gray-700/50 rounded-lg transition-colors border border-white/10">
+              <button className="p-2 hover:bg-gray-700/50 rounded-full transition-colors border border-white/10">
                 <Image src="/newt2image/enhancer.png" alt="enhancer" width={28} height={28} />
               </button>
               <HoverBorderGradient
                 onClick={!prompt.trim() || isGenerating ? undefined : onGenerate}
                 backgroundColor="bg-[#006aff]"
-                className="px-12 py-3 font-medium text-base"
+                className="px-12 py-3 font-medium text-base rounded-full"
               >
                 {isGenerating ? "Generating..." : "Generate"}
               </HoverBorderGradient>
@@ -150,13 +150,9 @@ export default function InputSection({
 
         <button
           onClick={onSettingsToggle}
-          className="p-4 bg-[#1F1F1F] backdrop-blur-sm rounded-2xl hover:bg-gradient-to-b from-[#6C3BFF] to-[#412399] transition-colors border border-[#8E8E8E]"
+          className="p-4 bg-[#1F1F1F] backdrop-blur-sm rounded-full hover:bg-transparent transition-all duration-300 border border-[#8E8E8E]"
         >
-          {/* 
-           */}
-           <Settings 
-           className="h-12 w-12"/>
-
+          <Settings className="h-12 w-12"/>
         </button>
       </div>
 
@@ -164,7 +160,7 @@ export default function InputSection({
       <div className="xl:hidden w-full px-0 ">
         {/* Input Field Only - Full Width Responsive */}
         <div className="w-full mb-4">
-          <div className="flex items-center bg-[#ffffff]/5 hover:bg-[#ffffff]/20 backdrop-blur-sm border border-[#8E8E8E] rounded-xl sm:rounded-2xl p-2 xs:p-4 transition-all duration-300 ease-in-out">
+          <div className="flex items-center bg-[#ffffff]/5 hover:bg-[#ffffff]/20 backdrop-blur-sm border border-[#8E8E8E] rounded-full p-2 xs:p-4 transition-all duration-300 ease-in-out">
             <AttachmentsDropdown
               onChooseFromLibrary={handleChooseFromLibrary}
               onUploadFromDevices={handleUploadFromDevices}
@@ -179,7 +175,7 @@ export default function InputSection({
               onKeyDown={(e) => e.key === "Enter" && onGenerate()}
             />
 
-            <button className="p-2 hover:bg-gray-700/50 rounded-lg transition-colors border border-white/10 md:ml-2">
+            <button className="p-2 hover:bg-gray-700/50 rounded-full transition-colors border border-white/10 md:ml-2">
               <Image
                 src="/newt2image/enhancer.png"
                 alt="enhancer"
@@ -196,14 +192,14 @@ export default function InputSection({
           <HoverBorderGradient
             onClick={!prompt.trim() || isGenerating ? undefined : onGenerate}
             backgroundColor="bg-[#006aff]"
-            className="px-2 py-2.5 xs:py-3 rounded-lg xs:rounded-xl font-medium text-sm xs:text-base flex-1 max-w-[32%]"
+            className="px-2 py-2.5 xs:py-3 rounded-full font-medium text-sm xs:text-base flex-1 max-w-[32%]"
           >
             {isGenerating ? "Generating..." : "Generate"}
           </HoverBorderGradient>
 
           <button
             onClick={onSettingsToggle}
-            className="p-2  bg-[#1F1F1F] backdrop-blur-sm rounded-lg xs:rounded-xl hover:bg-gradient-to-b from-[#6C3BFF] to-[#412399] transition-colors border border-[#8E8E8E] flex-shrink-0"
+            className="p-2 bg-[#1F1F1F] backdrop-blur-sm rounded-full hover:bg-transparent transition-all duration-300 border border-[#8E8E8E] flex-shrink-0"
           >
             <Image
               src="/mockupgeneration/setting.png"
