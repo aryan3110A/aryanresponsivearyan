@@ -110,7 +110,7 @@ export default function SettingsPanel(props: SettingsPanelProps) {
             </button>
           </div>
           {/* Content */}
-          <div className="flex-1 overflow-y-auto px-4 space-y-6 scrollbar-hide pb-6">
+          <div className="flex-1 overflow-y-auto px-4 space-y-6 scrollbar-hide pb-24">
             <style jsx>{`
               .scrollbar-hide {
                 -ms-overflow-style: none;

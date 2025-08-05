@@ -29,7 +29,7 @@ interface InputSectionProps {
 export default function InputSection({
   generatedPrompt,
   onGenerate,
-  // onSettingsToggle,
+  onSettingsToggle,
   isGenerating,
   generatedImages,
   selectedFont,
@@ -122,17 +122,17 @@ export default function InputSection({
 
   return (
     <div className="flex flex-col items-center w-full space-y-6 mb:space-y-4 lg:space-y-12">
-      {/* Desktop Layout */}
+      {/* Desktop Layout - Input with buttons inline */}
       <div className="hidden xl:flex items-center gap-4 w-full md:max-w-6xl lg:max-w-7xl px-4">
         <div className="flex-1 relative">
-          <div className="flex flex-col gap-4 bg-[#ffffff]/5 hover:bg-[#ffffff]/10 backdrop-blur-sm border border-[#8E8E8E] rounded-2xl lg:rounded-3xl p-4 transition-all duration-300 ease-in-out">
+          <div className="flex flex-col gap-4 bg-[#ffffff]/5 hover:bg-[#ffffff]/10 backdrop-blur-sm border border-[#8E8E8E] rounded-full p-4 transition-all duration-300 ease-in-out">
             <div className="flex flex-col gap-4">
               {/* Logo Upload Section */}
               <div className="flex items-center gap-4">
                 {!logoFile ? (
                   <button
                     onClick={() => handleUploadLogo()}
-                    className="flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-[#6C3BFF] to-[#412399] text-white rounded-xl hover:from-[#5A2FE6] hover:to-[#3A1F8A] transition-all duration-300 border border-[#8E8E8E]/30 hover:border-[#6C3BFF]/50"
+                    className="flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-[#6C3BFF] to-[#412399] text-white rounded-full hover:from-[#5A2FE6] hover:to-[#3A1F8A] transition-all duration-300 border border-[#8E8E8E]/30 hover:border-[#6C3BFF]/50"
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
@@ -140,7 +140,7 @@ export default function InputSection({
                     <span className="font-medium">Upload Logo</span>
                   </button>
                 ) : (
-                  <div className="flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-green-500/20 to-green-600/20 border border-green-500/30 rounded-xl">
+                  <div className="flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-green-500/20 to-green-600/20 border border-green-500/30 rounded-full">
                     <div className="flex items-center gap-2">
                       <svg className="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -171,7 +171,7 @@ export default function InputSection({
                     placeholder="Enter your business name"
                     value={businessName}
                     onChange={e => setBusinessName(e.target.value)}
-                    className="w-full bg-[#ffffff]/10 border border-[#8E8E8E]/50 rounded-lg px-4 py-3 text-white placeholder-white/60 outline-none focus:border-[#6C3BFF] transition-all duration-300"
+                    className="w-full bg-[#ffffff]/10 border border-[#8E8E8E]/50 rounded-full px-4 py-3 text-white placeholder-white/60 outline-none focus:border-[#6C3BFF] transition-all duration-300"
                   />
                 </div>
                 <div className="flex flex-col">
@@ -181,7 +181,7 @@ export default function InputSection({
                     placeholder="Enter your business tagline"
                     value={businessTagline}
                     onChange={e => setBusinessTagline(e.target.value)}
-                    className="w-full bg-[#ffffff]/10 border border-[#8E8E8E]/50 rounded-lg px-4 py-3 text-white placeholder-white/60 outline-none focus:border-[#6C3BFF] transition-all duration-300"
+                    className="w-full bg-[#ffffff]/10 border border-[#8E8E8E]/50 rounded-full px-4 py-3 text-white placeholder-white/60 outline-none focus:border-[#6C3BFF] transition-all duration-300"
                   />
                 </div>
               </div>
@@ -190,31 +190,31 @@ export default function InputSection({
               <button
                 onClick={onGenerate}
                 disabled={isGenerating || !logoFile || !businessName.trim()}
-                className="bg-gradient-to-b from-[#6C3BFF] to-[#412399] transition-colors text-white px-12 py-3 rounded-2xl font-medium text-base"
+                className="bg-gradient-to-b from-[#6C3BFF] to-[#412399] transition-colors text-white px-12 py-3 rounded-full font-medium text-base"
               >
                 {isGenerating ? "Generating..." : "Generate"}
               </button>
             </div>
           </div>
         </div>
-        {/* <button
+        <button
           onClick={onSettingsToggle}
-          className="p-3 bg-[#1F1F1F] backdrop-blur-sm rounded-2xl hover:bg-gradient-to-b from-[#6C3BFF] to-[#412399] transition-colors border border-[#8E8E8E]"
+          className="p-3 bg-[#1F1F1F] backdrop-blur-sm rounded-full hover:bg-transparent transition-all duration-300 border border-[#8E8E8E]"
         >
           <Image src="/mockupgeneration/setting.png" alt="Settings" width={32} height={32} className="w-12 h-12" />
-        </button> */}
+        </button>
       </div>
       {/* Mobile & Tablet Layout */}
       <div className="xl:hidden w-full px-0 ">
         <div className="w-full mb-4">
-          <div className="flex flex-col gap-3 bg-[#ffffff]/5 hover:bg-[#ffffff]/20 backdrop-blur-sm border border-[#8E8E8E] rounded-xl sm:rounded-2xl p-2 xs:p-4 transition-all duration-300 ease-in-out">
+          <div className="flex flex-col gap-3 bg-[#ffffff]/5 hover:bg-[#ffffff]/20 backdrop-blur-sm border border-[#8E8E8E] rounded-full p-2 xs:p-4 transition-all duration-300 ease-in-out">
             <div className="flex flex-col gap-3">
               {/* Logo Upload Section */}
               <div className="flex items-center gap-2">
                 {!logoFile ? (
                   <button
                     onClick={() => handleUploadLogo()}
-                    className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#6C3BFF] to-[#412399] text-white rounded-lg hover:from-[#5A2FE6] hover:to-[#3A1F8A] transition-all duration-300 text-sm border border-[#8E8E8E]/30 hover:border-[#6C3BFF]/50"
+                    className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#6C3BFF] to-[#412399] text-white rounded-full hover:from-[#5A2FE6] hover:to-[#3A1F8A] transition-all duration-300 text-sm border border-[#8E8E8E]/30 hover:border-[#6C3BFF]/50"
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
@@ -222,7 +222,7 @@ export default function InputSection({
                     <span className="font-medium text-sm">Upload Logo</span>
                   </button>
                 ) : (
-                  <div className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-green-500/20 to-green-600/20 border border-green-500/30 rounded-lg">
+                  <div className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-green-500/20 to-green-600/20 border border-green-500/30 rounded-full">
                     <div className="flex items-center gap-1.5">
                       <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -253,7 +253,7 @@ export default function InputSection({
                     placeholder="Enter your business name"
                     value={businessName}
                     onChange={e => setBusinessName(e.target.value)}
-                    className="w-full bg-[#ffffff]/10 border border-[#8E8E8E]/50 rounded-lg px-3 py-2 text-white placeholder-white/60 outline-none focus:border-[#6C3BFF] transition-all duration-300 text-sm"
+                    className="w-full bg-[#ffffff]/10 border border-[#8E8E8E]/50 rounded-full px-3 py-2 text-white placeholder-white/60 outline-none focus:border-[#6C3BFF] transition-all duration-300 text-sm"
                   />
                 </div>
                 <div className="flex flex-col">
@@ -263,13 +263,13 @@ export default function InputSection({
                     placeholder="Enter your business tagline"
                     value={businessTagline}
                     onChange={e => setBusinessTagline(e.target.value)}
-                    className="w-full bg-[#ffffff]/10 border border-[#8E8E8E]/50 rounded-lg px-3 py-2 text-white placeholder-white/60 outline-none focus:border-[#6C3BFF] transition-all duration-300 text-sm"
+                    className="w-full bg-[#ffffff]/10 border border-[#8E8E8E]/50 rounded-full px-3 py-2 text-white placeholder-white/60 outline-none focus:border-[#6C3BFF] transition-all duration-300 text-sm"
                   />
                 </div>
               </div><button
             onClick={onGenerate}
             disabled={isGenerating || !logoFile || !businessName.trim()}
-            className="bg-gradient-to-b from-[#6C3BFF] to-[#412399] transition-colors text-white px-2  py-2.5 xs:py-3 rounded-lg xs:rounded-xl font-medium text-sm xs:text-base flex-1 max-w-[32%] "
+            className="bg-gradient-to-b from-[#6C3BFF] to-[#412399] transition-colors text-white px-2  py-2.5 xs:py-3 rounded-full font-medium text-sm xs:text-base flex-1 max-w-[32%] "
           >
             {isGenerating ? "Generating..." : "Generate"}
           </button>
@@ -278,14 +278,15 @@ export default function InputSection({
         </div>
         <div className="flex items-center gap-3 xs:gap-4 justify-end w-full">
           
-          {/* <button
+          <button
             onClick={onSettingsToggle}
-            className="p-2  bg-[#1F1F1F] backdrop-blur-sm rounded-lg xs:rounded-xl hover:bg-gradient-to-b from-[#6C3BFF] to-[#412399] transition-colors border border-[#8E8E8E] flex-shrink-0"
+            className="p-2 bg-[#1F1F1F] backdrop-blur-sm rounded-full hover:bg-transparent transition-all duration-300 border border-[#8E8E8E] flex-shrink-0"
           >
             <Image src="/mockupgeneration/setting.png" alt="Settings" width={24} height={24} className="w-5 h-5 xs:w-6 xs:h-6 sm:w-7 sm:h-7" />
-          </button> */}
+          </button>
         </div>
       </div>
+
       {/* Upload Modal */}
       {showUploadComponent && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">

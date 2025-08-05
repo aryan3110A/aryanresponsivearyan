@@ -87,7 +87,7 @@ export default function SettingsPanel({
           </div>
 
           {/* Content */}
-          <div className="flex-1 overflow-y-auto px-4 space-y-6 scrollbar-hide pb-6">
+          <div className="flex-1 overflow-y-auto px-4 space-y-6 scrollbar-hide pb-24">
             <style jsx>{`
               .scrollbar-hide {
                 -ms-overflow-style: none;
@@ -199,23 +199,25 @@ export default function SettingsPanel({
               />
             </div>
 
-            {/* Save Button */}
-            <div className="mb-6 px-2 md:px-6">
-              <button
-                onClick={handleSave}
-                className="w-full bg-gradient-to-r from-[#6C3BFF] to-[#412399] hover:from-[#5A2FE6] hover:to-[#3A1F8A] text-white py-4 rounded-lg font-medium text-lg transition-all"
-              >
-                Save
-              </button>
-              <div className="bg-white/10 backdrop-blur-3xl hover:bg-white/20 rounded-lg p-4 space-y-2 text-sm text-gray-300 mt-6">
-                <div className="text-white font-medium mb-3">Settings Summary</div>
-                <div>Sticker Type : <span className="text-[#5AD7FF]">{stickerType || "None"}</span></div>
-                <div>Number of Stickers : <span className="text-[#5AD7FF]">{numberOfStickers}</span></div>
-                <div>Save File Type : <span className="text-[#5AD7FF]">{saveFileType || "None"}</span></div>
-                <div>Expression : <span className="text-[#5AD7FF]">{expression || "None"}</span></div>
-                <div>Sticker Consistency : <span className="text-[#5AD7FF]">{stickerConsistency ? "Enabled" : "Disabled"}</span></div>
-              </div>
+            {/* Settings Summary */}
+            <div className="bg-white/10 backdrop-blur-3xl hover:bg-white/20 rounded-lg p-4 space-y-2 text-sm text-gray-300 mb-6">
+              <div className="text-white font-medium mb-3">Settings Summary</div>
+              <div>Sticker Type : <span className="text-[#5AD7FF]">{stickerType || "None"}</span></div>
+              <div>Number of Stickers : <span className="text-[#5AD7FF]">{numberOfStickers}</span></div>
+              <div>Save File Type : <span className="text-[#5AD7FF]">{saveFileType || "None"}</span></div>
+              <div>Expression : <span className="text-[#5AD7FF]">{expression || "None"}</span></div>
+              <div>Sticker Consistency : <span className="text-[#5AD7FF]">{stickerConsistency ? "Enabled" : "Disabled"}</span></div>
             </div>
+          </div>
+
+          {/* Floating Save Button */}
+          <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent flex justify-center">
+            <button
+              onClick={handleSave}
+              className="w-32 bg-[#006aff] hover:bg-[#0052cc] text-white py-3 px-6 rounded-full font-medium text-sm transition-all shadow-lg"
+            >
+              Save
+            </button>
           </div>
         </div>
       </div>

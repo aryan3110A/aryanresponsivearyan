@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { Category, GeneratedSet } from '../page'
 import { ArrowLeft, Download, Sparkles, Clock, CheckCircle } from 'lucide-react'
 import { addDoc, collection } from 'firebase/firestore'
@@ -245,7 +245,7 @@ export default function GenerationResults({
     return prompts
   }
 
-  const generateBackendPrompt = (userPrompt: string, type: GenerationStep['type']): string => {
+  const generateBackendPrompt = useCallback((userPrompt: string, type: GenerationStep['type']): string => {
     const isJewelry = category.id === 'jewelry'
     const dimensionInfo = dimensions ? ` (${dimensions})` : ''
     
@@ -322,7 +322,7 @@ REQUIREMENTS:
 - CRITICAL: Maintain exact product identity from reference image`
 
     return finalPrompt
-  }
+  }, [category.id, dimensions, jewelryType, modelImage])
 
   // Generate images one by one with proper queue management
   useEffect(() => {
@@ -586,7 +586,7 @@ REQUIREMENTS:
     return () => {
       isCancelled = true
     }
-  }, [isGenerating, category.id, uploadedImage, userPrompt, selectedModel, onGenerationComplete, dimensions, generateBackendPrompt, jewelryType, modelImage, steps])
+  }, [isGenerating, category.id, uploadedImage, userPrompt, selectedModel, onGenerationComplete, dimensions, jewelryType, modelImage, steps, generateBackendPrompt])
 
   const downloadImage = async (imageUrl: string, filename: string) => {
     try {
