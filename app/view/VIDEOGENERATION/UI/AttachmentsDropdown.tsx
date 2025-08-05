@@ -77,7 +77,7 @@ export default function AttachmentsDropdown({
             </button>
             <button
               onClick={handleUploadFromDevices}
-              className="w-full flex items-center gap-3 px-3 py-2 text-white hover:bg-white/10 rounded-lg transition-colors text-left"
+              className="w-full flex items-center gap-3 px-3 py-2 text-white bg-[#006aff] hover:bg-[#0052cc] rounded-lg transition-colors text-left"
             >
               <Upload className="w-4 h-4" />
               <span className="text-sm">Upload from devices</span>

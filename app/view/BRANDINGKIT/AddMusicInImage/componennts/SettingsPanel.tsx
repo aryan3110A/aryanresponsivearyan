@@ -89,19 +89,20 @@ export default function SettingsPanel(props: SettingsPanelProps) {
              </div>
            
 
-          <div>
-          <div className="mb-6 px-2 md:px-6">
-              <button className="w-full flex items-center justify-center gap-2 py-4 rounded-lg bg-gradient-to-r from-[#6C3BFF] to-[#412399] hover:from-[#5A2FE6] hover:to-[#3A1F8A] text-white font-semibold text-lg transition-all"
-                onClick={() => {}}>
-                Save
-                <span className="flex items-center ml-2 text-base font-medium">
-                  (
-                  <Image src="/BRANDINGKIT/PRODUCTGENERATION/coins.svg" alt="Tokens" width={24} height={24} className="mx-1" />
-                  100
-                  )
-                </span>
-              </button>
-            </div>
+          {/* Floating Save Button */}
+          <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent flex justify-center">
+            <button
+              onClick={() => {}}
+              className="w-32 bg-[#006aff] hover:bg-[#0052cc] text-white py-3 px-6 rounded-full font-medium text-sm transition-all shadow-lg flex items-center justify-center gap-2"
+            >
+              Save
+              <span className="flex items-center ml-1 text-xs">
+                (
+                <Image src="/BRANDINGKIT/PRODUCTGENERATION/coins.svg" alt="Tokens" width={16} height={16} className="mx-1" />
+                100
+                )
+              </span>
+            </button>
           </div>
             </div>
           </div>

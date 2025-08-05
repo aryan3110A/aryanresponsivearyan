@@ -132,7 +132,7 @@ export default function InputSection({
                 {!logoFile ? (
                   <button
                     onClick={() => handleUploadLogo()}
-                    className="flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-[#6C3BFF] to-[#412399] text-white rounded-full hover:from-[#5A2FE6] hover:to-[#3A1F8A] transition-all duration-300 border border-[#8E8E8E]/30 hover:border-[#6C3BFF]/50"
+                    className="flex items-center gap-3 px-6 py-3 bg-[#006aff] hover:bg-[#0052cc] text-white rounded-full transition-all duration-300 border border-[#8E8E8E]/30 hover:border-[#006aff]/50"
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
@@ -190,7 +190,7 @@ export default function InputSection({
               <button
                 onClick={onGenerate}
                 disabled={isGenerating || !logoFile || !businessName.trim()}
-                className="bg-gradient-to-b from-[#6C3BFF] to-[#412399] transition-colors text-white px-12 py-3 rounded-full font-medium text-base"
+                className="bg-[#006aff] hover:bg-[#0052cc] transition-colors text-white px-12 py-3 rounded-full font-medium text-base"
               >
                 {isGenerating ? "Generating..." : "Generate"}
               </button>
@@ -214,7 +214,7 @@ export default function InputSection({
                 {!logoFile ? (
                   <button
                     onClick={() => handleUploadLogo()}
-                    className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#6C3BFF] to-[#412399] text-white rounded-full hover:from-[#5A2FE6] hover:to-[#3A1F8A] transition-all duration-300 text-sm border border-[#8E8E8E]/30 hover:border-[#6C3BFF]/50"
+                    className="flex items-center gap-2 px-4 py-2 bg-[#006aff] hover:bg-[#0052cc] text-white rounded-full transition-all duration-300 text-sm border border-[#8E8E8E]/30 hover:border-[#006aff]/50"
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
@@ -269,7 +269,7 @@ export default function InputSection({
               </div><button
             onClick={onGenerate}
             disabled={isGenerating || !logoFile || !businessName.trim()}
-            className="bg-gradient-to-b from-[#6C3BFF] to-[#412399] transition-colors text-white px-2  py-2.5 xs:py-3 rounded-full font-medium text-sm xs:text-base flex-1 max-w-[32%] "
+            className="bg-[#006aff] hover:bg-[#0052cc] transition-colors text-white px-2  py-2.5 xs:py-3 rounded-full font-medium text-sm xs:text-base flex-1 max-w-[32%] "
           >
             {isGenerating ? "Generating..." : "Generate"}
           </button>

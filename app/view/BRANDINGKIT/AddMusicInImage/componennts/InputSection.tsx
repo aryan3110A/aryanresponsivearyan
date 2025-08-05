@@ -145,7 +145,7 @@ export default function InputSection({
               <button
                 onClick={onGenerate}
                 disabled={!prompt.trim() || isGenerating}
-                className="bg-gradient-to-b from-[#6C3BFF] to-[#412399] transition-colors text-white px-12 py-3 rounded-full font-medium text-base"
+                className="bg-[#006aff] hover:bg-[#0052cc] transition-colors text-white px-12 py-3 rounded-full font-medium text-base"
               >
                 {isGenerating ? "Generating..." : "Generate"}
               </button>
@@ -197,7 +197,7 @@ export default function InputSection({
           <button
             onClick={onGenerate}
             disabled={!prompt.trim() || isGenerating}
-            className="bg-gradient-to-b from-[#6C3BFF] to-[#412399] transition-colors text-white px-2  py-2.5 xs:py-3 rounded-full font-medium text-sm xs:text-base flex-1 max-w-[32%] "
+            className="bg-[#006aff] hover:bg-[#0052cc] transition-colors text-white px-2  py-2.5 xs:py-3 rounded-full font-medium text-sm xs:text-base flex-1 max-w-[32%] "
           >
             {isGenerating ? "Generating..." : "Generate"}
           </button>
