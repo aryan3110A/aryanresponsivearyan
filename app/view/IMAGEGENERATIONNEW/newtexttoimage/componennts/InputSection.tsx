@@ -153,7 +153,7 @@ export default function InputSection({
       {/* Mobile & Tablet Layout - Fully Responsive */}
       <div className="xl:hidden w-full px-0 ">
         {/* Input Field Only - Full Width Responsive */}
-        <div className="w-full mb-4">
+        <div className="w-full mb-2">
           <div className="flex items-center bg-[#ffffff]/5 hover:bg-[#ffffff]/20 backdrop-blur-sm border border-[#8E8E8E] rounded-full p-2 xs:p-4 transition-all duration-300 ease-in-out">
             <input
               type="text"
@@ -178,14 +178,15 @@ export default function InputSection({
 
         {/* Buttons Below Input - Responsive Sizing */}
         <div className="flex items-center gap-3 xs:gap-4 justify-end w-full">
-          <button
-            onClick={onGenerate}
-            disabled={!prompt.trim() || isGenerating}
-            className="bg-gradient-to-b from-[#6C3BFF] to-[#412399] transition-colors text-white px-2  py-2.5 xs:py-3 rounded-full font-medium text-sm xs:text-base flex-1 max-w-[32%] "
+        <div className="flex items-center gap-3 xs:gap-4 justify-end w-full">
+          <HoverBorderGradient
+            onClick={!prompt.trim() || isGenerating ? undefined : onGenerate}
+            backgroundColor="bg-[#006aff]"
+            className="px-4 py-2.5 xs:py-3 rounded-full font-medium text-sm xs:text-base flex-1 max-w-[100%]"
           >
             {isGenerating ? "Generating..." : "Generate"}
-          </button>
-          
+          </HoverBorderGradient>
+
           <button
             onClick={handleSettingsClick}
             className="p-2 bg-[#1F1F1F] backdrop-blur-sm rounded-full hover:bg-transparent transition-all duration-300 border border-[#8E8E8E] flex-shrink-0"
@@ -195,9 +196,12 @@ export default function InputSection({
               alt="Settings"
               width={24}
               height={24}
-              className={`w-5 h-5 xs:w-6 xs:h-6 sm:w-7 sm:h-7 transition-transform duration-300 ${isSettingsRotating ? 'rotate-45' : ''}`}
+              className="w-5 h-5 xs:w-6 xs:h-6 sm:w-7 sm:h-7"
             />
           </button>
+        </div>
+          
+          
         </div>
       </div>
 

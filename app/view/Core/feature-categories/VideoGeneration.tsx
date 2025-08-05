@@ -13,7 +13,6 @@ const videoFeatures: FeatureItem[] = [
   { title: "Image to Video", href: VIDEOGENERATION.VIDEO_GENERATION, icon: "🎞️" },
   { title: "VFX AI", href: VIDEOGENERATION.VIDEO_GENERATION, icon: "✨" },
   { title: "Face Swap", href: VIDEOGENERATION.VIDEO_GENERATION, icon: "🔄" },
-  { title: "Live Portrait", href: VIDEOGENERATION.VIDEO_GENERATION, icon: "📹" },
   { title: "Character Swap", href: VIDEOGENERATION.VIDEO_GENERATION, icon: "👥" },
   { title: "Video Enhancement", href: VIDEOGENERATION.VIDEO_GENERATION, icon: "⚡" },
 ]
