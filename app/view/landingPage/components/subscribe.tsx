@@ -27,7 +27,7 @@ const NewsletterSignup: React.FC<NewsletterSignupProps> = ({ onSubmit }) => {
   };
 
   return (
-    <div className="relative bg-[rgba(255,255,255,0.1)] backdrop-blur-lg backdrop-saturate-150 border border-white border-opacity-20 rounded-xl p-8 max-w-4xl mx-auto text-white shadow-2xl overflow-hidden">
+    <div className="mb-10 relative bg-transparent backdrop-blur-lg backdrop-saturate-150 border border-white border-opacity-20 rounded-3xl p-8 max-w-4xl mx-auto text-white shadow-2xl overflow-hidden">
       {/* Clean static inner glow for glass depth */}
       <div className="absolute inset-[1px] bg-gradient-to-br from-white/5 to-transparent rounded-xl pointer-events-none"></div>
       
@@ -52,7 +52,7 @@ const NewsletterSignup: React.FC<NewsletterSignupProps> = ({ onSubmit }) => {
               value={email}
               onChange={handleEmailChange}
               required
-              className="bg-[rgba(255,255,255,0.08)] backdrop-blur-sm border border-white border-opacity-20 rounded-md px-4 py-3 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-30 focus:border-white focus:border-opacity-40 focus:bg-[rgba(255,255,255,0.12)] transition-all duration-300 shadow-inner"
+              className="bg-[rgba(255,255,255,0.08)] backdrop-blur-sm border border-white border-opacity-20 rounded-full px-4 py-3 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-30 focus:border-white focus:border-opacity-40 focus:bg-[rgba(255,255,255,0.12)] transition-all duration-300 shadow-inner"
             />
             
             {/* Checkbox and Privacy Policy */}
@@ -80,7 +80,7 @@ const NewsletterSignup: React.FC<NewsletterSignupProps> = ({ onSubmit }) => {
             <button
               type="submit"
               disabled={!email || !isChecked}
-              className="relative bg-[rgba(255,255,255,0.15)] backdrop-blur-md border border-white border-opacity-30 hover:bg-[rgba(255,255,255,0.25)] hover:border-opacity-40 disabled:bg-[rgba(255,255,255,0.05)] disabled:border-opacity-10 disabled:cursor-not-allowed rounded-md px-6 py-3 text-white font-semibold transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-30 shadow-lg overflow-hidden"
+              className="relative bg-[rgba(255,255,255,0.15)] backdrop-blur-md border border-white border-opacity-30 hover:bg-[rgba(255,255,255,0.25)] hover:border-opacity-40 disabled:bg-[rgba(255,255,255,0.05)] disabled:border-opacity-10 disabled:cursor-not-allowed rounded-full px-6 py-3 text-white font-semibold transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-30 shadow-lg overflow-hidden"
             >
               {/* Static button inner glow */}
               <div className="absolute inset-[1px] bg-gradient-to-t from-transparent to-white to-transparent opacity-[0.08] rounded-md"></div>

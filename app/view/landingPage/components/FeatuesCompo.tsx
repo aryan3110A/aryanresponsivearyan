@@ -121,7 +121,7 @@ export default function AiToolsGrid({ activeCategory = 'All' }: AiToolsGridProps
           {!showAll && filteredCards.length > 10 && (
             <button
               onClick={() => setShowAll(true)}
-              className="bg-[#23234c] text-white font-medium px-8 py-3 rounded-lg transition hover:bg-[#383877]"
+              className="bg-[#006AFF] text-white font-medium px-8 py-3 rounded-full transition hover:bg-[#383877]"
             >
               View All
             </button>

@@ -66,7 +66,7 @@ const InfiniteImageScroll: React.FC<InfiniteImageScrollProps> = ({
             key={`${image.id}-${index}`}
             className="flex-shrink-0"
           >
-            <div className="relative w-64 h-80 rounded-xl overflow-hidden bg-white/10 backdrop-blur-sm border border-white/20 shadow-lg">
+            <div className="relative w-64 h-80 mt-20 rounded-xl overflow-hidden bg-white/10 backdrop-blur-sm border border-white/20 shadow-lg">
               <Image
                 src={image.src}
                 alt={image.alt}

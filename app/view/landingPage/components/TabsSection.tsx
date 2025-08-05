@@ -10,10 +10,10 @@ const TabsSection = () => {
       title: "Image Generation",
       value: "image-generation",
       content: (
-        <div className="w-full h-full bg-gray-800/50 backdrop-blur-md rounded-2xl border border-gray-600 p-6">
-          <div className="w-full h-full flex flex-col md:flex-row gap-8">
+        <div className="w-full h-full bg-transparent backdrop-blur-xl rounded-2xl border border-white/20 p-6 shadow-2xl">
+          <div className="w-full h-full flex flex-col md:flex-row gap-8 justify-center items-center">
             {/* Image */}
-            <div className="flex-1 relative h-[300px] md:h-[400px] rounded-xl overflow-hidden">
+            <div className="flex-1 relative h-[300px] md:h-[400px] rounded-xl overflow-hidden ">
               <Image
                 src="/Landingpage/animated-tabs/imag1.png"
                 alt="Image Generation"
@@ -43,8 +43,8 @@ const TabsSection = () => {
       title: "Video Generation",
       value: "video-generation",
       content: (
-        <div className="w-full h-full bg-gray-800/50 backdrop-blur-md rounded-2xl border border-gray-600 p-6">
-          <div className="w-full h-full flex flex-col md:flex-row gap-8">
+        <div className="w-full h-full bg-transparent backdrop-blur-xl rounded-2xl border border-white/20 p-6 shadow-2xl">
+          <div className="w-full h-full flex flex-col md:flex-row gap-8 justify-center items-center">
             {/* Image */}
             <div className="flex-1 relative h-[300px] md:h-[400px] rounded-xl overflow-hidden">
               <Image
@@ -76,8 +76,8 @@ const TabsSection = () => {
       title: "Audio Generation",
       value: "audio-generation",
       content: (
-        <div className="w-full h-full bg-gray-800/50 backdrop-blur-md rounded-2xl border border-gray-600 p-6">
-          <div className="w-full h-full flex flex-col md:flex-row gap-8">
+        <div className="w-full h-full bg-transparent backdrop-blur-xl rounded-2xl border border-white/20 p-6 shadow-2xl">
+          <div className="w-full h-full flex flex-col md:flex-row gap-8 justify-center items-center">
             {/* Image */}
             <div className="flex-1 relative h-[300px] md:h-[400px] rounded-xl overflow-hidden">
               <Image
@@ -109,8 +109,8 @@ const TabsSection = () => {
       title: "Filming Tools",
       value: "filming-tools",
       content: (
-        <div className="w-full h-full bg-gray-800/50 backdrop-blur-md rounded-2xl border border-gray-600 p-6">
-          <div className="w-full h-full flex flex-col md:flex-row gap-8">
+        <div className="w-full h-full bg-transparent backdrop-blur-xl rounded-2xl border border-white/20 p-6 shadow-2xl">
+          <div className="w-full h-full flex flex-col md:flex-row gap-8 justify-center items-center">
             {/* Image */}
             <div className="flex-1 relative h-[300px] md:h-[400px] rounded-xl overflow-hidden">
               <Image
@@ -142,8 +142,8 @@ const TabsSection = () => {
       title: "Branding Kit",
       value: "branding-kit",
       content: (
-        <div className="w-full h-full bg-gray-800/50 backdrop-blur-md rounded-2xl border border-gray-600 p-6">
-          <div className="w-full h-full flex flex-col md:flex-row gap-8">
+        <div className="w-full h-full bg-transparent backdrop-blur-xl rounded-2xl border border-white/20 p-6 shadow-2xl">
+          <div className="w-full h-full flex flex-col md:flex-row gap-8 justify-center items-center">
             {/* Image */}
             <div className="flex-1 relative h-[300px] md:h-[400px] rounded-xl overflow-hidden">
               <Image
@@ -175,8 +175,8 @@ const TabsSection = () => {
       title: "3D Generation",
       value: "3d-generation",
       content: (
-        <div className="w-full h-full bg-gray-800/50 backdrop-blur-md rounded-2xl border border-gray-600 p-6">
-          <div className="w-full h-full flex flex-col md:flex-row gap-8">
+                <div className="w-full h-full bg-transparent backdrop-blur-xl rounded-2xl border border-white/20 p-6 shadow-2xl">
+          <div className="w-full h-full flex flex-col md:flex-row gap-8 justify-center items-center">
             {/* Image */}
             <div className="flex-1 relative h-[300px] md:h-[400px] rounded-xl overflow-hidden">
               <Image

@@ -32,7 +32,7 @@ export default function InputSection({
   setPrompt,
   generatedPrompt,
   onGenerate,
-  onSettingsToggle,
+  // onSettingsToggle,
   isGenerating,
   generatedImages,
   selectedFont,
@@ -133,9 +133,9 @@ export default function InputSection({
     setSelectedImageForOverlay(null)
   }
 
-  const handleSettingsClick = () => {
-    onSettingsToggle()
-  }
+  // const handleSettingsClick = () => {
+  //   onSettingsToggle()
+  // }
 
   return (
     <div className="flex flex-col items-center w-full space-y-6 mb:space-y-4 lg:space-y-12">
@@ -182,18 +182,18 @@ export default function InputSection({
           </div>
         </div>
 
-        <button
+        {/* <button
           onClick={handleSettingsClick}
           className="p-3 bg-[#1F1F1F] backdrop-blur-sm rounded-full hover:bg-transparent transition-all duration-300 border border-[#8E8E8E]"
         >
           <Image src="/mockupgeneration/setting.png" alt="Settings" width={32} height={32} className="w-12 h-12" />
-        </button>
+        </button> */}
       </div>
 
       {/* Mobile & Tablet Layout - Fully Responsive */}
       <div className="xl:hidden w-full px-0 ">
         {/* Input Field Only - Full Width Responsive */}
-        <div className="w-full mb-4">
+        <div className="w-full  mb-2">
           <div className="flex items-center bg-[#ffffff]/5 hover:bg-[#ffffff]/20 backdrop-blur-sm border border-[#8E8E8E] rounded-full p-2 xs:p-4 transition-all duration-300 ease-in-out">
             <AttachmentsDropdown
               onChooseFromLibrary={handleChooseFromLibrary}
@@ -237,12 +237,12 @@ export default function InputSection({
           <HoverBorderGradient
             onClick={!prompt.trim() || isGenerating ? undefined : onGenerate}
             backgroundColor="bg-[#006aff]"
-            className="px-2 py-2.5 xs:py-3 rounded-full font-medium text-sm xs:text-base flex-1 max-w-[32%]"
+            className="px-4 py-2.5 xs:py-3 rounded-full font-medium text-sm xs:text-base flex-1 max-w-[100%]"
           >
             {isGenerating ? "Generating..." : "Generate"}
           </HoverBorderGradient>
 
-          <button
+          {/* <button
             onClick={handleSettingsClick}
             className="p-2 bg-[#1F1F1F] backdrop-blur-sm rounded-full hover:bg-transparent transition-all duration-300 border border-[#8E8E8E] flex-shrink-0"
           >
@@ -253,7 +253,7 @@ export default function InputSection({
               height={24}
               className="w-5 h-5 xs:w-6 xs:h-6 sm:w-7 sm:h-7"
             />
-          </button>
+          </button> */}
         </div>
       </div>
 

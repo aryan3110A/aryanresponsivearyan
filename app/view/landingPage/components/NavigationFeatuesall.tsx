@@ -124,7 +124,7 @@ const NavigationCompo: React.FC<NavigationCompoProps> = ({
   };
 
   return (
-    <div className="relative">
+    <div className="relative mb-10 ">
       <NavigationFeatuesall
         as="div"
         containerClassName="bg-black rounded-full p-2"

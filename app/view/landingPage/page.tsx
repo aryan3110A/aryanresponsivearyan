@@ -17,12 +17,12 @@ const Main = () => {
       </div>
 
       {/* Main Content with proper spacing and z-index */}
-      <div className="pt-20 relative">
+      <div className=" relative">
         <div className="relative z-[10]">
           <Header />
         </div>
 
-        <div className="relative z-[10]">
+        <div className="relative z-[10] mt-16">
           <TabsSection />
         </div>
       </div>
@@ -31,6 +31,7 @@ const Main = () => {
       <div className="relative z-[10]">
         {/* <ArtGallery /> */}
         {/* <SocialMediaSuite /> */}
+        <p className="text-white flex justify-center items-center text-[3rem] mt-20  font-semibold">Features</p>
         <FeatuesAll />
       </div>
 
