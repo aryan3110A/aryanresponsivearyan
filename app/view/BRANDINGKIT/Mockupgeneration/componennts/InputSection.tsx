@@ -125,7 +125,7 @@ export default function InputSection({
       {/* Desktop Layout - Input with buttons inline */}
       <div className="hidden xl:flex items-center gap-4 w-full md:max-w-6xl lg:max-w-7xl px-4">
         <div className="flex-1 relative">
-          <div className="flex flex-col gap-4 bg-[#ffffff]/5 hover:bg-[#ffffff]/10 backdrop-blur-sm border border-[#8E8E8E] rounded-full p-4 transition-all duration-300 ease-in-out">
+          <div className="flex flex-col gap-4 bg-[#ffffff]/5 hover:bg-[#ffffff]/10 backdrop-blur-sm border border-[#8E8E8E] rounded-[4rem] p-8 transition-all duration-300 ease-in-out">
             <div className="flex flex-col gap-4">
               {/* Logo Upload Section */}
               <div className="flex items-center gap-4">
@@ -199,7 +199,7 @@ export default function InputSection({
         </div>
         <button
           onClick={onSettingsToggle}
-          className="p-3 bg-[#1F1F1F] backdrop-blur-sm rounded-full hover:bg-transparent transition-all duration-300 border border-[#8E8E8E]"
+          className="p-3 bg-white/5 backdrop-blur-sm rounded-full hover:bg-transparent transition-all duration-300 border border-[#8E8E8E]"
         >
           <Image src="/mockupgeneration/setting.png" alt="Settings" width={32} height={32} className="w-12 h-12" />
         </button>
@@ -495,7 +495,7 @@ export default function InputSection({
             </div>
             <UploadComponent
               onFilesSelected={handleFilesSelected}
-              title="Upload Logo"
+              title=""
               description="Select a logo file to use for mockup generation"
               supportedFormats="Supports: JPG, PNG, GIF"
               acceptedTypes="image/*"
