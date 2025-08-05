@@ -8,6 +8,7 @@ import { auth, db } from "@/database/firebase"
 import { doc, getDoc } from "firebase/firestore"
 import { APP_ROUTES, NAV_ROUTES, FEATURE_ROUTES } from "../../../../routes/routes"
 import { getImageUrl } from "@/routes/imageroute";
+import { HoverBorderGradient } from "./hover-border-gradient";
 
 
 
@@ -121,7 +122,7 @@ const Navigation = () => {
         } transition-all duration-300 hidden md:flex`}
       >
         {/* Logo */}
-        <div className="flex">
+        <div className="flex w-10 h-10 pl-2">
               <Image src={getImageUrl("core", "logo")} width={32} height={20} alt="logo" onClick={() => router.push("/")} />
             </div>
 
@@ -202,14 +203,13 @@ const Navigation = () => {
 
         {/* Get Started Button */}
         <div>
-          <button
-            className="relative bg-black/20 border border-white/20 rounded-full px-5 py-2 text-base font-medium border-t-[#acacac] border-b-[#6A0DAD] hover:border-t-[#6A0DAD] hover:border-b-[#acacac] 
-                      text-transparent bg-clip-text bg-gradient-to-r from-[#5AD7FF] to-[#656BF5] shadow-[inset_0px_0px_8px_rgba(255,255,255,0.2)] 
-                      transition-all duration-500 ease-in-out hover:text-white"
+          <HoverBorderGradient
             onClick={handleGetStarted}
+            containerClassName=""
+            className="text-white text-base font-medium"
           >
             Get Started
-          </button>
+          </HoverBorderGradient>
         </div>
       </div>
 

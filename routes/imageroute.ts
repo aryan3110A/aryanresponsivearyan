@@ -4,11 +4,11 @@ interface ImageRoute {
 
 interface FolderImageRoutes {
     [folderName: string]: ImageRoute;
-}
+}   
 
 export const imageRoutes: FolderImageRoutes = {
     core: {
-        logo: 'https://firebasestorage.googleapis.com/v0/b/wild-mind-ai.firebasestorage.app/o/public%2Fcore%2Flogomain.png?alt=media&token=28bd622f-58ff-4612-8012-799d7bdfce52',  
+        logo: 'https://firebasestorage.googleapis.com/v0/b/wild-mind-ai.firebasestorage.app/o/public%2Fcore%2FAsset%203wildmind%20logo%20text.svg?alt=media&token=c86daaa8-e085-498a-9037-b8b151c59b78',  
         coins : 'https://firebasestorage.googleapis.com/v0/b/wild-mind-ai.firebasestorage.app/o/public%2Fsetting%2Fcoins.png?alt=media&token=56e61d6d-8695-47ea-8e4d-952d2f8ff1ed',
         diamond : 'https://firebasestorage.googleapis.com/v0/b/wild-mind-ai.firebasestorage.app/o/public%2Fsetting%2Fdiamond.png?alt=media&token=4aad71ad-e181-4d8c-b2da-2de227d44336',
         profile:'https://firebasestorage.googleapis.com/v0/b/wild-mind-ai.firebasestorage.app/o/public%2Fsetting%2Fprofile.png?alt=media&token=fb2b2e2c-944a-458e-a505-8ca414315d00'

@@ -58,7 +58,7 @@ export default function NewText2Image() {
 
   const [currentSettings, setCurrentSettings] = useState<SettingsData | null>(null)
 
-  const modelSlugMap: Record<string, string> = {
+  const modelSlugMap = useMemo<Record<string, string>>(() => ({
     "Stable Turbo": "stable-turbo",
     "Stable Diffusion 3.5 Large": "stable-large",
     "Stable Diffusion 3.5 Medium": "stable-medium",
@@ -67,13 +67,13 @@ export default function NewText2Image() {
     "Flux.1 Schnell": "flux-schnell",
     "Flux.1 KONTEXT MAX": "flux-kontext-max",
     "Flux.1 KONTEXT PRO": "flux-kontext-pro"
-  };
+  }), []);
 
   // Map model names to their IDs for Flux models
-  const modelIdMap: Record<string, number> = {
+  const modelIdMap = useMemo<Record<string, number>>(() => ({
     "Flux.1 KONTEXT MAX": 6,
     "Flux.1 KONTEXT PRO": 7
-  };
+  }), []);
 
   const buildEnhancedPrompt = (basePrompt: string, settings: SettingsData) => {
     let enhancedPrompt = basePrompt

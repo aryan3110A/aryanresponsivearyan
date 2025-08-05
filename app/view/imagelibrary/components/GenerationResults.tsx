@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import { Category, GeneratedSet } from '../page'
 import { ArrowLeft, Download, Sparkles, Clock, CheckCircle } from 'lucide-react'
 import { addDoc, collection } from 'firebase/firestore'
@@ -122,7 +122,7 @@ export default function GenerationResults({
   const [allComplete, setAllComplete] = useState(false)
 
   // Photography Style Configuration
-  const MODEL_PHOTOGRAPHY_STYLES = {
+  const MODEL_PHOTOGRAPHY_STYLES = useMemo(() => ({
     studio_portrait: {
       id: 'studio_portrait',
       name: 'Studio Portrait',
@@ -141,9 +141,9 @@ export default function GenerationResults({
       angle: 'side profile',
       prompt_template: `Model wearing {item} identical to reference image, side view, {description}, fashion photo, exact product match`
     }
-  }
+  }), [])
 
-  const PRODUCT_PHOTOGRAPHY_STYLES = {
+  const PRODUCT_PHOTOGRAPHY_STYLES = useMemo(() => ({
     professional_showcase: {
       id: 'professional_showcase',
       name: 'Professional Showcase',
@@ -159,9 +159,9 @@ export default function GenerationResults({
       name: 'Minimalist Hero',
       prompt_template: `Product photo, {description}, simple background, no model`
     }
-  }
+  }), [])
 
-  const BRAND_AESTHETICS = {
+  const BRAND_AESTHETICS = useMemo(() => ({
     luxury: {
       id: 'luxury',
       descriptor: 'luxury',
@@ -178,9 +178,9 @@ export default function GenerationResults({
       mood: 'friendly',
       quality: 'authentic'
     }
-  }
+  }), [])
 
-  const CATEGORY_ENHANCEMENTS = {
+  const CATEGORY_ENHANCEMENTS = useMemo(() => ({
     jewelry: {
       model_addition: ', jewelry detail, close-up shot, elegant styling',
       product_addition: ', jewelry detail, premium presentation'
@@ -197,9 +197,9 @@ export default function GenerationResults({
       model_addition: ', accessory styling, natural pose, lifestyle integration',
       product_addition: ', accessory detail, elegant display'
     }
-  }
+  }), [])
 
-  const generatePrompts = (itemData: {
+  const generatePrompts = useCallback((itemData: {
     description: string
     itemType: string
     category: string
@@ -243,7 +243,7 @@ export default function GenerationResults({
     })
 
     return prompts
-  }
+  }, [BRAND_AESTHETICS, MODEL_PHOTOGRAPHY_STYLES, PRODUCT_PHOTOGRAPHY_STYLES])
 
   const generateBackendPrompt = useCallback((userPrompt: string, type: GenerationStep['type']): string => {
     const isJewelry = category.id === 'jewelry'
@@ -322,7 +322,7 @@ REQUIREMENTS:
 - CRITICAL: Maintain exact product identity from reference image`
 
     return finalPrompt
-  }, [category.id, dimensions, jewelryType, modelImage])
+  }, [category.id, dimensions, jewelryType, modelImage, CATEGORY_ENHANCEMENTS, generatePrompts])
 
   // Generate images one by one with proper queue management
   useEffect(() => {

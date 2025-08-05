@@ -14,6 +14,7 @@ import { NAV_ROUTES, FEATURE_ROUTES } from "../../../routes/routes";
 import Image from "next/image";
 import { getImageUrl } from "@/routes/imageroute";
 import { useState, useEffect } from "react";
+import { TextHoverEffect } from "./text-hover-effect";
 
 // Define types for navigation links
 interface NavigationLinks {
@@ -103,6 +104,8 @@ const socialLinks: SocialLink[] = [
 
 const Footer: React.FC = () => {
   const [screenWidth, setScreenWidth] = useState(0);
+  const [isFooterHovered, setIsFooterHovered] = useState(false);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -124,9 +127,49 @@ const Footer: React.FC = () => {
   // Tablet is between 768px and 1023px
   const isTablet = screenWidth >= 768 && screenWidth < 1024;
 
+  const handleMouseMove = (e: React.MouseEvent) => {
+    // Don't trigger footer hover if hovering over social media icons
+    const target = e.target as HTMLElement;
+    const isSocialIcon = target.closest('.social-icon-container');
+    
+    if (!isSocialIcon) {
+      setMousePosition({ x: e.clientX, y: e.clientY });
+    }
+  };
+
+  const handleFooterMouseEnter = () => {
+    setIsFooterHovered(true);
+  };
+
+  const handleFooterMouseLeave = () => {
+    setIsFooterHovered(false);
+  };
+
   return (
-    <footer className="bg-[#000] text-gray-300 py-8 w-full overflow-x-hidden">
-      <div className="max-w-full px-4 md:px-16 lg:px-12">
+    <footer 
+      className="bg-[#000] text-gray-300 py-8 w-full overflow-x-hidden relative group"
+      onMouseEnter={handleFooterMouseEnter}
+      onMouseLeave={handleFooterMouseLeave}
+      onMouseMove={handleMouseMove}
+    >
+      {/* Text Hover Effect Background */}
+      <div className="absolute inset-0 z-0 opacity-15">
+        <div className="absolute inset-0 w-full h-full flex items-center justify-center">
+          <div className="w-full h-full cursor-pointer">
+            <TextHoverEffect
+
+              text="WildMind" 
+              duration={0.3} 
+              className="w-full h-full" 
+              backgroundMode={true}
+              externalHovered={isFooterHovered}
+              mousePosition={mousePosition}
+            />
+          </div>
+        </div>
+      </div>
+      
+      <div className="max-w-full px-4 md:px-16 lg:px-12 relative z-20">
         {/* Desktop Layout - Using original code for desktop/laptop */}
         <div
           className={`${isMobile ? "hidden" : "flex"} ${
@@ -156,21 +199,23 @@ const Footer: React.FC = () => {
               </h1>
             </div>
             <p className="sm:text-sm md:text-[1.120rem] lg:text-[1.2rem] lg:leading-6 text-nowrap">
-              WildMind Studios uses advanced AI to turn <br /> imagination into
+              WildMind uses advanced AI to turn <br /> imagination into
               high-quality, creative visuals.
             </p>
 
             {/* Social Media Icons */}
-            <div className="flex gap-6">
+            <div className="flex gap-6 social-icon-container">
               {socialLinks.map((social, index) => (
                 <div key={index} className="relative group">
                   <Link
                     href={social.href}
                     className={`w-10 h-10 md:w-12 md:h-12 md:mt-6 lg:w-12 lg:h-12 rounded-full flex items-center justify-center border-2 border-[#545454] bg-[#1E1E1E] 
-                    transition-transform duration-200 ease-in-out transform-gpu will-change-transform hover:scale-125 hover:-translate-y-2 mt-4
+                    transition-transform duration-200 ease-in-out transform-gpu will-change-transform hover:scale-110 mt-4
                     ${social.hoverColor} ${social.borderHoverColor} ${social.glowColor}`}
+                    onMouseEnter={(e) => e.stopPropagation()}
+                    onMouseLeave={(e) => e.stopPropagation()}
                   >
-                    <social.icon className="w-5 h-5 md:w-7 md:h-7 lg:w-6 lg:h-6 transition-transform duration-100 ease-in-out hover:scale-110" />
+                    <social.icon className="w-5 h-5 md:w-7 md:h-7 lg:w-6 lg:h-6 transition-transform duration-100 ease-in-out hover:scale-105" />
                   </Link>
                   {/* Tooltip */}
                   <span className="absolute left-1/2 -translate-x-1/2 -top-5 bg-[#1E1E1E] text-white text-xs md:text-xs lg:text-sm px-2 py-1 rounded-md opacity-0 transition-opacity duration-200 group-hover:opacity-100">
@@ -197,7 +242,7 @@ const Footer: React.FC = () => {
                   <li key={name} className="pb-2 mb-2">
                     <Link
                       href={href}
-                      className="text-[#616161] md:text-[16px] hover:text-white transition-colors text-nowrap"
+                      className="text-[#FFFFFF]/80 md:text-[16px] hover:text-white transition-colors text-nowrap"
                     >
                       {name}
                     </Link>
@@ -213,7 +258,7 @@ const Footer: React.FC = () => {
           <div className="flex flex-col space-y-8">
             {/* Logo and Description */}
             <div className="flex flex-col items-center text-center">
-              <div className="mb-2">
+              <div className="mb-2 ">
                 <Image
                   src={getImageUrl("core", "logo") || "/placeholder.svg"}
                   alt="logo"
@@ -227,7 +272,7 @@ const Footer: React.FC = () => {
                 </span>
               </h1>
               <p className="text-sm text-gray-400 px-4">
-                WildMind Studios uses advanced AI to turn imagination into
+                WildMind uses advanced AI to turn imagination into
                 high-quality, creative visuals.
               </p>
             </div>

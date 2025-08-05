@@ -76,7 +76,7 @@ export default function AISTICKERGEN() {
       {/* <BackgroundShapes /> */}
 
       <div className="relative z-10">
-        <Header title="AI Sticker Generator" />
+        <Header title="Sticker Generator" />
 
         <main className="container mx-auto  lg:px-8 xl:px-12 2xl:px-16">
           <InputSection

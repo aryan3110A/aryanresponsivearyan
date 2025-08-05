@@ -119,7 +119,7 @@ const NAV_LAND = () => {
         } transition-all duration-300 hidden md:flex`}
       >
         {/* Logo */}
-        <div className="flex">
+        <div className="flex w-10 h-10 pl-2">
               <Image src={getImageUrl("core", "logo")} width={40} height={24} alt="logo" onClick={() => router.push("/")} />
             </div>
 

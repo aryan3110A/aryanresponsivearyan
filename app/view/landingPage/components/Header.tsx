@@ -18,8 +18,8 @@ const Header = () => {
   
 
   return (
-    <div  className="relative h-screen  overflow-hidden flex flex-col justify-center items-center 
-    mb:h-auto mb:min-h-[100vh] mb:px-2 mb:items-center mb:justify-center mb:flex-col"
+    <div  className="relative min-h-[80vh] overflow-hidden flex flex-col justify-center items-center 
+    mb:h-auto mb:min-h-[80vh] mb:px-2 mb:items-center mb:justify-center mb:flex-col"
      >
          {/* Left side gradient effect */}
       <div className="absolute top-0 left-0 w-1/4 h-2/5 opacity-40 rounded-full blur-3xl" 

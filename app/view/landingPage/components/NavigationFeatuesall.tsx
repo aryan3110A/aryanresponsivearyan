@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import { motion } from "motion/react";
-import { cn } from "../../../lib/utils";
+import { cn } from "@/app/lib/utils";
 
 type Direction = "TOP" | "LEFT" | "BOTTOM" | "RIGHT";
 
@@ -116,7 +116,7 @@ const NavigationCompo: React.FC<NavigationCompoProps> = ({
   ],
   onCategoryChange
 }) => {
-  const [activeCategory, setActiveCategory] = useState('Social Media');
+  const [activeCategory, setActiveCategory] = useState('All');
 
   const handleCategoryChange = (category: string) => {
     setActiveCategory(category);
@@ -130,7 +130,7 @@ const NavigationCompo: React.FC<NavigationCompoProps> = ({
         containerClassName="bg-black rounded-full p-2"
         className="bg-black rounded-full p-2"
       >
-        <div className="flex space-x-2 min-w-max px-4 overflow-x-auto relative z-10">
+        <div className="flex space-x-2 min-w-max px-4 overflow-x-auto scrollbar-hide relative z-10">
           {categories.map((category) => (
             <button
               key={category}
@@ -146,6 +146,17 @@ const NavigationCompo: React.FC<NavigationCompoProps> = ({
           ))}
         </div>
       </NavigationFeatuesall>
+      
+      {/* Add scrollbar hide styles */}
+      <style jsx>{`
+        .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+        .scrollbar-hide::-webkit-scrollbar { 
+          display: none;
+        }
+      `}</style>
     </div>
   );
 };
