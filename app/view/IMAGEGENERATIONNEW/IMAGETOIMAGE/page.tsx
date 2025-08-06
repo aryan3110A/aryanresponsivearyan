@@ -47,7 +47,7 @@ interface SettingsData {
 export default function ImageToImage() {
   const [prompt, setPrompt] = useState("")
   const [generatedImages, setGeneratedImages] = useState<string[]>([])
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false)
+
   const [isGenerating, setIsGenerating] = useState(false)
   const [selectedModel, setSelectedModel] = useState("Flux.1 KONTEXT MAX")
   const [selectedStyle, setSelectedStyle] = useState<string | null>(null)
@@ -253,61 +253,50 @@ export default function ImageToImage() {
     console.log("Settings saved:", settingsData)
   }
 
-  const handleSettingsToggle = () => {
-    setIsSettingsOpen(!isSettingsOpen)
-  }
-
   return (
     <>
-    <div className="min-h-screen bg-black text-white relative overflow-hidden">
-            {/* Background Particles */}
-      <StableBackground />
-      <NavigationFull />
-      {/* <BackgroundShapes /> */}
-
-      <div className="relative z-10">
-        <Header title="Image to Image " />
-
-        <main className="container mx-auto  lg:px-8 xl:px-12 2xl:px-16">
-          <InputSection
-            prompt={prompt}
-            setPrompt={setPrompt}
-            onGenerate={handleGenerate}
-            onSettingsToggle={handleSettingsToggle}
-            isGenerating={isGenerating}
-            generatedImages={generatedImages}
+      <div className="min-h-screen bg-black text-white relative overflow-hidden">
+        <StableBackground />
+        <NavigationFull />
+        <div className="flex flex-row relative" style={{ minHeight: 'calc(100vh - 64px - 64px)', marginTop: '64px' }}>
+          <SettingsPanel
+            isOpen={true}
+            onClose={() => {}} // No-op since we want it always open
             selectedModel={selectedModel}
+            setSelectedModel={setSelectedModel}
             selectedStyle={selectedStyle}
-            selectedQuality={selectedQuality}
+            setSelectedStyle={setSelectedStyle}
             selectedAspectRatio={selectedAspectRatio}
+            setSelectedAspectRatio={setSelectedAspectRatio}
+            selectedQuality={selectedQuality}
+            setSelectedQuality={setSelectedQuality}
             numberOfImages={numberOfImages}
-            uploadedImage={uploadedImage}
-            setUploadedImage={setUploadedImage}
+            setNumberOfImages={setNumberOfImages}
+            onSave={handleSettingsSave}
+            className="w-[340px] max-h-[calc(100vh-128px)] overflow-y-auto sticky top-[64px] z-30 border-r border-[#222]"
           />
-        </main>
-
-        
+          <div className="flex-1 overflow-y-auto flex flex-col items-center justify-center">
+            <div className="w-full max-w-4xl flex flex-col items-center justify-center px-2 sm:px-4 gap-8">
+              <Header title="Image to Image" />
+              <InputSection
+                prompt={prompt}
+                setPrompt={setPrompt}
+                onGenerate={handleGenerate}
+                isGenerating={isGenerating}
+                generatedImages={generatedImages}
+                selectedModel={selectedModel}
+                selectedStyle={selectedStyle}
+                selectedQuality={selectedQuality}
+                selectedAspectRatio={selectedAspectRatio}
+                numberOfImages={numberOfImages}
+                uploadedImage={uploadedImage}
+                setUploadedImage={setUploadedImage}
+              />
+            </div>
+          </div>
+        </div>
       </div>
-      
-
-      <SettingsPanel
-        isOpen={isSettingsOpen}
-        onClose={() => setIsSettingsOpen(false)}
-        selectedModel={selectedModel}
-        setSelectedModel={setSelectedModel}
-        selectedStyle={selectedStyle}
-        setSelectedStyle={setSelectedStyle}
-        selectedAspectRatio={selectedAspectRatio}
-        setSelectedAspectRatio={setSelectedAspectRatio}
-        selectedQuality={selectedQuality}
-        setSelectedQuality={setSelectedQuality}
-        numberOfImages={numberOfImages}
-        setNumberOfImages={setNumberOfImages}
-        onSave={handleSettingsSave}
-      />
-      
-    </div>
-    <Footer />
+      <Footer />
     </>
   )
 }

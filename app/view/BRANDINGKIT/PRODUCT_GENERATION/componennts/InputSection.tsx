@@ -2,15 +2,14 @@
 
 import Image from "next/image"
 import { useState, useRef } from "react"
-import AttachmentsDropdown from "./AttachmentsDropdown"
-import { UploadComponent, ImageOverlay } from "../../UI"
+import { ImageOverlay } from "../../UI"
 import { Download, Bookmark, Heart, Sparkles } from "lucide-react"
+import { HoverBorderGradient } from "../../../Core/hover-border-gradient"
 
 interface InputSectionProps {
   prompt: string
   setPrompt: (prompt: string) => void
   onGenerate: () => void
-  onSettingsToggle: () => void
   isGenerating: boolean
   generatedImages: string[]
   selectedModel: string
@@ -24,7 +23,6 @@ export default function InputSection({
   prompt,
   setPrompt,
   onGenerate,
-  onSettingsToggle,
   isGenerating,
   generatedImages,
   selectedModel,
@@ -33,7 +31,7 @@ export default function InputSection({
   selectedAspectRatio,
   numberOfImages,
 }: InputSectionProps) {
-  const [showUploadComponent, setShowUploadComponent] = useState(false)
+
   const [hoveredImageIndex, setHoveredImageIndex] = useState<number | null>(null)
   const [likedImages, setLikedImages] = useState<Set<number>>(new Set())
   const [bookmarkedImages, setBookmarkedImages] = useState<Set<number>>(new Set())
@@ -43,18 +41,7 @@ export default function InputSection({
   } | null>(null)
   const scrollContainerRef = useRef<HTMLDivElement>(null)
 
-  const handleChooseFromLibrary = () => {
-    console.log("Choose from library clicked")
-  }
 
-  const handleUploadFromDevices = () => {
-    setShowUploadComponent(true)
-    console.log("Upload from devices clicked")
-  }
-
-  const handleFilesSelected = (files: File[]) => {
-    console.log("Files selected:", files)
-  }
 
   const handleDownload = async (imageUrl: string, index: number) => {
     try {
@@ -121,119 +108,66 @@ export default function InputSection({
   return (
     <div className="flex flex-col items-center w-full space-y-6 mb:space-y-4 lg:space-y-12">
       {/* Desktop Layout - Input with buttons inline */}
-      <div className="hidden xl:flex items-center gap-4 w-full md:max-w-6xl lg:max-w-7xl px-4">
-        <div className="flex-1 relative">
-          <div className="flex items-center bg-[#ffffff]/5 hover:bg-[#ffffff]/20 backdrop-blur-sm border border-[#8E8E8E] rounded-full p-4 transition-all duration-300 ease-in-out">
-            <AttachmentsDropdown
-              onChooseFromLibrary={handleChooseFromLibrary}
-              onUploadFromDevices={handleUploadFromDevices}
-            />
-
+      <div className="hidden xl:flex items-center gap-4 w-full md:max-w-3xl lg:max-w-4xl px-4">
+        <div className="flex-1 relative max-w-full">
+          <div className="p-2 flex items-center bg-[#ffffff]/5 hover:bg-[#ffffff]/20 backdrop-blur-sm border border-[#8E8E8E] rounded-full transition-all duration-300 ease-in-out w-[1100px] max-w-full">
             <input
               type="text"
               placeholder="Type a prompt..."
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
-              className="flex-1 bg-transparent text-white placeholder-white outline-none text-lg ml-4"
+              className="flex-1 bg-transparent text-white placeholder-gray-600 outline-none text-sm ml-4 w-full max-w-full"
               onKeyDown={(e) => e.key === "Enter" && onGenerate()}
             />
             <div className="flex items-center gap-4">
-              <span className="text-xs text-white opacity-80 mr-2">1 token per product</span>
-              <button className="p-2 hover:bg-gray-700/50 rounded-full transition-colors border border-white/10">
-                <Image src="/newt2image/enhancer.png" alt="enhancer" width={28} height={28} />
+              <button className=" hover:bg-gray-700/50 rounded-full transition-colors border border-white/10">
+                <Image src="/newt2image/enhancer.png" alt="enhancer" width={20} height={20} />
               </button>
-              <button
-                onClick={onGenerate}
-                disabled={!prompt.trim() || isGenerating}
-                className="bg-gradient-to-b from-[#6C3BFF] to-[#412399] transition-colors text-white px-12 py-3 rounded-full font-medium text-base"
+              <HoverBorderGradient
+                onClick={!prompt.trim() || isGenerating ? undefined : onGenerate}
+                backgroundColor="bg-[#006aff]"
+                className={`px-4 py-2 font-regular text-sm rounded-full ${(!prompt.trim() || isGenerating) ? 'cursor-not-allowed' : 'cursor-pointer'}`}
               >
                 {isGenerating ? "Generating..." : "Generate"}
-              </button>
+              </HoverBorderGradient>
             </div>
           </div>
         </div>
-
-        <button
-          onClick={onSettingsToggle}
-          className="p-3 bg-[#1F1F1F] backdrop-blur-sm rounded-full hover:bg-transparent transition-all duration-300 border border-[#8E8E8E]"
-        >
-          <Image src="/mockupgeneration/setting.png" alt="Settings" width={32} height={32} className="w-12 h-12" />
-        </button>
       </div>
 
       {/* Mobile & Tablet Layout - Fully Responsive */}
-      <div className="xl:hidden w-full px-0 ">
-        {/* Input Field Only - Full Width Responsive */}
-        <div className="w-full mb-4">
-          <div className="flex items-center bg-[#ffffff]/5 hover:bg-[#ffffff]/20 backdrop-blur-sm border border-[#8E8E8E] rounded-full p-2 xs:p-4 transition-all duration-300 ease-in-out">
-            <AttachmentsDropdown
-              onChooseFromLibrary={handleChooseFromLibrary}
-              onUploadFromDevices={handleUploadFromDevices}
-            />
-
+      <div className="xl:hidden w-full max-w-full px-0 ">
+        <div className="w-full max-w-full mb-2">
+          <div className="flex items-center bg-[#ffffff]/5 hover:bg-[#ffffff]/20 backdrop-blur-sm border border-[#8E8E8E] rounded-full p-3 xs:p-4 sm:p-5 transition-all duration-300 ease-in-out w-full max-w-full">
             <input
               type="text"
               placeholder="Type a prompt..."
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
-              className="flex-1 bg-transparent text-white placeholder-white outline-none text-sm xs:text-base sm:text-lg ml-2 mr-1 xs:ml-3"
+              className="flex-1 bg-transparent text-white placeholder-white outline-none text-base xs:text-lg sm:text-xl ml-2 mr-1 xs:ml-3 w-full max-w-full"
               onKeyDown={(e) => e.key === "Enter" && onGenerate()}
             />
-
             <button className="p-2 hover:bg-gray-700/50 rounded-full transition-colors border border-white/10 md:ml-2">
               <Image
                 src="/newt2image/enhancer.png"
                 alt="enhancer"
-                width={20}
-                height={20}
-                className="w-5 h-5 "
+                width={24}
+                height={24}
+                className="w-6 h-6 xs:w-7 xs:h-7 sm:w-8 sm:h-8"
               />
             </button>
           </div>
         </div>
-
-        {/* Buttons Below Input - Responsive Sizing */}
-        <div className="flex items-center gap-3 xs:gap-4 justify-end w-full">
-          <button
-            onClick={onGenerate}
-            disabled={!prompt.trim() || isGenerating}
-            className="bg-gradient-to-b from-[#6C3BFF] to-[#412399] transition-colors text-white px-2  py-2.5 xs:py-3 rounded-full font-medium text-sm xs:text-base flex-1 max-w-[32%] "
+        <div className="flex items-center gap-3 xs:gap-4 justify-end w-full max-w-full">
+          <HoverBorderGradient
+            onClick={!prompt.trim() || isGenerating ? undefined : onGenerate}
+            backgroundColor="bg-[#006aff]"
+            className="px-6 py-3 xs:py-4 rounded-full font-regular text-base xs:text-lg flex-1 max-w-[100%]"
           >
             {isGenerating ? "Generating..." : "Generate"}
-          </button>
-
-          <button
-            onClick={onSettingsToggle}
-            className="p-2  bg-[#1F1F1F] backdrop-blur-sm rounded-full hover:bg-transparent transition-all duration-300 border border-[#8E8E8E] flex-shrink-0"
-          >
-            <Image
-              src="/mockupgeneration/setting.png"
-              alt="Settings"
-              width={24}
-              height={24}
-              className="w-5 h-5 xs:w-6 xs:h-6 sm:w-7 sm:h-7"
-            />
-          </button>
+          </HoverBorderGradient>
         </div>
       </div>
-
-      {/* Upload Component Modal */}
-      {showUploadComponent && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-gray-900/95 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6 w-full max-w-md mx-4">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-white font-medium text-lg">Upload Files</h3>
-              <button
-                onClick={() => setShowUploadComponent(false)}
-                className="p-2 hover:bg-gray-800/50 rounded-lg transition-colors"
-              >
-                <span className="text-white text-xl">×</span>
-              </button>
-            </div>
-            <UploadComponent onFilesSelected={handleFilesSelected} />
-          </div>
-        </div>
-      )}
 
       {/* Loading State */}
       {isGenerating && (

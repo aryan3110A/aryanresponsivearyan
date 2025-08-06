@@ -13,7 +13,7 @@ import StableBackground from "../../Core/StableBackground"
 export default function TextToMusic() {
   const [prompt, setPrompt] = useState("")
   const [generatedMusic, setGeneratedMusic] = useState<string[]>([])
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false)
+
   const [isGenerating, setIsGenerating] = useState(false)
 
   // Music generation specific states
@@ -122,62 +122,52 @@ export default function TextToMusic() {
     }
   }
 
-  const handleSettingsToggle = () => setIsSettingsOpen(!isSettingsOpen)
-
   return (
     <>
-    <div className="min-h-screen bg-black text-white relative overflow-hidden">
-      {/* Background Particles */}
-      <StableBackground />
-      <NavigationFull />
-      {/* <BackgroundShapes /> */}
-
-      <div className="relative z-10">
-        <Header title="Text To Music" />
-
-        <main className="container mx-auto lg:px-8 xl:px-12 2xl:px-16">
-          
-          <InputSection
-            prompt={prompt}
-            setPrompt={setPrompt}
-            lyrics={lyrics}
-            setLyrics={setLyrics}
-            songStructure={songStructure}
-            setSongStructure={setSongStructure}
-            onGenerate={handleGenerate}
-            onSettingsToggle={handleSettingsToggle}
-            isGenerating={isGenerating}
-            generatedImages={generatedMusic}
+      <div className="min-h-screen bg-black text-white relative overflow-hidden">
+        <StableBackground />
+        <NavigationFull />
+        <div className="flex flex-row relative" style={{ minHeight: 'calc(100vh - 64px - 64px)', marginTop: '64px' }}>
+          <SettingsPanel
+            isOpen={true}
+            onClose={() => {}} // No-op since we want it always open
             selectedModel={selectedModel}
             setSelectedModel={setSelectedModel}
+            sampleRate={sampleRate}
+            setSampleRate={setSampleRate}
+            bitrate={bitrate}
+            setBitrate={setBitrate}
             audioFormat={audioFormat}
+            setAudioFormat={setAudioFormat}
+            outputFormat={outputFormat}
+            setOutputFormat={setOutputFormat}
+            lyrics={lyrics}
+            songStructure={songStructure}
+            setSongStructure={setSongStructure}
+            className="w-[340px] max-h-[calc(100vh-128px)] overflow-y-auto sticky top-[64px] z-30 border-r border-[#222]"
           />
-        </main>
-
-        
+          <div className="flex-1 overflow-y-auto flex flex-col items-center justify-center">
+            <div className="w-full max-w-4xl flex flex-col items-center justify-center px-2 sm:px-4 gap-8">
+              <Header title="Text To Music" />
+              <InputSection
+                prompt={prompt}
+                setPrompt={setPrompt}
+                lyrics={lyrics}
+                setLyrics={setLyrics}
+                songStructure={songStructure}
+                setSongStructure={setSongStructure}
+                onGenerate={handleGenerate}
+                isGenerating={isGenerating}
+                generatedImages={generatedMusic}
+                selectedModel={selectedModel}
+                setSelectedModel={setSelectedModel}
+                audioFormat={audioFormat}
+              />
+            </div>
+          </div>
+        </div>
       </div>
-      
-
-      <SettingsPanel
-        isOpen={isSettingsOpen}
-        onClose={() => setIsSettingsOpen(false)}
-        selectedModel={selectedModel}
-        setSelectedModel={setSelectedModel}
-        sampleRate={sampleRate}
-        setSampleRate={setSampleRate}
-        bitrate={bitrate}
-        setBitrate={setBitrate}
-        audioFormat={audioFormat}
-        setAudioFormat={setAudioFormat}
-        outputFormat={outputFormat}
-        setOutputFormat={setOutputFormat}
-        lyrics={lyrics}
-        songStructure={songStructure}
-        setSongStructure={setSongStructure}
-      />
-      
-    </div>
-    <Footer />
+      <Footer />
     </>
   )
 }

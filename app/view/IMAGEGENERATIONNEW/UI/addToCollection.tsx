@@ -24,7 +24,7 @@ export default function AddToCollection({
       <div className="mx-2 md:mx-6 border-t border-white/15 mb-6"></div>
       <div className="flex items-center justify-between mb-4 px-2 md:px-6 cursor-pointer" onClick={() => setIsCollectionOpen(!isCollectionOpen)}>
         <div className="flex items-center gap-2">
-          <h3 className="text-white text-lg md:text-xl font-medium">Add To Collection</h3>
+          <h3 className="text-white text-sm md:text-xl font-medium">Add To Collection</h3>
           <Image src="/BRANDINGKIT/PRODUCTGENERATION/Iicon.svg" alt="Info" width={18} height={18} />
         </div>
         <button className="p-1">

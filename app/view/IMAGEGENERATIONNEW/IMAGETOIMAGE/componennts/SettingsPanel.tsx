@@ -22,6 +22,7 @@ interface SettingsPanelProps {
   numberOfImages: number
   setNumberOfImages: (number: number) => void
   onSave?: (settingsData: any) => void
+  className?: string
 }
 
 export default function SettingsPanel({
@@ -38,6 +39,7 @@ export default function SettingsPanel({
   numberOfImages,
   setNumberOfImages,
   onSave,
+  className,
 }: SettingsPanelProps) {
   const [isModelsOpen, setIsModelsOpen] = useState(false)
   const toggleButtonRef = useRef<HTMLButtonElement>(null)
@@ -177,21 +179,11 @@ export default function SettingsPanel({
 
   return (
     <>
-      {/* Backdrop */}
-      {isOpen && <div className="fixed inset-0 bg-black/50 z-40" onClick={onClose} />}
-
-      {/* Settings Panel */}
-      <div
-        className={`fixed top-0 left-0 h-full w-[90%] md:w-[560px] bg-transparent backdrop-blur-lg shadow-3xl transform transition-transform duration-300 ease-in-out z-50 ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
-      >
+      <div className={`sticky top-[64px] left-0 w-[340px] max-h-[calc(100vh-128px)] overflow-y-auto bg-transparent backdrop-blur-lg shadow-3xl z-30 border-r border-[#222] ${className || ''}`}>
         <div className="h-full flex flex-col">
           {/* Header */}
-          <div className="flex items-center justify-end p-4">
-            <button onClick={onClose} className="p-2 hover:bg-gray-800/50 rounded-lg transition-colors">
-              <X className="w-6 h-6 text-white" />
-            </button>
+          <div className="flex items-center justify-between p-4">
+            <h2 className="text-white text-sm font-normal">Settings</h2>
           </div>
 
           {/* Content */}
@@ -221,7 +213,7 @@ export default function SettingsPanel({
                 <div className="absolute inset-0 bg-black/60"></div>
                 <div className="relative z-10 flex items-center justify-between">
                   <div>
-                    <h3 className="text-white text-lg md:text-xl font-bold">
+                    <h3 className="text-white text-sm font-normal">
                       Model & <span className="text-[#6C3BFF]">Preset</span>
                     </h3>
                   </div>
@@ -425,7 +417,7 @@ export default function SettingsPanel({
 
             {/* Settings Summary */}
             <div className="bg-white/10 backdrop-blur-3xl hover:bg-white/20 rounded-lg p-4 space-y-2 text-sm text-gray-300 mb-6">
-              <div className="text-white font-medium mb-3">Settings Summary</div>
+              <div className="text-white font-normal mb-3 text-sm">Settings Summary</div>
               <div>Model Selection : <span className="text-[#5AD7FF]">{selectedModel}</span></div>
               <div>Visual Intensity : <span className="text-[#5AD7FF]">{visualIntensityEnabled ? visualIntensity.toFixed(1) : "Disabled"}</span></div>
               <div>Social Platform : <span className="text-[#5AD7FF]">{selectedSocialPlatform || "None"}</span></div>
@@ -443,10 +435,10 @@ export default function SettingsPanel({
           </div>
 
           {/* Floating Save Button */}
-          <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent flex justify-center">
+          <div className="sticky bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent flex justify-center z-50">
             <button
               onClick={handleSave}
-              className="w-32 bg-[#006aff] hover:bg-[#0052cc] text-white py-3 px-6 rounded-full font-medium text-sm transition-all shadow-lg"
+              className="w-32 bg-[#006aff] hover:bg-[#0052cc] text-white py-3 px-6 rounded-full font-normal text-sm transition-all shadow-lg"
             >
               Save
             </button>

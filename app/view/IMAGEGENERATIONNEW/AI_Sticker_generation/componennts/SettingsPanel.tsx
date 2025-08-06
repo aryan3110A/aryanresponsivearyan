@@ -17,6 +17,7 @@ interface SettingsPanelProps {
   setExpression: (expression: string | null) => void
   promptEnhance: string
   setPromptEnhance: (value: string) => void
+  className?: string
 }
 
 export default function SettingsPanel({
@@ -32,6 +33,7 @@ export default function SettingsPanel({
   setExpression,
   promptEnhance,
   setPromptEnhance,
+  className,
 }: SettingsPanelProps) {
   const [stickerConsistency, setStickerConsistency] = useState(false);
   const [collections, setCollections] = useState<string[]>([]);
@@ -69,21 +71,11 @@ export default function SettingsPanel({
 
   return (
     <>
-      {/* Backdrop */}
-      {isOpen && <div className="fixed inset-0 bg-black/50 z-40" onClick={onClose} />}
-
-      {/* Settings Panel */}
-      <div
-        className={`fixed top-0 left-0 h-full w-[90%] md:w-[560px] bg-transparent backdrop-blur-lg shadow-3xl transform transition-transform duration-300 ease-in-out z-50 ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
-      >
+      <div className={`sticky top-[64px] left-0 w-[340px] max-h-[calc(100vh-128px)] overflow-y-auto bg-transparent backdrop-blur-lg shadow-3xl z-30 border-r border-[#222] ${className || ''}`}>
         <div className="h-full flex flex-col">
           {/* Header */}
-          <div className="flex items-center justify-end p-4">
-            <button onClick={onClose} className="p-2 hover:bg-gray-800/50 rounded-lg transition-colors">
-              <X className="w-6 h-6 text-white" />
-            </button>
+          <div className="flex items-center justify-between p-4">
+            <h2 className="text-white text-sm font-normal">Settings</h2>
           </div>
 
           {/* Content */}
@@ -201,20 +193,20 @@ export default function SettingsPanel({
 
             {/* Settings Summary */}
             <div className="bg-white/10 backdrop-blur-3xl hover:bg-white/20 rounded-lg p-4 space-y-2 text-sm text-gray-300 mb-6">
-              <div className="text-white font-medium mb-3">Settings Summary</div>
-              <div>Sticker Type : <span className="text-[#5AD7FF]">{stickerType || "None"}</span></div>
-              <div>Number of Stickers : <span className="text-[#5AD7FF]">{numberOfStickers}</span></div>
-              <div>Save File Type : <span className="text-[#5AD7FF]">{saveFileType || "None"}</span></div>
-              <div>Expression : <span className="text-[#5AD7FF]">{expression || "None"}</span></div>
-              <div>Sticker Consistency : <span className="text-[#5AD7FF]">{stickerConsistency ? "Enabled" : "Disabled"}</span></div>
+              <div className="text-white text-sm font-normal mb-3">Settings Summary</div>
+              <div>Sticker Type : <span className="text-[#5AD7FF] text-sm font-normal">{stickerType || "None"}</span></div>
+              <div>Number of Stickers : <span className="text-[#5AD7FF] text-sm font-normal">{numberOfStickers}</span></div>
+              <div>Save File Type : <span className="text-[#5AD7FF] text-sm font-normal">{saveFileType || "None"}</span></div>
+              <div>Expression : <span className="text-[#5AD7FF] text-sm font-normal">{expression || "None"}</span></div>
+              <div>Sticker Consistency : <span className="text-[#5AD7FF] text-sm font-normal">{stickerConsistency ? "Enabled" : "Disabled"}</span></div>
             </div>
           </div>
 
           {/* Floating Save Button */}
-          <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent flex justify-center">
+          <div className="sticky bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent flex justify-center z-50">
             <button
               onClick={handleSave}
-              className="w-32 bg-[#006aff] hover:bg-[#0052cc] text-white py-3 px-6 rounded-full font-medium text-sm transition-all shadow-lg"
+              className="w-32 bg-[#006aff] hover:bg-[#0052cc] text-white py-3 px-6 rounded-full font-normal text-sm transition-all shadow-lg"
             >
               Save
             </button>

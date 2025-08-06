@@ -4,7 +4,6 @@
 import React, { useState } from "react";
 import { Header } from "../UI";
 import InputSection from "./componennts/InputSection";
-import SettingsPanel from "./componennts/SettingsPanel";
 
 import NavigationFull from "../../Core/NavigationFull";
 import Footer from "../../Core/Footer";
@@ -14,14 +13,15 @@ export default function ProductWithModelPosePage() {
   const [prompt, setPrompt] = useState("");
   const [generatedPrompt, setGeneratedPrompt] = useState(""); // Store the prompt used for generation
   const [generatedImages, setGeneratedImages] = useState<string[]>([]);
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+
   const [isGenerating, setIsGenerating] = useState(false);
 
-  const [selectedFont, setSelectedFont] = useState("Inter");
-  const [selectedStyle, setSelectedStyle] = useState<string | null>(null);
-  const [selectedAspectRatio, setSelectedAspectRatio] = useState("1:1");
-  const [selectedQuality, setSelectedQuality] = useState("HD");
-  const [numberOfImages, setNumberOfImages] = useState(1);
+  // Default values for image generation
+  const selectedFont = "Inter";
+  const selectedStyle = null;
+  const selectedAspectRatio = "1:1";
+  const selectedQuality = "HD";
+  const numberOfImages = 1;
   const [modelImage, setModelImage] = useState<File | null>(null);
   const [productImage, setProductImage] = useState<File | null>(null);
 
@@ -130,27 +130,21 @@ export default function ProductWithModelPosePage() {
     }
   };
 
-  const handleSettingsToggle = () => {
-    setIsSettingsOpen(!isSettingsOpen);
-  };
+
 
   return (
     <>
       <div className="min-h-screen bg-black text-white relative overflow-hidden">
-        {/* Background Particles */}
         <StableBackground />
         <NavigationFull />
-
-        <div className="relative z-10">
-          <Header title="Product With Model Pose" />
-
-          <main className="container mx-auto lg:px-8 xl:px-12 2xl:px-16">
+        <div className="relative z-10 flex flex-col items-center justify-center min-h-screen" style={{ marginTop: '64px', paddingTop: '2rem', paddingBottom: '4rem' }}>
+          <div className="w-full max-w-4xl flex flex-col items-center justify-center px-2 sm:px-4 gap-8">
+            <Header title="Product With Model Pose" />
             <InputSection
               prompt={prompt}
               setPrompt={setPrompt}
               generatedPrompt={generatedPrompt}
               onGenerate={handleGenerate}
-              onSettingsToggle={handleSettingsToggle}
               isGenerating={isGenerating}
               generatedImages={generatedImages}
               selectedFont={selectedFont}
@@ -163,23 +157,8 @@ export default function ProductWithModelPosePage() {
               productImage={productImage}
               setProductImage={setProductImage}
             />
-          </main>
+          </div>
         </div>
-
-        <SettingsPanel
-          isOpen={isSettingsOpen}
-          onClose={() => setIsSettingsOpen(false)}
-          selectedFont={selectedFont}
-          setSelectedFont={setSelectedFont}
-          selectedStyle={selectedStyle}
-          setSelectedStyle={setSelectedStyle}
-          selectedAspectRatio={selectedAspectRatio}
-          setSelectedAspectRatio={setSelectedAspectRatio}
-          selectedQuality={selectedQuality}
-          setSelectedQuality={setSelectedQuality}
-          numberOfImages={numberOfImages}
-          setNumberOfImages={setNumberOfImages}
-        />
       </div>
       <Footer />
     </>

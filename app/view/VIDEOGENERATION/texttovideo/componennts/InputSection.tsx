@@ -11,7 +11,6 @@ interface InputSectionProps {
   prompt: string
   setPrompt: (prompt: string) => void
   onGenerate: () => void
-  onSettingsToggle: () => void
   isGenerating: boolean
   generatedImages: string[]
   selectedModel: string
@@ -29,7 +28,6 @@ export default function InputSection({
   prompt,
   setPrompt,
   onGenerate,
-  onSettingsToggle,
   isGenerating,
   generatedImages,
   selectedModel,
@@ -224,9 +222,9 @@ export default function InputSection({
   return (
     <div className="flex flex-col items-center w-full space-y-6 mb:space-y-4 lg:space-y-12">
       {/* Desktop Layout - Input with buttons inline */}
-      <div className="hidden xl:flex items-center gap-4 w-full md:max-w-6xl lg:max-w-7xl px-4">
-        <div className="flex-1 relative">
-          <div className="flex items-center bg-[#ffffff]/5 hover:bg-[#ffffff]/20 backdrop-blur-sm border border-[#8E8E8E] rounded-full p-4 transition-all duration-300 ease-in-out">
+      <div className="hidden xl:flex items-center gap-4 w-full md:max-w-3xl lg:max-w-4xl px-4">
+        <div className="flex-1 relative max-w-full">
+          <div className="p-2 flex items-center bg-[#ffffff]/5 hover:bg-[#ffffff]/20 backdrop-blur-sm border border-[#8E8E8E] rounded-full transition-all duration-300 ease-in-out w-[1100px] max-w-full">
             <AttachmentsDropdown
               onChooseFromLibrary={handleChooseFromLibrary}
               onUploadFromDevices={handleUploadFromDevices}
@@ -237,37 +235,29 @@ export default function InputSection({
               placeholder="Type a prompt..."
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
-              className="flex-1 bg-transparent text-white placeholder-white outline-none text-lg ml-4"
+              className="flex-1 bg-transparent text-white placeholder-gray-600 outline-none text-sm ml-4 w-full max-w-full"
               onKeyDown={(e) => e.key === "Enter" && onGenerate()}
             />
             <div className="flex items-center gap-4">
-              <button className="p-2 hover:bg-gray-700/50 rounded-full transition-colors border border-white/10">
-                <Image src="/newt2image/enhancer.png" alt="enhancer" width={28} height={28} />
+              <button className=" hover:bg-gray-700/50 rounded-full transition-colors border border-white/10">
+                <Image src="/newt2image/enhancer.png" alt="enhancer" width={20} height={20} />
               </button>
               <HoverBorderGradient
                 onClick={!prompt.trim() || isGenerating ? undefined : onGenerate}
                 backgroundColor="bg-[#006aff]"
-                className="px-12 py-3 font-medium text-base rounded-full"
+                className={`px-4 py-2 font-regular text-sm rounded-full ${(!prompt.trim() || isGenerating) ? 'cursor-not-allowed' : 'cursor-pointer'}`}
               >
                 {isGenerating ? "Generating..." : "Generate"}
               </HoverBorderGradient>
             </div>
           </div>
         </div>
-
-        <button
-          onClick={onSettingsToggle}
-          className="p-3 bg-[#1F1F1F] backdrop-blur-sm rounded-full hover:bg-transparent transition-all duration-300 border border-[#8E8E8E]"
-        >
-          <Image src="/mockupgeneration/setting.png" alt="Settings" width={32} height={32} className="w-12 h-12" />
-        </button>
       </div>
 
       {/* Mobile & Tablet Layout - Fully Responsive */}
-      <div className="xl:hidden w-full px-0 ">
-        {/* Input Field Only - Full Width Responsive */}
-        <div className="w-full mb-4">
-          <div className="flex items-center bg-[#ffffff]/5 hover:bg-[#ffffff]/20 backdrop-blur-sm border border-[#8E8E8E] rounded-full p-2 xs:p-4 transition-all duration-300 ease-in-out">
+      <div className="xl:hidden w-full max-w-full px-0 ">
+        <div className="w-full max-w-full mb-2">
+          <div className="flex items-center bg-[#ffffff]/5 hover:bg-[#ffffff]/20 backdrop-blur-sm border border-[#8E8E8E] rounded-full p-3 xs:p-4 sm:p-5 transition-all duration-300 ease-in-out w-full max-w-full">
             <AttachmentsDropdown
               onChooseFromLibrary={handleChooseFromLibrary}
               onUploadFromDevices={handleUploadFromDevices}
@@ -278,44 +268,28 @@ export default function InputSection({
               placeholder="Type a prompt..."
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
-              className="flex-1 bg-transparent text-white placeholder-white outline-none text-sm xs:text-base sm:text-lg ml-2 mr-1 xs:ml-3"
+              className="flex-1 bg-transparent text-white placeholder-white outline-none text-base xs:text-lg sm:text-xl ml-2 mr-1 xs:ml-3 w-full max-w-full"
               onKeyDown={(e) => e.key === "Enter" && onGenerate()}
             />
-
             <button className="p-2 hover:bg-gray-700/50 rounded-full transition-colors border border-white/10 md:ml-2">
               <Image
                 src="/newt2image/enhancer.png"
                 alt="enhancer"
-                width={20}
-                height={20}
-                className="w-5 h-5 "
+                width={24}
+                height={24}
+                className="w-6 h-6 xs:w-7 xs:h-7 sm:w-8 sm:h-8"
               />
             </button>
           </div>
         </div>
-
-        {/* Buttons Below Input - Responsive Sizing */}
-        <div className="flex items-center gap-3 xs:gap-4 justify-end w-full">
+        <div className="flex items-center gap-3 xs:gap-4 justify-end w-full max-w-full">
           <HoverBorderGradient
             onClick={!prompt.trim() || isGenerating ? undefined : onGenerate}
             backgroundColor="bg-[#006aff]"
-            className="px-2 py-2.5 xs:py-3 rounded-full font-medium text-sm xs:text-base flex-1 max-w-[32%]"
+            className="px-6 py-3 xs:py-4 rounded-full font-regular text-base xs:text-lg flex-1 max-w-[100%]"
           >
             {isGenerating ? "Generating..." : "Generate"}
           </HoverBorderGradient>
-
-          <button
-            onClick={onSettingsToggle}
-            className="p-2 bg-[#1F1F1F] backdrop-blur-sm rounded-full hover:bg-transparent transition-all duration-300 border border-[#8E8E8E] flex-shrink-0"
-          >
-            <Image
-              src="/mockupgeneration/setting.png"
-              alt="Settings"
-              width={24}
-              height={24}
-              className="w-5 h-5 xs:w-6 xs:h-6 sm:w-7 sm:h-7"
-            />
-          </button>
         </div>
       </div>
 

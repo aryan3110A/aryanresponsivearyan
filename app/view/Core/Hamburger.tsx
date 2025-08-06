@@ -135,7 +135,7 @@ export default function Hamburger({ isOpen, onClose }: { isOpen: boolean; onClos
     <>
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-30"
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
           onClick={() => {
             onClose()
             setIsSettingsOpen(false)
@@ -143,7 +143,7 @@ export default function Hamburger({ isOpen, onClose }: { isOpen: boolean; onClos
         />
       )}
       <nav
-        className={`fixed top-0 left-0 bottom-0 w-[90vw] max-w-[320px] bg-[#101011] transform transition-transform duration-300 ease-in-out z-40 flex flex-col ${
+        className={`fixed top-0 left-0 bottom-0 w-[90vw] max-w-[320px] bg-[#101011] transform transition-transform duration-300 ease-in-out z-50 flex flex-col ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >

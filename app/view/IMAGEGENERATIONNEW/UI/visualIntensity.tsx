@@ -29,7 +29,7 @@ export default function VisualIntensity({
     <div className="px-2 md:px-6 mb-6">
       {/* Header with title and toggle */}
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-white text-lg md:text-xl font-medium">Visual intensity</h3>
+        <h3 className="text-white text-sm md:text-sm font-normal">Visual intensity</h3>
         <button
           className={`relative w-12 h-6 flex items-center rounded-full transition-colors duration-200 ${
             isEnabled ? "bg-[#6C3BFF]" : "bg-white"
@@ -59,7 +59,7 @@ export default function VisualIntensity({
 
           {/* Value Display */}
           <div className="flex-1 text-center">
-            <span className="text-white text-lg font-medium">{visualIntensity.toFixed(1)}</span>
+            <span className="text-white text-sm font-normal">{visualIntensity.toFixed(1)}</span>
           </div>
 
           {/* Plus Button */}

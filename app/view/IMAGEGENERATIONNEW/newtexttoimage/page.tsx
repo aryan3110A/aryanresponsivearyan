@@ -33,9 +33,7 @@ export default function NewText2Image() {
   const [prompt, setPrompt] = useState("")
   const [generatedImages, setGeneratedImages] = useState<string[]>([])
   const [generatedPrompts, setGeneratedPrompts] = useState<string[]>([]) // Store prompts for each image
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const [isGenerating, setIsGenerating] = useState(false)
-
 
   const [selectedModel, setSelectedModel] = useState("")
   const [selectedStyle, setSelectedStyle] = useState<string | null>(null)
@@ -285,19 +283,16 @@ export default function NewText2Image() {
   }, [prompt, currentSettings, selectedModel, modelIdMap, modelSlugMap, numberOfImages])
 
   const handleSettingsSave = (settingsData: SettingsData) => setCurrentSettings(settingsData)
-  const handleSettingsToggle = useCallback(() => setIsSettingsOpen(i => !i), [])
-  
 
   // Memoize the content to prevent unnecessary re-renders
   const content = useMemo(() => (
-    <div className="relative z-10">
-      <Header title="Text to Image " />
-      <main className="container mx-auto lg:px-8 xl:px-12 2xl:px-16">
+    <div className="relative z-10 w-auto md:ml-[340px] flex justify-center">
+      <div className="w-full max-w-4xl flex flex-col items-center justify-center px-2 sm:px-4 gap-8">
+        <Header title="Text to Image" />
         <InputSection
           prompt={prompt}
           setPrompt={setPrompt}
           onGenerate={handleGenerate}
-          onSettingsToggle={handleSettingsToggle}
           isGenerating={isGenerating}
           generatedImages={generatedImages}
           generatedPrompts={generatedPrompts}
@@ -307,7 +302,7 @@ export default function NewText2Image() {
           selectedAspectRatio={selectedAspectRatio}
           numberOfImages={numberOfImages}
         />
-      </main>
+      </div>
     </div>
   ), [
     prompt,
@@ -320,7 +315,6 @@ export default function NewText2Image() {
     selectedAspectRatio,
     numberOfImages,
     handleGenerate,
-    handleSettingsToggle,
   ]);
 
   return (
@@ -329,49 +323,69 @@ export default function NewText2Image() {
         {/* Stable background that doesn't re-render with input changes */}
         <StableBackground />
         <NavigationFull />
-        {content}
-
-        <SettingsPanel
-          isOpen={isSettingsOpen}
-          onClose={() => setIsSettingsOpen(false)}
-          onSave={handleSettingsSave}
-          selectedModel={selectedModel}
-          setSelectedModel={setSelectedModel}
-          selectedStyle={selectedStyle}
-          setSelectedStyle={setSelectedStyle}
-          selectedAspectRatio={selectedAspectRatio}
-          setSelectedAspectRatio={setSelectedAspectRatio}
-          selectedQuality={selectedQuality}
-          setSelectedQuality={setSelectedQuality}
-          numberOfImages={numberOfImages}
-          setNumberOfImages={setNumberOfImages}
-          selectedColor={selectedColor}
-          setSelectedColor={setSelectedColor}
-          customColor={customColor}
-          setCustomColor={setCustomColor}
-          selectedEffect={selectedEffect}
-          setSelectedEffect={setSelectedEffect}
-          customEffect={customEffect}
-          setCustomEffect={setCustomEffect}
-          selectedLightning={selectedLightning}
-          setSelectedLightning={setSelectedLightning}
-          customLightning={customLightning}
-          setCustomLightning={setCustomLightning}
-          selectedCameraAngle={selectedCameraAngle}
-          setSelectedCameraAngle={setSelectedCameraAngle}
-          visualIntensity={visualIntensity}
-          setVisualIntensity={setVisualIntensity}
-          visualIntensityEnabled={visualIntensityEnabled}
-          setVisualIntensityEnabled={setVisualIntensityEnabled}
-          selectedSocialPlatform={selectedSocialPlatform}
-          setSelectedSocialPlatform={setSelectedSocialPlatform}
-          selectedSocialFormat={selectedSocialFormat}
-          setSelectedSocialFormat={setSelectedSocialFormat}
-          selectedContentType={selectedContentType}
-          setSelectedContentType={setSelectedContentType}
-          promptEnhance={promptEnhance}
-          setPromptEnhance={setPromptEnhance}
-        />
+        <div className="flex w-full" style={{ minHeight: 'calc(100vh - 64px - 64px)', marginTop: '64px', height: 'calc(100vh - 64px - 64px)' }}>
+          <div className="w-[340px] h-full overflow-y-auto border-r border-[#222] bg-transparent backdrop-blur-lg shadow-3xl z-40">
+            <SettingsPanel
+              isOpen={true}
+              onClose={() => {}} // No-op since we want it always open
+              onSave={handleSettingsSave}
+              selectedModel={selectedModel}
+              setSelectedModel={setSelectedModel}
+              selectedStyle={selectedStyle}
+              setSelectedStyle={setSelectedStyle}
+              selectedAspectRatio={selectedAspectRatio}
+              setSelectedAspectRatio={setSelectedAspectRatio}
+              selectedQuality={selectedQuality}
+              setSelectedQuality={setSelectedQuality}
+              numberOfImages={numberOfImages}
+              setNumberOfImages={setNumberOfImages}
+              selectedColor={selectedColor}
+              setSelectedColor={setSelectedColor}
+              customColor={customColor}
+              setCustomColor={setCustomColor}
+              selectedEffect={selectedEffect}
+              setSelectedEffect={setSelectedEffect}
+              customEffect={customEffect}
+              setCustomEffect={setCustomEffect}
+              selectedLightning={selectedLightning}
+              setSelectedLightning={setSelectedLightning}
+              customLightning={customLightning}
+              setCustomLightning={setCustomLightning}
+              selectedCameraAngle={selectedCameraAngle}
+              setSelectedCameraAngle={setSelectedCameraAngle}
+              visualIntensity={visualIntensity}
+              setVisualIntensity={setVisualIntensity}
+              visualIntensityEnabled={visualIntensityEnabled}
+              setVisualIntensityEnabled={setVisualIntensityEnabled}
+              selectedSocialPlatform={selectedSocialPlatform}
+              setSelectedSocialPlatform={setSelectedSocialPlatform}
+              selectedSocialFormat={selectedSocialFormat}
+              setSelectedSocialFormat={setSelectedSocialFormat}
+              selectedContentType={selectedContentType}
+              setSelectedContentType={setSelectedContentType}
+              promptEnhance={promptEnhance}
+              setPromptEnhance={setPromptEnhance}
+            />
+          </div>
+          <div className="flex-1 h-full overflow-y-auto flex justify-center">
+            <div className="w-full max-w-4xl flex flex-col items-center justify-center px-2 sm:px-4 gap-8 mx-auto">
+              <Header title="Text to Image" />
+              <InputSection
+                prompt={prompt}
+                setPrompt={setPrompt}
+                onGenerate={handleGenerate}
+                isGenerating={isGenerating}
+                generatedImages={generatedImages}
+                generatedPrompts={generatedPrompts}
+                selectedModel={selectedModel}
+                selectedStyle={selectedStyle}
+                selectedQuality={selectedQuality}
+                selectedAspectRatio={selectedAspectRatio}
+                numberOfImages={numberOfImages}
+              />
+            </div>
+          </div>
+        </div>
       </div>
       <Footer />
     </>

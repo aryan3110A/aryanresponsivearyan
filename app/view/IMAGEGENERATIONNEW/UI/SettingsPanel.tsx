@@ -25,7 +25,7 @@ export default function SettingsPanel({
       <div className="fixed right-0 top-0 h-full w-full max-w-md bg-[#1A1A1A] border-l border-white/10 overflow-y-auto">
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-white/10 sticky top-0 bg-[#1A1A1A] z-10">
-          <h2 className="text-white text-lg font-semibold">{title}</h2>
+          <h2 className="text-white text-sm font-normal">{title}</h2>
           <button
             onClick={onClose}
             className="p-2 hover:bg-white/10 rounded-lg transition-colors"

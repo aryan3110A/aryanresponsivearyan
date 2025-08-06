@@ -29,6 +29,7 @@ interface SettingsPanelProps {
   setSelectedQuality: (quality: string) => void
   numberOfLogo: number
   setNumberOfLogo: (number: number) => void
+  className?: string
 }
 
 export default function SettingsPanel(props: SettingsPanelProps) {
@@ -95,19 +96,11 @@ export default function SettingsPanel(props: SettingsPanelProps) {
 
   return (
     <>
-      {/* Backdrop */}
-      {props.isOpen && <div className="fixed inset-0 bg-black/50 z-40" onClick={props.onClose} />}
-      {/* Settings Panel */}
-      <div
-        className={`fixed top-0 left-0 h-full w-[90%] md:w-[560px] bg-transparent backdrop-blur-lg shadow-3xl transform transition-transform duration-300 ease-in-out z-50 ${
-          props.isOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
-      >        <div className="h-full flex flex-col">
+      <div className={`sticky top-[64px] left-0 w-[340px] max-h-[calc(100vh-128px)] overflow-y-auto bg-transparent backdrop-blur-lg shadow-3xl z-30 border-r border-[#222] ${props.className || ''}`}>
+        <div className="h-full flex flex-col">
           {/* Header */}
-          <div className="flex items-center justify-end p-4">
-            <button onClick={props.onClose} className="p-2 hover:bg-gray-800/50 rounded-lg transition-colors">
-              <span className="text-white text-2xl">×</span>
-            </button>
+          <div className="flex items-center justify-between p-4">
+            <h2 className="text-white text-sm font-normal">Settings</h2>
           </div>
           {/* Content */}
           <div className="flex-1 overflow-y-auto px-4 space-y-6 scrollbar-hide pb-24">
@@ -122,6 +115,7 @@ export default function SettingsPanel(props: SettingsPanelProps) {
             `}</style>
             {/* Number of Logo Section */}
             <div className="mb-6">
+              <div className="text-white font-normal mb-3 text-sm">Number of Logos</div>
               <NumberSelector
                 onNumberSelect={setNumberOfLogo}
                 selectedNumber={numberOfLogo}
@@ -204,21 +198,17 @@ export default function SettingsPanel(props: SettingsPanelProps) {
               selectedAspectRatio={props.selectedAspectRatio}
               selectedFont={selectedFont}
             /> */}
-            {/* Save Button */}
-            <SaveButton onClick={() => setShowSummary(true)} showSummary={showSummary} />
-
-            {/* Model & Preset Button */}
-            <div className="mb-6 px-2 md:px-6">
-              {/* This section is removed as per the edit hint */}
-            </div>
-            {/* Font Select, Color Select, and other sections will be added next */}
+          </div>
+          {/* Floating Save Button */}
+          <div className="sticky bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent flex justify-center z-50">
+            <button
+              onClick={() => setShowSummary(true)}
+              className="w-32 bg-[#006aff] hover:bg-[#0052cc] text-white py-3 px-6 rounded-full font-normal text-sm transition-all shadow-lg"
+            >
+              Save
+            </button>
           </div>
         </div>
-      </div>
-
-      {/* Desktop Models Panel */}
-      <div className="hidden md:block">
-        {/* This section is removed as per the edit hint */}
       </div>
     </>
   )

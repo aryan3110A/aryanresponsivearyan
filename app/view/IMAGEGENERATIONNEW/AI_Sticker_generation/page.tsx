@@ -12,7 +12,6 @@ import StableBackground from "../../Core/StableBackground"
 export default function AISTICKERGEN() {
   const [prompt, setPrompt] = useState("")
   const [generatedImages, setGeneratedImages] = useState<string[]>([])
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const [isGenerating, setIsGenerating] = useState(false)
   const [stickerType, setStickerType] = useState<string | null>(null)
   const [numberOfStickers, setNumberOfStickers] = useState(1)
@@ -22,40 +21,21 @@ export default function AISTICKERGEN() {
 
   const handleGenerate = async () => {
     if (!prompt.trim()) return
-
     setIsGenerating(true)
-    
     try {
-      // Prepare the final prompt with style if selected
       const finalPrompt = stickerType ? `${prompt}, ${stickerType} type` : prompt
-      
-      // Use default resolution for stickers
       const width = 512
       const height = 512
-
-      // Call the API
       const response = await fetch('/api/generate-image', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          prompt: finalPrompt,
-          width,
-          height,
-          num_images: numberOfStickers,
-        }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt: finalPrompt, width, height, num_images: numberOfStickers }),
       })
-
-      if (!response.ok) {
-        throw new Error('Failed to generate images')
-      }
-
+      if (!response.ok) throw new Error('Failed to generate images')
       const data = await response.json()
       setGeneratedImages(data.image_urls || [])
     } catch (error) {
       console.error('Generation failed:', error)
-      // Fallback to placeholder images for demo
       const placeholderImages = Array(numberOfStickers).fill("/placeholder.svg?height=400&width=400")
       setGeneratedImages(placeholderImages)
     } finally {
@@ -63,58 +43,44 @@ export default function AISTICKERGEN() {
     }
   }
 
-  const handleSettingsToggle = () => {
-    setIsSettingsOpen(!isSettingsOpen)
-  }
-
   return (
     <>
-    <div className="min-h-screen bg-black text-white relative overflow-hidden">
-            {/* Background Particles */}
-      <StableBackground />
-      <NavigationFull />
-      {/* <BackgroundShapes /> */}
-
-      <div className="relative z-10">
-        <Header title="Sticker Generator" />
-
-        <main className="container mx-auto  lg:px-8 xl:px-12 2xl:px-16">
-          <InputSection
-            prompt={prompt}
-            setPrompt={setPrompt}
-            onGenerate={handleGenerate}
-            onSettingsToggle={handleSettingsToggle}
-            isGenerating={isGenerating}
-            generatedImages={generatedImages}
+      <div className="min-h-screen bg-black text-white relative overflow-hidden">
+        <StableBackground />
+        <NavigationFull />
+        <div className="flex flex-row relative" style={{ minHeight: 'calc(100vh - 64px - 64px)', marginTop: '64px' }}>
+          <SettingsPanel
+            isOpen={true}
+            onClose={() => {}} // No-op since we want it always open
             stickerType={stickerType}
             setStickerType={setStickerType}
             numberOfStickers={numberOfStickers}
             setNumberOfStickers={setNumberOfStickers}
+            saveFileType={saveFileType}
+            setSaveFileType={setSaveFileType}
+            expression={expression}
+            setExpression={setExpression}
+            promptEnhance={promptEnhance}
+            setPromptEnhance={setPromptEnhance}
+            className="w-[340px] max-h-[calc(100vh-128px)] overflow-y-auto sticky top-[64px] z-30 border-r border-[#222]"
           />
-        </main>
-
-        
+          <div className="flex-1 overflow-y-auto flex flex-col items-center justify-center">
+            <div className="w-full max-w-4xl flex flex-col items-center justify-center px-2 sm:px-4 gap-8">
+              <Header title="Sticker Generator" />
+              <InputSection
+                prompt={prompt}
+                setPrompt={setPrompt}
+                onGenerate={handleGenerate}
+                isGenerating={isGenerating}
+                generatedImages={generatedImages}
+                stickerType={stickerType}
+                numberOfStickers={numberOfStickers}
+              />
+            </div>
+          </div>
+        </div>
       </div>
-      
-
-      <SettingsPanel
-      
-        isOpen={isSettingsOpen}
-        onClose={() => setIsSettingsOpen(false)}
-        stickerType={stickerType}
-        setStickerType={setStickerType}
-        numberOfStickers={numberOfStickers}
-        setNumberOfStickers={setNumberOfStickers}
-        saveFileType={saveFileType}
-        setSaveFileType={setSaveFileType}
-        expression={expression}
-        setExpression={setExpression}
-        promptEnhance={promptEnhance}
-        setPromptEnhance={setPromptEnhance}
-      />
-      
-    </div>
-    <Footer />
+      <Footer />
     </>
   )
 }

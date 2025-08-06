@@ -20,6 +20,7 @@ interface SettingsPanelProps {
   lyrics: string
   songStructure: string[]
   setSongStructure: (structure: string[]) => void
+  className?: string
 }
 
 export default function SettingsPanel({
@@ -38,6 +39,7 @@ export default function SettingsPanel({
   lyrics,
   songStructure,
   setSongStructure,
+  className,
 }: SettingsPanelProps) {
   // State for music generation settings
   const [isModelsOpen, setIsModelsOpen] = useState(false);
@@ -99,21 +101,11 @@ export default function SettingsPanel({
 
   return (
     <>
-      {/* Backdrop */}
-      {isOpen && <div className="fixed inset-0 bg-black/50 z-40" onClick={onClose} />}
-
-      {/* Settings Panel */}
-      <div
-        className={`fixed top-0 left-0 h-full w-[90%] md:w-[560px] bg-transparent backdrop-blur-lg shadow-3xl transform transition-transform duration-300 ease-in-out z-50 ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
-      >
+      <div className={`sticky top-[64px] left-0 w-[340px] max-h-[calc(100vh-128px)] overflow-y-auto bg-transparent backdrop-blur-lg shadow-3xl z-30 border-r border-[#222] ${className || ''}`}>
         <div className="h-full flex flex-col">
           {/* Header */}
-          <div className="flex items-center justify-end p-4">
-            <button onClick={onClose} className="p-2 hover:bg-gray-800/50 rounded-lg transition-colors">
-              <X className="w-6 h-6 text-white" />
-            </button>
+          <div className="flex items-center justify-between p-4">
+            <h2 className="text-white text-sm font-normal">Settings</h2>
           </div>
 
           {/* Content */}
@@ -142,8 +134,8 @@ export default function SettingsPanel({
                 <div className="absolute inset-0 bg-black/60"></div>
                 <div className="relative z-10 flex items-center justify-between">
                   <div>
-                    <h3 className="text-white text-lg md:text-xl font-bold">
-                      Model & <span className="text-[#6C3BFF]">Preset</span>
+                                    <h3 className="text-white text-sm font-normal">
+                  Model & <span className="text-[#6C3BFF]">Preset</span>
                     </h3>
                     <p className="text-gray-300 text-sm mt-1">
                       Selected: <span className="text-[#5AD7FF]">{selectedModel}</span>
@@ -185,7 +177,7 @@ export default function SettingsPanel({
                         />
                       </div>
                       <div className="flex-1">
-                        <h4 className="text-white text-base font-medium">{model.title}</h4>
+                        <h4 className="text-white text-sm font-normal">{model.title}</h4>
                       </div>
                       {selectedModel === model.title && (
                         <div className="w-4 h-4 rounded-full bg-[#6C3BFF] flex items-center justify-center">
@@ -203,7 +195,7 @@ export default function SettingsPanel({
               <div className="mx-2 md:mx-6 border-t border-white/15 mb-6"></div>
               
               <div className="mb-4">
-                <h3 className="text-white text-lg font-medium mb-4 px-2 md:px-6">Song Structure</h3>
+                <h3 className="text-white text-sm font-normal mb-4 px-2 md:px-6">Song Structure</h3>
                 <div className="px-2 md:px-6">
                   <p className="text-sm text-gray-400 mb-3">Add sections to build your song:</p>
                   <div className="flex flex-wrap gap-2 mb-4">
@@ -216,7 +208,7 @@ export default function SettingsPanel({
                           }
                         }}
                         disabled={songStructure.includes(section)}
-                        className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+                        className={`px-3 py-2 rounded-lg text-sm font-normal transition-all ${
                           songStructure.includes(section)
                             ? "bg-gray-700 text-gray-500 cursor-not-allowed"
                             : "bg-[#6C3BFF]/20 border border-[#6C3BFF] text-[#6C3BFF] hover:bg-[#6C3BFF]/30"
@@ -234,7 +226,7 @@ export default function SettingsPanel({
                       <div className="bg-gray-900/50 border border-gray-700 rounded-xl p-4">
                         <div className="flex flex-wrap gap-2">
                           {songStructure.map((section, index) => (
-                            <div key={index} className="flex items-center gap-2 px-3 py-2 bg-[#6C3BFF] text-white rounded-lg text-sm font-medium">
+                            <div key={index} className="flex items-center gap-2 px-3 py-2 bg-[#6C3BFF] text-white rounded-lg text-sm font-normal">
                               <span>{index + 1}. {section.charAt(0).toUpperCase() + section.slice(1)}</span>
                               <button
                                 onClick={() => setSongStructure(songStructure.filter((_, i) => i !== index))}
@@ -262,7 +254,7 @@ export default function SettingsPanel({
                     <div className="bg-gray-800/50 border border-gray-600 rounded-xl p-4 space-y-3 mt-4">
                       <div className="flex items-center gap-2">
                         <div className="w-1.5 h-1.5 bg-green-400 rounded-full"></div>
-                        <span className="text-sm text-green-400 font-medium">Structured Preview</span>
+                        <span className="text-sm text-green-400 font-normal">Structured Preview</span>
                       </div>
                       <div className="bg-gray-900/50 rounded-lg p-3 max-h-32 overflow-y-auto">
                         <pre className="text-sm text-gray-200 whitespace-pre-wrap font-mono leading-relaxed">
@@ -291,10 +283,10 @@ export default function SettingsPanel({
 
               {/* Sample Rate - Fixed to MinMax recommended */}
               <div className="mb-4">
-                <h3 className="text-white text-lg font-medium mb-4 px-2 md:px-6">Sample Rate</h3>
+                <h3 className="text-white text-sm font-normal mb-4 px-2 md:px-6">Sample Rate</h3>
                 <div className="px-2 md:px-6">
                   <div className="w-full h-[60px] border border-[#6C3BFF] rounded-lg flex items-center justify-center bg-white/10">
-                    <span className="text-[#6C3BFF] text-sm font-medium">44100Hz (Recommended)</span>
+                    <span className="text-[#6C3BFF] text-sm font-normal">44100Hz (Recommended)</span>
                   </div>
                   <p className="text-xs text-gray-400 mt-2">MinMax API recommended sample rate</p>
                 </div>
@@ -302,10 +294,10 @@ export default function SettingsPanel({
 
               {/* Bitrate - Fixed to MinMax recommended */}
               <div className="mb-4">
-                <h3 className="text-white text-lg font-medium mb-4 px-2 md:px-6">Bitrate</h3>
+                <h3 className="text-white text-sm font-normal mb-4 px-2 md:px-6">Bitrate</h3>
                 <div className="px-2 md:px-6">
                   <div className="w-full h-[60px] border border-[#6C3BFF] rounded-lg flex items-center justify-center bg-white/10">
-                    <span className="text-[#6C3BFF] text-sm font-medium">256k (Recommended)</span>
+                    <span className="text-[#6C3BFF] text-sm font-normal">256k (Recommended)</span>
                   </div>
                   <p className="text-xs text-gray-400 mt-2">MinMax API recommended bitrate</p>
                 </div>
@@ -313,10 +305,10 @@ export default function SettingsPanel({
 
               {/* Audio Format - Fixed to MinMax supported */}
               <div className="mb-4">
-                <h3 className="text-white text-lg font-medium mb-4 px-2 md:px-6">Audio Format</h3>
+                <h3 className="text-white text-sm font-normal mb-4 px-2 md:px-6">Audio Format</h3>
                 <div className="px-2 md:px-6">
                   <div className="w-full h-[60px] border border-[#6C3BFF] rounded-lg flex items-center justify-center bg-white/10">
-                    <span className="text-[#6C3BFF] text-sm font-medium">MP3</span>
+                    <span className="text-[#6C3BFF] text-sm font-normal">MP3</span>
                   </div>
                   <p className="text-xs text-gray-400 mt-2">MinMax API supported format</p>
                 </div>
@@ -324,7 +316,7 @@ export default function SettingsPanel({
 
               {/* Output Format - MinMax supported options */}
               <div className="mb-4">
-                <h3 className="text-white text-lg font-medium mb-4 px-2 md:px-6">Output Format</h3>
+                <h3 className="text-white text-sm font-normal mb-4 px-2 md:px-6">Output Format</h3>
                 <div className="grid grid-cols-2 gap-2 md:gap-4 px-2 md:px-6">
                   {["hex", "url"].map((format) => (
                     <div
@@ -351,7 +343,7 @@ export default function SettingsPanel({
               <div className="px-2 md:px-6">
                 <button
                   onClick={handleReset}
-                  className="w-full bg-gray-800/50 hover:bg-gray-700/50 text-white py-3 rounded-lg font-medium transition-colors border border-gray-600"
+                  className="w-full bg-gray-800/50 hover:bg-gray-700/50 text-white py-3 rounded-lg font-normal transition-colors border border-gray-600"
                 >
                   Reset to Defaults
                 </button>
@@ -360,7 +352,7 @@ export default function SettingsPanel({
               
             {/* Summary Section */}
             <div className="bg-white/10 backdrop-blur-3xl hover:bg-white/20 rounded-lg p-4 space-y-2 text-sm text-gray-300 mb-6">
-              <div className="text-white font-medium mb-3">Music Generation Settings</div>
+              <div className="text-white font-normal mb-3 text-sm">Music Generation Settings</div>
               <div>Model: <span className="text-[#5AD7FF]">{selectedModel}</span></div>
               <div>Sample Rate: <span className="text-[#5AD7FF]">44100Hz (Fixed)</span></div>
               <div>Bitrate: <span className="text-[#5AD7FF]">256k (Fixed)</span></div>
@@ -372,10 +364,10 @@ export default function SettingsPanel({
           </div>
 
           {/* Floating Save Button */}
-          <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent flex justify-center">
+          <div className="sticky bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent flex justify-center z-50">
             <button
               onClick={handleSave}
-              className="w-32 bg-[#006aff] hover:bg-[#0052cc] text-white py-3 px-6 rounded-full font-medium text-sm transition-all shadow-lg"
+              className="w-32 bg-[#006aff] hover:bg-[#0052cc] text-white py-3 px-6 rounded-full font-normal text-sm transition-all shadow-lg"
             >
               Save
             </button>

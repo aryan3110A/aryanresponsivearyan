@@ -13,7 +13,7 @@ import { CAMERA_MOVEMENTS, CameraMovement, getModelType, getApiModelName, suppor
 export default function NewTextToVideo() {
   const [prompt, setPrompt] = useState("")
   const [generatedImages, setGeneratedImages] = useState<string[]>([])
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false)
+
   const [isGenerating, setIsGenerating] = useState(false)
   const [selectedModel, setSelectedModel] = useState("MiniMax-Hailuo-02")
   const [selectedAspectRatio, setSelectedAspectRatio] = useState("16:9")
@@ -217,76 +217,55 @@ export default function NewTextToVideo() {
 
 
 
-  const handleSettingsToggle = () => {
-    setIsSettingsOpen(!isSettingsOpen)
-  }
-
   return (
     <>
-    <div className="min-h-screen bg-black text-white relative overflow-hidden">
-      {/* Background Particles */}
-      <StableBackground />
-      <NavigationFull />
-      {/* <BackgroundShapes /> */}
-
-      <div className="relative z-10">
-        <Header title="Text To Video" />
-
-        {/* Debug Info - Remove in production */}
-        {/* <div className="fixed top-20 right-4 bg-black/80 text-white p-4 rounded-lg text-xs z-50 max-w-xs">
-          <div className="font-bold mb-2">Debug Info:</div>
-          <div>Model: {selectedModel}</div>
-          <div>Type: {getModelType(selectedModel)}</div>
-          <div>FirstFrame: {firstFrameImage ? '✅' : '❌'}</div>
-          <div>Subject: {subjectImage ? '✅' : '❌'}</div>
-          <div>Supports Subject Ref: {supportsSubjectReference(selectedModel) ? '✅' : '❌'}</div>
-        </div> */}
-
-        <main className="container mx-auto  lg:px-8 xl:px-12 2xl:px-16">
-          <InputSection
-            prompt={prompt}
-            setPrompt={setPrompt}
-            onGenerate={handleGenerate}
-            onSettingsToggle={handleSettingsToggle}
-            isGenerating={isGenerating}
-            generatedImages={generatedImages}
+      <div className="min-h-screen bg-black text-white relative overflow-hidden">
+        <StableBackground />
+        <NavigationFull />
+        <div className="flex flex-row relative" style={{ minHeight: 'calc(100vh - 64px - 64px)', marginTop: '64px' }}>
+          <SettingsPanel
+            isOpen={true}
+            onClose={() => {}} // No-op since we want it always open
             selectedModel={selectedModel}
-            selectedStyle={null}
-            selectedQuality={selectedQuality}
+            setSelectedModel={setSelectedModel}
             selectedAspectRatio={selectedAspectRatio}
-            numberOfImages={1}
+            setSelectedAspectRatio={setSelectedAspectRatio}
+            selectedQuality={selectedQuality}
+            setSelectedQuality={setSelectedQuality}
+            selectedDuration={selectedDuration}
+            setSelectedDuration={setSelectedDuration}
+            selectedCameraMovements={selectedCameraMovements}
+            setSelectedCameraMovements={setSelectedCameraMovements}
             firstFrameImage={firstFrameImage}
             setFirstFrameImage={setFirstFrameImage}
             subjectImage={subjectImage}
             setSubjectImage={setSubjectImage}
+            className="w-[340px] max-h-[calc(100vh-128px)] overflow-y-auto sticky top-[64px] z-30 border-r border-[#222]"
           />
-        </main>
-
-        
+          <div className="flex-1 overflow-y-auto flex flex-col items-center justify-center">
+            <div className="w-full max-w-4xl flex flex-col items-center justify-center px-2 sm:px-4 gap-8">
+              <Header title="Text To Video" />
+              <InputSection
+                prompt={prompt}
+                setPrompt={setPrompt}
+                onGenerate={handleGenerate}
+                isGenerating={isGenerating}
+                generatedImages={generatedImages}
+                selectedModel={selectedModel}
+                selectedStyle={null}
+                selectedQuality={selectedQuality}
+                selectedAspectRatio={selectedAspectRatio}
+                numberOfImages={1}
+                firstFrameImage={firstFrameImage}
+                setFirstFrameImage={setFirstFrameImage}
+                subjectImage={subjectImage}
+                setSubjectImage={setSubjectImage}
+              />
+            </div>
+          </div>
+        </div>
       </div>
-      
-
-      <SettingsPanel
-        isOpen={isSettingsOpen}
-        onClose={() => setIsSettingsOpen(false)}
-        selectedModel={selectedModel}
-        setSelectedModel={setSelectedModel}
-        selectedAspectRatio={selectedAspectRatio}
-        setSelectedAspectRatio={setSelectedAspectRatio}
-        selectedQuality={selectedQuality}
-        setSelectedQuality={setSelectedQuality}
-        selectedDuration={selectedDuration}
-        setSelectedDuration={setSelectedDuration}
-        selectedCameraMovements={selectedCameraMovements}
-        setSelectedCameraMovements={setSelectedCameraMovements}
-        firstFrameImage={firstFrameImage}
-        setFirstFrameImage={setFirstFrameImage}
-        subjectImage={subjectImage}
-        setSubjectImage={setSubjectImage}
-      />
-      
-    </div>
-    <Footer />
+      <Footer />
     </>
   )
 }
