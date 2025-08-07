@@ -99,11 +99,11 @@ export default function SettingsPanel({
 
   return (
     <>
-      <div className={`sticky top-[64px] left-0 w-[340px] max-h-[calc(100vh-128px)] overflow-y-auto bg-transparent backdrop-blur-lg shadow-3xl z-30 border-r border-[#222] ${className || ''}`}>
+      <div className={`sticky top-[64px] left-0 w-auto md:w-[400px] lg:w-[480px] max-h-[calc(100vh-128px)] overflow-y-auto bg-transparent backdrop-blur-lg shadow-3xl z-30 border-r border-[#222] ${className || ''}`}>
         <div className="h-full flex flex-col">
           {/* Header */}
           <div className="flex items-center justify-between p-4">
-            <h2 className="text-white text-sm font-normal">Settings</h2>
+            <h2 className="text-white text-lg font-normal">Settings</h2>
           </div>
 
           {/* Content */}

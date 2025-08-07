@@ -56,7 +56,7 @@ export default function AttachmentsDropdown({ onChooseFromLibrary, onUploadFromD
       <button
         ref={buttonRef}
         onClick={toggleDropdown}
-        className={`p-1 md:p-3 rounded-full md:rounded-xl lg:rounded-full  transition-all duration-300 ease-in-out hover:bg-transparent transition-colors ease-in-out border border-[#8E8E8E] ${
+        className={`p-1 md:p-3 lg:p-2 rounded-full md:rounded-xl lg:rounded-full  transition-all duration-300 ease-in-out hover:bg-transparent transition-colors ease-in-out border border-[#8E8E8E] ${
           isOpen
             ? "bg-gradient-to-b from-[#6C3BFF] to-[#412399] text-white"
             : "bg-white/10  text-gray-300 hover:text-white"
@@ -70,7 +70,7 @@ export default function AttachmentsDropdown({ onChooseFromLibrary, onUploadFromD
       {/* Dropdown Menu */}
       <div
         ref={dropdownRef}
-        className={`absolute bottom-full left-0 mb-6 w-56 md:w-64 backdrop-blur-3xl bg-white/20 md:bg-white/15 shadow-3xl border border-[#8E8E8E] rounded-2xl  z-50 overflow-hidden transition-all duration-300 ease-in-out transform origin-bottom ${
+        className={`absolute bottom-full left-0 mb-6 w-56 md:w-64 backdrop-blur-3xl bg-white/20 md:bg-white/15 shadow-3xl border border-[#8E8E8E] rounded-2xl  z-[9999] overflow-hidden transition-all duration-300 ease-in-out transform origin-bottom ${
           isOpen ? "opacity-100 scale-100 translate-y-0" : "opacity-0 scale-95 translate-y-2 pointer-events-none"
         }`}
       >

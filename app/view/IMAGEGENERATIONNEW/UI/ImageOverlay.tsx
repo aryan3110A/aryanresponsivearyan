@@ -97,9 +97,9 @@ export default function ImageOverlay({
   return (
     <>
       {/* Desktop Layout - Properly Centered */}
-        <div className="hidden md:flex fixed inset-0 bg:transparent backdrop-blur-3xl shadow-sm shadow-sm z-100 items-center justify-center md:py-10 lg:py-10">
+        <div className="hidden md:flex fixed inset-0 bg:transparent backdrop-blur-3xl shadow-sm shadow-sm z-100 items-center justify-center md:py-20 lg:py-20">
         {/* Modal Container - Centered */}
-        <div className="relative z-30 w-full md:w-auto md:max-w-6xl lg:w-auto gap-6 lg:max-w-7xl h-full max-h-[90vh] bg-white/10 backdrop-blur-3xl shadow-3xl rounded-2xl overflow-hidden flex md:p-10 lg:p-10">
+        <div className="relative z-50 w-full md:w-auto md:max-w-6xl lg:w-auto gap-6 lg:max-w-7xl h-full max-h-[90vh] bg-white/10 backdrop-blur-3xl shadow-3xl rounded-2xl overflow-hidden flex md:p-14 lg:p-8">
           <button
             onClick={onClose}
             className="absolute top-6 right-6 p-2 text-white hover:bg-white/10 rounded-lg transition-colors z-10"

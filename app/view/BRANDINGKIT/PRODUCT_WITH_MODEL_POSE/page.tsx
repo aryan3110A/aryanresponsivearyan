@@ -100,7 +100,7 @@ export default function ProductWithModelPosePage() {
       formData.append("width", width.toString());
       formData.append("height", height.toString());
 
-      const response = await fetch("https://2d08570d4cfd.ngrok-free.app/generate", {
+      const response = await fetch("https://4ae95d3a1b9e.ngrok-free.app/generate", {
         method: "POST",
         body: formData,
       });
@@ -114,53 +114,55 @@ export default function ProductWithModelPosePage() {
       // Handle both single image and multiple images response
       if (data.image_urls) {
         // Multiple images - use image proxy to bypass ngrok warning
-        setGeneratedImages(data.image_urls.map((url: string) => `/api/image-proxy?url=https://2d08570d4cfd.ngrok-free.app${url}`));
+        setGeneratedImages(data.image_urls.map((url: string) => `/api/image-proxy?url=https://4ae95d3a1b9e.ngrok-free.app${url}`));
       } else if (data.image_url) {  
         // Single image (backward compatibility) - use image proxy to bypass ngrok warning
-                  setGeneratedImages([`/api/image-proxy?url=https://2d08570d4cfd.ngrok-free.app${data.image_url}`]);
-      } else {  
-        throw new Error("No image URLs received.");
+                  setGeneratedImages([`/api/image-proxy?url=https://4ae95d3a1b9e.ngrok-free.app${data.image_url}`]);
+        } else {  
+          throw new Error("No image URLs received.");
+        }
+      } catch (error) {
+        console.error("Generation failed:", error);
+        const fallback = Array(numberOfImages).fill("/placeholder.svg");
+        setGeneratedImages(fallback);
+      } finally {
+        setIsGenerating(false);
       }
-    } catch (error) {
-      console.error("Generation failed:", error);
-      const fallback = Array(numberOfImages).fill("/placeholder.svg");
-      setGeneratedImages(fallback);
-    } finally {
-      setIsGenerating(false);
-    }
-  };
+    };
 
-
-
-  return (
-    <>
-      <div className="min-h-screen bg-black text-white relative overflow-hidden">
-        <StableBackground />
-        <NavigationFull />
-        <div className="relative z-10 flex flex-col items-center justify-center min-h-screen" style={{ marginTop: '64px', paddingTop: '2rem', paddingBottom: '4rem' }}>
-          <div className="w-full max-w-4xl flex flex-col items-center justify-center px-2 sm:px-4 gap-8">
-            <Header title="Product With Model Pose" />
-            <InputSection
-              prompt={prompt}
-              setPrompt={setPrompt}
-              generatedPrompt={generatedPrompt}
-              onGenerate={handleGenerate}
-              isGenerating={isGenerating}
-              generatedImages={generatedImages}
-              selectedFont={selectedFont}
-              selectedStyle={selectedStyle}
-              selectedQuality={selectedQuality}
-              selectedAspectRatio={selectedAspectRatio}
-              numberOfImages={numberOfImages}
-              modelImage={modelImage}
-              setModelImage={setModelImage}
-              productImage={productImage}
-              setProductImage={setProductImage}
-            />
+    return (
+      <>
+        <div className="min-h-screen bg-black text-white relative overflow-hidden">
+          <StableBackground />
+          <NavigationFull />
+          <div className="relative z-10 flex flex-col items-center justify-center min-h-screen" >
+            <div className="w-full max-w-7xl flex flex-col items-center justify-center px-2 sm:px-4 ">
+              <div className="sticky top-0 z-0 bg-black/50 backdrop-blur-sm py-2 w-full">
+                <Header title="Product With Model" />
+              </div>
+              <div className="w-full flex flex-col items-center gap-6 min-h-[400px]">
+                <InputSection
+                  prompt={prompt}
+                  setPrompt={setPrompt}
+                  generatedPrompt={generatedPrompt}
+                  onGenerate={handleGenerate}
+                  isGenerating={isGenerating}
+                  generatedImages={generatedImages}
+                  selectedFont={selectedFont}
+                  selectedStyle={selectedStyle}
+                  selectedQuality={selectedQuality}
+                  selectedAspectRatio={selectedAspectRatio}
+                  numberOfImages={numberOfImages}
+                  modelImage={modelImage}
+                  setModelImage={setModelImage}
+                  productImage={productImage}
+                  setProductImage={setProductImage}
+                />
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-      <Footer />
-    </>
-  );
-}
+        <Footer />
+      </>
+    );
+  }

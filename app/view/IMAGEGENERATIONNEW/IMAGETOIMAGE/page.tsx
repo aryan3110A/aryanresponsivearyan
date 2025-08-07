@@ -255,42 +255,65 @@ export default function ImageToImage() {
 
   return (
     <>
-      <div className="min-h-screen bg-black text-white relative overflow-hidden">
-        <StableBackground />
+      <div className="max-h-[100rem] bg-black text-white relative overflow-hidden">
+      <StableBackground />
         <NavigationFull />
-        <div className="flex flex-row relative" style={{ minHeight: 'calc(100vh - 64px - 64px)', marginTop: '64px' }}>
-          <SettingsPanel
-            onClose={() => {}} // No-op since we want it always open
-            selectedModel={selectedModel}
-            setSelectedModel={setSelectedModel}
-            selectedStyle={selectedStyle}
-            setSelectedStyle={setSelectedStyle}
-            selectedAspectRatio={selectedAspectRatio}
-            setSelectedAspectRatio={setSelectedAspectRatio}
-            selectedQuality={selectedQuality}
-            setSelectedQuality={setSelectedQuality}
-            numberOfImages={numberOfImages}
-            setNumberOfImages={setNumberOfImages}
-            onSave={handleSettingsSave}
-            className="w-[340px] max-h-[calc(100vh-128px)] overflow-y-auto sticky top-[64px] z-30 border-r border-[#222]"
-          />
-          <div className="flex-1 overflow-y-auto flex flex-col items-center justify-center">
-            <div className="w-full max-w-4xl flex flex-col items-center justify-center px-2 sm:px-4 gap-8">
-              <Header title="Image to Image" />
-              <InputSection
-                prompt={prompt}
-                setPrompt={setPrompt}
-                onGenerate={handleGenerate}
-                isGenerating={isGenerating}
-                generatedImages={generatedImages}
-                selectedModel={selectedModel}
-                selectedStyle={selectedStyle}
-                selectedQuality={selectedQuality}
-                selectedAspectRatio={selectedAspectRatio}
-                numberOfImages={numberOfImages}
-                uploadedImage={uploadedImage}
-                setUploadedImage={setUploadedImage}
-              />
+        <div className="flex w-full h-screen" style={{ marginTop: '10px' }}>
+          <div className="md:w-auto md:max-w-[400px]  lg:w-[480px] lg:max-w-[480px] h-full overflow-y-auto scrollbar-hide border-r border-[#222] bg-transparent backdrop-blur-lg shadow-3xl z-0">
+            <style jsx>{`
+              .scrollbar-hide {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+              }
+              .scrollbar-hide::-webkit-scrollbar { 
+                display: none;
+              }
+            `}</style>
+            <SettingsPanel
+              onClose={() => {}} // No-op since we want it always open
+              selectedModel={selectedModel}
+              setSelectedModel={setSelectedModel}
+              selectedStyle={selectedStyle}
+              setSelectedStyle={setSelectedStyle}
+              selectedAspectRatio={selectedAspectRatio}
+              setSelectedAspectRatio={setSelectedAspectRatio}
+              selectedQuality={selectedQuality}
+              setSelectedQuality={setSelectedQuality}
+              numberOfImages={numberOfImages}
+              setNumberOfImages={setNumberOfImages}
+              onSave={handleSettingsSave}
+            />
+          </div>
+          <div className="flex-1 h-full overflow-y-auto scrollbar-hide flex justify-center">
+            <style jsx>{`
+              .scrollbar-hide {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+              }
+              .scrollbar-hide::-webkit-scrollbar { 
+                display: none;
+              }
+            `}</style>
+            <div className="w-full max-w-5xl flex flex-col items-center justify-center px-2 sm:px-4 gap-8 mx-auto">
+              <div className="sticky top-0 z-0 bg-black/50 backdrop-blur-sm py-4 w-full">
+                <Header title="Image to Image" />
+              </div>
+              <div className="w-full flex flex-col items-center gap-8 min-h-[400px]">
+                <InputSection
+                  prompt={prompt}
+                  setPrompt={setPrompt}
+                  onGenerate={handleGenerate}
+                  isGenerating={isGenerating}
+                  generatedImages={generatedImages}
+                  selectedModel={selectedModel}
+                  selectedStyle={selectedStyle}
+                  selectedQuality={selectedQuality}
+                  selectedAspectRatio={selectedAspectRatio}
+                  numberOfImages={numberOfImages}
+                  uploadedImage={uploadedImage}
+                  setUploadedImage={setUploadedImage}
+                />
+              </div>
             </div>
           </div>
         </div>

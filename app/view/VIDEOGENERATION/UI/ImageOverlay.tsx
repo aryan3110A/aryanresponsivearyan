@@ -118,7 +118,7 @@ export default function ImageOverlay({
   return (
     <>
       {/* Desktop Layout - Properly Centered */}
-      <div className="hidden md:flex fixed inset-0 bg:transparent backdrop-blur-3xl shadow-sm z-50 items-center justify-center md:py-10 lg:py-10">
+      <div className="hidden md:flex fixed inset-0 bg:transparent backdrop-blur-3xl shadow-sm z-[9999] items-center justify-center md:py-10 lg:py-10">
         {/* Modal Container - Centered */}
         <div className="relative w-full md:max-w-6xl lg:max-w-7xl h-full max-h-[90vh] bg-white/10 backdrop-blur-3xl shadow-3xl rounded-2xl overflow-hidden flex md:p-10 lg:p-10">
           <button
@@ -241,11 +241,11 @@ export default function ImageOverlay({
       </div>
 
       {/* Mobile & Tablet Layout - New responsive design */}
-      <div className="md:hidden fixed inset-0 bg:transparent backdrop-blur-3xl shadow-sm z-50 pt-14 px-6 ">
+      <div className="md:hidden fixed inset-0 bg:transparent backdrop-blur-3xl shadow-sm z-[9999] pt-14 px-6 ">
         {/* Close Button - Fixed position */}
         <button
           onClick={onClose}
-          className="fixed top-14 right-6 p-2 text-white hover:bg-white/10 rounded-lg transition-colors z-20"
+          className="fixed top-14 right-6 p-2 text-white hover:bg-white/10 rounded-lg transition-colors z-[10000]"
         >
           <X className="w-7 h-7" />
         </button>

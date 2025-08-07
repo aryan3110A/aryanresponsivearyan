@@ -219,12 +219,12 @@ export default function NewTextToVideo() {
 
   return (
     <>
-      <div className="min-h-screen bg-black text-white relative overflow-hidden">
+      <div className="max-h-[100rem] bg-black text-white relative overflow-hidden">
         <StableBackground />
         <NavigationFull />
-        <div className="flex flex-row relative" style={{ minHeight: 'calc(100vh - 64px - 64px)', marginTop: '64px' }}>
-                  <SettingsPanel
-          onClose={() => {}} // No-op since we want it always open
+        <div className="flex w-full h-screen" style={{ marginTop: '0px' }}>
+          <SettingsPanel
+            onClose={() => {}} // No-op since we want it always open
             selectedModel={selectedModel}
             setSelectedModel={setSelectedModel}
             selectedAspectRatio={selectedAspectRatio}
@@ -239,27 +239,31 @@ export default function NewTextToVideo() {
             setFirstFrameImage={setFirstFrameImage}
             subjectImage={subjectImage}
             setSubjectImage={setSubjectImage}
-            className="w-[340px] max-h-[calc(100vh-128px)] overflow-y-auto sticky top-[64px] z-30 border-r border-[#222]"
+            className="w-[480px] max-h-[calc(100vh-128px)] overflow-y-auto sticky z-30 border-r border-[#222]"
           />
-          <div className="flex-1 overflow-y-auto flex flex-col items-center justify-center">
-            <div className="w-full max-w-4xl flex flex-col items-center justify-center px-2 sm:px-4 gap-8">
-              <Header title="Text To Video" />
-              <InputSection
-                prompt={prompt}
-                setPrompt={setPrompt}
-                onGenerate={handleGenerate}
-                isGenerating={isGenerating}
-                generatedImages={generatedImages}
-                selectedModel={selectedModel}
-                selectedStyle={null}
-                selectedQuality={selectedQuality}
-                selectedAspectRatio={selectedAspectRatio}
-                numberOfImages={1}
-                firstFrameImage={firstFrameImage}
-                setFirstFrameImage={setFirstFrameImage}
-                subjectImage={subjectImage}
-                setSubjectImage={setSubjectImage}
-              />
+          <div className="flex-1 h-full overflow-y-auto flex justify-center">
+            <div className="w-full max-w-5xl flex flex-col items-center justify-center px-2 sm:px-4 mx-auto">
+              <div className="sticky top-0 z-20 bg-black/50 backdrop-blur-sm py-4 w-full">
+                <Header title="Text To Video" />
+              </div>
+              <div className="w-full flex flex-col items-center gap-6 min-h-[400px]">
+                <InputSection
+                  prompt={prompt}
+                  setPrompt={setPrompt}
+                  onGenerate={handleGenerate}
+                  isGenerating={isGenerating}
+                  generatedImages={generatedImages}
+                  selectedModel={selectedModel}
+                  selectedStyle={null}
+                  selectedQuality={selectedQuality}
+                  selectedAspectRatio={selectedAspectRatio}
+                  numberOfImages={1}
+                  firstFrameImage={firstFrameImage}
+                  setFirstFrameImage={setFirstFrameImage}
+                  subjectImage={subjectImage}
+                  setSubjectImage={setSubjectImage}
+                />
+              </div>
             </div>
           </div>
         </div>

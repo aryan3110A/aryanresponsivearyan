@@ -126,7 +126,7 @@ export default function VideoSettings({
           </button>
           
           {isModelDropdownOpen && (
-            <div className="absolute top-full left-0 right-0 mt-1 bg-gray-800 border border-gray-600 rounded-lg shadow-lg z-10 max-h-60 overflow-y-auto">
+            <div className="w-auto  absolute top-full left-0 right-0 mt-1 bg-gray-800 border border-gray-600 rounded-lg shadow-lg z-10 max-h-auto overflow-y-auto">
               {VIDEO_MODELS.map((model) => (
                 <button
                   key={model.id}

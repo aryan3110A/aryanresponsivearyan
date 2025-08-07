@@ -13,8 +13,8 @@ export default function Header({
   className = ""
 }: HeaderProps) {
   return (
-    <header className={`text-center pt-2 lg:py-12 xl:py-16 ${className}`}>
-      <div className="flex items-center justify-center gap-4 md:gap-60 mb-6 lg:mb-8 mt-[6rem] md:mt-[4rem] lg:mt-[10rem]">
+    <header className={`text-center pt-2 lg:py-0 md:py-0 xl:py-16 z-10 ${className}`}>
+      <div className="flex items-center justify-center gap-4 md:gap-60  lg:mb-0 mt-[6rem] md:mt-[4rem] lg:mt-[6rem]">
         
         
         <div className="flex-1 max-w-4xl px-4 md:px-0">

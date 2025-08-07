@@ -1,9 +1,9 @@
 "use client"
 
 import Image from "next/image"
-import { useState, useRef } from "react"
+import { useState,  } from "react"
 import { AttachmentsDropdown, UploadComponent, ImageOverlay } from "../../UI"
-import { Download, Bookmark, Heart, Sparkles } from "lucide-react"
+import { Download, Bookmark, Heart } from "lucide-react"
 import { HoverBorderGradient } from "../../../Core/hover-border-gradient"
 
 interface InputSectionProps {
@@ -44,7 +44,6 @@ export default function InputSection({
     index: number
   } | null>(null)
 
-  const scrollContainerRef = useRef<HTMLDivElement>(null)
 
   const handleChooseFromLibrary = () => {
     console.log("Choose from library clicked")
@@ -107,20 +106,25 @@ export default function InputSection({
     })
   }
 
+ 
   const handleInfo = (imageUrl: string, index: number) => {
     setSelectedImageForOverlay({ url: imageUrl, index })
+    document.body.style.overflow = 'hidden' // ✅ Disable background scrolling
   }
+  
 
   const closeImageOverlay = () => {
     setSelectedImageForOverlay(null)
+    document.body.style.overflow = '' // ✅ Restore background scrolling
   }
+  
 
 
 
   return (
-    <div className="w-full flex flex-col items-center gap-8 mt-2">
+    <div className="w-full flex flex-col items-center gap-8 min-h-[300px]">
       {/* Desktop Layout - Input with buttons inline */}
-      <div className="hidden xl:flex items-center gap-4 w-full md:max-w-3xl lg:max-w-4xl px-4">
+      <div className="hidden xl:flex items-center gap-4 w-full md:max-w-4xl lg:max-w-5xl px-4">
         <div className="flex-1 relative max-w-full">
           <div className="p-2 flex items-center bg-[#ffffff]/5 hover:bg-[#ffffff]/20 backdrop-blur-sm border border-[#8E8E8E] rounded-full transition-all duration-300 ease-in-out w-[1100px] max-w-full">
             <div className="relative mr-4">
@@ -207,6 +211,102 @@ export default function InputSection({
         </div>
       </div>
 
+      {/* Content Area - Fixed Height to Prevent Layout Shifts */}
+      <div className="w-full flex flex-col items-center justify-center min-h-[200px]">
+        {/* Generated Images - Fully Responsive Layout */}
+        {generatedImages && generatedImages.length > 0 && (
+          <div className="w-auto flex flex-row gap-6 flex-wrap justify-left">
+            {generatedImages.map((image, index) => (
+              <div
+                onClick={() => handleInfo(image, index)}
+                key={index}
+                style={{width: 300, height: 300}}
+                className="relative aspect-square bg-transparent rounded-xl overflow-hidden group cursor-pointer"
+                onMouseEnter={() => setHoveredImageIndex(index)}
+                onMouseLeave={() => setHoveredImageIndex(null)}
+              >
+                <div className="w-full  aspect-square bg-transparent rounded-lg overflow-hidden border border-white/10">
+                  <Image
+                    src={image || "/placeholder.svg"}
+                    alt={`Generated image ${index + 1}`}
+                    width={200}
+                    height={200}
+                    className="w-full h-full object-contain"
+                  />
+                </div>
+
+                <div
+                  className={`absolute inset-0 bg-black/10 transition-all duration-300 ${
+                    hoveredImageIndex === index ? "opacity-100" : "opacity-0 pointer-events-none"
+                  }`}
+                >
+                  <button
+                    onClick={() => handleInfo(image, index)}
+                    className="text-black font-semibold absolute top-3 right-3 px-[.5vw] bg-gradient-to-b from-[#00F0FF] to-[#009099] backdrop-blur-sm rounded-full hover:bg-white/30 transition-all duration-200"
+                  >
+                    !
+                  </button>
+
+                  <div className="absolute bottom-3 left-3 flex items-center gap-2">
+                    <button
+                      onClick={() => handleDownload(image, index)}
+                      className="p-2 bg-gradient-to-b from-[#00F0FF] to-[#009099] backdrop-blur-sm rounded-lg hover:bg-[#5AD7FF]/30 transition-all duration-200 group/btn"
+                    >
+                      <Download className="w-4 h-4 text-[#000] group-hover/btn:scale-110 transition-transform" />
+                    </button>
+
+                    <button onClick={() => handleBookmark(index)}>
+                      <Bookmark
+                        className={`w-6 h-6 transition-colors duration-200 ${
+                          bookmarkedImages.has(index) ? "fill-[#a4c48c] text-[#a4c48c]" : "text-[#fff]"
+                        }`}
+                      />
+                    </button>
+
+                    <button onClick={() => handleLike(index)}>
+                      <Heart
+                        className={`w-6 h-6 transition-colors duration-200 ${
+                          likedImages.has(index) ? "fill-red-500 text-red-500" : "text-[#fff]"
+                        }`}
+                      />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Enhanced Loading State with Progress */}
+        {isGenerating && (
+          <div className="flex flex-col items-center justify-center py-8 xs:py-12 lg:py-16">
+            <div className="animate-spin rounded-full h-8 w-8 xs:h-12 xs:w-12 lg:h-16 lg:w-16 border-b-2 border-white mb-4"></div>
+            <div className="text-white text-sm xs:text-base text-center">
+              <div>Generating with {selectedModel}</div>
+              <div className="text-gray-400 text-xs xs:text-sm mt-1">
+                {selectedAspectRatio} • {selectedQuality} • {numberOfImages} image{numberOfImages > 1 ? 's' : ''}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Image Overlay Modal */}
+      {selectedImageForOverlay && (
+        <ImageOverlay
+          isOpen={!!selectedImageForOverlay}
+          onClose={closeImageOverlay}
+          imageUrl={selectedImageForOverlay.url}
+          prompt={prompt}
+          modelSelection={selectedModel}
+          stylePalette={selectedStyle || ""}
+          imageQuality={selectedQuality}
+          frameSize={selectedAspectRatio}
+          numberOfItems={numberOfImages}
+          itemLabel="Images"
+        />
+      )}
+
       {/* Upload Component Modal */}
       {showUploadComponent && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
@@ -223,206 +323,6 @@ export default function InputSection({
             <UploadComponent onFilesSelected={handleFilesSelected} />
           </div>
         </div>
-      )}
-
-      {/* Enhanced Loading State with Progress */}
-      {isGenerating && (
-        <div className="flex flex-col items-center justify-center py-8 xs:py-12 lg:py-16">
-          <div className="animate-spin rounded-full h-8 w-8 xs:h-12 xs:w-12 lg:h-16 lg:w-16 border-b-2 border-white mb-4"></div>
-          <div className="text-white text-sm xs:text-base text-center">
-            <div>Generating with {selectedModel}</div>
-            <div className="text-gray-400 text-xs xs:text-sm mt-1">
-              {selectedAspectRatio} • {selectedQuality} • {numberOfImages} image{numberOfImages > 1 ? 's' : ''}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Generated Images - Fully Responsive Layout */}
-      {generatedImages && generatedImages.length > 0 && (
-        <div className="w-full">
-          {/* Desktop Layout - Grid */}
-          <div className="hidden xl:block max-w-8xl mx-auto px-4">
-            <div className="flex items-center gap-2 mb-4 px-6">
-              <div className="bg-white/10 rounded-lg p-2">
-                <Sparkles className="w-5 h-5 text-gray-400" />
-              </div>
-              <span className="text-white text-sm font-medium">{prompt}</span>
-            </div>
-
-            <div className="relative bg-transparent backdrop-blur-sm border border-gray-700/30 rounded-xl p-6 lg:p-8 min-h-[400px] overflow-hidden">
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 lg:gap-6">
-                {generatedImages.map((image, index) => (
-                  <div
-                  onClick={() => handleInfo(image, index)}
-
-                    key={index}
-                    className="relative aspect-square bg-gray-900/50 rounded-xl overflow-hidden group cursor-pointer"
-                    onMouseEnter={() => setHoveredImageIndex(index)}
-                    onMouseLeave={() => setHoveredImageIndex(null)}
-                  >
-                    <div className="w-full aspect-square bg-transparent rounded-lg overflow-hidden border border-white/10">
-                      <Image
-                        src={image || "/placeholder.svg"}
-                        alt={`Generated image ${index + 1}`}
-                        width={200}
-                        height={200}
-                        className="w-full h-full object-contain"
-                      />
-                    </div>
-
-                    <div
-                      className={`absolute inset-0 bg-black/10 transition-all duration-300 ${
-                        hoveredImageIndex === index ? "opacity-100" : "opacity-0 pointer-events-none"
-                      }`}
-                    >
-                      <button
-                        onClick={() => handleInfo(image, index)}
-                        className="text-black font-semibold absolute top-3 right-3 px-[.5vw] bg-gradient-to-b from-[#00F0FF] to-[#009099] backdrop-blur-sm rounded-full hover:bg-white/30 transition-all duration-200"
-                      >
-                        !
-                      </button>
-
-                      <div className="absolute bottom-3 left-3 flex items-center gap-2">
-                        <button
-                          onClick={() => handleDownload(image, index)}
-                          className="p-2 bg-gradient-to-b from-[#00F0FF] to-[#009099] backdrop-blur-sm rounded-lg hover:bg-[#5AD7FF]/30 transition-all duration-200 group/btn"
-                        >
-                          <Download className="w-4 h-4 text-[#000] group-hover/btn:scale-110 transition-transform" />
-                        </button>
-
-                        <button onClick={() => handleBookmark(index)}>
-                          <Bookmark
-                            className={`w-6 h-6 transition-colors duration-200 ${
-                              bookmarkedImages.has(index) ? "fill-[#a4c48c] text-[#a4c48c]" : "text-[#fff]"
-                            }`}
-                          />
-                        </button>
-
-                        <button onClick={() => handleLike(index)}>
-                          <Heart
-                            className={`w-6 h-6 transition-colors duration-200 ${
-                              likedImages.has(index) ? "fill-red-500 text-red-500" : "text-[#fff]"
-                            }`}
-                          />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Mobile & Tablet Layout - Fully Responsive Horizontal Scrolling */}
-          <div className="xl:hidden w-full">
-            {/* Prompt Display - Responsive Width */}
-            <div className="flex items-center gap-2 xs:gap-3 mb-3 xs:mb-4 px-3 xs:px-4 sm:px-6">
-              <div className="bg-white/10 rounded-lg p-1.5 xs:p-2 flex-shrink-0">
-                <Sparkles className="w-3 h-3 xs:w-4 xs:h-4 text-gray-400" />
-              </div>
-              <span className="text-white text-xs xs:text-sm font-medium line-clamp-2 flex-1">{prompt}</span>
-            </div>
-
-            {/* Horizontal Scrolling Images Container - Fully Responsive */}
-            <div className="relative w-full">
-              <div
-                ref={scrollContainerRef}
-                className="flex gap-3 xs:gap-4 overflow-x-auto scrollbar-hide px-3 xs:px-4 sm:px-6 pb-4"
-                style={{
-                  scrollSnapType: "x mandatory",
-                  WebkitOverflowScrolling: "touch",
-                }}
-              >
-                {generatedImages.map((image, index) => (
-                  <div
-                    onClick={() => handleInfo(image, index)}
-                    key={index}
-                    className="flex-shrink-0 w-[calc(100vw-6rem)] xs:w-[calc(100vw-8rem)] sm:w-[calc(100vw-12rem)] md:w-[calc(50vw-4rem)] max-w-sm"
-                    style={{ scrollSnapAlign: "start" }}
-                  >
-                    {/* Image Container - Responsive */}
-                    <div className="relative bg-transparent backdrop-blur-sm border border-gray-700/30 rounded-xl p-3 xs:p-4 overflow-hidden w-full">
-                      <div className="relative w-full aspect-square bg-gray-900/50 rounded-xl overflow-hidden">
-                        <div className="w-full aspect-square bg-transparent rounded-lg overflow-hidden border border-white/10">
-                          <Image
-                            src={image || "/placeholder.svg"}
-                            alt={`Generated image ${index + 1}`}
-                            width={400}
-                            height={400}
-                            className="w-full h-full object-contain"
-                          />
-                        </div>
-
-                        {/* Mobile Action Buttons - Responsive Sizing */}
-                        <div className="absolute inset-0 bg-black/5">
-                          {/* Info Button - Top Right */}
-                          <button
-                            onClick={() => handleInfo(image, index)}
-                            className="text-black font-semibold absolute top-2 xs:top-3 right-2 xs:right-3 w-6 h-6 xs:w-8 xs:h-8 bg-gradient-to-b from-[#00F0FF] to-[#009099] backdrop-blur-sm rounded-full hover:bg-white/30 transition-all duration-200 flex items-center justify-center text-xs xs:text-sm"
-                          >
-                            !
-                          </button>
-
-                          {/* Action Buttons - Bottom Left */}
-                          <div className="absolute bottom-2 xs:bottom-3 left-2 xs:left-3 flex items-center gap-1.5 xs:gap-2">
-                            <button
-                              onClick={() => handleDownload(image, index)}
-                              className="p-1.5 xs:p-2 bg-gradient-to-b from-[#00F0FF] to-[#009099] backdrop-blur-sm rounded-lg hover:bg-[#5AD7FF]/30 transition-all duration-200"
-                            >
-                              <Download className="w-3 h-3 xs:w-4 xs:h-4 text-[#000]" />
-                            </button>
-
-                            <button onClick={() => handleBookmark(index)}>
-                              <Bookmark
-                                className={`w-4 h-4 xs:w-5 xs:h-5 transition-colors duration-200 ${
-                                  bookmarkedImages.has(index) ? "fill-[#a4c48c] text-[#a4c48c]" : "text-[#fff]"
-                                }`}
-                              />
-                            </button>
-
-                            <button onClick={() => handleLike(index)}>
-                              <Heart
-                                className={`w-4 h-4 xs:w-5 xs:h-5 transition-colors duration-200 ${
-                                  likedImages.has(index) ? "fill-red-500 text-red-500" : "text-[#fff]"
-                                }`}
-                              />
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Scroll Indicators - Responsive */}
-              {generatedImages.length > 1 && (
-                <div className="flex justify-center mt-3 xs:mt-4 gap-1.5 xs:gap-2">
-                  {generatedImages.map((_, index) => (
-                    <div key={index} className="w-1.5 h-1.5 xs:w-2 xs:h-2 rounded-full bg-gray-600" />
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Image Overlay Modal */}
-      {selectedImageForOverlay && (
-        <ImageOverlay
-          isOpen={!!selectedImageForOverlay}
-          onClose={closeImageOverlay}
-          imageUrl={selectedImageForOverlay.url}
-          prompt={prompt}
-          modelSelection={selectedModel}
-          stylePalette={selectedStyle || ""}
-          imageQuality={selectedQuality}
-          frameSize={selectedAspectRatio}
-          numberOfItems={numberOfImages}
-          itemLabel="Images"
-        />
       )}
 
       {/* Add scrollbar hide styles */}

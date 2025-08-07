@@ -134,15 +134,12 @@ export default function SettingsPanel({
 
   return (
     <>
-      <div className={`sticky top-[64px] left-0 w-[340px] max-h-[calc(100vh-128px)] overflow-y-auto bg-transparent backdrop-blur-lg shadow-3xl z-30 border-r border-[#222] ${className || ''}`}>
+      <div className={`sticky left-0 w-auto md:w-[400px] lg:w-[480px] max-h-[calc(100vh-128px)] overflow-y-auto bg-transparent backdrop-blur-lg shadow-3xl z-30 border-r border-[#222] ${className || ''}`}>
         <div className="h-full flex flex-col">
           {/* Header */}
-          <div className="flex items-center justify-between p-4">
-            <h2 className="text-white text-sm font-normal">Settings</h2>
-          </div>
 
           {/* Content */}
-          <div className="flex-1 overflow-y-auto px-4 space-y-6 scrollbar-hide pb-24">
+          <div className="flex-1 overflow-y-auto px-4 space-y-6 scrollbar-hide  mt-20">
             <style jsx>{`
               .scrollbar-hide {
                 -ms-overflow-style: none;
@@ -155,9 +152,7 @@ export default function SettingsPanel({
 
             {/* Video Settings Section */}
             <div className="mb-6">
-              <h3 className="text-white text-sm font-normal mb-4">
-                Video <span className="text-[#6C3BFF]">Settings</span>
-              </h3>
+             
               <VideoSettings
                 selectedModel={selectedModel}
                 setSelectedModel={setSelectedModel}

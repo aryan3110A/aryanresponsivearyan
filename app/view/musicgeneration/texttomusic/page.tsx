@@ -127,9 +127,18 @@ export default function TextToMusic() {
       <div className="min-h-screen bg-black text-white relative overflow-hidden">
         <StableBackground />
         <NavigationFull />
-        <div className="flex flex-row relative" style={{ minHeight: 'calc(100vh - 64px - 64px)', marginTop: '64px' }}>
-                  <SettingsPanel
-          onClose={() => {}} // No-op since we want it always open
+        <div className="flex w-full h-screen scrollbar-hide" style={{ marginTop: '64px' }}>
+          <style jsx>{`
+            .scrollbar-hide {
+              -ms-overflow-style: none;
+              scrollbar-width: none;
+            }
+            .scrollbar-hide::-webkit-scrollbar {
+              display: none;
+            }
+          `}</style>
+          <SettingsPanel
+            onClose={() => {}} // No-op since we want it always open
             selectedModel={selectedModel}
             setSelectedModel={setSelectedModel}
             sampleRate={sampleRate}
@@ -143,25 +152,29 @@ export default function TextToMusic() {
             lyrics={lyrics}
             songStructure={songStructure}
             setSongStructure={setSongStructure}
-            className="w-[340px] max-h-[calc(100vh-128px)] overflow-y-auto sticky top-[64px] z-30 border-r border-[#222]"
+            className="w-[480px] max-h-[calc(100vh-128px)] overflow-y-auto sticky z-30 border-r border-[#222] scrollbar-hide"
           />
-          <div className="flex-1 overflow-y-auto flex flex-col items-center justify-center">
-            <div className="w-full max-w-4xl flex flex-col items-center justify-center px-2 sm:px-4 gap-8">
-              <Header title="Text To Music" />
-              <InputSection
-                prompt={prompt}
-                setPrompt={setPrompt}
-                lyrics={lyrics}
-                setLyrics={setLyrics}
-                songStructure={songStructure}
-                setSongStructure={setSongStructure}
-                onGenerate={handleGenerate}
-                isGenerating={isGenerating}
-                generatedImages={generatedMusic}
-                selectedModel={selectedModel}
-                setSelectedModel={setSelectedModel}
-                audioFormat={audioFormat}
-              />
+          <div className="flex-1 h-full overflow-y-auto flex justify-center scrollbar-hide">
+            <div className="w-full max-w-5xl flex flex-col items-center justify-center px-2 sm:px-4 gap-6 mx-auto">
+              <div className="sticky top-0 z-10 bg-black/50 backdrop-blur-sm py-4 w-full">
+                <Header title="Text To Music" />
+              </div>
+              <div className="w-full flex flex-col items-center gap-6 min-h-[400px]">
+                <InputSection
+                  prompt={prompt}
+                  setPrompt={setPrompt}
+                  lyrics={lyrics}
+                  setLyrics={setLyrics}
+                  songStructure={songStructure}
+                  setSongStructure={setSongStructure}
+                  onGenerate={handleGenerate}
+                  isGenerating={isGenerating}
+                  generatedImages={generatedMusic}
+                  selectedModel={selectedModel}
+                  setSelectedModel={setSelectedModel}
+                  audioFormat={audioFormat}
+                />
+              </div>
             </div>
           </div>
         </div>

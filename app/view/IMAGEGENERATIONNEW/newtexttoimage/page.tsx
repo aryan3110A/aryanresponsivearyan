@@ -288,12 +288,12 @@ export default function NewText2Image() {
 
   return (
     <>
-      <div className="min-h-screen bg-black text-white relative overflow-hidden">
+      <div className="max-h-[100rem] bg-black text-white relative overflow-hidden">
         {/* Stable background that doesn't re-render with input changes */}
         <StableBackground />
         <NavigationFull />
-        <div className="flex w-full" style={{ minHeight: 'calc(100vh - 64px - 64px)', marginTop: '64px', height: 'calc(100vh - 64px - 64px)' }}>
-          <div className="w-[340px] h-full overflow-y-auto scrollbar-hide border-r border-[#222] bg-transparent backdrop-blur-lg shadow-3xl z-40">
+        <div className="flex w-full h-screen" style={{ marginTop: '10px' }}>
+          <div className="md:w-auto md:max-w-[400px]  lg:w-[480px] lg:max-w-[480px] h-full overflow-y-auto scrollbar-hide border-r border-[#222] bg-transparent backdrop-blur-lg shadow-3xl z-0">
             <style jsx>{`
               .scrollbar-hide {
                 -ms-overflow-style: none;
@@ -355,21 +355,25 @@ export default function NewText2Image() {
                 display: none;
               }
             `}</style>
-            <div className="w-full max-w-4xl flex flex-col items-center justify-center px-2 sm:px-4 gap-8 mx-auto">
-              <Header title="Text to Image" />
-              <InputSection
-                prompt={prompt}
-                setPrompt={setPrompt}
-                onGenerate={handleGenerate}
-                isGenerating={isGenerating}
-                generatedImages={generatedImages}
-                generatedPrompts={generatedPrompts}
-                selectedModel={selectedModel}
-                selectedStyle={selectedStyle}
-                selectedQuality={selectedQuality}
-                selectedAspectRatio={selectedAspectRatio}
-                numberOfImages={numberOfImages}
-              />
+            <div className="w-full max-w-5xl flex flex-col items-center justify-center px-2 sm:px-4 gap-8 mx-auto">
+              <div className="sticky top-0 z-0 bg-black/50 backdrop-blur-sm py-4 w-full">
+                <Header title="Text to Image" />
+              </div>
+              <div className="w-full flex flex-col items-center gap-8 min-h-[400px]">
+                <InputSection
+                  prompt={prompt}
+                  setPrompt={setPrompt}
+                  onGenerate={handleGenerate}
+                  isGenerating={isGenerating}
+                  generatedImages={generatedImages}
+                  generatedPrompts={generatedPrompts}
+                  selectedModel={selectedModel}
+                  selectedStyle={selectedStyle}
+                  selectedQuality={selectedQuality}
+                  selectedAspectRatio={selectedAspectRatio}
+                  numberOfImages={numberOfImages}
+                />
+              </div>
             </div>
           </div>
         </div>

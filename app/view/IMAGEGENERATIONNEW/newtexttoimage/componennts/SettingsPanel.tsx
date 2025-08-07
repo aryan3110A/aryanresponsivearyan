@@ -245,7 +245,7 @@ export default function SettingsPanel({
   return (
     <>
       {/* Settings Panel - Sticky and attached just below the navigation bar */}
-      <div className="sticky top-[64px] left-0 w-[340px] max-h-[calc(100vh-128px)] overflow-y-auto bg-transparent backdrop-blur-lg shadow-3xl z-40 border-r border-[#222] scrollbar-hide">
+      <div className="sticky top-[64px] left-0 w-auto max-h-[calc(100vh-128px)] overflow-y-auto bg-transparent backdrop-blur-lg shadow-3xl  border-r border-[#222] scrollbar-hide">
         <style jsx>{`
           .scrollbar-hide {
             -ms-overflow-style: none;
