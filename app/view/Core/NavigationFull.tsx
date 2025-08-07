@@ -176,7 +176,7 @@ export default function NavigationFull() {
                 width={28}
                 height={28}
                 alt="logo"
-                className="lg:w-10 lg:h-10"
+                className="lg:w-7 lg:h-7"
               />
             </div>
           </div>
@@ -321,7 +321,7 @@ export default function NavigationFull() {
 
       >
         <div className="px-10 py-10">
-          <div className="grid grid-cols-1 md:grid-cols-6 lg:grid-cols-6 xl:grid-cols-6 gap-6 lg:gap-8  font-poppins">
+          <div className="grid grid-cols-1 md:grid-cols-6 lg:grid-cols-6 xl:grid-cols-6 gap-10 md:gap-10 lg:gap-0 xl:gap-0 font-poppins">
             <div className="col-span-1">
               <ImageGeneration />
             </div>

@@ -169,7 +169,7 @@ const Footer: React.FC = () => {
         </div>
       </div>
       
-      <div className="max-w-full px-4 md:px-16 lg:px-12 relative z-20">
+      <div className="max-w-full px-4 md:px-16 lg:px-12 relative z-0">
         {/* Desktop Layout - Using original code for desktop/laptop */}
         <div
           className={`${isMobile ? "hidden" : "flex"} ${

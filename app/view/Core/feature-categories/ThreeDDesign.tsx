@@ -8,8 +8,8 @@ interface FeatureItem {
 }
 
 const threeDFeatures: FeatureItem[] = [
-  { title: "Text to 3D", href: "/view/IMAGEGENERATIONNEW/newtexttoimage", icon: "🎲" },
-  { title: "Image to 3D", href: "/view/IMAGEGENERATIONNEW/newtexttoimage", icon: "🔮" },
+  { coming: true, title: "Text to 3D", href: "/view/IMAGEGENERATIONNEW/newtexttoimage", icon: "🎲" },
+  { coming: true, title: "Image to 3D", href: "/view/IMAGEGENERATIONNEW/newtexttoimage", icon: "🔮" },
 ]
 
 export default function ThreeDDesign() {
@@ -26,8 +26,8 @@ export default function ThreeDDesign() {
             href={feature.href}
             className="flex items-center text-gray-300 hover:text-white transition-all duration-200 text-sm group"
           >
-            <span className="ml-4 ">{feature.title}</span>
-            {feature.coming && <span className="text-xs text-yellow-400 ml-2">(Soon)</span>}
+            <span className="ml-4 flex no-wrap">{feature.title}</span>
+            {feature.coming && <span className="text-sm text-gray-300 ml-1 flex-shrink-0">(Soon)</span>}
           </Link>
         ))}
       </div>

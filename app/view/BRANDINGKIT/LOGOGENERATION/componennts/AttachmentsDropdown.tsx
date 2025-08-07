@@ -51,7 +51,7 @@ export default function AttachmentsDropdown({ onChooseFromLibrary, onUploadFromD
       <button
         ref={buttonRef}
         onClick={toggleDropdown}
-        className={`p-1 md:p-3 rounded-lg md:rounded-xl transition-all duration-300 ease-in-out hover:bg-transparent transition-colors ease-in-out border border-[#8E8E8E] ${
+        className={`p-1 md:p-3 rounded-lg md:rounded-full  lg:rounded-full  transition-all duration-300 ease-in-out hover:bg-transparent transition-colors ease-in-out border border-[#8E8E8E] ${
           isOpen
             ? "bg-gradient-to-b from-[#6C3BFF] to-[#412399] text-white"
             : "bg-white/10  text-gray-300 hover:text-white"

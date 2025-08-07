@@ -34,7 +34,6 @@ export default function SettingsPanel({
 }: SettingsPanelProps) {
   
 
-
   const [photoReal, setPhotoReal] = useState(false);
   const [negativePrompt, setNegativePrompt] = useState(false);
   const [transparency, setTransparency] = useState(false);
@@ -259,7 +258,7 @@ export default function SettingsPanel({
                 selectedCameraAngle={selectedCameraAngle}
               />
             </div>
-         
+          
             {/* Quality Section */}
             {/* <div className="mb-6">
               <Quality onQualitySelect={setSelectedQuality} selectedQuality={selectedQuality} />

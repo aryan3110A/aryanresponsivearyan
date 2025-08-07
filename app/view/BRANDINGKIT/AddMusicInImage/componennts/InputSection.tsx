@@ -5,6 +5,7 @@ import { useState, useRef } from "react"
 import AttachmentsDropdown from "./AttachmentsDropdown"
 import { UploadComponent, ImageOverlay } from "../../UI"
 import { Download, Bookmark, Heart, Sparkles } from "lucide-react"
+import { HoverBorderGradient } from "../../../Core/hover-border-gradient"
 
 interface InputSectionProps {
   prompt: string
@@ -138,17 +139,15 @@ export default function InputSection({
               onKeyDown={(e) => e.key === "Enter" && onGenerate()}
             />
             <div className="flex items-center gap-4">
-              <span className="text-xs text-white opacity-80 mr-2">1 token per product</span>
               <button className="p-2 hover:bg-gray-700/50 rounded-full transition-colors border border-white/10">
                 <Image src="/newt2image/enhancer.png" alt="enhancer" width={28} height={28} />
               </button>
-              <button
-                onClick={onGenerate}
-                disabled={!prompt.trim() || isGenerating}
-                className="bg-gradient-to-b from-[#6C3BFF] to-[#412399] transition-colors text-white px-12 py-3 rounded-full font-medium text-base"
+              <HoverBorderGradient
+                onClick={!prompt.trim() || isGenerating ? undefined : onGenerate}
+                className="px-12 py-3 font-medium text-base rounded-full bg-[#006aff]"
               >
                 {isGenerating ? "Generating..." : "Generate"}
-              </button>
+              </HoverBorderGradient>
             </div>
           </div>
         </div>
@@ -194,13 +193,12 @@ export default function InputSection({
 
         {/* Buttons Below Input - Responsive Sizing */}
         <div className="flex items-center gap-3 xs:gap-4 justify-end w-full">
-          <button
-            onClick={onGenerate}
-            disabled={!prompt.trim() || isGenerating}
-            className="bg-gradient-to-b from-[#6C3BFF] to-[#412399] transition-colors text-white px-2  py-2.5 xs:py-3 rounded-full font-medium text-sm xs:text-base flex-1 max-w-[32%] "
+          <HoverBorderGradient
+            onClick={!prompt.trim() || isGenerating ? undefined : onGenerate}
+            className="px-2  py-2.5 xs:py-3 rounded-full font-medium text-sm xs:text-base flex-1 max-w-[32%] bg-[#006aff]"
           >
             {isGenerating ? "Generating..." : "Generate"}
-          </button>
+          </HoverBorderGradient>
 
           <button
             onClick={onSettingsToggle}

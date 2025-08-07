@@ -94,11 +94,15 @@ export default function InputSection({
 
   const handleInfo = (imageUrl: string, index: number) => {
     setSelectedImageForOverlay({ url: imageUrl, index })
+    document.body.style.overflow = 'hidden' // ✅ Disable background scrolling
   }
+  
 
   const closeImageOverlay = () => {
     setSelectedImageForOverlay(null)
+    document.body.style.overflow = '' // ✅ Restore background scrolling
   }
+  
 
   const handleSettingsClick = () => {
     setIsSettingsRotating(true)
@@ -127,8 +131,7 @@ export default function InputSection({
               </button>
               <HoverBorderGradient
                 onClick={!prompt.trim() || isGenerating ? undefined : onGenerate}
-                backgroundColor="bg-[#006aff]"
-                className={`px-12 py-3 font-medium text-base rounded-full ${(!prompt.trim() || isGenerating) ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+                className={`px-12 py-3 font-medium text-base rounded-full bg-[#006aff] ${(!prompt.trim() || isGenerating) ? 'cursor-not-allowed' : 'cursor-pointer'}`}
               >
                 {isGenerating ? "Generating..." : "Generate"}
               </HoverBorderGradient>
@@ -153,7 +156,7 @@ export default function InputSection({
       {/* Mobile & Tablet Layout - Fully Responsive */}
       <div className="xl:hidden w-full px-0 ">
         {/* Input Field Only - Full Width Responsive */}
-        <div className="w-full mb-2">
+        <div className="w-full mb-4">
           <div className="flex items-center bg-[#ffffff]/5 hover:bg-[#ffffff]/20 backdrop-blur-sm border border-[#8E8E8E] rounded-full p-2 xs:p-4 transition-all duration-300 ease-in-out">
             <input
               type="text"
@@ -178,15 +181,14 @@ export default function InputSection({
 
         {/* Buttons Below Input - Responsive Sizing */}
         <div className="flex items-center gap-3 xs:gap-4 justify-end w-full">
-        <div className="flex items-center gap-3 xs:gap-4 justify-end w-full">
-          <HoverBorderGradient
-            onClick={!prompt.trim() || isGenerating ? undefined : onGenerate}
-            backgroundColor="bg-[#006aff]"
-            className="px-4 py-2.5 xs:py-3 rounded-full font-medium text-sm xs:text-base flex-1 max-w-[100%]"
+          <button
+            onClick={onGenerate}
+            disabled={!prompt.trim() || isGenerating}
+            className="bg-gradient-to-b from-[#6C3BFF] to-[#412399] transition-colors text-white px-2  py-2.5 xs:py-3 rounded-full font-medium text-sm xs:text-base flex-1 max-w-[32%] "
           >
             {isGenerating ? "Generating..." : "Generate"}
-          </HoverBorderGradient>
-
+          </button>
+          
           <button
             onClick={handleSettingsClick}
             className="p-2 bg-[#1F1F1F] backdrop-blur-sm rounded-full hover:bg-transparent transition-all duration-300 border border-[#8E8E8E] flex-shrink-0"
@@ -196,12 +198,9 @@ export default function InputSection({
               alt="Settings"
               width={24}
               height={24}
-              className="w-5 h-5 xs:w-6 xs:h-6 sm:w-7 sm:h-7"
+              className={`w-5 h-5 xs:w-6 xs:h-6 sm:w-7 sm:h-7 transition-transform duration-300 ${isSettingsRotating ? 'rotate-45' : ''}`}
             />
           </button>
-        </div>
-          
-          
         </div>
       </div>
 

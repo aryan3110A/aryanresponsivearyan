@@ -13,8 +13,8 @@ const brandingFeatures: FeatureItem[] = [
   { title: "Mockups Generation", href:  BRANDINGKIT.MOCKUPEGNERATION, icon: "📱" },
   { title: "Product with Model Poses", href:  BRANDINGKIT.PRODUCTWITHMODELPOSEEGNERATION, icon: "🧍" },
   { title: "Product Generation", href: BRANDINGKIT.PRODUCT_GENERATION, icon: "📦" },
-  { title: "Add Music in Image", href:  BRANDINGKIT.ADDMUSICINIMAGEGNERATION, icon: "🎵" },
-  { title: "Add Music in Video", href:  BRANDINGKIT.ADDMUSICINVIDEOGNERATION, icon: "🎶" },
+  { coming: true, title: "Add Music in Image", href:  BRANDINGKIT.ADDMUSICINIMAGEGNERATION, icon: "🎵" },
+  {coming: true, title: "Add Music in Video", href:  BRANDINGKIT.ADDMUSICINVIDEOGNERATION, icon: "🎶" },
 ]
 
 export default function BrandingKit() {
@@ -31,8 +31,8 @@ export default function BrandingKit() {
             href={feature.href}
             className="flex items-center text-gray-300 hover:text-white transition-all duration-200 text-sm group"
           >
-            <span className="ml-4 ">{feature.title}</span>
-            {feature.coming && <span className="text-xs text-yellow-400 ml-2">(Soon)</span>}
+            <span className="ml-4 flex no-wrap">{feature.title}</span>
+            {feature.coming && <span className="text-sm text-gray-300 ml-1 flex-shrink-0">(Soon)</span>}
           </Link>
         ))}
       </div>

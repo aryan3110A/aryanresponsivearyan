@@ -25,7 +25,7 @@ export default function InputSection({
   prompt,
   setPrompt,
   onGenerate,
-  // onSettingsToggle,
+  onSettingsToggle,
   isGenerating,
   generatedImages,
   selectedModel,
@@ -156,12 +156,12 @@ export default function InputSection({
           </div>
         </div>
 
-        {/* <button
+        <button
           onClick={onSettingsToggle}
           className="p-3 bg-[#1F1F1F] backdrop-blur-sm rounded-full hover:bg-transparent transition-all duration-300 border border-[#8E8E8E]"
         >
           <Image src="/mockupgeneration/setting.png" alt="Settings" width={32} height={32} className="w-12 h-12" />
-        </button> */}
+        </button>
       </div>
 
       {/* Mobile & Tablet Layout - Fully Responsive */}
@@ -205,18 +205,18 @@ export default function InputSection({
             {isGenerating ? "Generating..." : "Generate"}
           </HoverBorderGradient>
 
-          {/* <button
+          <button
             onClick={onSettingsToggle}
             className="p-2 bg-[#1F1F1F] backdrop-blur-sm rounded-full hover:bg-transparent transition-all duration-300 border border-[#8E8E8E] flex-shrink-0"
-          > */}
-            {/* <Image
+          > 
+             <Image
               src="/mockupgeneration/setting.png"
               alt="Settings"
               width={24}
               height={24}
               className="w-5 h-5 xs:w-6 xs:h-6 sm:w-7 sm:h-7"
             />
-          </button> */}
+          </button>
         </div>
       </div>
 
@@ -261,6 +261,8 @@ export default function InputSection({
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 lg:gap-6">
                 {generatedImages.map((image, index) => (
                   <div
+                  onClick={() => handleInfo(image, index)}
+
                     key={index}
                     className="relative aspect-square bg-gray-900/50 rounded-xl overflow-hidden group cursor-pointer"
                     onMouseEnter={() => setHoveredImageIndex(index)}
@@ -341,6 +343,7 @@ export default function InputSection({
               >
                 {generatedImages.map((image, index) => (
                   <div
+                  onClick={() => handleInfo(image, index)}
                     key={index}
                     className="flex-shrink-0 w-[calc(100vw-6rem)] xs:w-[calc(100vw-8rem)] sm:w-[calc(100vw-12rem)] md:w-[calc(50vw-4rem)] max-w-sm"
                     style={{ scrollSnapAlign: "start" }}

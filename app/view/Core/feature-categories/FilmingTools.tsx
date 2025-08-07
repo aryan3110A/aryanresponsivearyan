@@ -8,9 +8,9 @@ interface FeatureItem {
 }
 
 const filmingFeatures: FeatureItem[] = [
-  { title: "AI story board", href: "/view/IMAGEGENERATIONNEW/newtexttoimage", icon: "📋" },
-  { title: "Film generation", href: "/view/IMAGEGENERATIONNEW/newtexttoimage", icon: "🎭" },
-  { title: "Comic book generation", href: "/view/IMAGEGENERATIONNEW/newtexttoimage", icon: "📚" },
+  { coming: true, title: "AI story board", href: "/view/IMAGEGENERATIONNEW/newtexttoimage", icon: "📋" },
+  { coming: true, title: "Film generation", href: "/view/IMAGEGENERATIONNEW/newtexttoimage", icon: "🎭" },
+  { coming: true, title: "Comic book generation", href: "/view/IMAGEGENERATIONNEW/newtexttoimage", icon: "📚" },
 ]
 
 export default function FilmingTools() {
@@ -27,8 +27,8 @@ export default function FilmingTools() {
             href={feature.href}
             className="flex items-center text-gray-300 hover:text-white transition-all duration-200 text-sm group"
           >
-            <span className="ml-4 ">{feature.title}</span>
-            {feature.coming && <span className="text-xs text-yellow-400 ml-2">(Soon)</span>}
+            <span className="ml-4 flex no-wrap">{feature.title}</span>
+            {feature.coming && <span className="text-sm text-gray-300 ml-1 flex-shrink-0">(Soon)</span>}
           </Link>
         ))}
       </div>

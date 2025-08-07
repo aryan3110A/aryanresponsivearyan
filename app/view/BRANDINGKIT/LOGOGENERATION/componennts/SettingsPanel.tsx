@@ -48,8 +48,6 @@ export default function SettingsPanel(props: SettingsPanelProps) {
   // const [fixedSeed, setFixedSeed] = useState(false)
   // const [promptEnhance, setPromptEnhance] = useState("Auto")
   const [showSummary, setShowSummary] = useState(false)
-  // Add state for numberOfLogo if not present
-  const [numberOfLogo, setNumberOfLogo] = useState(props.numberOfLogo || 1)
   // Add state for selectedFileType
   // const [selectedFileType, setSelectedFileType] = useState<string | null>(null)
   // Add state for logoName
@@ -123,8 +121,8 @@ export default function SettingsPanel(props: SettingsPanelProps) {
             {/* Number of Logo Section */}
             <div className="mb-6">
               <NumberSelector
-                onNumberSelect={setNumberOfLogo}
-                selectedNumber={numberOfLogo}
+                onNumberSelect={props.setNumberOfLogo}
+                selectedNumber={props.numberOfLogo}
                 title="Number of Logos"
               />
             </div>
@@ -205,7 +203,10 @@ export default function SettingsPanel(props: SettingsPanelProps) {
               selectedFont={selectedFont}
             /> */}
             {/* Save Button */}
-            <SaveButton onClick={() => setShowSummary(true)} showSummary={showSummary} />
+            <SaveButton onClick={() => {
+              setShowSummary(true)
+              props.onClose() // Close the settings panel when save is clicked
+            }} showSummary={showSummary} />
 
             {/* Model & Preset Button */}
             <div className="mb-6 px-2 md:px-6">

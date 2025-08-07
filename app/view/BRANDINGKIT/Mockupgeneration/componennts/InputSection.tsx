@@ -3,9 +3,9 @@
 import Image from "next/image"
 import { useState, useRef } from "react"
 // import AttachmentsDropdown from "./AttachmentsDropdown"
-import { UploadComponent } from "../../UI"
-import ImageOverlay from "./ImageOverlay"
+import { UploadComponent, ImageOverlay } from "../../UI"
 import { Download, Bookmark, Heart, Sparkles, X } from "lucide-react"
+import { HoverBorderGradient } from "../../../Core/hover-border-gradient"
 
 interface InputSectionProps {
   generatedPrompt: string
@@ -130,15 +130,15 @@ export default function InputSection({
               {/* Logo Upload Section */}
               <div className="flex items-center gap-4">
                 {!logoFile ? (
-                  <button
+                  <HoverBorderGradient
                     onClick={() => handleUploadLogo()}
-                    className="flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-[#6C3BFF] to-[#412399] text-white rounded-full hover:from-[#5A2FE6] hover:to-[#3A1F8A] transition-all duration-300 border border-[#8E8E8E]/30 hover:border-[#6C3BFF]/50"
+                    className="flex items-center gap-3 px-6 py-3 text-white rounded-full hover:from-[#5A2FE6] hover:to-[#3A1F8A] transition-all duration-300"
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
                     </svg>
                     <span className="font-medium">Upload Logo</span>
-                  </button>
+                  </HoverBorderGradient>
                 ) : (
                   <div className="flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-green-500/20 to-green-600/20 border border-green-500/30 rounded-full">
                     <div className="flex items-center gap-2">
@@ -187,13 +187,12 @@ export default function InputSection({
               </div>
             </div>
             <div className="flex items-center gap-4">
-              <button
-                onClick={onGenerate}
-                disabled={isGenerating || !logoFile || !businessName.trim()}
-                className="bg-gradient-to-b from-[#6C3BFF] to-[#412399] transition-colors text-white px-12 py-3 rounded-full font-medium text-base"
+              <HoverBorderGradient
+                onClick={isGenerating || !logoFile || !businessName.trim() ? undefined : onGenerate}
+                className="px-12 py-3 font-medium text-base rounded-full bg-[#006aff]"
               >
                 {isGenerating ? "Generating..." : "Generate"}
-              </button>
+              </HoverBorderGradient>
             </div>
           </div>
         </div>
@@ -328,6 +327,7 @@ export default function InputSection({
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 lg:gap-6">
                 {generatedImages.map((image, index) => (
                   <div
+                    onClick={() => handleInfo(image, index)}
                     key={index}
                     className="relative aspect-square bg-gray-900/50 rounded-xl overflow-hidden group cursor-pointer"
                     onMouseEnter={() => setHoveredImageIndex(index)}
@@ -408,6 +408,7 @@ export default function InputSection({
               >
                 {generatedImages.map((image, index) => (
                   <div
+                    onClick={() => handleInfo(image, index)}
                     key={index}
                     className="flex-shrink-0 w-[calc(100vw-6rem)] xs:w-[calc(100vw-8rem)] sm:w-[calc(100vw-12rem)] md:w-[calc(50vw-4rem)] max-w-sm"
                     style={{ scrollSnapAlign: "start" }}
@@ -511,11 +512,12 @@ export default function InputSection({
           onClose={closeImageOverlay}
           imageUrl={selectedImageForOverlay.url}
           prompt={generatedPrompt}
-          fontSelect={selectedFont}
+          modelSelection={selectedFont}
           stylePalette={selectedStyle || ""}
           imageQuality={selectedQuality}
           frameSize={selectedAspectRatio}
-          numberOfImages={numberOfImages}
+          numberOfItems={numberOfImages}
+          itemLabel="Mockups"
         />
       )}
 
