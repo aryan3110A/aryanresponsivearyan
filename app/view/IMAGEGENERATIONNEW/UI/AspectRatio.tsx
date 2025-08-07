@@ -39,7 +39,7 @@ export default function AspectRatio({
   return (
     <div className={className}>
       <div className="mx-2 md:mx-6 border-t border-white/15 mb-6"></div>
-      <h3 className="text-white text-lg md:text-xl font-medium mb-4 px-2 md:px-6">{title}</h3>
+      <h3 className="text-white text-sm md:text-sm font-normal mb-4 px-2 md:px-6">{title}</h3>
       <div className="grid grid-cols-4 gap-2 md:gap-4 px-2 md:px-6">
         {ratios.map((ratio) => (
           <button
@@ -51,7 +51,7 @@ export default function AspectRatio({
             }`}
             onClick={() => handleSelect(ratio.label)}
           >
-            <div className="text-lg mb-1">{ratio.icon}</div>
+            <div className="text-sm mb-1">{ratio.icon}</div>
             <span className="text-xs md:text-sm font-medium">{ratio.label}</span>
           </button>
         ))}

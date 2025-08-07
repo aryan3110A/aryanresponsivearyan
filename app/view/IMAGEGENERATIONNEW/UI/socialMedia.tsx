@@ -81,7 +81,7 @@ export default function SocialMedia({
 
       {/* Main Social Media Frame Header */}
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-white text-lg md:text-xl font-medium">Social Media Frame</h3>
+        <h3 className="text-white text-sm md:text-sm font-normal">Social Media Frame</h3>
         <button onClick={() => setIsMainOpen(!isMainOpen)} className="p-1">
           <ChevronDown className={`text-white h-5 w-5 transition-transform ${isMainOpen ? "rotate-180" : ""}`} />
         </button>
@@ -101,11 +101,11 @@ export default function SocialMedia({
               >
                 <div className="flex items-center gap-3">
                   <div
-                    className={`w-8 h-8 ${platform.color} rounded-lg flex items-center justify-center text-white text-lg`}
+                    className={`w-8 h-8 ${platform.color} rounded-lg flex items-center justify-center text-white text-sm`}
                   >
                     {platform.icon}
                   </div>
-                  <span className="text-white font-medium text-lg">{platform.name}</span>
+                  <span className="text-white font-normal text-sm">{platform.name}</span>
                 </div>
                 <ChevronDown
                   className={`text-white h-5 w-5 transition-transform ${

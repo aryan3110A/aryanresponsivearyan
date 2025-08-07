@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { X } from "lucide-react"
+import React from "react"
 import {
   cameraAngles as CameraAngle,
   effects as Effects,
@@ -21,7 +21,6 @@ import VideoSettings from "./VideoSettings"
 import { getApiResolution, getSupportedAspectRatios, getAvailableQualities } from "./videoModels"
 
 interface SettingsPanelProps {
-  isOpen: boolean
   onClose: () => void
   selectedModel: string
   setSelectedModel: (model: string) => void
@@ -37,10 +36,10 @@ interface SettingsPanelProps {
   setFirstFrameImage: (image: string | null) => void
   subjectImage: string | null
   setSubjectImage: (image: string | null) => void
+  className?: string
 }
 
 export default function SettingsPanel({
-  isOpen,
   onClose,
   selectedModel,
   setSelectedModel,
@@ -56,6 +55,7 @@ export default function SettingsPanel({
   setFirstFrameImage,
   subjectImage,
   setSubjectImage,
+  className,
 }: SettingsPanelProps) {
 
 
@@ -134,21 +134,11 @@ export default function SettingsPanel({
 
   return (
     <>
-      {/* Backdrop */}
-      {isOpen && <div className="fixed inset-0 bg-black/50 z-40" onClick={onClose} />}
-
-      {/* Settings Panel */}
-      <div
-        className={`fixed top-0 left-0 h-full w-[90%] md:w-[560px] bg-transparent backdrop-blur-lg shadow-3xl transform transition-transform duration-300 ease-in-out z-50 ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
-      >
+      <div className={`sticky top-[64px] left-0 w-[340px] max-h-[calc(100vh-128px)] overflow-y-auto bg-transparent backdrop-blur-lg shadow-3xl z-30 border-r border-[#222] ${className || ''}`}>
         <div className="h-full flex flex-col">
           {/* Header */}
-          <div className="flex items-center justify-end p-4">
-            <button onClick={onClose} className="p-2 hover:bg-gray-800/50 rounded-lg transition-colors">
-              <X className="w-6 h-6 text-white" />
-            </button>
+          <div className="flex items-center justify-between p-4">
+            <h2 className="text-white text-sm font-normal">Settings</h2>
           </div>
 
           {/* Content */}
@@ -165,7 +155,7 @@ export default function SettingsPanel({
 
             {/* Video Settings Section */}
             <div className="mb-6">
-              <h3 className="text-white text-lg font-bold mb-4">
+              <h3 className="text-white text-sm font-normal mb-4">
                 Video <span className="text-[#6C3BFF]">Settings</span>
               </h3>
               <VideoSettings
@@ -316,7 +306,7 @@ export default function SettingsPanel({
 
             {/* Settings Summary */}
             <div className="bg-white/10 backdrop-blur-3xl hover:bg-white/20 rounded-lg p-4 space-y-2 text-sm text-gray-300 mb-6">
-              <div className="text-white font-medium mb-3">Video Settings Summary</div>
+              <div className="text-white font-normal text-sm mb-3">Video Settings Summary</div>
               <div>Model : <span className="text-[#5AD7FF]">{selectedModel}</span></div>
               <div>Duration : <span className="text-[#5AD7FF]">{selectedDuration}s</span></div>
               <div>Aspect Ratio : <span className="text-[#5AD7FF]">{selectedAspectRatio}</span></div>
@@ -329,10 +319,10 @@ export default function SettingsPanel({
           </div>
 
           {/* Floating Save Button */}
-          <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent flex justify-center">
+          <div className="sticky bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent flex justify-center z-50">
             <button
               onClick={handleSave}
-              className="w-32 bg-[#006aff] hover:bg-[#0052cc] text-white py-3 px-6 rounded-full font-medium text-sm transition-all shadow-lg"
+              className="w-32 bg-[#006aff] hover:bg-[#0052cc] text-white py-3 px-6 rounded-full font-normal text-sm transition-all shadow-lg"
             >
               Save
             </button>

@@ -1,10 +1,10 @@
 import React from "react";
-import Particles from "./Particals";
+
 
 // Stable background component that doesn't re-render with input changes
 const StableBackground: React.FC = React.memo(() => (
   <div className="absolute inset-0 w-full h-full z-0">
-    <Particles
+    {/* <Particles
       particleColors={['#ffffff', '#ffffff']}
       particleCount={200}
       particleSpread={10}
@@ -13,7 +13,7 @@ const StableBackground: React.FC = React.memo(() => (
       moveParticlesOnHover={false}
       alphaParticles={false}
       disableRotation={false}
-    />
+    /> */}
   </div>
 ));
 

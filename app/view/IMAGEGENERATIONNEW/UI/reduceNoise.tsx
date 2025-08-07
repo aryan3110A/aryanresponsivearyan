@@ -12,7 +12,7 @@ export default function reduceNoise({ reduceNoise, setReduceNoise }: ReduceNoise
         
 
       <div className="flex items-center gap-2">
-        <span className="text-white text-lg font-medium">Reduce Noise</span>
+        <span className="text-white text-sm font-normal">Reduce Noise</span>
       </div>
       <div className="flex items-center gap-2">
         <span className="flex items-center justify-center">

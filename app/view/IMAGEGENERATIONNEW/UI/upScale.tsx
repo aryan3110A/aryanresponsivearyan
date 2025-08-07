@@ -12,7 +12,7 @@ export default function upScale({ upScale, setUpScale }: UpScaleProps) {
         
 
       <div className="flex items-center gap-2">
-        <span className="text-white text-lg font-medium">Up Scale</span>
+        <span className="text-white text-sm font-normal">Up Scale</span>
       </div>
       <div className="flex items-center gap-2">
         <span className="flex items-center justify-center">

@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useRef } from "react"
-import { X, ChevronDown, Check } from "lucide-react"
+import { ChevronDown, Check } from "lucide-react"
 import { ModelsPresetPanel, promptEnhancer as PromptEnhancer,  AspectRatio, Quality, NumberSelector, OptionSelector, SelectColor, effects as Effects, lightning as Lightning, cameraAngles as CameraAngle, AdvanceSettingPanel, AddToCollection, PrivateMode, VisualIntensity, SocialMedia
 , ResetToDefaults} from "../../UI"
 
@@ -27,7 +27,6 @@ interface SettingsData {
 }
 
 interface SettingsPanelProps {
-  isOpen: boolean
   onClose: () => void
   onSave: (settingsData: SettingsData) => void
   selectedModel: string
@@ -69,7 +68,6 @@ interface SettingsPanelProps {
 }
 
 export default function SettingsPanel({
-  isOpen,
   onClose,
   onSave,
   selectedModel,
@@ -246,21 +244,12 @@ export default function SettingsPanel({
 
   return (
     <>
-      {/* Backdrop */}
-      {isOpen && <div className="fixed inset-0 bg-black/50 z-40" onClick={onClose} />}
-
-      {/* Settings Panel */}
-      <div
-        className={`fixed top-0 left-0 h-full w-[90%] md:w-[560px] bg-transparent backdrop-blur-lg shadow-3xl transform transition-transform duration-300 ease-in-out z-50 ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
-      >
+      {/* Settings Panel - Sticky and attached just below the navigation bar */}
+      <div className="sticky top-[64px] left-0 w-[340px] max-h-[calc(100vh-128px)] overflow-y-auto bg-transparent backdrop-blur-lg shadow-3xl z-40 border-r border-[#222]">
         <div className="h-full flex flex-col">
           {/* Header */}
-          <div className="flex items-center justify-end p-4">
-            <button onClick={onClose} className="p-2 hover:bg-gray-800/50 rounded-lg transition-colors">
-              <X className="w-6 h-6 text-white" />
-            </button>
+          <div className="flex items-center justify-between p-4">
+            <h2 className="text-white text-lg font-semibold">Presets</h2>
           </div>
 
           {/* Content */}
@@ -280,7 +269,7 @@ export default function SettingsPanel({
               <button
                 ref={toggleButtonRef}
                 onClick={toggleModels}
-                className="px-6 md:px-10 w-full py-6 md:py-8 bg-white/10 rounded-lg border border-white/5 cursor-pointer hover:from-gray-700 hover:to-gray-600 transition-all mb-4 text-left relative overflow-hidden"
+                className="px-4 md:px-6 w-full py-4 md:py-6 bg-white/10 rounded-lg border border-white/5 cursor-pointer hover:from-gray-700 hover:to-gray-600 transition-all mb-4 text-left relative overflow-hidden"
                 style={{
                   backgroundImage: "",
                   backgroundSize: "cover",
@@ -290,49 +279,33 @@ export default function SettingsPanel({
                 <div className="absolute inset-0 bg-black/60"></div>
                 <div className="relative z-10 flex items-center justify-between">
                   <div>
-                    <h3 className="text-white text-lg md:text-xl font-bold">
-                      Model & <span className="text-[#6C3BFF]">Preset</span>
+                    <h3 className="text-white text-lg font-normal">
+                      Models
                     </h3>
                   </div>
                   <ChevronDown
-                    className={`text-white text-xl md:text-3xl transition-transform duration-300 ${
+                    className={`text-white text-sm md:text-sm transition-transform duration-300 ${
                       isModelsOpen ? "rotate-180" : ""
                     }`}
                   />
                 </div>
               </button>
 
-              {/* Models Dropdown for Mobile/Tablet */}
-              <div className="md:hidden">
-                <ModelsPresetPanel
-                  isOpen={isModelsOpen}
-                  onClose={() => setIsModelsOpen(false)}
-                  selectedModel={selectedModel}
-                  onModelSelect={(model: string) => {
-                    console.log('SettingsPanel - Received model from ModelsPresetPanel:', model)
-                    setSelectedModel(model)
-                    updateAspectRatioIfNeeded(model)
-                    setIsModelsOpen(false)
-                  }}
-                  excludeRef={toggleButtonRef}
-                />
-              </div>
-                  {/* hello */}
-              {/* Models Dropdown for Desktop */}
-              <div className="hidden md:block">
-                <ModelsPresetPanel
-                  isOpen={isModelsOpen}
-                  onClose={() => setIsModelsOpen(false)}
-                  selectedModel={selectedModel}
-                  onModelSelect={(model: string) => {
-                    console.log('SettingsPanel - Received model from ModelsPresetPanel:', model)
-                    setSelectedModel(model)
-                    updateAspectRatioIfNeeded(model)
-                    setIsModelsOpen(false)
-                  }}
-                  excludeRef={toggleButtonRef}
-                />
-              </div>
+              {/* Models Dropdown */}
+              {isModelsOpen && (
+                <div className="absolute top-full left-0 right-0 z-50 bg-gray-900/95 backdrop-blur-lg border border-white/10 rounded-lg shadow-2xl">
+                  <ModelsPresetPanel
+                    isOpen={isModelsOpen}
+                    onClose={() => setIsModelsOpen(false)}
+                    selectedModel={selectedModel}
+                    onModelSelect={(model: string) => {
+                      setSelectedModel(model)
+                      updateAspectRatioIfNeeded(model)
+                      setIsModelsOpen(false)
+                    }}
+                  />
+                </div>
+              )}
             </div>
 
             {/* Visual Intensity Section */}
@@ -480,7 +453,7 @@ export default function SettingsPanel({
 
             {/* Settings Summary */}
             <div className="bg-white/10 backdrop-blur-3xl hover:bg-white/20 rounded-lg p-4 space-y-2 text-sm text-gray-300 mb-6">
-              <div className="text-white font-medium mb-3">Settings Summary</div>
+              <div className="text-white font-normal mb-3">Settings Summary</div>
               <div>Model Selection : <span className="text-[#5AD7FF]">{selectedModel}</span></div>
               <div>Visual Intensity : <span className="text-[#5AD7FF]">{visualIntensityEnabled ? visualIntensity.toFixed(1) : "Disabled"}</span></div>
               <div>Style Palettes : <span className="text-[#5AD7FF]">{selectedStyle || "None"}</span></div>
@@ -495,10 +468,10 @@ export default function SettingsPanel({
           </div>
 
           {/* Floating Save Button */}
-          <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent flex justify-center">
+          <div className="sticky bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent flex justify-center z-50">
             <button
               onClick={handleSave}
-              className="w-32 bg-[#006aff] hover:bg-[#0052cc] text-white py-3 px-6 rounded-full font-medium text-sm transition-all shadow-lg"
+              className="w-32 bg-[#006aff] hover:bg-[#0052cc] text-white py-3 px-6 rounded-full font-normal text-sm transition-all shadow-lg"
             >
               Save
             </button>

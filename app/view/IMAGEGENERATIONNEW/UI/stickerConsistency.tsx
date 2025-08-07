@@ -12,7 +12,7 @@ export default function StickerConsistency({ stickerConsistency, setStickerConsi
         
 
       <div className="flex items-center gap-2">
-        <span className="text-white text-lg font-medium">Sticker Consistency</span>
+        <span className="text-white text-sm font-normal">Sticker Consistency</span>
       </div>
       <div className="flex items-center gap-2">
         <span className="flex items-center justify-center">

@@ -92,7 +92,7 @@ export default function UploadComponent({
       />
 
       {/* Title Heading */}
-      {title && <h3 className="text-lg font-semibold text-white mb-2">{title}</h3>}
+      {title && <h3 className="text-sm font-normal text-white mb-2">{title}</h3>}
 
       {/* Upload Area */}
       <div
@@ -116,7 +116,7 @@ export default function UploadComponent({
       {/* Uploaded Files List */}
       {uploadedFiles.length > 0 && (
         <div className="space-y-2">
-          <h4 className="text-sm font-medium text-gray-300">Uploaded Files:</h4>
+          <h4 className="text-sm font-normal text-gray-300">Uploaded Files:</h4>
           <div className="space-y-2 max-h-32 overflow-y-auto scrollbar-hide">
             <style jsx>{`
               .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }

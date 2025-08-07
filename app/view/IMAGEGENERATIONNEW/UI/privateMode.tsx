@@ -14,7 +14,7 @@ export default function PrivateMode({ privateMode, setPrivateMode }: PrivateMode
         
 
       <div className="flex items-center gap-2">
-        <span className="text-white text-lg font-medium">Private Mode</span>
+        <span className="text-white text-sm font-normal">Private Mode</span>
         <Image src="/BRANDINGKIT/PRODUCTGENERATION/Iicon.svg" alt="Info" width={18} height={18} />
       </div>
       <div className="flex items-center gap-2">

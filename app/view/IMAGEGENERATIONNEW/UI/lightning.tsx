@@ -55,7 +55,7 @@ export default function Lightning({
   return (
 <div><div className="mx-2 md:mx-6 border-t border-white/15 mb-6 "></div>
 <div className="flex items-center justify-between mb-4 px-2 md:px-6">
-        <h3 className="text-white text-lg md:text-xl font-medium">Select Lightning</h3>
+        <h3 className="text-white text-sm md:text-sm font-normal">Select Lightning</h3>
         <button
           onClick={() => setIsOpen(!isOpen)}
           className="p-1"

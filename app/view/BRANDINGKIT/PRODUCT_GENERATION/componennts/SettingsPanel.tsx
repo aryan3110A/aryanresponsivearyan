@@ -8,7 +8,6 @@ import SelectBackground from "./SelectBackground"
 import Image from "next/image"
 
 interface SettingsPanelProps {
-  isOpen: boolean
   onClose: () => void
   selectedModel: string
   setSelectedModel: (model: string) => void
@@ -20,6 +19,7 @@ interface SettingsPanelProps {
   setSelectedQuality: (quality: string) => void
   numberOfImages: number
   setNumberOfImages: (number: number) => void
+  className?: string
 }
 
 export default function SettingsPanel(props: SettingsPanelProps) {
@@ -104,19 +104,11 @@ export default function SettingsPanel(props: SettingsPanelProps) {
 
   return (
     <>
-      {/* Backdrop */}
-      {props.isOpen && <div className="fixed inset-0 bg-black/50 z-40" onClick={props.onClose} />}
-      {/* Settings Panel */}
-      <div
-        className={`fixed top-0 left-0 h-full w-[90%] md:w-[560px] bg-transparent backdrop-blur-lg shadow-3xl transform transition-transform duration-300 ease-in-out z-50 ${
-          props.isOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
-      >        <div className="h-full flex flex-col">
+      <div className={`sticky top-[64px] left-0 w-[340px] max-h-[calc(100vh-128px)] overflow-y-auto bg-transparent backdrop-blur-lg shadow-3xl z-30 border-r border-[#222] ${props.className || ''}`}>
+        <div className="h-full flex flex-col">
           {/* Header */}
-          <div className="flex items-center justify-end p-4">
-            <button onClick={props.onClose} className="p-2 hover:bg-gray-800/50 rounded-lg transition-colors">
-              <span className="text-white text-2xl">×</span>
-            </button>
+          <div className="flex items-center justify-between p-4">
+            <h2 className="text-white text-sm font-normal">Settings</h2>
           </div>
           {/* Content */}
           <div className="flex-1 overflow-y-auto px-4 space-y-6 scrollbar-hide pb-24">
@@ -143,7 +135,7 @@ export default function SettingsPanel(props: SettingsPanelProps) {
                 <div className="absolute inset-0 bg-black/60"></div>
                 <div className="relative z-10 flex items-center justify-between">
                   <div>
-                    <h3 className="text-white text-lg md:text-xl font-bold">
+                    <h3 className="text-white text-sm font-normal">
                       Model & <span className="text-[#6C3BFF]">Preset</span>
                     </h3>
                   </div>
@@ -180,7 +172,7 @@ export default function SettingsPanel(props: SettingsPanelProps) {
             {/* Font Select Section */}
             <div className="mb-6">
               <div className="flex items-center justify-between mb-2 px-2 md:px-6 cursor-pointer" onClick={() => setIsFontOpen((v) => !v)}>
-                <h3 className="text-white text-lg md:text-xl font-medium">Font Select</h3>
+                <h3 className="text-white text-sm md:text-xl font-normal">Font Select</h3>
                 <span className={`transition-transform ${isFontOpen ? "rotate-180" : ""}`} style={{ display: 'inline-block' }}>
                   <Image src="/BRANDINGKIT/PRODUCTGENERATION/dropdownicon.svg" alt="Dropdown" width={18} height={18} />
                 </span>
@@ -195,7 +187,7 @@ export default function SettingsPanel(props: SettingsPanelProps) {
                       }`}
                       onClick={() => setSelectedFont(font)}
                     >
-                      <span className={`text-white text-base font-medium flex-1`} style={{ fontFamily: font }}>{font}</span>
+                      <span className={`text-white text-base font-normal flex-1`} style={{ fontFamily: font }}>{font}</span>
                       <span className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${selectedFont === font ? "border-[#6C3BFF]" : "border-gray-500"}`}>
                         {selectedFont === font && <span className="block w-3 h-3 rounded-full bg-[#6C3BFF]" />}
                       </span>
@@ -208,7 +200,7 @@ export default function SettingsPanel(props: SettingsPanelProps) {
             {/* Select Color Section */}
             <div className="mb-6">
               <div className="flex items-center justify-between mb-2 px-2 md:px-6 cursor-pointer" onClick={() => setIsColorOpen((v) => !v)}>
-                <h3 className="text-white text-lg md:text-xl font-medium">Select Color</h3>
+                <h3 className="text-white text-sm md:text-xl font-normal">Select Color</h3>
                 <span className={`transition-transform ${isColorOpen ? "rotate-180" : ""}`} style={{ display: 'inline-block' }}>
                   <Image src="/BRANDINGKIT/PRODUCTGENERATION/dropdownicon.svg" alt="Dropdown" width={18} height={18} />
                 </span>
@@ -223,7 +215,7 @@ export default function SettingsPanel(props: SettingsPanelProps) {
                       }`}
                       onClick={() => { setSelectedColor(color); setCustomColor("") }}
                     >
-                      <span className="text-white text-base font-medium flex-1">{color}</span>
+                      <span className="text-white text-base font-normal flex-1">{color}</span>
                       <span className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${selectedColor === color ? "border-[#6C3BFF]" : "border-gray-500"}`}>
                         {selectedColor === color && <span className="block w-3 h-3 rounded-full bg-[#6C3BFF]" />}
                       </span>
@@ -248,7 +240,7 @@ export default function SettingsPanel(props: SettingsPanelProps) {
             {/* Private Mode Section */}
             <div className="mb-6 flex items-center justify-between px-2 md:px-6">
               <div className="flex items-center gap-2">
-                <span className="text-white text-lg font-medium">Private Mode</span>
+                <span className="text-white text-sm font-normal">Private Mode</span>
                 <Image src="/BRANDINGKIT/PRODUCTGENERATION/Iicon.svg" alt="Info" width={18} height={18} />
               </div>
               <div className="flex items-center gap-2">
@@ -270,7 +262,7 @@ export default function SettingsPanel(props: SettingsPanelProps) {
             {/* Add To Collection Section */}
             <div className="mb-6">
               <div className="flex items-center mb-2 px-2 md:px-6 cursor-pointer" onClick={() => setIsCollectionOpen((v) => !v)}>
-                <h3 className="text-white text-lg md:text-xl font-medium mr-2">Add To Collection</h3>
+                <h3 className="text-white text-sm md:text-xl font-normal mr-2">Add To Collection</h3>
                 <Image src="/BRANDINGKIT/PRODUCTGENERATION/Iicon.svg" alt="Info" width={18} height={18} />
                 <span className={`transition-transform ml-2 ${isCollectionOpen ? "rotate-180" : ""}`} style={{ display: 'inline-block' }}>
                   <Image src="/BRANDINGKIT/PRODUCTGENERATION/dropdownicon.svg" alt="Dropdown" width={18} height={18} />
@@ -285,10 +277,10 @@ export default function SettingsPanel(props: SettingsPanelProps) {
                     <span className="w-10 h-10 flex items-center justify-center rounded-lg bg-black/40 border border-white/10 mr-2">
                       <Image src="/BRANDINGKIT/PRODUCTGENERATION/Frame.svg" alt="Add Collection" width={24} height={24} />
                     </span>
-                    <span className="text-white text-base font-medium">Add New Collection</span>
+                    <span className="text-white text-base font-normal">Add New Collection</span>
                   </button>
                   <button
-                    className="w-full flex items-center justify-between p-3 rounded-lg border-2 border-[#6C3BFF] bg-black/30 hover:bg-white/10 transition-all text-white text-base font-medium mt-2"
+                    className="w-full flex items-center justify-between p-3 rounded-lg border-2 border-[#6C3BFF] bg-black/30 hover:bg-white/10 transition-all text-white text-base font-normal mt-2"
                   >
                     <span>View All</span>
                     <ExternalLink className="w-5 h-5 text-white ml-2" />
@@ -301,7 +293,7 @@ export default function SettingsPanel(props: SettingsPanelProps) {
             <div className="mb-6">
               <div className="flex items-center justify-between mb-2 px-2 md:px-6 cursor-pointer" onClick={() => setIsAdvanceOpen((v) => !v)}>
                 <div className="flex items-center gap-2">
-                  <h3 className="text-white text-lg md:text-xl font-medium">Advance Setting</h3>
+                  <h3 className="text-white text-sm md:text-xl font-normal">Advance Setting</h3>
                   <Image src="/BRANDINGKIT/PRODUCTGENERATION/Iicon.svg" alt="Info" width={18} height={18} />
                 </div>
                 <span className={`transition-transform ${isAdvanceOpen ? 'rotate-180' : ''}`} style={{ display: 'inline-block' }}>
@@ -401,7 +393,7 @@ export default function SettingsPanel(props: SettingsPanelProps) {
 
             {/* Reset to Defaults Button */}
             <div className="mb-4 px-2 md:px-6">
-              <button className="w-full flex items-center justify-center gap-2 py-3 rounded-lg bg-white/10 hover:bg-white/20 text-white font-medium text-base transition-all"
+              <button className="w-full flex items-center justify-center gap-2 py-3 rounded-lg bg-white/10 hover:bg-white/20 text-white font-normal text-base transition-all"
                 onClick={handleReset}>
                 <Image src="/BRANDINGKIT/PRODUCTGENERATION/reply.svg" alt="Reset" width={22} height={22} />
                 Reset to Defaults
@@ -412,7 +404,7 @@ export default function SettingsPanel(props: SettingsPanelProps) {
             <div className="mb-4 px-2 md:px-6">
               <div className="relative">
                 <button
-                  className="w-full flex items-center justify-between px-4 py-3 rounded-lg bg-white/10 hover:bg-white/20 text-white font-medium text-base transition-all flex-col items-start"
+                  className="w-full flex flex-col items-start justify-between px-4 py-3 rounded-lg bg-white/10 hover:bg-white/20 text-white font-normal text-base transition-all"
                   onClick={() => setIsPromptEnhanceOpen(v => !v)}
                   style={{ alignItems: 'stretch' }}
                 >
@@ -476,18 +468,12 @@ export default function SettingsPanel(props: SettingsPanelProps) {
           </div>
 
           {/* Floating Save Button */}
-          <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent flex justify-center">
+          <div className="sticky bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent flex justify-center z-50">
             <button
               onClick={() => setShowSummary(true)}
-              className="w-32 bg-[#006aff] hover:bg-[#0052cc] text-white py-3 px-6 rounded-full font-medium text-sm transition-all shadow-lg flex items-center justify-center gap-2"
+              className="w-32 bg-[#006aff] hover:bg-[#0052cc] text-white py-3 px-6 rounded-full font-normal text-sm transition-all shadow-lg"
             >
               Save
-              <span className="flex items-center ml-1 text-xs">
-                (
-                <Image src="/BRANDINGKIT/PRODUCTGENERATION/coins.svg" alt="Tokens" width={16} height={16} className="mx-1" />
-                100
-                )
-              </span>
             </button>
           </div>
         </div>

@@ -13,7 +13,6 @@ interface InputSectionProps {
   setPrompt: (prompt: string) => void
   generatedPrompt: string
   onGenerate: () => void
-  onSettingsToggle: () => void
   isGenerating: boolean
   generatedImages: string[]
   selectedFont: string
@@ -32,7 +31,6 @@ export default function InputSection({
   setPrompt,
   generatedPrompt,
   onGenerate,
-  // onSettingsToggle,
   isGenerating,
   generatedImages,
   selectedFont,
@@ -140,9 +138,9 @@ export default function InputSection({
   return (
     <div className="flex flex-col items-center w-full space-y-6 mb:space-y-4 lg:space-y-12">
       {/* Desktop Layout - Input with buttons inline */}
-      <div className="hidden xl:flex items-center gap-4 w-full md:max-w-6xl lg:max-w-7xl px-4">
-        <div className="flex-1 relative">
-          <div className="flex items-center bg-[#ffffff]/5 hover:bg-[#ffffff]/20 backdrop-blur-sm border border-[#8E8E8E] rounded-full p-4 transition-all duration-300 ease-in-out">
+      <div className="hidden xl:flex items-center gap-4 w-full md:max-w-3xl lg:max-w-4xl px-4">
+        <div className="flex-1 relative max-w-full">
+          <div className="p-2 flex items-center bg-[#ffffff]/5 hover:bg-[#ffffff]/20 backdrop-blur-sm border border-[#8E8E8E] rounded-full transition-all duration-300 ease-in-out w-[1100px] max-w-full">
             <AttachmentsDropdown
               onChooseFromLibrary={handleChooseFromLibrary}
               onUploadFromDevices={handleUploadFromDevices}
@@ -164,17 +162,17 @@ export default function InputSection({
               placeholder="Type a prompt..."
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
-              className="flex-1 bg-transparent text-white placeholder-white outline-none text-lg ml-4"
+              className="flex-1 bg-transparent text-white placeholder-gray-600 outline-none text-sm ml-4 w-full max-w-full"
               onKeyDown={(e) => e.key === "Enter" && onGenerate()}
             />
             <div className="flex items-center gap-4">
-              <button className="p-2 hover:bg-gray-700/50 rounded-full transition-colors border border-white/10">
-                <Image src="/newt2image/enhancer.png" alt="enhancer" width={28} height={28} />
+              <button className=" hover:bg-gray-700/50 rounded-full transition-colors border border-white/10">
+                <Image src="/newt2image/enhancer.png" alt="enhancer" width={20} height={20} />
               </button>
               <HoverBorderGradient
                 onClick={!prompt.trim() || isGenerating ? undefined : onGenerate}
                 backgroundColor="bg-[#006aff]"
-                className="px-12 py-3 font-medium text-base rounded-full"
+                className={`px-4 py-2 font-regular text-sm rounded-full ${(!prompt.trim() || isGenerating) ? 'cursor-not-allowed' : 'cursor-pointer'}`}
               >
                 {isGenerating ? "Generating..." : "Generate"}
               </HoverBorderGradient>
@@ -194,7 +192,7 @@ export default function InputSection({
       <div className="xl:hidden w-full px-0 ">
         {/* Input Field Only - Full Width Responsive */}
         <div className="w-full  mb-2">
-          <div className="flex items-center bg-[#ffffff]/5 hover:bg-[#ffffff]/20 backdrop-blur-sm border border-[#8E8E8E] rounded-full p-2 xs:p-4 transition-all duration-300 ease-in-out">
+          <div className="flex items-center bg-[#ffffff]/5 hover:bg-[#ffffff]/20 backdrop-blur-sm border border-[#8E8E8E] rounded-full p-3 xs:p-4 sm:p-5 transition-all duration-300 ease-in-out">
             <AttachmentsDropdown
               onChooseFromLibrary={handleChooseFromLibrary}
               onUploadFromDevices={handleUploadFromDevices}
@@ -216,7 +214,7 @@ export default function InputSection({
               placeholder="Type a prompt..."
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
-              className="flex-1 bg-transparent text-white placeholder-white outline-none text-sm xs:text-base sm:text-lg ml-2 mr-1 xs:ml-3"
+              className="flex-1 bg-transparent text-white placeholder-white outline-none text-base xs:text-lg sm:text-xl ml-2 mr-1 xs:ml-3 w-full max-w-full"
               onKeyDown={(e) => e.key === "Enter" && onGenerate()}
             />
 
@@ -226,7 +224,7 @@ export default function InputSection({
                 alt="enhancer"
                 width={20}
                 height={20}
-                className="w-5 h-5 "
+                className="w-6 h-6 xs:w-7 xs:h-7 sm:w-8 sm:h-8"
               />
             </button>
           </div>
@@ -237,7 +235,7 @@ export default function InputSection({
           <HoverBorderGradient
             onClick={!prompt.trim() || isGenerating ? undefined : onGenerate}
             backgroundColor="bg-[#006aff]"
-            className="px-4 py-2.5 xs:py-3 rounded-full font-medium text-sm xs:text-base flex-1 max-w-[100%]"
+            className="px-6 py-3 xs:py-4 rounded-full font-regular text-base xs:text-lg flex-1 max-w-[100%]"
           >
             {isGenerating ? "Generating..." : "Generate"}
           </HoverBorderGradient>

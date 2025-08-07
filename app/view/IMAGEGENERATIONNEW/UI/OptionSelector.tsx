@@ -40,7 +40,7 @@ export default function OptionSelector({
       {showBorderTop && <div className=""></div>}
       
       <div className="flex items-center justify-between mb-4 px-2 md:px-6">
-        <h3 className="text-white text-lg md:text-xl font-medium">{title}</h3>
+        <h3 className="text-white text-sm md:text-sm font-normal">{title}</h3>
         <button
           onClick={() => setIsOpen(!isOpen)}
           className="p-1"
