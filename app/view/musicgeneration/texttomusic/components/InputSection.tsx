@@ -3,7 +3,7 @@
 import React from "react"
 import Image from "next/image"
 import { useState, useRef } from "react"
-import { AttachmentsDropdown, UploadComponent, ImageOverlay } from "../../UI"
+import { ImageOverlay } from "../../UI"
 import { Download, Bookmark, Heart, Sparkles } from "lucide-react"
 import { HoverBorderGradient } from "../../../Core/hover-border-gradient"
 
@@ -31,7 +31,7 @@ export default function InputSection({
   selectedModel,
   audioFormat,
 }: InputSectionProps) {
-  const [showUploadComponent, setShowUploadComponent] = useState(false)
+
   const [likedImages, setLikedImages] = useState<Set<number>>(new Set())
   const [bookmarkedImages, setBookmarkedImages] = useState<Set<number>>(new Set())
   const [selectedImageForOverlay, setSelectedImageForOverlay] = useState<{
@@ -40,18 +40,9 @@ export default function InputSection({
   } | null>(null)
   const scrollContainerRef = useRef<HTMLDivElement>(null)
 
-  const handleChooseFromLibrary = () => {
-    console.log("Choose from library clicked")
-  }
 
-  const handleUploadFromDevices = () => {
-    setShowUploadComponent(true)
-    console.log("Upload from devices clicked")
-  }
 
-  const handleFilesSelected = (files: File[]) => {
-    console.log("Files selected:", files)
-  }
+
 
 
 
@@ -203,23 +194,7 @@ export default function InputSection({
         </div>
       </div>
 
-      {/* Upload Component Modal */}
-      {showUploadComponent && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-gray-900/95 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6 w-full max-w-md mx-4">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-white font-medium text-lg">Upload Files</h3>
-              <button
-                onClick={() => setShowUploadComponent(false)}
-                className="p-2 hover:bg-gray-800/50 rounded-lg transition-colors"
-              >
-                <span className="text-white text-xl">×</span>
-              </button>
-            </div>
-            <UploadComponent onFilesSelected={handleFilesSelected} />
-          </div>
-        </div>
-      )}
+
 
       {/* Loading State */}
       {isGenerating && (

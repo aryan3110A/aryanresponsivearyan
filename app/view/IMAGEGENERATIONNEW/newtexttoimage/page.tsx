@@ -284,38 +284,7 @@ export default function NewText2Image() {
 
   const handleSettingsSave = (settingsData: SettingsData) => setCurrentSettings(settingsData)
 
-  // Memoize the content to prevent unnecessary re-renders
-  const content = useMemo(() => (
-    <div className="relative z-10 w-auto md:ml-[340px] flex justify-center">
-      <div className="w-full max-w-4xl flex flex-col items-center justify-center px-2 sm:px-4 gap-8">
-        <Header title="Text to Image" />
-        <InputSection
-          prompt={prompt}
-          setPrompt={setPrompt}
-          onGenerate={handleGenerate}
-          isGenerating={isGenerating}
-          generatedImages={generatedImages}
-          generatedPrompts={generatedPrompts}
-          selectedModel={selectedModel}
-          selectedStyle={selectedStyle}
-          selectedQuality={selectedQuality}
-          selectedAspectRatio={selectedAspectRatio}
-          numberOfImages={numberOfImages}
-        />
-      </div>
-    </div>
-  ), [
-    prompt,
-    isGenerating,
-    generatedImages,
-    generatedPrompts,
-    selectedModel,
-    selectedStyle,
-    selectedQuality,
-    selectedAspectRatio,
-    numberOfImages,
-    handleGenerate,
-  ]);
+
 
   return (
     <>
@@ -325,9 +294,8 @@ export default function NewText2Image() {
         <NavigationFull />
         <div className="flex w-full" style={{ minHeight: 'calc(100vh - 64px - 64px)', marginTop: '64px', height: 'calc(100vh - 64px - 64px)' }}>
           <div className="w-[340px] h-full overflow-y-auto border-r border-[#222] bg-transparent backdrop-blur-lg shadow-3xl z-40">
-            <SettingsPanel
-              isOpen={true}
-              onClose={() => {}} // No-op since we want it always open
+                    <SettingsPanel
+          onClose={() => {}} // No-op since we want it always open
               onSave={handleSettingsSave}
               selectedModel={selectedModel}
               setSelectedModel={setSelectedModel}

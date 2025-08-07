@@ -2,11 +2,11 @@
 
 import Image from "next/image"
 import { useState, useRef } from "react"
-import { UploadComponent, ImageOverlay } from "../../UI"
+import { ImageOverlay } from "../../UI"
 import { Download, Bookmark, Heart, Sparkles } from "lucide-react"
 import { HoverBorderGradient } from "../../../Core/hover-border-gradient"
 
-interface InputSectionProps {
+export interface InputSectionProps {
   prompt: string
   setPrompt: (prompt: string) => void
   onGenerate: () => void
@@ -25,11 +25,11 @@ export default function InputSection({
   isGenerating,
   generatedImages,
   stickerType,
-  setStickerType,
+
   numberOfStickers,
-  setNumberOfStickers,
+
 }: any) {
-  const [showUploadComponent, setShowUploadComponent] = useState(false)
+
   const [hoveredImageIndex, setHoveredImageIndex] = useState<number | null>(null)
   const [likedImages, setLikedImages] = useState<Set<number>>(new Set())
   const [bookmarkedImages, setBookmarkedImages] = useState<Set<number>>(new Set())
@@ -54,7 +54,7 @@ export default function InputSection({
       link.click()
       document.body.removeChild(link)
       window.URL.revokeObjectURL(url)
-    } catch (error) {
+    } catch {
       alert("Failed to download image. Please try again.")
     }
   }
@@ -161,7 +161,7 @@ export default function InputSection({
             </div>
             <div className="relative bg-transparent backdrop-blur-sm border border-gray-700/30 rounded-xl p-6 lg:p-8 min-h-[400px] overflow-hidden">
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 lg:gap-6">
-                {generatedImages.map((image, index) => (
+                {generatedImages.map((image: string, index: number) => (
                   <div
                     key={index}
                     className="relative bg-gray-900/50 rounded-xl overflow-hidden group cursor-pointer"
@@ -233,7 +233,7 @@ export default function InputSection({
                   WebkitOverflowScrolling: "touch",
                 }}
               >
-                {generatedImages.map((image, index) => (
+                {generatedImages.map((image: string, index: number) => (
                   <div
                     key={index}
                     className="flex-shrink-0 w-[calc(100vw-6rem)] xs:w-[calc(100vw-8rem)] sm:w-[calc(100vw-12rem)] md:w-[calc(50vw-4rem)] max-w-sm"
@@ -287,7 +287,7 @@ export default function InputSection({
               </div>
               {generatedImages.length > 1 && (
                 <div className="flex justify-center mt-3 xs:mt-4 gap-1.5 xs:gap-2">
-                  {generatedImages.map((_, index) => (
+                  {generatedImages.map((_: string, index: number) => (
                     <div key={index} className="w-1.5 h-1.5 xs:w-2 xs:h-2 rounded-full bg-gray-600" />
                   ))}
                 </div>

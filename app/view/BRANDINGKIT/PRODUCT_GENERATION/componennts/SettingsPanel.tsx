@@ -8,7 +8,6 @@ import SelectBackground from "./SelectBackground"
 import Image from "next/image"
 
 interface SettingsPanelProps {
-  isOpen: boolean
   onClose: () => void
   selectedModel: string
   setSelectedModel: (model: string) => void

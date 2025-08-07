@@ -1,5 +1,5 @@
 import React from "react";
-import Particles from "./Particals";
+
 
 // Stable background component that doesn't re-render with input changes
 const StableBackground: React.FC = React.memo(() => (

@@ -1,11 +1,10 @@
 "use client"
 
-import {  X } from "lucide-react"
+import React from "react"
 import { NumberSelector, OptionSelector, promptEnhancer as PromptEnhancer, SaveFile, Expression, stickerConsistency as StickerConsistency, AddToCollection, AdvanceSettingPanel, ResetToDefaults } from "../../UI"
 import { useState } from "react"
 
 interface SettingsPanelProps {
-  isOpen: boolean
   onClose: () => void
   stickerType: string | null
   setStickerType: (type: string | null) => void
@@ -21,7 +20,6 @@ interface SettingsPanelProps {
 }
 
 export default function SettingsPanel({
-  isOpen,
   onClose,
   stickerType,
   setStickerType,

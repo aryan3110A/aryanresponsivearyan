@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useRef } from "react"
-import { X, ChevronDown, Check } from "lucide-react"
+import { ChevronDown, Check } from "lucide-react"
 import { ModelsPresetPanel, promptEnhancer as PromptEnhancer,  AspectRatio, Quality, NumberSelector, OptionSelector, SelectColor, effects as Effects, lightning as Lightning, cameraAngles as CameraAngle, AdvanceSettingPanel, AddToCollection, PrivateMode, VisualIntensity, SocialMedia
 , ResetToDefaults} from "../../UI"
 
@@ -27,7 +27,6 @@ interface SettingsData {
 }
 
 interface SettingsPanelProps {
-  isOpen: boolean
   onClose: () => void
   onSave: (settingsData: SettingsData) => void
   selectedModel: string
@@ -69,7 +68,6 @@ interface SettingsPanelProps {
 }
 
 export default function SettingsPanel({
-  isOpen,
   onClose,
   onSave,
   selectedModel,

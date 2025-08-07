@@ -50,7 +50,6 @@ export default function AISTICKERGEN() {
         <NavigationFull />
         <div className="flex flex-row relative" style={{ minHeight: 'calc(100vh - 64px - 64px)', marginTop: '64px' }}>
           <SettingsPanel
-            isOpen={true}
             onClose={() => {}} // No-op since we want it always open
             stickerType={stickerType}
             setStickerType={setStickerType}

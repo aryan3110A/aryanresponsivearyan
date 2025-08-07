@@ -43,7 +43,7 @@ export default function InputSection({
     url: string
     index: number
   } | null>(null)
-  const [isSettingsRotating, setIsSettingsRotating] = useState(false)
+
   const scrollContainerRef = useRef<HTMLDivElement>(null)
 
   const handleChooseFromLibrary = () => {
@@ -115,12 +115,7 @@ export default function InputSection({
     setSelectedImageForOverlay(null)
   }
 
-  const handleSettingsClick = () => {
-    setIsSettingsRotating(true)
-    onSettingsToggle()
-    // Reset rotation after animation completes
-    setTimeout(() => setIsSettingsRotating(false), 1000)
-  }
+
 
   return (
     <div className="w-full flex flex-col items-center gap-8 mt-2">

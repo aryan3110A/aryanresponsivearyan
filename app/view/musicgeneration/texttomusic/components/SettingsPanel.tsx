@@ -1,11 +1,10 @@
 "use client"
 
-import { X, ChevronDown } from "lucide-react"
+import { ChevronDown } from "lucide-react"
 import { useState, useEffect } from "react"
 import Image from "next/image"
 
 interface SettingsPanelProps {
-  isOpen: boolean
   onClose: () => void
   selectedModel: string
   setSelectedModel: (model: string) => void
@@ -24,7 +23,6 @@ interface SettingsPanelProps {
 }
 
 export default function SettingsPanel({
-  isOpen,
   onClose,
   selectedModel,
   setSelectedModel,

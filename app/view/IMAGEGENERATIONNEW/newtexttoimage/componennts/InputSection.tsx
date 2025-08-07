@@ -1,9 +1,9 @@
 "use client"
 
 import Image from "next/image"
-import { useState, useRef } from "react"
+import { useState } from "react"
 import { ImageOverlay } from "../../UI"
-import { Download, Bookmark, Heart, Sparkles } from "lucide-react"
+import { Download, Bookmark, Heart } from "lucide-react"
 import { HoverBorderGradient } from "../../../Core/hover-border-gradient"
 
 interface InputSectionProps {
@@ -40,7 +40,7 @@ export default function InputSection({
     url: string
     index: number
   } | null>(null)
-  const scrollContainerRef = useRef<HTMLDivElement>(null)
+
 
   const handleDownload = async (imageUrl: string, index: number) => {
     try {

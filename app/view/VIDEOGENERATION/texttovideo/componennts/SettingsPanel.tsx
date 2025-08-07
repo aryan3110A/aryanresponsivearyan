@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { X } from "lucide-react"
+import React from "react"
 import {
   cameraAngles as CameraAngle,
   effects as Effects,
@@ -21,7 +21,6 @@ import VideoSettings from "./VideoSettings"
 import { getApiResolution, getSupportedAspectRatios, getAvailableQualities } from "./videoModels"
 
 interface SettingsPanelProps {
-  isOpen: boolean
   onClose: () => void
   selectedModel: string
   setSelectedModel: (model: string) => void
@@ -41,7 +40,6 @@ interface SettingsPanelProps {
 }
 
 export default function SettingsPanel({
-  isOpen,
   onClose,
   selectedModel,
   setSelectedModel,

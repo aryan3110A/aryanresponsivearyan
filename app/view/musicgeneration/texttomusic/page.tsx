@@ -128,9 +128,8 @@ export default function TextToMusic() {
         <StableBackground />
         <NavigationFull />
         <div className="flex flex-row relative" style={{ minHeight: 'calc(100vh - 64px - 64px)', marginTop: '64px' }}>
-          <SettingsPanel
-            isOpen={true}
-            onClose={() => {}} // No-op since we want it always open
+                  <SettingsPanel
+          onClose={() => {}} // No-op since we want it always open
             selectedModel={selectedModel}
             setSelectedModel={setSelectedModel}
             sampleRate={sampleRate}

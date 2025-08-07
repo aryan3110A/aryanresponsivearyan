@@ -12,8 +12,8 @@ import StableBackground from "../../Core/StableBackground"
 
 export default function LogoGeneration() {
   const [prompt, setPrompt] = useState("")
-  const [generatedImages, setGeneratedImages] = useState<string[]>([])
-  const [isGenerating, setIsGenerating] = useState(false)
+  const [generatedImages] = useState<string[]>([])
+  const [isGenerating] = useState(false)
   // Add other state as needed for your logo generation logic
 
   const handleGenerate = async () => {
@@ -26,9 +26,8 @@ export default function LogoGeneration() {
         <StableBackground />
         <NavigationFull />
         <div className="flex flex-row relative" style={{ minHeight: 'calc(100vh - 64px - 64px)', marginTop: '64px' }}>
-          <SettingsPanel
-            isOpen={true}
-            onClose={() => {}} // No-op since we want it always open
+                  <SettingsPanel
+          onClose={() => {}} // No-op since we want it always open
             // Add required props here based on the interface
             selectedModel=""
             setSelectedModel={() => {}}

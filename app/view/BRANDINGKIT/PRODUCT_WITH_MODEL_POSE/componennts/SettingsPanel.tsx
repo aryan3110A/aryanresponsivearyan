@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { AspectRatio, NumberSelector } from "../../UI"
 import SelectBackground from "./SelectBackground"
-import Image from "next/image"
+
 import CameraAngle from "./camera_angle"
 import FontSelect from "./FontSelect"
 import AddToCollection from "./addToCollection"

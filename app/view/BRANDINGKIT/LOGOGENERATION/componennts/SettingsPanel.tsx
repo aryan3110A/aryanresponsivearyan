@@ -14,10 +14,9 @@ import { NumberSelector } from "../../UI"
 // import ResetToDefaults from "./ResetToDefaults"
 // import SelectBackground from "./SelectBackground"
 // import SummarySection from "./SummarySection"
-import SaveButton from "./SaveButton"
+
 
 interface SettingsPanelProps {
-  isOpen: boolean
   onClose: () => void
   selectedModel: string
   setSelectedModel: (model: string) => void
@@ -48,7 +47,7 @@ export default function SettingsPanel(props: SettingsPanelProps) {
   // const [tiling, setTiling] = useState(false)
   // const [fixedSeed, setFixedSeed] = useState(false)
   // const [promptEnhance, setPromptEnhance] = useState("Auto")
-  const [showSummary, setShowSummary] = useState(false)
+
   // Add state for numberOfLogo if not present
   const [numberOfLogo, setNumberOfLogo] = useState(props.numberOfLogo || 1)
   // Add state for selectedFileType
@@ -202,7 +201,7 @@ export default function SettingsPanel(props: SettingsPanelProps) {
           {/* Floating Save Button */}
           <div className="sticky bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent flex justify-center z-50">
             <button
-              onClick={() => setShowSummary(true)}
+              onClick={() => {}}
               className="w-32 bg-[#006aff] hover:bg-[#0052cc] text-white py-3 px-6 rounded-full font-normal text-sm transition-all shadow-lg"
             >
               Save

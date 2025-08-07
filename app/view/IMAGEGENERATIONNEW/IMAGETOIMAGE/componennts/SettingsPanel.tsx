@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useRef } from "react"
-import { X, ChevronDown } from "lucide-react"
+import { ChevronDown } from "lucide-react"
 import ModelsPresetPanel from "./ModelsPresetPanel"
 import { reduceNoise as ReduceNoise, upScale as UpScale, promptEnhancer as PromptEnhancer,  AspectRatio, Quality, NumberSelector, OptionSelector, SelectColor, effects as Effects, lightning as Lightning, cameraAngles as CameraAngle, AdvanceSettingPanel, AddToCollection, PrivateMode, VisualIntensity, SocialMedia
 , ResetToDefaults,
@@ -9,7 +9,6 @@ SaveFile,
 FontSelect} from "../../UI"
 
 interface SettingsPanelProps {
-  isOpen: boolean
   onClose: () => void
   selectedModel: string
   setSelectedModel: (model: string) => void
@@ -26,7 +25,6 @@ interface SettingsPanelProps {
 }
 
 export default function SettingsPanel({
-  isOpen,
   onClose,
   selectedModel,
   setSelectedModel,

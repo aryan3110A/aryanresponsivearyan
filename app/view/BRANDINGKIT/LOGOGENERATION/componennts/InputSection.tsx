@@ -2,7 +2,7 @@
 
 import Image from "next/image"
 import { useState, useRef } from "react"
-import AttachmentsDropdown from "./AttachmentsDropdown"
+
 import { UploadComponent, ImageOverlay } from "../../UI"
 import { Download, Bookmark, Heart, Sparkles } from "lucide-react"
 import { HoverBorderGradient } from "../../../Core/hover-border-gradient"
@@ -43,14 +43,7 @@ export default function InputSection({
 
   const scrollContainerRef = useRef<HTMLDivElement>(null)
 
-  const handleChooseFromLibrary = () => {
-    console.log("Choose from library clicked")
-  }
 
-  const handleUploadFromDevices = () => {
-    setShowUploadComponent(true)
-    console.log("Upload from devices clicked")
-  }
 
   const handleFilesSelected = (files: File[]) => {
     console.log("Files selected:", files)
