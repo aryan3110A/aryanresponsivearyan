@@ -245,7 +245,16 @@ export default function SettingsPanel({
   return (
     <>
       {/* Settings Panel - Sticky and attached just below the navigation bar */}
-      <div className="sticky top-[64px] left-0 w-[340px] max-h-[calc(100vh-128px)] overflow-y-auto bg-transparent backdrop-blur-lg shadow-3xl z-40 border-r border-[#222]">
+      <div className="sticky top-[64px] left-0 w-[340px] max-h-[calc(100vh-128px)] overflow-y-auto bg-transparent backdrop-blur-lg shadow-3xl z-40 border-r border-[#222] scrollbar-hide">
+        <style jsx>{`
+          .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+          }
+          .scrollbar-hide::-webkit-scrollbar { 
+            display: none;
+          }
+        `}</style>
         <div className="h-full flex flex-col">
           {/* Header */}
           <div className="flex items-center justify-between p-4">
@@ -253,16 +262,7 @@ export default function SettingsPanel({
           </div>
 
           {/* Content */}
-          <div className="flex-1 overflow-y-auto px-4 space-y-6 scrollbar-hide pb-24">
-            <style jsx>{`
-              .scrollbar-hide {
-                -ms-overflow-style: none;
-                scrollbar-width: none;
-              }
-              .scrollbar-hide::-webkit-scrollbar { 
-                display: none;
-              }
-            `}</style>
+          <div className="flex-1 overflow-y-auto px-4 space-y-6 pb-24">
 
             {/* Model & Preset Section */}
             <div className="relative">

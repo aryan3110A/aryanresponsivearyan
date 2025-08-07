@@ -293,13 +293,23 @@ export default function NewText2Image() {
         <StableBackground />
         <NavigationFull />
         <div className="flex w-full" style={{ minHeight: 'calc(100vh - 64px - 64px)', marginTop: '64px', height: 'calc(100vh - 64px - 64px)' }}>
-          <div className="w-[340px] h-full overflow-y-auto border-r border-[#222] bg-transparent backdrop-blur-lg shadow-3xl z-40">
-                    <SettingsPanel
+          <div className="w-[340px] h-full overflow-y-auto scrollbar-hide border-r border-[#222] bg-transparent backdrop-blur-lg shadow-3xl z-40">
+            <style jsx>{`
+              .scrollbar-hide {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+              }
+              .scrollbar-hide::-webkit-scrollbar { 
+                display: none;
+              }
+            `}</style>
+            <SettingsPanel
           onClose={() => {}} // No-op since we want it always open
               onSave={handleSettingsSave}
               selectedModel={selectedModel}
               setSelectedModel={setSelectedModel}
               selectedStyle={selectedStyle}
+              
               setSelectedStyle={setSelectedStyle}
               selectedAspectRatio={selectedAspectRatio}
               setSelectedAspectRatio={setSelectedAspectRatio}
@@ -335,7 +345,16 @@ export default function NewText2Image() {
               setPromptEnhance={setPromptEnhance}
             />
           </div>
-          <div className="flex-1 h-full overflow-y-auto flex justify-center">
+          <div className="flex-1 h-full overflow-y-auto scrollbar-hide flex justify-center">
+            <style jsx>{`
+              .scrollbar-hide {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+              }
+              .scrollbar-hide::-webkit-scrollbar { 
+                display: none;
+              }
+            `}</style>
             <div className="w-full max-w-4xl flex flex-col items-center justify-center px-2 sm:px-4 gap-8 mx-auto">
               <Header title="Text to Image" />
               <InputSection
@@ -356,6 +375,8 @@ export default function NewText2Image() {
         </div>
       </div>
       <Footer />
+      
+      {/* Remove the page-level scrollbar hide styles since we're adding them directly to containers */}
     </>
   )
 }

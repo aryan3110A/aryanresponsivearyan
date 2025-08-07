@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+// import { useState } from "react"
 import { NumberSelector } from "../../UI"
 // import LogoStyle from "./logoStyle"
 // import FontSelect from "./FontSelect"
@@ -49,7 +49,7 @@ export default function SettingsPanel(props: SettingsPanelProps) {
   // const [promptEnhance, setPromptEnhance] = useState("Auto")
 
   // Add state for numberOfLogo if not present
-  const [numberOfLogo, setNumberOfLogo] = useState(props.numberOfLogo || 1)
+  // const [numberOfLogo, setNumberOfLogo] = useState(props.numberOfLogo || 1)
   // Add state for selectedFileType
   // const [selectedFileType, setSelectedFileType] = useState<string | null>(null)
   // Add state for logoName
