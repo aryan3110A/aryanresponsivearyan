@@ -140,14 +140,14 @@ export default function InputSection({
               className="flex-1 bg-transparent text-white placeholder-gray-600 outline-none text-sm ml-4 w-full max-w-full"
               onKeyDown={(e) => e.key === "Enter" && onGenerate()}
             />
-            <div className="flex items-center gap-4">
-              <button className=" hover:bg-gray-700/50 rounded-full transition-colors border border-white/10">
+            <div className="flex items-center gap-2">
+              <button className=" hover:bg-gray-700/50 rounded-full transition-colors border border-white/10 p-2 ">
                 <Image src="/newt2image/enhancer.png" alt="enhancer" width={20} height={20} />
               </button>
               <HoverBorderGradient
                 onClick={!prompt.trim() || isGenerating ? undefined : onGenerate}
                 backgroundColor="bg-[#006aff]"
-                className={`px-4 py-2 font-regular text-sm rounded-full ${(!prompt.trim() || isGenerating) ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+                className={`px-8 py-3 font-regular text-sm rounded-full ${(!prompt.trim() || isGenerating) ? 'cursor-not-allowed' : 'cursor-pointer'}`}
               >
                 {isGenerating ? "Generating..." : "Generate"}
               </HoverBorderGradient>
@@ -170,7 +170,7 @@ export default function InputSection({
               onKeyDown={(e) => e.key === "Enter" && onGenerate()}
             />
 
-            <button className="p-2 hover:bg-gray-700/50 rounded-full transition-colors border border-white/10 md:ml-2">
+            <button className="p-3 hover:bg-gray-700/50 rounded-full transition-colors border border-white/10 md:ml-2">
               <Image
                 src="/newt2image/enhancer.png"
                 alt="enhancer"
@@ -223,7 +223,7 @@ export default function InputSection({
                     className="w-full max-w-md bg-gray-900/50 rounded-xl p-6 group"
                   >
                     <div className="flex items-center gap-4 mb-4">
-                      <div className="w-12 h-12 bg-gradient-to-r from-[#6C3BFF] to-[#412399] rounded-full flex items-center justify-center">
+                      <div className="w-12 h-12 bg-gradient-to-r from-[#006aff] to-[#412399] rounded-full flex items-center justify-center">
                         <Sparkles className="w-6 h-6 text-white" />
                       </div>
                       <div>
