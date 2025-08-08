@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
+import { AnimatePresence, motion } from 'framer-motion';
 
 // The cards array with proper categorization
 const cards = [
@@ -83,40 +84,47 @@ export default function AiToolsGrid({ activeCategory = 'All' }: AiToolsGridProps
   const visibleCards = showAll ? filteredCards : filteredCards.slice(0, 10);
 
   return (
-    <div className="w-[1100px] border border-gray-700 rounded-3xl p-10  overflow-hidden bg-black mx-auto">
+    <div className="w-full max-w-[1300px] border border-gray-700 rounded-3xl p-10 overflow-hidden bg-gradient-to-br from-white/20 via-transparent to-transparent mx-auto">
       <div className="w-full h-full">
-        <div
-          className={`
-            grid 
-            grid-cols-4 
-            gap-4
-            auto-rows-[160px]
-          `}
-        >
-          {visibleCards.map((card, idx) => (
-            <div
-              key={idx}
-              className={`relative group bg-slate-900 rounded-lg overflow-hidden`}
-              style={{
-                gridColumn: `span ${card.col} / span ${card.col}`,
-                gridRow: `span ${card.row} / span ${card.row}`,
-              }}
-            >
-              <Image
-                src={card.src}
-                alt={card.title}
-                fill
-                className="object-cover"
-                sizes="25vw"
-                priority={idx < 10}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-              <div className="absolute bottom-3 left-4 text-white text-base font-semibold drop-shadow-md">
-                {card.title}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeCategory}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -30 }}
+            transition={{ duration: 0.35, ease: 'easeInOut' }}
+            className={`
+              grid 
+              grid-cols-4 
+              gap-4
+              auto-rows-[160px]
+            `}
+          >
+            {visibleCards.map((card, idx) => (
+              <div
+                key={card.title + idx}
+                className="relative group bg-slate-900 rounded-lg overflow-hidden"
+                style={{
+                  gridColumn: `span ${card.col} / span ${card.col}`,
+                  gridRow: `span ${card.row} / span ${card.row}`,
+                }}
+              >
+                <Image
+                  src={card.src}
+                  alt={card.title}
+                  fill
+                  className="object-cover"
+                  sizes="25vw"
+                  priority={idx < 10}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                <div className="absolute bottom-3 left-4 text-white text-base font-semibold drop-shadow-md">
+                  {card.title}
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </motion.div>
+        </AnimatePresence>
         <div className="flex justify-center py-6">
           {!showAll && filteredCards.length > 10 && (
             <button

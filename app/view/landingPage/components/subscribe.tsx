@@ -1,98 +1,128 @@
 'use client'
 
-
-import React, { useState } from 'react';
+import React, { useState } from 'react'
+import { ChevronRight } from 'lucide-react'
+import CardSwap, { Card } from './CardSwap'
+import Image from 'next/image'
 
 interface NewsletterSignupProps {
-  onSubmit?: (email: string) => void;
+  onSubmit?: (email: string) => void
 }
 
 const NewsletterSignup: React.FC<NewsletterSignupProps> = ({ onSubmit }) => {
-  const [email, setEmail] = useState<string>('');
-  const [isChecked, setIsChecked] = useState<boolean>(false);
+  const [email, setEmail] = useState('')
+  const [isChecked, setIsChecked] = useState(false)
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (email && isChecked) {
-      onSubmit?.(email);
+    e.preventDefault()
+    if (onSubmit) {
+      onSubmit(email)
     }
-  };
-
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
-  };
-
-  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setIsChecked(e.target.checked);
-  };
+  }
 
   return (
-    <div className="mb-10 relative bg-transparent backdrop-blur-lg backdrop-saturate-150 border border-white border-opacity-20 rounded-3xl p-8 max-w-4xl mx-auto text-white shadow-2xl overflow-hidden">
-      {/* Clean static inner glow for glass depth */}
-      <div className="absolute inset-[1px] bg-gradient-to-br from-white/5 to-transparent rounded-xl pointer-events-none"></div>
-      
-      <div className="relative flex flex-col md:flex-row items-center justify-between gap-8 z-10">
-        {/* Left side text */}
-        <div className="flex flex-col space-y-2 md:space-y-4">
-          <span className="uppercase text-gray-300 text-sm font-medium tracking-wider drop-shadow-sm">
-            Newsletter Signup
-          </span>
-          <h2 className="font-bold text-3xl md:text-4xl leading-tight drop-shadow-md">
-            Subscribe for<br />the updates!
-          </h2>
-        </div>
+    <div className="relative z-0 mb-4 max-w-7xl mx-auto text-white p-6 sm:p-10 rounded-3xl border border-white/20 backdrop-blur-lg bg-gradient-to-br from-white/5 to-transparent shadow-2xl overflow-hidden">
+      <div className="absolute inset-[1px] bg-gradient-to-br from-white/20 via-transparent to-transparent rounded-2xl pointer-events-none z-0" />
 
-        {/* Right side form */}
-        <div className="flex flex-col space-y-4 w-full md:w-auto min-w-80">
-          <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
-            {/* Email input with clean glass effect */}
-            <input
-              type="email"
-              placeholder="Enter your email address"
-              value={email}
-              onChange={handleEmailChange}
-              required
-              className="bg-[rgba(255,255,255,0.08)] backdrop-blur-sm border border-white border-opacity-20 rounded-full px-4 py-3 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-30 focus:border-white focus:border-opacity-40 focus:bg-[rgba(255,255,255,0.12)] transition-all duration-300 shadow-inner"
-            />
-            
-            {/* Checkbox and Privacy Policy */}
+      <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-12 md:gap-20">
+        {/* Left: Form */}
+        <div className="flex-1 space-y-6 w-full -mt-28 md:-mt-44">
+          <div className="space-y-3">
+            <span className="uppercase text-sm text-gray-300 tracking-widest">Newsletter Signup</span>
+            <h2 className="text-3xl md:text-4xl font-bold drop-shadow-md">
+              Subscribe for<br />the updates!
+            </h2>
+          </div>
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="relative flex items-center w-full">
+              <input
+                type="email"
+                placeholder="Enter your email address"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="w-full bg-white/5 border border-white/20 backdrop-blur-sm text-white rounded-full px-4 py-3 pr-12 placeholder-gray-300 shadow-inner focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-white/40 focus:bg-white/10 transition-all duration-300"
+              />
+              <button
+                className="flex items-center justify-center w-7 h-7 rounded-full bg-white/33 shrink-0 absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer focus:outline-none"
+              >
+                <ChevronRight className="w-5 h-5" />
+              </button>
+            </div>
+
             <label className="flex items-start space-x-3 text-gray-300 text-sm cursor-pointer">
               <input
                 type="checkbox"
                 checked={isChecked}
-                onChange={handleCheckboxChange}
+                onChange={(e) => setIsChecked(e.target.checked)}
                 required
-                className="accent-white w-4 h-4 mt-0.5 flex-shrink-0 opacity-80"
+                className="accent-white w-4 h-4 mt-1"
               />
-              <span className="select-none drop-shadow-sm">
+              <span>
                 I agree to the{' '}
-                <a 
-                  href="#" 
-                  className="underline hover:text-white transition-colors duration-200 drop-shadow-sm"
-                >
+                <a href="#" className="underline hover:text-white transition">
                   Privacy Policy
-                </a>
-                .
+                </a>.
               </span>
             </label>
-            
-            {/* Clean liquid glass button */}
-            <button
-              type="submit"
-              disabled={!email || !isChecked}
-              className="relative bg-[rgba(255,255,255,0.15)] backdrop-blur-md border border-white border-opacity-30 hover:bg-[rgba(255,255,255,0.25)] hover:border-opacity-40 disabled:bg-[rgba(255,255,255,0.05)] disabled:border-opacity-10 disabled:cursor-not-allowed rounded-full px-6 py-3 text-white font-semibold transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-30 shadow-lg overflow-hidden"
-            >
-              {/* Static button inner glow */}
-              <div className="absolute inset-[1px] bg-gradient-to-t from-transparent to-white to-transparent opacity-[0.08] rounded-md"></div>
-              
-              {/* Button content */}
-              <span className="relative z-10 drop-shadow-sm">View More</span>
-            </button>
+
           </form>
+        </div>
+
+        {/* Right: CardStack animation (fixed layout and height) */}
+        <div className="flex-1 flex items-center justify-center relative min-h-[480px]">
+          <CardSwap
+            cardDistance={50}
+            verticalDistance={80}
+            delay={3500}
+            pauseOnHover={false}
+            skewAmount={5}
+          >
+              <Card className="bg-black/20 p-0 rounded-[12px] bg-[#0F0F10] border border-[#1F1F22] shadow-[0_0_0_1px_rgba(255,255,255,0.08)] w-[320px] h-[200px] overflow-hidden flex flex-col">
+              <div className="px-4 py-2 text-sm font-medium text-white bg-gradient-to-b from-[#19191B] to-[#121213] border-b border-[#2C2C2E]">
+                Updates
+              </div>
+              <Image
+                src="/Landingpage/animated-tabs/imagegen.png"
+                alt="Updates"
+                width={320}
+                height={200}
+                className="flex-1 w-full object-contain bg-transparent"
+              />
+            </Card>
+
+            <Card className="bg-black/20 p-0 rounded-[12px] bg-[#0F0F10] border border-[#1F1F22] shadow-[0_0_0_1px_rgba(255,255,255,0.08)] w-[320px] h-[200px] overflow-hidden flex flex-col">
+              <div className="px-4 py-2 text-sm font-medium text-white bg-gradient-to-b from-[#19191B] to-[#121213] border-b border-[#2C2C2E]">
+                Promotional Deals
+              </div>
+              <Image
+                src="/Landingpage/animated-tabs/audio.png"
+                alt="Promotions"
+                width={320}
+                height={200}
+                className="flex-1 w-full object-contain bg-transparent"
+              />
+            </Card>
+
+            <Card className="bg-black/20 p-0 rounded-[12px] bg-[#0F0F10] border border-[#1F1F22] shadow-[0_0_0_1px_rgba(255,255,255,0.08)] w-[320px] h-[200px] overflow-hidden flex flex-col">
+              <div className="px-4 py-2 text-sm font-medium text-white bg-gradient-to-b from-[#19191B] to-[#121213] border-b border-[#2C2C2E]">
+                Newsletter
+              </div>
+              <Image
+                src="/Landingpage/animated-tabs/3D.png"
+                alt="Newsletter"
+                width={320}
+                height={200}
+                className="flex-1 w-full object-contain bg-transparent"
+              />
+            </Card>
+
+          </CardSwap>
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default NewsletterSignup;
+export default NewsletterSignup

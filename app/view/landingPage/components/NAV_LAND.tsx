@@ -7,7 +7,13 @@ import { onAuthStateChanged, signOut } from "firebase/auth"
 import { auth, db } from "@/database/firebase"
 import { doc, getDoc } from "firebase/firestore"
 import { APP_ROUTES, NAV_ROUTES, FEATURE_ROUTES } from "../../../../routes/routes"
-import { getImageUrl } from "@/routes/imageroute";
+import { getImageUrl } from "@/routes/imageroute"
+import ImageGeneration from "../../Core/feature-categories/ImageGeneration"
+import BrandingKit from "../../Core/feature-categories/BrandingKit"
+import VideoGeneration from "../../Core/feature-categories/VideoGeneration"
+import AudioGeneration from "../../Core/feature-categories/AudioGeneration"
+import FilmingTools from "../../Core/feature-categories/FilmingTools"
+import ThreeDDesign from "../../Core/feature-categories/ThreeDDesign"
 
 const NAV_LAND = () => {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
@@ -19,6 +25,7 @@ const NAV_LAND = () => {
   const [userEmail, setUserEmail] = useState<string>("")
   const [username, setUsername] = useState<string>("")
   const menuRef = useRef<HTMLDivElement>(null)
+  const headerRef = useRef<HTMLElement>(null)
   const router = useRouter()
 
   useEffect(() => {
@@ -110,68 +117,46 @@ const NAV_LAND = () => {
 
   return (
     <>
-      {/* Desktop Navigation */}
-      <div
-        className={`fixed top-5 left-1/2 -translate-x-1/2 z-[1000] items-center justify-between p-2 rounded-[50px] 
-        border-[1px] border-white/20 w-[90vw] sm-laptop:w-[55vw] md:w-[45vw] lg:w-[45vw] text-white
-        ${
-          scrolled ? "backdrop-blur-xl bg-black/30 shadow-lg" : "backdrop-blur-xl bg-black/10 shadow-lg"
-        } transition-all duration-300 hidden md:flex`}
-      >
+             {/* Desktop Navigation */}
+       <header
+         ref={headerRef}
+         className={`fixed top-5 left-1/2 -translate-x-1/2 z-[1000] items-center justify-between p-2 rounded-[50px] 
+         border-[1px] border-white/20 w-[90vw] sm-laptop:w-[55vw] md:w-[45vw] lg:w-[45vw] text-white
+         ${
+           scrolled ? "backdrop-blur-xl bg-black/30 shadow-lg" : "backdrop-blur-xl bg-black/10 shadow-lg"
+         } transition-all duration-300 hidden md:flex`}
+       >
         {/* Logo */}
         <div className="flex w-10 h-10 pl-2">
               <Image src={getImageUrl("core", "logo")} width={40} height={24} alt="logo" onClick={() => router.push("/")} />
             </div>
 
-        {/* Features Dropdown */}
-        <div className="relative">
-          <span
-            onClick={() => toggleDropdown("features")}
-            className="cursor-pointer px-3 py-1 flex items-center gap-1 hover:bg-gradient-to-l hover:bg-clip-text font-poppins bg-transparent hover:text-[#dbdbdb]"
-          >
-            Features
-            <Image
-              width={12}
-              height={12}
-              src={activeDropdown === "features" ? "/Core/arrowup.svg" : "/Core/arrowdown.svg"}
-              alt="dropdown-arrow"
-              className="ml-1"
-            />
-          </span>
-
-          {activeDropdown === "features" && (
-            <ul className="absolute left-1/2 -translate-x-1/2 mt-4 w-80 bg-black text-white rounded-lg border border-[#5f5e5e] shadow-[6px_6px_10px_rgba(0,0,0,0.6)] p-3 pr-4 flex flex-col items-center overflow-hidden whitespace-nowrap">
-              <li
-                className="w-full px-3 py-2 cursor-pointer text-center hover:text-[#dbdbdb] hover:bg-gradient-to-l hover:bg-clip-text"
-                onClick={() => router.push(FEATURE_ROUTES.IMAGE_GENERATION)}
-              >
-                Text to image
-              </li>
-              <li
-                className="w-full px-3 py-2 cursor-pointer text-center hover:text-[#dbdbdb] hover:bg-gradient-to-l hover:bg-clip-text"
-                onClick={() => router.push('/music-generation')}
-              >
-                Text to music
-              </li>
-              <li className="w-full px-3 py-2 cursor-pointer text-center hover:text-[#dbdbdb] hover:bg-gradient-to-l hover:bg-clip-text">
-                Text to video (coming soon)
-              </li>
-              <li className="w-full px-3 py-2 cursor-pointer text-center hover:text-[#dbdbdb] hover:bg-gradient-to-l hover:bg-clip-text">
-                Sketch to image (coming soon)
-              </li>
-              <li className="w-full px-1 py-2 cursor-pointer text-center hover:text-[#dbdbdb] hover:bg-gradient-to-l hover:bg-clip-text">
-                Real-time generation (coming soon)
-              </li>
-            </ul>
-          )}
-        </div>
+                 {/* Features Dropdown */}
+         <div 
+           className="relative group"
+           onMouseEnter={() => setActiveDropdown("features")}
+           onMouseLeave={() => setActiveDropdown(null)}
+         >
+           <span
+             className="cursor-pointer px-3 py-1 flex items-center gap-1 hover:bg-gradient-to-l hover:bg-clip-text font-poppins bg-transparent hover:text-[#dbdbdb]"
+           >
+             Features
+             <Image
+               width={12}
+               height={12}
+               src={activeDropdown === "features" ? "/Core/arrowup.svg" : "/Core/arrowdown.svg"}
+               alt="dropdown-arrow"
+               className="ml-1"
+             />
+           </span>
+         </div>
 
         <div>
           <span
             className="px-3 py-1 hover:bg-gradient-to-l hover:bg-clip-text cursor-pointer hover:text-[#dbdbdb]"
             onClick={() => router.push(NAV_ROUTES.TEMPLATES)}
           >
-            Templates
+            Workflows
           </span>
         </div>
 
@@ -193,18 +178,50 @@ const NAV_LAND = () => {
           </span>
         </div>
 
-        {/* Get Started Button */}
-        <div>
-          <button
-            className="hidden md:block md:flex-nowrap  relative bg-black/20 border border-white/20 rounded-full px-5 py-2 text-base font-medium border-t-[#acacac] border-b-[#6A0DAD] hover:border-t-[#6A0DAD] hover:border-b-[#acacac] 
-                      text-transparent bg-clip-text bg-gradient-to-r from-[#5AD7FF] to-[#656BF5] shadow-[inset_0px_0px_8px_rgba(255,255,255,0.2)] 
-                      transition-all duration-500 ease-in-out hover:text-white"
-            onClick={handleGetStarted}
-          >
-            Get Started
-          </button>
-        </div>
-      </div>
+                 {/* Get Started Button */}
+         <div>
+           <button
+             className="hidden md:block md:flex-nowrap  relative bg-black/20 border border-white/20 rounded-full px-5 py-2 text-base font-medium border-t-[#acacac] border-b-[#6A0DAD] hover:border-t-[#6A0DAD] hover:border-b-[#acacac] 
+                       text-transparent bg-clip-text bg-gradient-to-r from-[#5AD7FF] to-[#656BF5] shadow-[inset_0px_0px_8px_rgba(255,255,255,0.2)] 
+                       transition-all duration-500 ease-in-out hover:text-white"
+             onClick={handleGetStarted}
+           >
+             Get Started
+           </button>
+         </div>
+
+                             {/* Enhanced Features Dropdown */}
+         {activeDropdown === "features" && (
+           <div
+             onMouseEnter={() => setActiveDropdown("features")}
+             onMouseLeave={() => setActiveDropdown(null)}
+             className="absolute left-1/2 transform -translate-x-1/2 top-full z-50 bg-black/90 backdrop-blur-3xl shadow-lg border border-gray-700 rounded-2xl shadow-xl animate-in slide-in-from-top-2 duration-300 w-auto -mr-[60vw]"
+           >
+             <div className="px-10 py-10">
+               <div className="grid grid-cols-1 md:grid-cols-6 lg:grid-cols-6 xl:grid-cols-6 gap-6 lg:gap-8 font-poppins">
+                 <div className="col-span-1">
+                   <ImageGeneration />
+                 </div>
+                 <div className="col-span-1">
+                   <BrandingKit />
+                 </div>
+                 <div className="col-span-1">
+                   <VideoGeneration />
+                 </div>
+                 <div className="col-span-1">
+                   <AudioGeneration />
+                 </div>
+                 <div className="col-span-1">
+                   <FilmingTools />
+                 </div>
+                 <div className="col-span-1">
+                   <ThreeDDesign />
+                 </div>
+               </div>
+             </div>
+           </div>
+         )}
+       </header>
 
       {/* Mobile Navigation */}
       <div className="hidden fixed top-0 left-0 w-full z-[1000] mb:block md:hidden">
@@ -299,32 +316,111 @@ const NAV_LAND = () => {
 
                   {activeDropdown === "features" && (
                     <div className="pl-0 py-2 space-y-2 text-sm animate-in slide-in-from-left duration-300">
-                      <div
-                        className="py-1 text-gray-300 hover:text-white cursor-pointer"
-                        onClick={() => {
-                          router.push(FEATURE_ROUTES.IMAGE_GENERATION)
-                          setIsMobileMenuOpen(false)
-                        }}
-                      >
-                        Text to image
-                      </div>
-                      <div
-                        className="py-1 text-gray-300 hover:text-white cursor-pointer"
-                        onClick={() => {
-                          router.push('/music-generation')
-                          setIsMobileMenuOpen(false)
-                        }}
-                      >
-                        Text to music
-                      </div>
-                      <div className="py-1 text-gray-300 hover:text-white cursor-pointer">
-                        Text to video (coming soon)
-                      </div>
-                      <div className="py-1 text-gray-300 hover:text-white cursor-pointer">
-                        Sketch to image (coming soon)
-                      </div>
-                      <div className="py-1 text-gray-300 hover:text-white cursor-pointer">
-                        Real-time generation (coming soon)
+                      <div className="grid grid-cols-1 gap-4">
+                        <div className="space-y-3">
+                          <h4 className="text-white font-semibold text-sm">Image Generation</h4>
+                          <div className="space-y-2 pl-4">
+                            <div
+                              className="py-1 text-gray-300 hover:text-white cursor-pointer"
+                              onClick={() => {
+                                router.push(FEATURE_ROUTES.IMAGE_GENERATION)
+                                setIsMobileMenuOpen(false)
+                              }}
+                            >
+                              Text to Image
+                            </div>
+                            <div className="py-1 text-gray-300 hover:text-white cursor-pointer">
+                              Image to Image
+                            </div>
+                            <div className="py-1 text-gray-300 hover:text-white cursor-pointer">
+                              AI Sticker Generation
+                            </div>
+                            <div className="py-1 text-gray-300 hover:text-white cursor-pointer">
+                              Live Portrait
+                            </div>
+                            <div className="py-1 text-gray-300 hover:text-white cursor-pointer">
+                              Inpaint
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div className="space-y-3">
+                          <h4 className="text-white font-semibold text-sm">Branding Kit</h4>
+                          <div className="space-y-2 pl-4">
+                            <div className="py-1 text-gray-300 hover:text-white cursor-pointer">
+                              Logo Generation
+                            </div>
+                            <div className="py-1 text-gray-300 hover:text-white cursor-pointer">
+                              Mockups Generation
+                            </div>
+                            <div className="py-1 text-gray-300 hover:text-white cursor-pointer">
+                              Product with Model Poses
+                            </div>
+                            <div className="py-1 text-gray-300 hover:text-white cursor-pointer">
+                              Product Generation
+                            </div>
+                            <div className="py-1 text-gray-300 hover:text-white cursor-pointer">
+                              Add Music in Image
+                            </div>
+                            <div className="py-1 text-gray-300 hover:text-white cursor-pointer">
+                              Add Music in Video
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="space-y-3">
+                          <h4 className="text-white font-semibold text-sm">Video Generation</h4>
+                          <div className="space-y-2 pl-4">
+                            <div className="py-1 text-gray-300 hover:text-white cursor-pointer">
+                              Text to Video
+                            </div>
+                            <div className="py-1 text-gray-300 hover:text-white cursor-pointer">
+                              Image to Video
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="space-y-3">
+                          <h4 className="text-white font-semibold text-sm">Audio Generation</h4>
+                          <div className="space-y-2 pl-4">
+                            <div
+                              className="py-1 text-gray-300 hover:text-white cursor-pointer"
+                              onClick={() => {
+                                router.push('/music-generation')
+                                setIsMobileMenuOpen(false)
+                              }}
+                            >
+                              Text to Music
+                            </div>
+                            <div className="py-1 text-gray-300 hover:text-white cursor-pointer">
+                              Voice Generation
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="space-y-3">
+                          <h4 className="text-white font-semibold text-sm">Filming Tools</h4>
+                          <div className="space-y-2 pl-4">
+                            <div className="py-1 text-gray-300 hover:text-white cursor-pointer">
+                              Video Editing
+                            </div>
+                            <div className="py-1 text-gray-300 hover:text-white cursor-pointer">
+                              Background Removal
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="space-y-3">
+                          <h4 className="text-white font-semibold text-sm">3D Design</h4>
+                          <div className="space-y-2 pl-4">
+                            <div className="py-1 text-gray-300 hover:text-white cursor-pointer">
+                              3D Model Generation
+                            </div>
+                            <div className="py-1 text-gray-300 hover:text-white cursor-pointer">
+                              Texture Generation
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   )}

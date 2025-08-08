@@ -5,7 +5,7 @@ import React, { useEffect } from 'react';
 import { loadSlim } from '@tsparticles/slim';
 import Button from '../landingPage/components/Button';
 import SlideImage from '../landingPage/components/Slideimage';
-import { HeroHighlightDemo } from '../landingPage/components/Headertext';
+// import { HeroHighlightDemo } from '../landingPage/components/Headertext';
 import { initParticlesEngine } from "@tsparticles/react";
 
 
@@ -32,7 +32,7 @@ const Header = () => {
       {/* Main Content */}
       <div className="z-20 w-full h-full flex flex-col justify-between items-center px-0 md:pt-20 lg:pt-4 mb-28"
       >
-        <HeroHighlightDemo />
+        {/* <HeroHighlightDemo /> */}
         
         <SlideImage />
 

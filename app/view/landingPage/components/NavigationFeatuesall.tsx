@@ -130,12 +130,12 @@ const NavigationCompo: React.FC<NavigationCompoProps> = ({
         containerClassName="bg-black rounded-full p-2"
         className="bg-black rounded-full p-2"
       >
-        <div className="flex space-x-2 min-w-max px-4 overflow-x-auto scrollbar-hide relative z-10">
+        <div className="flex space-x-2 min-w-max px-1 overflow-x-auto scrollbar-hide relative z-10">
           {categories.map((category) => (
             <button
               key={category}
               onClick={() => handleCategoryChange(category)}
-              className={`px-6 py-3 rounded-full text-sm font-medium transition-all duration-200 whitespace-nowrap ${
+              className={`px-8 py-3 rounded-full text-medium font-medium transition-all duration-200 whitespace-nowrap ${
                 activeCategory === category
                   ? 'bg-[#006AFF] text-white shadow-md transform scale-105'
                   : 'text-white hover:bg-gray-900 hover:text-white'

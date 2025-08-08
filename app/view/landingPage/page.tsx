@@ -6,32 +6,44 @@ import NAV_LAND from "./components/NAV_LAND";
 import FeatuesAll from "./components/FeatuesAll";
 import Footer from "../Core/Footer";
 import Subscribe from "./components/subscribe";
-import InfiniteImageScroll from "./components/InfiniteImageScroll";
-
+import CircularGallery from "./components/CicularGallery";
+import DarkVeil from "./components/DarkVeil";
 const Main = () => {
   return (
-    <div className="bg-black relative mb:bg-gradient-to-br from-[#050505] via-[#0a0a1f] to-[#0c0c0c]">
+    <div className="relative w-full bg-black">
       {/* Navigation (Fixed on top with highest z-index) */}
       <div className="fixed top-0 left-0 right-0 z-[100] flex justify-center">
         <NAV_LAND />
       </div>
 
-      {/* Main Content with proper spacing and z-index */}
-      <div className=" relative">
-        <div className="relative z-[10]">
-          <Header />
-        </div>
+                                                                                                                                                   {/* Header with DarkVeil Background */}
+<div className="relative h-screen w-full overflow-hidden flex flex-col justify-center items-center">
+  <div className="absolute inset-0 w-full h-full z-0">
+    <DarkVeil
+      hueShift={2}
+      noiseIntensity={0.05}
+      scanlineIntensity={0.5}
+      speed={1}
+      scanlineFrequency={0}
+      warpAmount={6}
+      resolutionScale={1}
+    />
+    </div>
+      <div className="relative z-[10] w-full pt-2">
+        <Header />
+    </div>
+    </div>
 
-        <div className="relative z-[10] mt-16">
-          <TabsSection />
-        </div>
+           {/* TabsSection without DarkVeil background */}
+      <div className="relative z-[10] bg-black">
+      <TabsSection />
       </div>
 
       {/* Additional sections with proper spacing */}
       <div className="relative z-[10]">
         {/* <ArtGallery /> */}
         {/* <SocialMediaSuite /> */}
-        <p className="text-white flex justify-center items-center text-[3rem] mt-20  font-semibold">Features</p>
+        <p className="text-white flex justify-center items-center text-[3rem] mt-20 mb-10 font-semibold">Features</p>
         <FeatuesAll />
       </div>
 
@@ -59,20 +71,26 @@ const Main = () => {
         <Subscribe />
       </div>
 
-      <div className="relative mt-10 z-[10]">
-      <InfiniteImageScroll 
-            images={[
-              { id: 1, src: '/Landingpage/ArtGallery/img1.png', alt: 'Sample 1' },
-              { id: 2, src: '/Landingpage/ArtGallery/img2.png', alt: 'Sample 2' },
-              { id: 3, src: '/Landingpage/ArtGallery/img3.png', alt: 'Sample 3' },
-              { id: 4, src: '/Landingpage/ArtGallery/img4.png', alt: 'Sample 3' },
-              { id: 5, src: '/Landingpage/ArtGallery/img5.png', alt: 'Sample 3' },
-              { id: 6, src: '/Landingpage/ArtGallery/img6.png', alt: 'Sample 3' },
-              { id: 7, src: '/Landingpage/ArtGallery/img7.png', alt: 'Sample 3' },
-              { id: 8, src: '/Landingpage/ArtGallery/img8.png', alt: 'Sample 3' },
-              { id: 9, src: '/Landingpage/ArtGallery/img9.png', alt: 'Sample 3' },
-            ]}
-          />
+      <div className="relative mt-30 z-[30]">
+        <div style={{ height: '600px', position: 'relative' }}>
+          <CircularGallery
+            bend={0}
+            textColor="#ffffff"
+            borderRadius={0.05}
+            scrollEase={0.02}
+            items={[
+              { image: '/Landingpage/ArtGallery/img1.png', text: '' },
+              { image: '/Landingpage/ArtGallery/img2.png', text: '' },
+              { image: '/Landingpage/ArtGallery/img3.png', text: '' },
+              { image: '/Landingpage/ArtGallery/img4.png', text: '' },
+              { image: '/Landingpage/ArtGallery/img5.png', text: '' },
+              { image: '/Landingpage/ArtGallery/img6.png', text: '' },
+              { image: '/Landingpage/ArtGallery/img7.png', text: '' },
+              { image: '/Landingpage/ArtGallery/img8.png', text: '' },
+              { image: '/Landingpage/ArtGallery/img9.png', text: '' },
+            ]}
+          />
+        </div>
       </div>
 
       <div className="relative z-[10]">
