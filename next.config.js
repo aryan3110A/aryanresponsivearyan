@@ -70,12 +70,16 @@ const nextConfig = {
         hostname: '3770353c90dd.ngrok-free.app',
         pathname: '/**',
       },
-             {
+        {
          protocol: 'https',
          hostname: '4ae95d3a1b9e.ngrok-free.app',
          pathname: '/**',
-
        },
+       {
+        protocol: 'https',
+        hostname: 'f3f35ea9db7b.ngrok-free.app',
+        pathname: '/**',
+      },
       {
         protocol: 'https',
         hostname: 'delivery-us1.bfl.ai',

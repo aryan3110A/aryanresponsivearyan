@@ -259,7 +259,7 @@ export default function NewText2Image() {
         
         // Try direct ngrok as last resort
         const modelSlug = modelSlugMap[modelName] || "stable-turbo"
-        const modelEndpoint = `https://3770353c90dd.ngrok-free.app/${modelSlug}/generate`
+        const modelEndpoint = `https://f3f35ea9db7b.ngrok-free.app/${modelSlug}/generate`
         
         const fallback = await fetch(modelEndpoint, {
           method: 'POST',
