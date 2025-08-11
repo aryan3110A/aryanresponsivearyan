@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useRef } from "react"
-import { ChevronDown, Check } from "lucide-react"
+import { ChevronDown } from "lucide-react"
 import { ModelsPresetPanel, promptEnhancer as PromptEnhancer,  AspectRatio, Quality, NumberSelector, OptionSelector, SelectColor, effects as Effects, lightning as Lightning, cameraAngles as CameraAngle, AdvanceSettingPanel, AddToCollection, PrivateMode, VisualIntensity, SocialMedia
 , ResetToDefaults} from "../../UI"
 
@@ -111,7 +111,6 @@ export default function SettingsPanel({
   const toggleButtonRef = useRef<HTMLButtonElement>(null)
 
   // Add popup state
-  const [showSavePopup, setShowSavePopup] = useState(false)
 
   // Remove duplicate state declarations - use props instead
   const [photoReal, setPhotoReal] = useState(false);
@@ -204,12 +203,12 @@ export default function SettingsPanel({
     }
     
     // Show popup
-    setShowSavePopup(true)
+    // setShowSavePopup(true)
     
-    // Hide popup after 2 seconds
-    setTimeout(() => {
-      setShowSavePopup(false)
-    }, 2000)
+    // // Hide popup after 2 seconds
+    // setTimeout(() => {
+    //   setShowSavePopup(false)
+    // }, 2000)
     
     // Apply settings to backend/prompt
     const settingsData: SettingsData = {
@@ -480,12 +479,12 @@ export default function SettingsPanel({
       </div>
 
       {/* Save Popup */}
-      {showSavePopup && (
+      {/* {showSavePopup && (
         <div className="fixed top-4 right-4 bg-green-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 z-60">
           <Check className="w-4 h-4" />
           Changes Saved
         </div>
-      )}
+      )} */}
     </>
   )
 }

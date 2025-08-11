@@ -10,18 +10,18 @@ interface ImageOverlayProps {
   imageUrl: string
   prompt: string
   model?: string
-  modelSelection: string
-  stylePalette: string
-  imageQuality: string
-  frameSize: string
+  modelSelection?: string
+  stylePalette?: string
+  imageQuality?: string
+  frameSize?: string
   numberOfItems: number
   itemLabel?: string
+  stickerType?: string
   likes?: number
   onRemix?: () => void
   onShare?: () => void
   onDownload?: () => void
   className?: string
-  musicType?: string
 }
 
 export default function ImageOverlay({
@@ -29,18 +29,17 @@ export default function ImageOverlay({
   onClose,
   imageUrl,
   prompt,
-  modelSelection,
-  stylePalette,
-  imageQuality,
-  frameSize,
+  modelSelection = "",
+  stylePalette = "",
+  imageQuality = "",
+  frameSize = "",
   numberOfItems,
   itemLabel = "Items",
+  stickerType,
   likes = 8,
   onRemix,
   onShare,
-  onDownload,
-  className = "",
-  musicType
+  
 }: ImageOverlayProps) {
   const [isOriginalImageOpen, setIsOriginalImageOpen] = useState(true)
   const [isLiked, setIsLiked] = useState(false)
@@ -69,15 +68,10 @@ export default function ImageOverlay({
   }
 
   const handleDownload = async () => {
-    if (onDownload) {
-      onDownload()
-      return
-    }
-
     try {
       console.log("Starting download...")
 
-      // Create a temporary link element and trigger download
+       // Create a temporary link element and trigger download
       const link = document.createElement("a")
       link.href = imageUrl
       link.download = `${prompt.toLowerCase().replace(/[^a-z0-9]/g, "-").slice(0, 30)}-${new Date().toISOString().slice(0, 19).replace(/:/g, "-")}.png`
@@ -101,11 +95,11 @@ export default function ImageOverlay({
   }
 
   return (
-    <div className={className}>
+    <>
       {/* Desktop Layout - Properly Centered */}
-      <div className="hidden md:flex fixed inset-0 bg:transparent backdrop-blur-3xl shadow-sm z-50 items-center justify-center md:py-16 lg:py-20">
+        <div className="hidden md:flex fixed inset-0 bg:transparent backdrop-blur-3xl shadow-sm shadow-sm z-30 items-center justify-center md:py-20 lg:py-20">
         {/* Modal Container - Centered */}
-        <div className="relative w-full md:max-w-6xl lg:max-w-7xl h-full max-h-[90vh] bg-white/10 backdrop-blur-3xl shadow-3xl rounded-2xl overflow-hidden flex md:p-10 lg:p-10">
+        <div className="relative z-50 w-full md:w-auto md:max-w-6xl lg:w-auto gap-6 lg:max-w-7xl h-full max-h-[90vh] bg-white/10 backdrop-blur-3xl shadow-3xl rounded-2xl overflow-hidden flex md:p-14 lg:p-8">
           <button
             onClick={onClose}
             className="absolute top-6 right-6 p-2 text-white hover:bg-white/10 rounded-lg transition-colors z-10"
@@ -113,14 +107,14 @@ export default function ImageOverlay({
             <X className="w-6 h-6" />
           </button>
           {/* Left Side - Image */}
-          <div className="flex-1 flex items-center justify-center ">
-            <div className="relative w-full h-full md:max-w-2xl lg:max-w-3xl max-h-full">
+          <div className="flex-1 flex items-center justify-center">
+            <div className="relative w-full h-full md:w-auto md:max-w-2xl lg:w-auto lg:max-w-3xl max-h-full">
               <Image
                 src={imageUrl || "/placeholder.svg"}
                 alt="Generated image"
                 width={1080}
                 height={1080}
-                className="w-full h-full object-contain rounded-3xl"
+                className="w-full h-full object-contain rounded-2xl"
               />
             </div>
           </div>
@@ -178,12 +172,12 @@ export default function ImageOverlay({
 
             {/* Settings Summary - Styled like SettingsPanel */}
             <div className="px-6 md:pt-2 lg:pt-4 pb-2 flex-1 ">
-              <div className="bg-white/5 backdrop-blur-3xl hover:bg-white/20 rounded-lg lg:p-4 md:p-2  space-y-1 lg:space-y-3  md:text-xs lg:text-sm text-gray-300 transition-colors">
+              <div className="bg-white/5 backdrop-blur-3xl hover:bg-white/20 rounded-lg p-4 space-y-1 lg:space-y-3  md:text-xs lg:text-sm text-gray-300 transition-colors">
                 <div className="flex justify-between">
                   <span className="text-white">Model Selection: {modelSelection}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-white">Camera Angle: {stylePalette}</span>
+                  <span className="text-white">Style Palette: {stylePalette || stickerType}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-white">Image Quality: {imageQuality}</span>
@@ -194,12 +188,6 @@ export default function ImageOverlay({
                 <div className="flex justify-between">
                   <span className="text-white">Number of {itemLabel}: {numberOfItems}</span>
                 </div>
-                {musicType && (
-                  <div className="flex justify-between">
-                    <span>Music Type:</span>
-                    <span>{musicType}</span>
-                  </div>
-                )}
               </div>
             </div>
 
@@ -315,8 +303,8 @@ export default function ImageOverlay({
                   <span>{modelSelection}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-white">Camera Angle:</span>
-                  <span>{stylePalette}</span>
+                  <span className="text-white">Style Palette:</span>
+                  <span>{stylePalette || stickerType}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-white">Image Quality:</span>
@@ -330,12 +318,6 @@ export default function ImageOverlay({
                   <span className="text-white">Number of {itemLabel}:</span>
                   <span>{numberOfItems}</span>
                 </div>
-                {musicType && (
-                  <div className="flex justify-between">
-                    <span className="text-white">Music Type:</span>
-                    <span>{musicType}</span>
-                  </div>
-                )}
               </div>
             </div>
 
@@ -366,6 +348,6 @@ export default function ImageOverlay({
           </div>
         </div>
       </div>
-    </div>
+    </>
   )
 }

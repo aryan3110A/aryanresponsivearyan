@@ -14,7 +14,7 @@ export default function NumberSelector({
   onNumberSelect, 
   selectedNumber = 1,
   title = "Number of Items",
-  options = [1, 2, 3, 50],
+  options = [1, 2, 3, 4],
   className = ""
 }: NumberSelectorProps) {
   const [selected, setSelected] = useState<number>(selectedNumber)

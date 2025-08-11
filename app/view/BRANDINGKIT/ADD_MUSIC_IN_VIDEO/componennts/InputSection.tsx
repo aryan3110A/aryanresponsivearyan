@@ -34,7 +34,7 @@ export default function InputSection({
   } | null>(null)
   const scrollContainerRef = useRef<HTMLDivElement>(null)
   const model = "Flux Kontext";
-  const musicType = "Classic";
+  // const musicType = "Classic";
 
   const handleChooseFromLibrary = () => {
     console.log("Choose from library clicked")
@@ -410,7 +410,7 @@ export default function InputSection({
           imageUrl={selectedImageForOverlay.url}
           prompt={prompt}
           model={model}
-          musicType={musicType}
+          // musicType={musicType}
           modelSelection={model}
           stylePalette=""
           imageQuality=""
