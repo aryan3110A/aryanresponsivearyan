@@ -81,7 +81,7 @@ export default function TextGenerationTemplate() {
 
             {/* Center txt logo */}
             <div className="absolute top-[50%] left-[50%] transform -translate-x-[50%] -translate-y-[50%] text-[8vh] font-bold text-white/80 pointer-events-none z-10">
-              txt
+              Templates
             </div>
           </div>
         </div>
