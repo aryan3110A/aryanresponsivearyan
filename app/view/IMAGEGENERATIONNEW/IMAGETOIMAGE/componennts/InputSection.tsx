@@ -146,8 +146,8 @@ export default function InputSection({
               className="flex-1 bg-transparent text-white placeholder-gray-600 outline-none text-sm ml-4 w-full max-w-full"
               onKeyDown={(e) => e.key === "Enter" && onGenerate()}
             />
-            <div className="flex items-center gap-4">
-              <button className=" hover:bg-gray-700/50 rounded-full transition-colors border border-white/10">
+              <div className="flex items-center gap-2">
+              <button className=" hover:bg-gray-700/50 rounded-full transition-colors border border-white/10 p-2">
                 <Image src="/newt2image/enhancer.png" alt="enhancer" width={20} height={20} />
               </button>
               <HoverBorderGradient

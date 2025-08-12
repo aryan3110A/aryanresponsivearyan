@@ -1,20 +1,20 @@
-"use client"
+'use client';
 
-import React, { useState } from "react"
-import { Header } from "../../IMAGEGENERATIONNEW/UI"
-import InputSection from "./componennts/InputSection"
-import SettingsPanel from "./componennts/SettingsPanel"
+import React, { useState } from 'react';
+import { Header } from '../../IMAGEGENERATIONNEW/UI';
+import InputSection from './componennts/InputSection';
+import SettingsPanel from './componennts/SettingsPanel';
 // import BackgroundShapes from "./componennts/BackgroundShapes"
 
-import NavigationFull from "../../Core/NavigationFull"
-import Footer from "../../Core/Footer"
-import StableBackground from "../../Core/StableBackground"
+import NavigationFull from '../../Core/NavigationFull';
+import Footer from '../../Core/Footer';
+import StableBackground from '../../Core/StableBackground';
 
 export default function LogoGeneration() {
-  const [prompt, setPrompt] = useState("")
-  const [generatedImages, setGeneratedImages] = useState<string[]>([])
-  const [isGenerating, setIsGenerating] = useState(false)
-  const [numberOfImages, setNumberOfImages] = useState(1)
+  const [prompt, setPrompt] = useState('');
+  const [generatedImages, setGeneratedImages] = useState<string[]>([]);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [numberOfImages, setNumberOfImages] = useState(1);
 
   const handleGenerate = async () => {
     setIsGenerating(true);
@@ -22,31 +22,31 @@ export default function LogoGeneration() {
 
     try {
       if (!prompt.trim()) {
-        alert("Please enter a prompt for logo generation.");
+        alert('Please enter a prompt for logo generation.');
         setIsGenerating(false);
         return;
       }
 
       // Updated endpoint to use the unified /generate endpoint
-      const response = await fetch("https://a68c2c8c4b6b.ngrok-free.app/generate", {
-        method: "POST",
+      const response = await fetch('https://a68c2c8c4b6b.ngrok-free.app/generate', {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           prompt: prompt,
-          num_images: numberOfImages
+          num_images: numberOfImages,
         }),
       });
 
       if (!response.ok) {
-        throw new Error("Failed to connect to backend.");
+        throw new Error('Failed to connect to backend.');
       }
 
       const data = await response.json();
-      
-      console.log("Backend response:", data);
-      
+
+      console.log('Backend response:', data);
+
       if (data.image_urls && data.image_urls.length > 0) {
         // Use image proxy to bypass ngrok warning page
         const imageUrls = data.image_urls.map((url: string) => {
@@ -55,16 +55,15 @@ export default function LogoGeneration() {
           const fullUrl = `https://a68c2c8c4b6b.ngrok-free.app${url}`;
           return `/api/image-proxy?url=${encodeURIComponent(fullUrl)}`;
         });
-        console.log("Generated image URLs:", imageUrls);
+        console.log('Generated image URLs:', imageUrls);
         setGeneratedImages(imageUrls);
       } else {
-        console.error("No image URLs in response:", data);
-        throw new Error("No images received from backend.");
+        console.error('No image URLs in response:', data);
+        throw new Error('No images received from backend.');
       }
-
     } catch (error) {
-      console.error("Generation failed:", error);
-      const fallback = Array(numberOfImages).fill("/placeholder.svg");
+      console.error('Generation failed:', error);
+      const fallback = Array(numberOfImages).fill('/placeholder.svg');
       setGeneratedImages(fallback);
     } finally {
       setIsGenerating(false);
@@ -76,7 +75,7 @@ export default function LogoGeneration() {
       <div className="min-h-screen bg-black text-white relative overflow-hidden">
         <StableBackground />
         <NavigationFull />
-        <div className="flex w-full h-screen" style={{ marginTop: '64px' }}>
+        <div className="flex w-full    h-screen" style={{ marginTop: '64px' }}>
           <SettingsPanel
             onClose={() => {}} // No-op since we want it always open
             // Add required props here based on the interface
@@ -90,7 +89,7 @@ export default function LogoGeneration() {
             setSelectedQuality={() => {}}
             numberOfLogo={numberOfImages}
             setNumberOfLogo={setNumberOfImages}
-            className="w-[480px] max-h-[calc(100vh-128px)] overflow-y-auto sticky z-30 border-r border-[#222]"
+            className="md:w-[400px] md:max-w-[400px] lg:w-[480px] lg:max-w-[480px] max-h-[calc(100vh-128px)] overflow-y-auto sticky z-30 border-r border-[#222]"
           />
           <div className="flex-1 h-full overflow-y-auto flex justify-center">
             <div className="w-full max-w-5xl flex flex-col items-center justify-center px-2 sm:px-4 gap-8 mx-auto">
@@ -117,5 +116,5 @@ export default function LogoGeneration() {
       </div>
       <Footer />
     </>
-  )
+  );
 }

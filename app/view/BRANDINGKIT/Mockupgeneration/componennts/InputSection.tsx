@@ -125,7 +125,7 @@ export default function InputSection({
       {/* Desktop Layout - Input with buttons inline */}
       <div className="hidden xl:flex items-center gap-4 w-full md:max-w-6xl lg:max-w-7xl px-4">
         <div className="flex-1 relative">
-          <div className="flex flex-col gap-4 bg-[#ffffff]/5 hover:bg-[#ffffff]/10 backdrop-blur-sm border border-[#8E8E8E] rounded-[4rem] p-8 transition-all duration-300 ease-in-out">
+          <div className="flex flex-col gap-4 bg-[#ffffff]/5 hover:bg-[#ffffff]/10 backdrop-blur-sm border border-[#8E8E8E]  md:rounded-[3.5rem] lg:rounded-[4rem] p-8 transition-all duration-300 ease-in-out">
             <div className="flex flex-col gap-4">
               {/* Logo Upload Section */}
               <div className="flex items-center gap-4">

@@ -115,8 +115,8 @@ export default function InputSection({
               className="flex-1 bg-transparent text-white placeholder-gray-600 outline-none text-sm ml-4 w-full max-w-full"
               onKeyDown={(e) => e.key === "Enter" && onGenerate()}
             />
-            <div className="flex items-center gap-4">
-              <button className=" hover:bg-gray-700/50 rounded-full transition-colors border border-white/10">
+            <div className="flex items-center gap-2">
+              <button className=" hover:bg-gray-700/50 rounded-full transition-colors border border-white/10 p-2">
                 <Image src="/newt2image/enhancer.png" alt="enhancer" width={20} height={20} />
               </button>
               <HoverBorderGradient
@@ -176,7 +176,7 @@ export default function InputSection({
           <div className="w-full flex flex-col items-center gap-6">
             {/* Outputs Header */}
             <div className="w-full text-left ml-14">
-              <h2 className="font-poppins text-white/80 text-xl font-semibold bg-gradient-to-r from-[#5AD7FF] to-[#656BF5] text-transparent bg-clip-text">
+              <h2 className="font-poppin text-xl font-semibold bg-gradient-to-r from-[#5AD7FF] to-[#656BF5] text-transparent bg-clip-text">
                 Output :
               </h2>
               

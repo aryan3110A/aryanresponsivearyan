@@ -294,7 +294,7 @@ export default function ImageToImage() {
                 display: none;
               }
             `}</style>
-            <div className="w-full max-w-5xl flex flex-col items-center justify-center px-2 sm:px-4 gap-8 mx-auto">
+            <div className="pt-20 w-full max-w-5xl flex flex-col items-center justify-center px-2 sm:px-4 gap-8 mx-auto">
               <div className="sticky top-0 z-0 bg-black/50 backdrop-blur-sm py-4 w-full">
                 <Header title="Image to Image" />
               </div>

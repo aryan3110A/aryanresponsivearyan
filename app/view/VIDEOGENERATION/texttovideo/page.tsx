@@ -1,67 +1,84 @@
-"use client"
+'use client';
 
-import React, { useState } from "react"
-import { Header } from "../UI"
-import InputSection from "./componennts/InputSection"
-import SettingsPanel from "./componennts/SettingsPanel"
+import React, { useState } from 'react';
+import { Header } from '../UI';
+import InputSection from './componennts/InputSection';
+import SettingsPanel from './componennts/SettingsPanel';
 // import BackgroundShapes from "./componennts/BackgroundShapes"
-import NavigationFull from "../../Core/NavigationFull"
-import Footer from "../../Core/Footer"
-import StableBackground from "../../Core/StableBackground"
-import { CAMERA_MOVEMENTS, CameraMovement, getModelType, getApiModelName, supportsCameraMovements, getApiResolution } from "./componennts/videoModels"
+import NavigationFull from '../../Core/NavigationFull';
+import Footer from '../../Core/Footer';
+import StableBackground from '../../Core/StableBackground';
+import {
+  CAMERA_MOVEMENTS,
+  CameraMovement,
+  getModelType,
+  getApiModelName,
+  supportsCameraMovements,
+  getApiResolution,
+} from './componennts/videoModels';
 
 export default function NewTextToVideo() {
-  const [prompt, setPrompt] = useState("")
-  const [generatedImages, setGeneratedImages] = useState<string[]>([])
+  const [prompt, setPrompt] = useState('');
+  const [generatedImages, setGeneratedImages] = useState<string[]>([]);
 
-  const [isGenerating, setIsGenerating] = useState(false)
-  const [selectedModel, setSelectedModel] = useState("MiniMax-Hailuo-02")
-  const [selectedAspectRatio, setSelectedAspectRatio] = useState("16:9")
-  const [selectedQuality, setSelectedQuality] = useState("HD")
-  const [selectedDuration, setSelectedDuration] = useState(6)
-  const [selectedCameraMovements, setSelectedCameraMovements] = useState<string[]>([])
-  const [firstFrameImage, setFirstFrameImage] = useState<string | null>(null)
-  const [subjectImage, setSubjectImage] = useState<string | null>(null)
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [selectedModel, setSelectedModel] = useState('MiniMax-Hailuo-02');
+  const [selectedAspectRatio, setSelectedAspectRatio] = useState('16:9');
+  const [selectedQuality, setSelectedQuality] = useState('HD');
+  const [selectedDuration, setSelectedDuration] = useState(6);
+  const [selectedCameraMovements, setSelectedCameraMovements] = useState<string[]>([]);
+  const [firstFrameImage, setFirstFrameImage] = useState<string | null>(null);
+  const [subjectImage, setSubjectImage] = useState<string | null>(null);
 
   const handleGenerate = async () => {
-    if (!prompt.trim()) return
+    if (!prompt.trim()) return;
 
     // Model-specific validation based on MiniMax API requirements
-    const modelType = getModelType(selectedModel)
+    const modelType = getModelType(selectedModel);
 
     // I2V models require first_frame_image
-    if ((selectedModel === 'I2V-01-Director' || selectedModel === 'I2V-01' || selectedModel === 'I2V-01-live') && !firstFrameImage) {
-      alert('Please upload a first frame image for image-to-video generation')
-      return
+    if (
+      (selectedModel === 'I2V-01-Director' ||
+        selectedModel === 'I2V-01' ||
+        selectedModel === 'I2V-01-live') &&
+      !firstFrameImage
+    ) {
+      alert('Please upload a first frame image for image-to-video generation');
+      return;
     }
 
     // S2V-01 requires subject_reference
     if (selectedModel === 'S2V-01' && !subjectImage) {
-      console.log('S2V-01 validation failed - subjectImage:', subjectImage)
-      console.log('firstFrameImage:', firstFrameImage)
-      alert('S2V-01 model requires a subject reference image. Please upload an image using the attachment button and try again.')
-      return
+      console.log('S2V-01 validation failed - subjectImage:', subjectImage);
+      console.log('firstFrameImage:', firstFrameImage);
+      alert(
+        'S2V-01 model requires a subject reference image. Please upload an image using the attachment button and try again.',
+      );
+      return;
     }
 
-    setIsGenerating(true)
+    setIsGenerating(true);
 
     try {
       // Build the final prompt with camera movements for Director models
-      let finalPrompt = prompt
+      let finalPrompt = prompt;
       if (selectedCameraMovements.length > 0 && supportsCameraMovements(selectedModel)) {
-        const cameraInstructions = selectedCameraMovements.map(movementId => {
-          const movement = CAMERA_MOVEMENTS.find((m: CameraMovement) => m.id === movementId)
-          return movement?.instruction
-        }).filter(Boolean).join(', ')
+        const cameraInstructions = selectedCameraMovements
+          .map((movementId) => {
+            const movement = CAMERA_MOVEMENTS.find((m: CameraMovement) => m.id === movementId);
+            return movement?.instruction;
+          })
+          .filter(Boolean)
+          .join(', ');
 
         if (cameraInstructions) {
-          finalPrompt = `${prompt} ${cameraInstructions}`
+          finalPrompt = `${prompt} ${cameraInstructions}`;
         }
       }
 
       // Prepare API payload based on model type and MiniMax API specifications
-      const apiModel = getApiModelName(selectedModel)
-      const apiResolution = getApiResolution(selectedModel, selectedQuality, selectedAspectRatio)
+      const apiModel = getApiModelName(selectedModel);
+      const apiResolution = getApiResolution(selectedModel, selectedQuality, selectedAspectRatio);
 
       // Base payload according to MiniMax API
       const basePayload = {
@@ -70,44 +87,46 @@ export default function NewTextToVideo() {
         duration: selectedDuration,
         resolution: apiResolution,
         prompt_optimizer: true, // Enable prompt optimization by default
-        aspect_ratio: selectedAspectRatio // Most models support aspect_ratio
-      }
+        aspect_ratio: selectedAspectRatio, // Most models support aspect_ratio
+      };
 
       // Add model-specific parameters according to MiniMax API documentation
-      const apiPayload: Record<string, unknown> = { ...basePayload }
+      const apiPayload: Record<string, unknown> = { ...basePayload };
 
       // For I2V models (Image-to-Video), add first_frame_image
       if (modelType === 'image-to-video' && firstFrameImage) {
-        apiPayload.first_frame_image = firstFrameImage
+        apiPayload.first_frame_image = firstFrameImage;
       }
       // For MiniMax-Hailuo-02, first_frame_image is optional
       else if (selectedModel === 'MiniMax-Hailuo-02' && firstFrameImage) {
-        apiPayload.first_frame_image = firstFrameImage
+        apiPayload.first_frame_image = firstFrameImage;
       }
 
       // For S2V-01 model, add subject_reference array (required)
       if (selectedModel === 'S2V-01') {
-        const imageToUse = subjectImage || firstFrameImage
+        const imageToUse = subjectImage || firstFrameImage;
 
         if (!imageToUse) {
-          console.log('❌ ERROR: No image available for S2V-01')
-          alert('S2V-01 model requires a subject reference image. Please upload an image using the attachment button and try again.')
-          return
+          console.log('❌ ERROR: No image available for S2V-01');
+          alert(
+            'S2V-01 model requires a subject reference image. Please upload an image using the attachment button and try again.',
+          );
+          return;
         }
 
         const subjectRefArray = [
           {
-            type: "character",
-            image: [imageToUse]
-          }
-        ]
+            type: 'character',
+            image: [imageToUse],
+          },
+        ];
 
-        apiPayload.subject_reference = subjectRefArray
-        delete apiPayload.aspect_ratio
+        apiPayload.subject_reference = subjectRefArray;
+        delete apiPayload.aspect_ratio;
       }
 
-      console.log('=== STEP 1: Creating video generation task ===')
-      
+      console.log('=== STEP 1: Creating video generation task ===');
+
       // Step 1: Create video generation task
       const response = await fetch('/api/generate-video', {
         method: 'POST',
@@ -115,31 +134,31 @@ export default function NewTextToVideo() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(apiPayload),
-      })
+      });
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}))
-        throw new Error(errorData.error || 'Failed to create video generation task')
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || 'Failed to create video generation task');
       }
 
-      const taskData = await response.json()
-      
+      const taskData = await response.json();
+
       if (!taskData.success || !taskData.task_id) {
-        throw new Error(taskData.error || 'No task ID received')
+        throw new Error(taskData.error || 'No task ID received');
       }
 
-      console.log('✅ Task created with ID:', taskData.task_id)
+      console.log('✅ Task created with ID:', taskData.task_id);
 
       // Step 2: Poll for task completion
-      console.log('=== STEP 2: Polling for task completion ===')
-      const maxAttempts = 60 // 5 minutes with 5-second intervals
-      let attempts = 0
-      let taskStatus = 'Queueing'
-      let fileId = null
+      console.log('=== STEP 2: Polling for task completion ===');
+      const maxAttempts = 60; // 5 minutes with 5-second intervals
+      let attempts = 0;
+      let taskStatus = 'Queueing';
+      let fileId = null;
 
       while (attempts < maxAttempts && !['Success', 'Fail'].includes(taskStatus)) {
-        await new Promise(resolve => setTimeout(resolve, 5000)) // Wait 5 seconds
-        
+        await new Promise((resolve) => setTimeout(resolve, 5000)); // Wait 5 seconds
+
         try {
           const statusResponse = await fetch('/api/query-video-status', {
             method: 'POST',
@@ -147,82 +166,80 @@ export default function NewTextToVideo() {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({ task_id: taskData.task_id }),
-          })
+          });
 
           if (!statusResponse.ok) {
-            console.log(`Status check failed, attempt ${attempts + 1}/${maxAttempts}`)
-            attempts++
-            continue
+            console.log(`Status check failed, attempt ${attempts + 1}/${maxAttempts}`);
+            attempts++;
+            continue;
           }
 
-          const statusData = await statusResponse.json()
-          taskStatus = statusData.status
-          fileId = statusData.file_id
+          const statusData = await statusResponse.json();
+          taskStatus = statusData.status;
+          fileId = statusData.file_id;
 
-          console.log(`Task ${taskData.task_id} status: ${taskStatus}`)
-          
+          console.log(`Task ${taskData.task_id} status: ${taskStatus}`);
+
           if (taskStatus === 'Success') {
-            console.log('✅ Video generation completed!')
-            break
+            console.log('✅ Video generation completed!');
+            break;
           } else if (taskStatus === 'Fail') {
-            throw new Error('Video generation failed')
+            throw new Error('Video generation failed');
           }
         } catch (statusError) {
-          console.log(`Status check error, attempt ${attempts + 1}/${maxAttempts}:`, statusError)
+          console.log(`Status check error, attempt ${attempts + 1}/${maxAttempts}:`, statusError);
         }
-        
-        attempts++
+
+        attempts++;
       }
 
       if (taskStatus !== 'Success' || !fileId) {
-        throw new Error('Video generation timed out or failed')
+        throw new Error('Video generation timed out or failed');
       }
 
-      console.log('✅ Video generation completed, file ID:', fileId)
+      console.log('✅ Video generation completed, file ID:', fileId);
 
       // Step 3: Download the video
-      console.log('=== STEP 3: Downloading video ===')
+      console.log('=== STEP 3: Downloading video ===');
       const downloadResponse = await fetch('/api/download-video', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ file_id: fileId }),
-      })
+      });
 
       if (!downloadResponse.ok) {
-        const errorData = await downloadResponse.json().catch(() => ({}))
-        throw new Error(errorData.error || 'Failed to download video')
+        const errorData = await downloadResponse.json().catch(() => ({}));
+        throw new Error(errorData.error || 'Failed to download video');
       }
 
-      const downloadData = await downloadResponse.json()
+      const downloadData = await downloadResponse.json();
 
       if (downloadData.success && downloadData.video_urls && downloadData.video_urls.length > 0) {
-        setGeneratedImages(downloadData.video_urls)
-        console.log('✅ Video downloaded successfully:', downloadData.video_urls)
+        setGeneratedImages(downloadData.video_urls);
+        console.log('✅ Video downloaded successfully:', downloadData.video_urls);
       } else {
-        throw new Error(downloadData.error || 'No video URLs in response')
+        throw new Error(downloadData.error || 'No video URLs in response');
       }
     } catch (error) {
-      console.error('Video generation failed:', error)
+      console.error('Video generation failed:', error);
       // Show error to user
-      alert(`Video generation failed: ${error instanceof Error ? error.message : 'Unknown error'}`)
+      alert(`Video generation failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
       // Fallback to placeholder video for demo
-      const placeholderVideo = ["/placeholder-video.mp4"]
-      setGeneratedImages(placeholderVideo)
+      const placeholderVideo = ['/placeholder-video.mp4'];
+      setGeneratedImages(placeholderVideo);
     } finally {
-      setIsGenerating(false)
+      setIsGenerating(false);
     }
-  }
-
-
+  };
 
   return (
     <>
-      <div className="max-h-[100rem] bg-black text-white relative overflow-hidden">
+      <div className="min-h-screen bg-black text-white relative overflow-hidden">
         <StableBackground />
         <NavigationFull />
-        <div className="flex w-full h-screen" style={{ marginTop: '0px' }}>
+        <div className="flex w-full min-h-screen">
           <SettingsPanel
             onClose={() => {}} // No-op since we want it always open
             selectedModel={selectedModel}
@@ -239,14 +256,12 @@ export default function NewTextToVideo() {
             setFirstFrameImage={setFirstFrameImage}
             subjectImage={subjectImage}
             setSubjectImage={setSubjectImage}
-            className="w-[480px] max-h-[calc(100vh-128px)] overflow-y-auto sticky z-30 border-r border-[#222]"
+            className="w-[480px] h-screen overflow-y-auto border-r border-[#222]"
           />
-          <div className="flex-1 h-full overflow-y-auto flex justify-center">
-            <div className="w-full max-w-5xl flex flex-col items-center justify-center px-2 sm:px-4 mx-auto">
-              <div className="sticky top-0 z-20 bg-black/50 backdrop-blur-sm py-4 w-full">
-                <Header title="Text To Video" />
-              </div>
-              <div className="w-full flex flex-col items-center gap-6 min-h-[400px]">
+          <div className="flex-1 flex justify-center overflow-y-auto md:pt-20">
+            <div className="w-full max-w-5xl flex flex-col items-center justify-center px-2 sm:px-4 gap-8 mx-auto py-8">
+              <Header title="Text To Video" />
+              <div className="w-full flex flex-col items-center gap-8 min-h-[400px]">
                 <InputSection
                   prompt={prompt}
                   setPrompt={setPrompt}
@@ -270,5 +285,5 @@ export default function NewTextToVideo() {
       </div>
       <Footer />
     </>
-  )
+  );
 }

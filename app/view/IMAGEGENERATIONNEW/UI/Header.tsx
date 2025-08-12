@@ -1,15 +1,14 @@
-
 interface HeaderProps {
-  title?: string
-  description?: string
- 
-  className?: string
+  title?: string;
+  description?: string;
+
+  className?: string;
 }
 
-export default function Header({ 
-  title = "AI Image Generator",
-  description = "Create awe-inspiring masterpieces effortlessly and explore the endless possibilities of AI generated art. Enter a prompt, choose a style, and watch Imagine - AI art generator bring your ideas to life!",
-  className = ""
+export default function Header({
+  title = 'AI Image Generator',
+  description = 'Create awe-inspiring masterpieces effortlessly and explore the endless possibilities of AI generated art. Enter a prompt, choose a style, and watch Imagine - AI art generator bring your ideas to life!',
+  className = '',
 }: HeaderProps) {
   return (
     <header className={`w-full flex justify-center  pb-4  ${className}`}>
@@ -22,5 +21,5 @@ export default function Header({
         </p>
       </div>
     </header>
-  )
+  );
 }

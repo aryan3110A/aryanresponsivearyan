@@ -95,8 +95,8 @@ export default function SettingsPanel(props: SettingsPanelProps) {
 
   return (
     <>
-      <div className="sticky top-[64px] left-0 w-auto max-h-[calc(100vh-128px)] overflow-y-auto bg-transparent backdrop-blur-lg shadow-3xl  border-r border-[#222] scrollbar-hide">
-      <div className="md:w-auto md:max-w-[400px]  lg:w-[480px] lg:max-w-[480px] h-full overflow-y-auto scrollbar-hide border-r border-[#222] bg-transparent backdrop-blur-lg shadow-3xl z-0">
+      <div className="sticky top-[64px] left-0 w-full md:w-[400px] lg:w-[480px] max-h-[calc(100vh-128px)] overflow-y-auto bg-transparent backdrop-blur-lg shadow-3xl  border-r border-[#222] scrollbar-hide">
+      <div className=" h-full overflow-y-auto scrollbar-hide border-r border-[#222] bg-transparent backdrop-blur-lg shadow-3xl z-0">
       {/* Header */}
           <div className="flex items-center justify-between p-4">
             <h2 className="text-white text-sm font-normal ml-6">Settings</h2>

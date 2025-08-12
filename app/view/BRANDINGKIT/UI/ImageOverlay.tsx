@@ -97,14 +97,14 @@ export default function ImageOverlay({
   return (
     <>
       {/* Desktop Layout - Properly Centered */}
-        <div className="hidden md:flex fixed inset-0 bg:transparent backdrop-blur-3xl shadow-sm shadow-sm z-30 items-center justify-center md:py-20 lg:py-20">
+        <div className="hidden md:flex fixed inset-0 bg:transparent backdrop-blur-3xl shadow-sm z-30 items-center justify-center md:py-16 lg:py-20">
         {/* Modal Container - Centered */}
-        <div className="relative z-50 w-full md:w-auto md:max-w-6xl lg:w-auto gap-6 lg:max-w-7xl h-full max-h-[90vh] bg-white/10 backdrop-blur-3xl shadow-3xl rounded-2xl overflow-hidden flex md:p-14 lg:p-8">
-          <button
+        <div className="relative z-50 w-full md:w-auto md:max-w-6xl lg:w-auto gap-6 lg:max-w-7xl h-full max-h-[90vh] bg-white/10 backdrop-blur-3xl shadow-3xl rounded-2xl overflow-hidden flex md:p-6 lg:p-8">
+          <button 
             onClick={onClose}
-            className="absolute top-6 right-6 p-2 text-white hover:bg-white/10 rounded-lg transition-colors z-10"
+            className="absolute top-0 right-0 p-2 text-white hover:bg-white/10 rounded-lg transition-colors z-10"
           >
-            <X className="w-6 h-6" />
+            <X className="w-5 h-5" />
           </button>
           {/* Left Side - Image */}
           <div className="flex-1 flex items-center justify-center">
@@ -112,7 +112,7 @@ export default function ImageOverlay({
               <Image
                 src={imageUrl || "/placeholder.svg"}
                 alt="Generated image"
-                width={1080}
+                width={1080}                        
                 height={1080}
                 className="w-full h-full object-contain rounded-2xl"
               />
@@ -120,14 +120,14 @@ export default function ImageOverlay({
           </div>
 
           {/* Right Side - Info Panel */}
-          <div className="w-80 md:w-80 lg:w-96 bg-white/15 flex flex-col md:mr-6 lg:mr-10 rounded-xl">
+          <div className="w-80 md:w-80 lg:w-96 bg-white/15 flex flex-col md:mr-4 lg:mr-10 rounded-xl">
             {/* Header with Remix and Action Buttons */}
-            <div className="px-6 lg:pt-6 md:pt-4 ">
+            <div className="px-6 lg:pt-6 md:pt-2 ">
               <div className="flex items-center justify-between mb-4 md:mb-2">
                 {/* Remix Button */}
                 <button
                   onClick={handleRemix}
-                  className="bg-transparent text-white py-1 px-8 rounded-lg font-medium border border-[#00F0FF]"
+                  className="bg-transparent text-white py-1 px-6 rounded-lg font-medium border border-[#00F0FF]"
                 >
                   Remix
                 </button>
@@ -159,20 +159,20 @@ export default function ImageOverlay({
 
             {/* Prompt Section */}
             <div className="px-6">
-              <div className="flex items-center bg-white/10 rounded-md px-3 py-2 md:py-1 lg:py-2 justify-between w-full">
+              <div className="flex items-center bg-white/10 rounded-md px-3 py-2 md:py-0 lg:py-2 justify-between w-full">
                 <p className="text-white md:text-xs lg:text-sm leading-relaxed truncate">Prompt: {prompt}</p>
                 <button
                   onClick={handleCopyPrompt}
                   className="p-2 text-gray-400 hover:text-white transition-colors flex-shrink-0"
                 >
-                  <Copy className="w-4 h-4" />
+                  <Copy className="lg:w-4 lg:h-4 md:w-3 md:h-3" />
                 </button>
               </div>
             </div>
 
             {/* Settings Summary - Styled like SettingsPanel */}
             <div className="px-6 md:pt-2 lg:pt-4 pb-2 flex-1 ">
-              <div className="bg-white/5 backdrop-blur-3xl hover:bg-white/20 rounded-lg p-4 space-y-1 lg:space-y-3  md:text-xs lg:text-sm text-gray-300 transition-colors">
+              <div className="bg-white/10 hover:bg-white/20 rounded-lg md:p-2 md:px-3 lg:p-4 space-y-1 lg:space-y-3  md:text-xs lg:text-sm text-gray-300 transition-colors">
                 <div className="flex justify-between">
                   <span className="text-white">Model Selection: {modelSelection}</span>
                 </div>
@@ -195,7 +195,7 @@ export default function ImageOverlay({
             <div className="px-8 lg:mb-12 md:mb-28">
               <button
                 onClick={() => setIsOriginalImageOpen(!isOriginalImageOpen)}
-                className="w-full flex items-center justify-between text-white text-sm mb-4 hover:text-gray-300 transition-colors"
+                className="w-full flex items-center justify-between text-white text-sm md:mb-2 lg:mb-4 hover:text-gray-300 transition-colors"
               >
                 <span>Original Image</span>
                 <ChevronDown
