@@ -129,7 +129,7 @@ const Footer: React.FC = () => {
       className="bg-[#000] text-gray-300 py-8 w-full overflow-x-hidden relative"
     >
       
-      <div className="max-w-full px-4 md:px-16 lg:px-12 relative z-10">
+      <div className="max-w-full px-4 md:px-16 lg:px-12 relative z-0">
         {/* Desktop Layout - Using original code for desktop/laptop */}
         <div
           className={`${isMobile ? "hidden" : "flex"} ${
