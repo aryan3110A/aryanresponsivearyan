@@ -1,22 +1,41 @@
 'use client'
 
-import React, { useState } from 'react'
-import { ChevronRight } from 'lucide-react'
-import CardSwap, { Card } from './CardSwap'
+import React, { useMemo, useState } from 'react'
 import Image from 'next/image'
+import CardSwap, { Card } from './CardSwap';
+import { ChevronRight, Check } from 'lucide-react';
 
 interface NewsletterSignupProps {
   onSubmit?: (email: string) => void
 }
 
 const NewsletterSignup: React.FC<NewsletterSignupProps> = ({ onSubmit }) => {
-  const [email, setEmail] = useState('')
-  const [isChecked, setIsChecked] = useState(false)
+  const [email, setEmail] = useState<string>('')
+  const [isChecked, setIsChecked] = useState<boolean>(false)
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success'>('idle')
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const isReady = useMemo(() => email.trim().length > 0 && isChecked, [email, isChecked])
+  const showPolicyHint = useMemo(() => email.trim().length > 0 && !isChecked, [email, isChecked])
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    if (onSubmit) {
-      onSubmit(email)
+    if (!isReady) return
+
+    try {
+      setStatus('loading')
+      const maybePromise = onSubmit?.(email)
+      if (maybePromise && typeof (maybePromise as any).then === 'function') {
+        await (maybePromise as Promise<unknown>)
+      } else {
+        // Fallback artificial delay to show spinner if no async handler provided
+        await new Promise((resolve) => setTimeout(resolve, 1200))
+      }
+      setStatus('success')
+      // Optional: revert back to idle after a brief success state
+      setTimeout(() => setStatus('idle'), 2000)
+    } catch {
+      // In case of error, just return to idle so user can retry
+      setStatus('idle')
     }
   }
 
@@ -42,12 +61,27 @@ const NewsletterSignup: React.FC<NewsletterSignupProps> = ({ onSubmit }) => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full bg-white/5 border border-white/20 backdrop-blur-sm text-white rounded-full px-4 py-3 pr-12 placeholder-gray-300 shadow-inner focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-white/40 focus:bg-white/10 transition-all duration-300"
+                aria-invalid={showPolicyHint}
+                className={`w-full bg-white/5 border backdrop-blur-sm text-white rounded-full px-4 py-3 pr-12 placeholder-gray-300 shadow-inner focus:outline-none transition-all duration-300
+                  ${showPolicyHint ? 'border-red-400/60 focus:ring-2 focus:ring-red-400/40 focus:border-red-400/60' : 'border-white/20 focus:ring-2 focus:ring-white/30 focus:border-white/40 focus:bg-white/10'}
+                `}
               />
               <button
-                className="flex items-center justify-center w-7 h-7 rounded-full bg-white/33 shrink-0 absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer focus:outline-none"
+                type="submit"
+                disabled={!isReady || status === 'loading'}
+                aria-label="Submit email"
+                className={`flex items-center justify-center w-9 h-9 rounded-full absolute right-2 top-1/2 -translate-y-1/2 focus:outline-none transition-colors duration-200
+                  ${status === 'loading' ? 'cursor-wait' : 'cursor-pointer'}
+                  ${isReady ? 'bg-white text-black shadow-md hover:bg-white/90' : 'bg-white/20 text-white/60'}
+                `}
               >
-                <ChevronRight className="w-5 h-5" />
+                {status === 'loading' ? (
+                  <span className="inline-block w-4 h-4 border-2 border-black/70 border-t-transparent rounded-full animate-spin" />
+                ) : status === 'success' ? (
+                  <Check className="w-5 h-5 text-green-400" />
+                ) : (
+                  <ChevronRight className="w-5 h-5" />
+                )}
               </button>
             </div>
 
@@ -67,6 +101,12 @@ const NewsletterSignup: React.FC<NewsletterSignupProps> = ({ onSubmit }) => {
               </span>
             </label>
 
+            {showPolicyHint && (
+              <p className="text-xs text-red-400">
+                Please agree to the Privacy Policy to continue.
+              </p>
+            )}
+
           </form>
         </div>
 
@@ -84,11 +124,11 @@ const NewsletterSignup: React.FC<NewsletterSignupProps> = ({ onSubmit }) => {
                 Updates
               </div>
               <Image
-                src="/Landingpage/animated-tabs/imagegen.png"
+                src="/Landingpage/animated-tabs/updates.png"
                 alt="Updates"
                 width={320}
                 height={200}
-                className="flex-1 w-full object-contain bg-transparent"
+                className="flex-1 w-full object-cover bg-transparent"
               />
             </Card>
 
@@ -97,11 +137,11 @@ const NewsletterSignup: React.FC<NewsletterSignupProps> = ({ onSubmit }) => {
                 Promotional Deals
               </div>
               <Image
-                src="/Landingpage/animated-tabs/audio.png"
+                src="/Landingpage/animated-tabs/promo.png"
                 alt="Promotions"
                 width={320}
                 height={200}
-                className="flex-1 w-full object-contain bg-transparent"
+                className="flex-1 w-full object-cover bg-transparent"
               />
             </Card>
 
@@ -110,11 +150,11 @@ const NewsletterSignup: React.FC<NewsletterSignupProps> = ({ onSubmit }) => {
                 Newsletter
               </div>
               <Image
-                src="/Landingpage/animated-tabs/3D.png"
+                src="/Landingpage/animated-tabs/neswsl.png"
                 alt="Newsletter"
                 width={320}
                 height={200}
-                className="flex-1 w-full object-contain bg-transparent"
+                className="flex-1 w-full object-cover bg-[#fff8eb]"
               />
             </Card>
 

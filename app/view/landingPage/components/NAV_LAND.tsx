@@ -133,12 +133,11 @@ const NAV_LAND = () => {
 
                  {/* Features Dropdown */}
          <div 
-           className="relative group"
-           onMouseEnter={() => setActiveDropdown("features")}
-           onMouseLeave={() => setActiveDropdown(null)}
+           className="relative"
          >
            <span
              className="cursor-pointer px-3 py-1 flex items-center gap-1 hover:bg-gradient-to-l hover:bg-clip-text font-poppins bg-transparent hover:text-[#dbdbdb]"
+             onClick={() => toggleDropdown("features")}
            >
              Features
              <Image
@@ -193,9 +192,7 @@ const NAV_LAND = () => {
                              {/* Enhanced Features Dropdown */}
          {activeDropdown === "features" && (
            <div
-             onMouseEnter={() => setActiveDropdown("features")}
-             onMouseLeave={() => setActiveDropdown(null)}
-             className="absolute left-1/2 transform -translate-x-1/2 top-full z-50 bg-black/90 backdrop-blur-3xl shadow-lg border border-gray-700 rounded-2xl shadow-xl animate-in slide-in-from-top-2 duration-300 w-auto -mr-[60vw]"
+             className="absolute left-1/2 transform -translate-x-1/2 top-full z-50 bg-black/90 backdrop-blur-3xl shadow-xl border border-gray-700 rounded-2xl animate-in slide-in-from-top-2 duration-300 w-auto -mr-[60vw]"
            >
              <div className="px-10 py-10">
                <div className="grid grid-cols-1 md:grid-cols-6 lg:grid-cols-6 xl:grid-cols-6 gap-6 lg:gap-8 font-poppins">

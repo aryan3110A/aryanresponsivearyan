@@ -16,7 +16,7 @@ const Main = () => {
         <NAV_LAND />
       </div>
 
-                                                                                                                                                   {/* Header with DarkVeil Background */}
+                                                                                                                                                    {/* Header with DarkVeil Background */}
 <div className="relative h-screen w-full overflow-hidden flex flex-col justify-center items-center">
   <div className="absolute inset-0 w-full h-full z-0">
     <DarkVeil
@@ -29,12 +29,11 @@ const Main = () => {
       resolutionScale={1}
     />
     </div>
-      <div className="relative z-[10] w-full pt-2">
+      <div className="relative z-[10] w-full pt-3 pb-20">
         <Header />
     </div>
     </div>
 
-           {/* TabsSection without DarkVeil background */}
       <div className="relative z-[10] bg-black">
       <TabsSection />
       </div>

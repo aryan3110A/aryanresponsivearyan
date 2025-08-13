@@ -27,18 +27,18 @@ const NewButton: React.FC<NewButtonProps> = ({
     <button
       type={type}
       onClick={onClick}
-      className={`px-6 py-2 border-[2px] border-white/20 rounded-3xl text-sm font-regular transition-colors duration-200 flex items-center justify-between gap-2 ${className}`}
+      className={`px-4 py-2 border-[2px] border-white/20 rounded-3xl text-xs font-medium transition-colors duration-200 flex items-center ${className}`}
       style={{
         background: background,
         color: textColor,
-        boxShadow: `0 0 18px 4px ${glowColor}`,
+        boxShadow: `0 0 8px 2px ${glowColor}`,
       }}
       onMouseOver={e => (e.currentTarget.style.background = hoverBackground)}
       onMouseOut={e => (e.currentTarget.style.background = background)}
     >
-      <span>{text}</span>
+      <span className="flex-1 text-left">{text}</span>
       <span
-        className="flex items-center justify-center w-7 h-7 rounded-full bg-white shrink-0 ml-4 focus:outline-none border-none p-0"
+        className="flex items-center justify-center w-5 h-5 rounded-full bg-white shrink-0 focus:outline-none border-none p-0 ml-2"
         style={{ color: background }}
         aria-label="arrow"
       >

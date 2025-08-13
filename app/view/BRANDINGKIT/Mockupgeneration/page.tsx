@@ -41,7 +41,7 @@ export default function ProductWithModelPosePage() {
       formData.append("business_tagline", businessTagline);
 
       // Updated endpoint to use the unified /generate endpoint
-      const response = await fetch("https://a68c2c8c4b6b.ngrok-free.app/generate", {
+      const response = await fetch("https://f3f35ea9db7b.ngrok-free.app/generate", {
         method: "POST",
         body: formData,
       });
@@ -66,7 +66,7 @@ export default function ProductWithModelPosePage() {
             try {
               const json = JSON.parse(chunk.replace("data: ", ""));
               // Use image proxy to bypass ngrok warning page
-              setGeneratedImages((prev) => [...prev, `/api/image-proxy?url=https://a68c2c8c4b6b.ngrok-free.app${json.image_url}`]);
+              setGeneratedImages((prev) => [...prev, `/api/image-proxy?url=https://f3f35ea9db7b.ngrok-free.app${json.image_url}`]);
             } catch {
               console.warn("Invalid JSON chunk:", chunk);
             }
