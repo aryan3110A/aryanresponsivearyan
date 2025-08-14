@@ -1,6 +1,6 @@
 'use client';
-
-import React, { useState } from 'react';
+ 
+import React, { useState, useEffect } from 'react';
 import { Header } from '../../IMAGEGENERATIONNEW/UI';
 import InputSection from './componennts/InputSection';
 import SettingsPanel from './componennts/SettingsPanel';
@@ -25,6 +25,42 @@ export default function LogoGeneration() {
   const handleOverlayClose = () => {
     setIsOverlayOpen(false);
   };
+
+  // Robust global scroll lock when overlay is open
+  useEffect(() => {
+    if (isOverlayOpen) {
+      const scrollY = window.scrollY;
+      document.documentElement.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.left = '0';
+      document.body.style.right = '0';
+      document.body.style.width = '100%';
+
+      return () => {
+        document.documentElement.style.overflow = '';
+        const top = document.body.style.top;
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.left = '';
+        document.body.style.right = '';
+        document.body.style.width = '';
+        window.scrollTo(0, parseInt(top || '0') * -1);
+      };
+    } else {
+      // ensure styles are reset if toggled quickly
+      document.documentElement.style.overflow = '';
+      const top = document.body.style.top;
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
+      document.body.style.width = '';
+      if (top) {
+        window.scrollTo(0, parseInt(top || '0') * -1);
+      }
+    }
+  }, [isOverlayOpen]);
 
   const handleGenerate = async () => {
     setIsGenerating(true);
