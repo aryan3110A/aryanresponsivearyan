@@ -100,7 +100,8 @@ export default function ProductWithModelPosePage() {
       formData.append("width", width.toString());
       formData.append("height", height.toString());
 
-      const response = await fetch("https://f3f35ea9db7b.ngrok-free.app/generate", {
+      const API_BASE = process.env.NEXT_PUBLIC_BACKEND_KONTEXT || 'https://a52873fa8a11.ngrok-free.app';
+      const response = await fetch(`${API_BASE}/generate`, {
         method: "POST",
         body: formData,
       });
@@ -114,10 +115,10 @@ export default function ProductWithModelPosePage() {
       // Handle both single image and multiple images response
       if (data.image_urls) {
         // Multiple images - use image proxy to bypass ngrok warning
-            setGeneratedImages(data.image_urls.map((url: string) => `/api/image-proxy?url=https://f3f35ea9db7b.ngrok-free.app${url}`));
+            setGeneratedImages(data.image_urls.map((url: string) => `/api/image-proxy?url=${API_BASE}${url}`));
       } else if (data.image_url) {  
         // Single image (backward compatibility) - use image proxy to bypass ngrok warning
-                  setGeneratedImages([`/api/image-proxy?url=https://f3f35ea9db7b.ngrok-free.app${data.image_url}`]);
+                  setGeneratedImages([`/api/image-proxy?url=${API_BASE}${data.image_url}`]);
         } else {  
           throw new Error("No image URLs received.");
         }

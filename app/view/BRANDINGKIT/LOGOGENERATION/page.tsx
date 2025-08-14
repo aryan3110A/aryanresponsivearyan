@@ -28,7 +28,8 @@ export default function LogoGeneration() {
       }
 
       // Updated endpoint to use the unified /generate endpoint
-      const response = await fetch('https://6debd752a0c4.ngrok-free.app/generate', {
+      const API_BASE = process.env.NEXT_PUBLIC_BACKEND_KONTEXT || 'https://a52873fa8a11.ngrok-free.app';
+      const response = await fetch(`${API_BASE}/generate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -52,7 +53,7 @@ export default function LogoGeneration() {
         const imageUrls = data.image_urls.map((url: string) => {
           // The backend returns URLs like "/download/filename.png"
           // We need to construct the full ngrok URL
-          const fullUrl = `https://6debd752a0c4.ngrok-free.app${url}`;
+          const fullUrl = `${API_BASE}${url}`;
           return `/api/image-proxy?url=${encodeURIComponent(fullUrl)}`;
         });
         console.log('Generated image URLs:', imageUrls);
