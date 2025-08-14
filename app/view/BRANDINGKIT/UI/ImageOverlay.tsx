@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import React, { useState } from "react"
 import { X, Share2, Bookmark, Heart, Download, Copy, ChevronDown } from "lucide-react"
 import Image from "next/image"
 
@@ -30,12 +30,10 @@ export default function ImageOverlay({
   imageUrl,
   prompt,
   modelSelection = "",
-  stylePalette = "",
   imageQuality = "",
   frameSize = "",
   numberOfItems,
   itemLabel = "Items",
-  stickerType,
   likes = 8,
   onRemix,
   onShare,
@@ -44,6 +42,20 @@ export default function ImageOverlay({
   const [isOriginalImageOpen, setIsOriginalImageOpen] = useState(true)
   const [isLiked, setIsLiked] = useState(false)
   const [isBookmarked, setIsBookmarked] = useState(false)
+
+  // Prevent background scrolling when overlay is open
+  React.useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'unset'
+    }
+
+    // Cleanup function to restore scrolling when component unmounts
+    return () => {
+      document.body.style.overflow = 'unset'
+    }
+  }, [isOpen])
 
   if (!isOpen) return null
 
@@ -97,7 +109,7 @@ export default function ImageOverlay({
   return (
     <>
       {/* Desktop Layout - Properly Centered */}
-        <div className="hidden md:flex fixed inset-0 bg:transparent backdrop-blur-3xl shadow-sm z-30 items-center justify-center md:py-16 lg:py-12">
+        <div className="hidden md:flex fixed inset-0 bg:transparent backdrop-blur-3xl shadow-sm z-30 items-center justify-center md:py-16 lg:py-14 md:px-10 lg:px-10">
         {/* Modal Container - Centered */}
         <div className="relative z-50 w-full md:w-auto md:max-w-6xl lg:w-auto gap-6 lg:max-w-7xl h-full max-h-[90vh] bg-white/10 backdrop-blur-3xl shadow-3xl rounded-2xl overflow-hidden flex md:p-6 lg:p-8">
           <button 
@@ -174,19 +186,16 @@ export default function ImageOverlay({
             <div className="px-6 md:pt-2 lg:pt-4 pb-2 flex-1 ">
               <div className="bg-white/10 hover:bg-white/20 rounded-lg md:p-2 md:px-3 lg:p-4 space-y-1 lg:space-y-3  md:text-xs lg:text-sm text-gray-300 transition-colors">
                 <div className="flex justify-between">
-                  <span className="text-white">Model Selection: {modelSelection}</span>
+                  <span className="text-white">Model Selection : {modelSelection || "FLUX KONTEXT DEV"}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-white">Style Palette: {stylePalette || stickerType}</span>
+                  <span className="text-white">{itemLabel} Quality : {imageQuality}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-white">Image Quality: {imageQuality}</span>
+                  <span className="text-white">Frame Size : {frameSize}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-white">Frame Size: {frameSize}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-white">Number of {itemLabel}: {numberOfItems}</span>
+                  <span className="text-white">Number of {itemLabel} : {numberOfItems}</span>
                 </div>
               </div>
             </div>
@@ -300,14 +309,10 @@ export default function ImageOverlay({
               <div className="bg-white/5 backdrop-blur-3xl hover:bg-white/20 rounded-lg p-3 space-y-2 text-xs text-gray-300 transition-colors">
                 <div className="flex justify-between">
                   <span className="text-white">Model Selection:</span>
-                  <span>{modelSelection}</span>
+                  <span>{modelSelection || "FLUX KONTEXT DEV"}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-white">Style Palette:</span>
-                  <span>{stylePalette || stickerType}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-white">Image Quality:</span>
+                  <span className="text-white">{itemLabel} Quality:</span>
                   <span>{imageQuality}</span>
                 </div>
                 <div className="flex justify-between">
