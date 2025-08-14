@@ -1,23 +1,23 @@
-"use client"
+'use client';
 
-import Image from "next/image"
-import { useState, useRef } from "react"
+import Image from 'next/image';
+import { useState, useRef } from 'react';
 
-import { UploadComponent, ImageOverlay } from "../../UI"
-import { Download, Bookmark, Heart, Sparkles } from "lucide-react"
-import { HoverBorderGradient } from "../../../Core/hover-border-gradient"
+import { UploadComponent, ImageOverlay } from '../../UI';
+import { Download, Bookmark, Heart, Sparkles } from 'lucide-react';
+import { HoverBorderGradient } from '../../../Core/hover-border-gradient';
 
 interface InputSectionProps {
-  prompt: string
-  setPrompt: (prompt: string) => void
-  onGenerate: () => void
-  isGenerating: boolean
-  generatedImages: string[]
-  selectedModel: string
-  selectedStyle: string | null
-  selectedQuality: string
-  selectedAspectRatio: string
-  numberOfLogo: number
+  prompt: string;
+  setPrompt: (prompt: string) => void;
+  onGenerate: () => void;
+  isGenerating: boolean;
+  generatedImages: string[];
+  selectedModel: string;
+  selectedStyle: string | null;
+  selectedQuality: string;
+  selectedAspectRatio: string;
+  numberOfLogo: number;
 }
 
 export default function InputSection({
@@ -32,86 +32,82 @@ export default function InputSection({
   selectedAspectRatio,
   numberOfLogo,
 }: InputSectionProps) {
-  const [showUploadComponent, setShowUploadComponent] = useState(false)
-  const [hoveredImageIndex, setHoveredImageIndex] = useState<number | null>(null)
-  const [likedImages, setLikedImages] = useState<Set<number>>(new Set())
-  const [bookmarkedImages, setBookmarkedImages] = useState<Set<number>>(new Set())
+  const [showUploadComponent, setShowUploadComponent] = useState(false);
+  const [hoveredImageIndex, setHoveredImageIndex] = useState<number | null>(null);
+  const [likedImages, setLikedImages] = useState<Set<number>>(new Set());
+  const [bookmarkedImages, setBookmarkedImages] = useState<Set<number>>(new Set());
   const [selectedImageForOverlay, setSelectedImageForOverlay] = useState<{
-    url: string
-    index: number
-  } | null>(null)
+    url: string;
+    index: number;
+  } | null>(null);
 
-  const scrollContainerRef = useRef<HTMLDivElement>(null)
-
-
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const handleFilesSelected = (files: File[]) => {
-    console.log("Files selected:", files)
-  }
+    console.log('Files selected:', files);
+  };
 
   const handleDownload = async (imageUrl: string, index: number) => {
     try {
-      console.log(`Downloading image ${index + 1}...`)
+      console.log(`Downloading image ${index + 1}...`);
 
-      const response = await fetch(imageUrl)
+      const response = await fetch(imageUrl);
       if (!response.ok) {
-        throw new Error("Failed to fetch image")
+        throw new Error('Failed to fetch image');
       }
 
-      const blob = await response.blob()
-      const url = window.URL.createObjectURL(blob)
-      const link = document.createElement("a")
-      link.href = url
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
 
-      const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, "-")
-      const filename = `generated-image-${index + 1}-${timestamp}.png`
-      link.download = filename
+      const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
+      const filename = `generated-image-${index + 1}-${timestamp}.png`;
+      link.download = filename;
 
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
-      window.URL.revokeObjectURL(url)
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
 
-      console.log(`Image ${index + 1} downloaded successfully as ${filename}`)
+      console.log(`Image ${index + 1} downloaded successfully as ${filename}`);
     } catch (error) {
-      console.error("Download failed:", error)
-      alert("Failed to download image. Please try again.")
+      console.error('Download failed:', error);
+      alert('Failed to download image. Please try again.');
     }
-  }
+  };
 
   const handleBookmark = (index: number) => {
     setBookmarkedImages((prev) => {
-      const updated = new Set(prev)
+      const updated = new Set(prev);
       if (updated.has(index)) {
-        updated.delete(index)
+        updated.delete(index);
       } else {
-        updated.add(index)
+        updated.add(index);
       }
-      return updated
-    })
-  }
+      return updated;
+    });
+  };
 
   const handleLike = (index: number) => {
     setLikedImages((prev) => {
-      const updated = new Set(prev)
+      const updated = new Set(prev);
       if (updated.has(index)) {
-        updated.delete(index)
+        updated.delete(index);
       } else {
-        updated.add(index)
+        updated.add(index);
       }
-      return updated
-    })
-  }
+      return updated;
+    });
+  };
 
   const handleInfo = (imageUrl: string, index: number) => {
-    setSelectedImageForOverlay({ url: imageUrl, index })
-  }
+    setSelectedImageForOverlay({ url: imageUrl, index });
+  };
 
   const closeImageOverlay = () => {
-    setSelectedImageForOverlay(null)
-  }
-
-
+    setSelectedImageForOverlay(null);
+  };
 
   return (
     <div className="w-full flex flex-col items-center gap-8 mt-2">
@@ -125,7 +121,7 @@ export default function InputSection({
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
               className="flex-1 bg-transparent text-white placeholder-gray-600 outline-none text-sm ml-4 w-full max-w-full"
-              onKeyDown={(e) => e.key === "Enter" && onGenerate()}
+              onKeyDown={(e) => e.key === 'Enter' && onGenerate()}
             />
             <div className="flex items-center gap-2 ">
               <button className=" hover:bg-gray-700/50 rounded-full transition-colors border border-white/10 p-2">
@@ -134,15 +130,15 @@ export default function InputSection({
               <HoverBorderGradient
                 onClick={!prompt.trim() || isGenerating ? undefined : onGenerate}
                 backgroundColor="bg-[#006aff]"
-                className={`px-4 py-2 font-regular text-sm rounded-full ${(!prompt.trim() || isGenerating) ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+                className={`px-4 py-2 font-regular text-sm rounded-full ${
+                  !prompt.trim() || isGenerating ? 'cursor-not-allowed' : 'cursor-pointer'
+                }`}
               >
-                {isGenerating ? "Generating..." : "Generate"}
+                {isGenerating ? 'Generating...' : 'Generate'}
               </HoverBorderGradient>
             </div>
           </div>
         </div>
-
-        
       </div>
 
       {/* Mobile & Tablet Layout - Fully Responsive */}
@@ -156,7 +152,7 @@ export default function InputSection({
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
               className="flex-1 bg-transparent text-white placeholder-white outline-none text-base xs:text-lg sm:text-xl ml-2 mr-1 xs:ml-3 w-full max-w-full"
-              onKeyDown={(e) => e.key === "Enter" && onGenerate()}
+              onKeyDown={(e) => e.key === 'Enter' && onGenerate()}
             />
 
             <button className="p-2 hover:bg-gray-700/50 rounded-full transition-colors border border-white/10 md:ml-2">
@@ -178,7 +174,7 @@ export default function InputSection({
             backgroundColor="bg-[#006aff]"
             className="px-6 py-3 xs:py-4 rounded-full font-medium text-base xs:text-lg flex-1 max-w-[100%]"
           >
-            {isGenerating ? "Generating..." : "Generate"}
+            {isGenerating ? 'Generating...' : 'Generate'}
           </HoverBorderGradient>
         </div>
       </div>
@@ -224,8 +220,7 @@ export default function InputSection({
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 lg:gap-6">
                 {generatedImages.map((image, index) => (
                   <div
-                  onClick={() => handleInfo(image, index)}
-
+                    onClick={() => handleInfo(image, index)}
                     key={index}
                     className="relative aspect-square bg-gray-900/50 rounded-xl overflow-hidden group cursor-pointer"
                     onMouseEnter={() => setHoveredImageIndex(index)}
@@ -233,7 +228,7 @@ export default function InputSection({
                   >
                     <div className="w-full aspect-square bg-transparent rounded-lg overflow-hidden border border-white/10">
                       <Image
-                        src={image || "/placeholder.svg"}
+                        src={image || '/placeholder.svg'}
                         alt={`Generated image ${index + 1}`}
                         width={200}
                         height={200}
@@ -243,7 +238,9 @@ export default function InputSection({
 
                     <div
                       className={`absolute inset-0 bg-black/10 transition-all duration-300 ${
-                        hoveredImageIndex === index ? "opacity-100" : "opacity-0 pointer-events-none"
+                        hoveredImageIndex === index
+                          ? 'opacity-100'
+                          : 'opacity-0 pointer-events-none'
                       }`}
                     >
                       <button
@@ -264,7 +261,9 @@ export default function InputSection({
                         <button onClick={() => handleBookmark(index)}>
                           <Bookmark
                             className={`w-6 h-6 transition-colors duration-200 ${
-                              bookmarkedImages.has(index) ? "fill-[#a4c48c] text-[#a4c48c]" : "text-[#fff]"
+                              bookmarkedImages.has(index)
+                                ? 'fill-[#a4c48c] text-[#a4c48c]'
+                                : 'text-[#fff]'
                             }`}
                           />
                         </button>
@@ -272,7 +271,7 @@ export default function InputSection({
                         <button onClick={() => handleLike(index)}>
                           <Heart
                             className={`w-6 h-6 transition-colors duration-200 ${
-                              likedImages.has(index) ? "fill-red-500 text-red-500" : "text-[#fff]"
+                              likedImages.has(index) ? 'fill-red-500 text-red-500' : 'text-[#fff]'
                             }`}
                           />
                         </button>
@@ -291,32 +290,36 @@ export default function InputSection({
               <div className="bg-white/10 rounded-lg p-1.5 xs:p-2 flex-shrink-0">
                 <Sparkles className="w-3 h-3 xs:w-4 xs:h-4 text-gray-400" />
               </div>
-              <span className="text-white text-xs xs:text-sm font-medium line-clamp-2 flex-1">{prompt}</span>
+              <span className="text-white text-xs xs:text-sm font-medium line-clamp-2 flex-1">
+                {prompt}
+              </span>
             </div>
 
             {/* Horizontal Scrolling Images Container - Fully Responsive */}
             <div className="relative w-full">
               <div
                 ref={scrollContainerRef}
-                className="flex gap-3 xs:gap-4 overflow-x-auto scrollbar-hide px-3 xs:px-4 sm:px-6 pb-4"
+                className="flex gap-3 xs:gap-4 overflow-x-auto px-3 xs:px-4 sm:px-6 pb-4"
                 style={{
-                  scrollSnapType: "x mandatory",
-                  WebkitOverflowScrolling: "touch",
+                  scrollSnapType: 'x mandatory',
+                  WebkitOverflowScrolling: 'touch',
+                  scrollbarWidth: 'none',
+                  msOverflowStyle: 'none',
                 }}
               >
                 {generatedImages.map((image, index) => (
                   <div
-                  onClick={() => handleInfo(image, index)}
+                    onClick={() => handleInfo(image, index)}
                     key={index}
                     className="flex-shrink-0 w-[calc(100vw-6rem)] xs:w-[calc(100vw-8rem)] sm:w-[calc(100vw-12rem)] md:w-[calc(50vw-4rem)] max-w-sm"
-                    style={{ scrollSnapAlign: "start" }}
+                    style={{ scrollSnapAlign: 'start' }}
                   >
                     {/* Image Container - Responsive */}
                     <div className="relative bg-transparent backdrop-blur-sm border border-gray-700/30 rounded-xl p-3 xs:p-4 overflow-hidden w-full">
                       <div className="relative w-full aspect-square bg-gray-900/50 rounded-xl overflow-hidden">
                         <div className="w-full aspect-square bg-transparent rounded-lg overflow-hidden border border-white/10">
                           <Image
-                            src={image || "/placeholder.svg"}
+                            src={image || '/placeholder.svg'}
                             alt={`Generated image ${index + 1}`}
                             width={400}
                             height={400}
@@ -346,7 +349,9 @@ export default function InputSection({
                             <button onClick={() => handleBookmark(index)}>
                               <Bookmark
                                 className={`w-4 h-4 xs:w-5 xs:h-5 transition-colors duration-200 ${
-                                  bookmarkedImages.has(index) ? "fill-[#a4c48c] text-[#a4c48c]" : "text-[#fff]"
+                                  bookmarkedImages.has(index)
+                                    ? 'fill-[#a4c48c] text-[#a4c48c]'
+                                    : 'text-[#fff]'
                                 }`}
                               />
                             </button>
@@ -354,7 +359,9 @@ export default function InputSection({
                             <button onClick={() => handleLike(index)}>
                               <Heart
                                 className={`w-4 h-4 xs:w-5 xs:h-5 transition-colors duration-200 ${
-                                  likedImages.has(index) ? "fill-red-500 text-red-500" : "text-[#fff]"
+                                  likedImages.has(index)
+                                    ? 'fill-red-500 text-red-500'
+                                    : 'text-[#fff]'
                                 }`}
                               />
                             </button>
@@ -370,7 +377,10 @@ export default function InputSection({
               {generatedImages.length > 1 && (
                 <div className="flex justify-center mt-3 xs:mt-4 gap-1.5 xs:gap-2">
                   {generatedImages.map((_, index) => (
-                    <div key={index} className="w-1.5 h-1.5 xs:w-2 xs:h-2 rounded-full bg-gray-600" />
+                    <div
+                      key={index}
+                      className="w-1.5 h-1.5 xs:w-2 xs:h-2 rounded-full bg-gray-600"
+                    />
                   ))}
                 </div>
               )}
@@ -387,7 +397,7 @@ export default function InputSection({
           imageUrl={selectedImageForOverlay.url}
           prompt={prompt}
           modelSelection={selectedModel}
-          stylePalette={selectedStyle || ""}
+          stylePalette={selectedStyle || ''}
           imageQuality={selectedQuality}
           frameSize={selectedAspectRatio}
           numberOfItems={numberOfLogo}
@@ -401,10 +411,15 @@ export default function InputSection({
           -ms-overflow-style: none;
           scrollbar-width: none;
         }
-        .scrollbar-hide::-webkit-scrollbar { 
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+
+        /* Hide horizontal scrollbar for mobile image scrolling */
+        .overflow-x-auto::-webkit-scrollbar {
           display: none;
         }
       `}</style>
     </div>
-  )
+  );
 }

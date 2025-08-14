@@ -28,7 +28,8 @@ export default function LogoGeneration() {
       }
 
       // Updated endpoint to use the unified /generate endpoint
-      const API_BASE = process.env.NEXT_PUBLIC_BACKEND_KONTEXT || 'https://2db768471a14.ngrok-free.app';
+      const API_BASE =
+        process.env.NEXT_PUBLIC_BACKEND_KONTEXT || 'https://2db768471a14.ngrok-free.app';
       const response = await fetch(`${API_BASE}/generate`, {
         method: 'POST',
         headers: {
@@ -73,10 +74,13 @@ export default function LogoGeneration() {
 
   return (
     <>
-      <div className="min-h-screen bg-black text-white relative overflow-hidden">
+      <div className="min-h-screen bg-black text-white relative">
         <StableBackground />
         <NavigationFull />
-        <div className="flex w-full    h-screen" style={{ marginTop: '64px' }}>
+
+        {/* Main Content Container - Single scrollable area */}
+        <div className="flex w-full min-h-screen pt-16">
+          {/* Settings Panel - Fixed width, no scrolling */}
           <SettingsPanel
             onClose={() => {}} // No-op since we want it always open
             // Add required props here based on the interface
@@ -90,14 +94,19 @@ export default function LogoGeneration() {
             setSelectedQuality={() => {}}
             numberOfLogo={numberOfImages}
             setNumberOfLogo={setNumberOfImages}
-            className="md:w-[400px] md:max-w-[400px] lg:w-[480px] lg:max-w-[480px] max-h-[calc(100vh-128px)] overflow-y-auto sticky z-30 border-r border-[#222]"
+            className="md:w-[400px] md:max-w-[400px] lg:w-[480px] lg:max-w-[480px] flex-shrink-0 border-r border-[#222]"
           />
-          <div className="flex-1 h-full overflow-y-auto flex justify-center">
-            <div className="w-full max-w-5xl flex flex-col items-center justify-center px-2 sm:px-4 gap-8 mx-auto">
-              <div className="sticky top-0 z-10 bg-black/50 backdrop-blur-sm py-4 w-full">
+
+          {/* Main Content Area - Single scrollable container */}
+          <div className="flex-1 min-h-screen overflow-y-auto">
+            <div className="w-full max-w-5xl flex flex-col items-center mx-auto">
+              {/* Header - Fixed at top of content area */}
+              <div className="w-full bg-black/50 backdrop-blur-sm py-4 px-4">
                 <Header title="Logo Generator" />
               </div>
-              <div className="w-full flex flex-col items-center gap-8 min-h-[400px]">
+
+              {/* Content - Scrollable */}
+              <div className="w-full flex flex-col items-center gap-8 px-4 py-8">
                 <InputSection
                   prompt={prompt}
                   setPrompt={setPrompt}
@@ -116,6 +125,37 @@ export default function LogoGeneration() {
         </div>
       </div>
       <Footer />
+
+      {/* Add CSS to ensure proper page scrolling */}
+      <style jsx global>{`
+        html,
+        body {
+          overflow-x: hidden;
+        }
+
+        /* Ensure the main page scrolls properly */
+        body {
+          scroll-behavior: smooth;
+        }
+
+        /* Hide any unwanted scrollbars */
+        ::-webkit-scrollbar {
+          width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+          background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+          background: rgba(255, 255, 255, 0.1);
+          border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+          background: rgba(255, 255, 255, 0.2);
+        }
+      `}</style>
     </>
   );
 }

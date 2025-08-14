@@ -1,7 +1,7 @@
-"use client"
+'use client';
 
 // import { useState } from "react"
-import { NumberSelector } from "../../UI"
+import { NumberSelector } from '../../UI';
 // import LogoStyle from "./logoStyle"
 // import FontSelect from "./FontSelect"
 // import SelectColor from "./SelectColor"
@@ -15,20 +15,19 @@ import { NumberSelector } from "../../UI"
 // import SelectBackground from "./SelectBackground"
 // import SummarySection from "./SummarySection"
 
-
 interface SettingsPanelProps {
-  onClose: () => void
-  selectedModel: string
-  setSelectedModel: (model: string) => void
-  selectedStyle: string | null
-  setSelectedStyle: (style: string | null) => void
-  selectedAspectRatio: string
-  setSelectedAspectRatio: (ratio: string) => void
-  selectedQuality: string
-  setSelectedQuality: (quality: string) => void
-  numberOfLogo: number
-  setNumberOfLogo: (number: number) => void
-  className?: string
+  onClose: () => void;
+  selectedModel: string;
+  setSelectedModel: (model: string) => void;
+  selectedStyle: string | null;
+  setSelectedStyle: (style: string | null) => void;
+  selectedAspectRatio: string;
+  setSelectedAspectRatio: (ratio: string) => void;
+  selectedQuality: string;
+  setSelectedQuality: (quality: string) => void;
+  numberOfLogo: number;
+  setNumberOfLogo: (number: number) => void;
+  className?: string;
 }
 
 export default function SettingsPanel(props: SettingsPanelProps) {
@@ -95,119 +94,120 @@ export default function SettingsPanel(props: SettingsPanelProps) {
 
   return (
     <>
-      <div className="sticky top-[64px] left-0 w-full md:w-[400px] lg:w-[480px] max-h-[calc(100vh-128px)] overflow-y-auto bg-transparent backdrop-blur-lg shadow-3xl  border-r border-[#222] scrollbar-hide">
-      <div className=" h-full overflow-y-auto scrollbar-hide border-r border-[#222] bg-transparent backdrop-blur-lg shadow-3xl z-0">
-      {/* Header */}
-          <div className="flex items-center justify-between p-4">
-            <h2 className="text-white text-sm font-normal ml-6">Settings</h2>
+      <div className="w-full md:w-[400px] lg:w-[480px] h-full bg-transparent backdrop-blur-lg shadow-3xl border-r border-[#222]">
+        {/* Header */}
+        <div className="flex items-center justify-between p-4 border-b border-[#222]">
+          <h2 className="text-white text-sm font-normal ml-6">Settings</h2>
+        </div>
+
+        {/* Content */}
+        <div className="flex-1 px-4 space-y-6 py-6">
+          {/* Number of Logo Section */}
+          <div className="mb-6">
+            <NumberSelector
+              onNumberSelect={props.setNumberOfLogo}
+              selectedNumber={props.numberOfLogo}
+              title="Number of Logos"
+            />
           </div>
-          {/* Content */}
-          <div className="flex-1 overflow-y-auto px-4 space-y-6 scrollbar-hide pb-24">
-            <style jsx>{`
-              .scrollbar-hide {
-                -ms-overflow-style: none;
-                scrollbar-width: none;
-              }
-              .scrollbar-hide::-webkit-scrollbar { 
-                display: none;
-              }
-            `}</style>
-            {/* Number of Logo Section */}
-            <div className="mb-6">
-              <NumberSelector
-                onNumberSelect={props.setNumberOfLogo}
-                selectedNumber={props.numberOfLogo}
-                title="Number of Logos"
-              />
-            </div>
-            {/* Save File Type Section */}
-            {/* <div className="mb-6">
-              <SaveFile onFileTypeSelect={setSelectedFileType} selectedFileType={selectedFileType} />
-            </div> */}
-            {/* Font Select Section */}
-            {/* <div className="mb-6">
-              <FontSelect onFontSelect={setSelectedFont} selectedFont={selectedFont} />
-            </div> */}
-            {/* Select Color Section */}
-            {/* <div className="mb-6">
-              <SelectColor onColorSelect={setSelectedColor} selectedColor={selectedColor} customColor={customColor} setCustomColor={setCustomColor} />
-            </div> */}
-            {/* Logo Style Section */}
-            {/* <div className="mb-6">
-              <LogoStyle onStyleSelect={props.setSelectedStyle} selectedStyle={props.selectedStyle} />
-            </div> */}
-            {/* Select Background Section */}
-            {/* <div className="mb-6">
-              <SelectBackground
-                backgrounds={uploadedBackground ? [{ src: uploadedBackground, label: "Custom Upload" }, ...backgrounds] : backgrounds}
-                selectedBackground={selectedBackground}
-                setSelectedBackground={setSelectedBackground}
-                onUpload={handleBackgroundUpload}
-              />
-            </div> */}
-            {/* Logo Name Section */}
-            {/* <div className="mb-6">
-              <LogoPasteName logoName={logoName} setLogoName={setLogoName} />
-            </div> */}
-            {/* Private Mode Section */}
-            {/* <div className="mb-6">
-              <PrivateMode privateMode={privateMode} setPrivateMode={setPrivateMode} />
-            </div> */}
-            {/* Add To Collection Section */}
-            {/* <div className="mb-6">
-              <AddToCollection
-                collections={collections}
-                setCollections={setCollections}
-                isCollectionOpen={isCollectionOpen}
-                setIsCollectionOpen={setIsCollectionOpen}
-              />
-            </div> */}
-            {/* Advance Setting Section */}
-            {/* <div className="mb-6">
-              <AdvanceSettingPanel
-                photoReal={photoReal}
-                setPhotoReal={setPhotoReal}
-                negativePrompt={negativePrompt}
-                setNegativePrompt={setNegativePrompt}
-                transparency={transparency}
-                setTransparency={setTransparency}
-                tiling={tiling}
-                setTiling={setTiling}
-                fixedSeed={fixedSeed}
-                setFixedSeed={setFixedSeed}
-              />
-            </div> */}
-            {/* Prompt Enhance Dropdown */}
-            {/* <div className="mb-4  ">
-              <PromptEnhancerPanel
-                promptEnhance={promptEnhance}
-                setPromptEnhance={setPromptEnhance}
-              />
-            </div> */}
 
-            {/* Reset to Defaults Button */}
-                {/* <ResetToDefaults onReset={handleReset} /> */}
+          {/* Save File Type Section */}
+          {/* <div className="mb-6">
+            <SaveFile onFileTypeSelect={setSelectedFileType} selectedFileType={selectedFileType} />
+          </div> */}
 
-            {/* Summary Section */}
-            {/* <SummarySection
-              showSummary={showSummary}
-              selectedModel={props.selectedModel}
+          {/* Font Select Section */}
+          {/* <div className="mb-6">
+            <FontSelect onFontSelect={setSelectedFont} selectedFont={selectedFont} />
+          </div> */}
+
+          {/* Select Color Section */}
+          {/* <div className="mb-6">
+            <SelectColor onColorSelect={setSelectedColor} selectedColor={selectedColor} customColor={customColor} setCustomColor={setCustomColor} />
+          </div> */}
+
+          {/* Logo Style Section */}
+          {/* <div className="mb-6">
+            <LogoStyle onStyleSelect={props.setSelectedStyle} selectedStyle={props.selectedStyle} />
+          </div> */}
+
+          {/* Select Background Section */}
+          {/* <div className="mb-6">
+            <SelectBackground
+              backgrounds={uploadedBackground ? [{ src: uploadedBackground, label: "Custom Upload" }, ...backgrounds] : backgrounds}
               selectedBackground={selectedBackground}
-              selectedAspectRatio={props.selectedAspectRatio}
-              selectedFont={selectedFont}
-            /> */}
-          </div>
-          {/* Floating Save Button */}
-          <div className="sticky bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent flex justify-center z-50">
-            <button
-              onClick={() => {}}
-              className="w-32 bg-[#006aff] hover:bg-[#0052cc] text-white py-3 px-6 rounded-full font-normal text-sm transition-all shadow-lg"
-            >
-              Save
-            </button>
-          </div>
+              setSelectedBackground={setSelectedBackground}
+              onUpload={handleBackgroundUpload}
+            />
+          </div> */}
+
+          {/* Logo Name Section */}
+          {/* <div className="mb-6">
+            <LogoPasteName logoName={logoName} setLogoName={setLogoName} />
+          </div> */}
+
+          {/* Private Mode Section */}
+          {/* <div className="mb-6">
+            <PrivateMode privateMode={privateMode} setPrivateMode={setPrivateMode} />
+          </div> */}
+
+          {/* Add To Collection Section */}
+          {/* <div className="mb-6">
+            <AddToCollection
+              collections={collections}
+              setCollections={setCollections}
+              isCollectionOpen={isCollectionOpen}
+              setIsCollectionOpen={setIsCollectionOpen}
+            />
+          </div> */}
+
+          {/* Advance Setting Section */}
+          {/* <div className="mb-6">
+            <AdvanceSettingPanel
+              photoReal={photoReal}
+              setPhotoReal={setPhotoReal}
+              negativePrompt={negativePrompt}
+              setNegativePrompt={setNegativePrompt}
+              transparency={transparency}
+              setTransparency={setTransparency}
+              tiling={tiling}
+              setTiling={setTiling}
+              fixedSeed={fixedSeed}
+              setFixedSeed={setFixedSeed}
+            />
+          </div> */}
+
+          {/* Prompt Enhance Dropdown */}
+          {/* <div className="mb-4  ">
+            <PromptEnhancerPanel
+              promptEnhance={promptEnhance}
+              setPromptEnhance={setPromptEnhance}
+            />
+          </div> */}
+
+          {/* Reset to Defaults Button */}
+          {/* <ResetToDefaults onReset={handleReset} /> */}
+
+          {/* Summary Section */}
+          {/* <SummarySection
+            showSummary={showSummary}
+            selectedModel={props.selectedModel}
+            selectedBackground={selectedBackground}
+            selectedAspectRatio={props.selectedAspectRatio}
+            selectedFont={selectedFont}
+          /> */}
+        </div>
+
+        {/* Floating Save Button */}
+        <div className="p-4 bg-gradient-to-t from-black/80 to-transparent flex justify-center">
+          <button
+            onClick={() => {}}
+            className="w-32 bg-[#006aff] hover:bg-[#0052cc] text-white py-3 px-6 rounded-full font-normal text-sm transition-all shadow-lg"
+          >
+            Save
+          </button>
         </div>
       </div>
     </>
-  )
+  );
 }
