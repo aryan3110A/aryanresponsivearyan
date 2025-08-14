@@ -15,6 +15,16 @@ export default function LogoGeneration() {
   const [generatedImages, setGeneratedImages] = useState<string[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
   const [numberOfImages, setNumberOfImages] = useState(1);
+  const [isOverlayOpen, setIsOverlayOpen] = useState(false);
+
+  // Handle overlay state changes
+  const handleOverlayOpen = () => {
+    setIsOverlayOpen(true);
+  };
+
+  const handleOverlayClose = () => {
+    setIsOverlayOpen(false);
+  };
 
   const handleGenerate = async () => {
     setIsGenerating(true);
@@ -98,15 +108,15 @@ export default function LogoGeneration() {
           />
 
           {/* Main Content Area - Single scrollable container */}
-          <div className="flex-1 min-h-screen overflow-y-auto">
-            <div className="w-full max-w-5xl flex flex-col items-center mx-auto">
-              {/* Header - Fixed at top of content area */}
-              <div className="w-full bg-black/50 backdrop-blur-sm py-4 px-4">
+          <div className={`flex-1 min-h-screen ${isOverlayOpen ? 'overflow-hidden' : 'overflow-y-auto'}`}>
+          <div className="pt-20 w-full max-w-5xl flex flex-col items-center justify-center px-2 sm:px-4 gap-8 mx-auto py-8">
+          {/* Header - Fixed at top of content area */}
+              <div className="w-full bg-black/50 backdrop-blur-sm py-8 px-4">
                 <Header title="Logo Generator" />
               </div>
 
               {/* Content - Scrollable */}
-              <div className="w-full flex flex-col items-center gap-8 px-4 py-8">
+              <div className="w-full flex flex-col items-center gap-8 min-h-[400px]">
                 <InputSection
                   prompt={prompt}
                   setPrompt={setPrompt}
@@ -118,6 +128,8 @@ export default function LogoGeneration() {
                   selectedQuality="HD"
                   selectedAspectRatio="1:1"
                   numberOfLogo={numberOfImages}
+                  onOverlayOpen={handleOverlayOpen}
+                  onOverlayClose={handleOverlayClose}
                 />
               </div>
             </div>

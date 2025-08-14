@@ -18,6 +18,8 @@ interface InputSectionProps {
   selectedQuality: string;
   selectedAspectRatio: string;
   numberOfLogo: number;
+  onOverlayOpen?: () => void;
+  onOverlayClose?: () => void;
 }
 
 export default function InputSection({
@@ -31,6 +33,8 @@ export default function InputSection({
   selectedQuality,
   selectedAspectRatio,
   numberOfLogo,
+  onOverlayOpen,
+  onOverlayClose,
 }: InputSectionProps) {
   const [showUploadComponent, setShowUploadComponent] = useState(false);
   const [hoveredImageIndex, setHoveredImageIndex] = useState<number | null>(null);
@@ -103,14 +107,20 @@ export default function InputSection({
 
   const handleInfo = (imageUrl: string, index: number) => {
     setSelectedImageForOverlay({ url: imageUrl, index });
+    if (onOverlayOpen) {
+      onOverlayOpen();
+    }
   };
 
   const closeImageOverlay = () => {
     setSelectedImageForOverlay(null);
+    if (onOverlayClose) {
+      onOverlayClose();
+    }
   };
 
   return (
-    <div className="w-full flex flex-col items-center gap-8 mt-2">
+    <div className="w-full flex flex-col items-center gap-8 min-h-[300px]">
       {/* Desktop Layout - Input with buttons inline */}
       <div className="hidden xl:flex items-center gap-4 w-full md:max-w-4xl lg:max-w-5xl px-4">
         <div className="flex-1 relative max-w-full">

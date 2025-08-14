@@ -31,7 +31,7 @@ export default function InputSection({
   selectedStyle,
   selectedQuality,
   selectedAspectRatio,
-  numberOfImages,
+  numberOfImages, 
 }: InputSectionProps) {
   const [hoveredImageIndex, setHoveredImageIndex] = useState<number | null>(null)
   const [likedImages, setLikedImages] = useState<Set<number>>(new Set())
