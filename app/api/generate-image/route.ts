@@ -16,7 +16,7 @@ async function handleRegularModel(prompt: string, model: string, width: number, 
 
   const modelKey = modelEndpoints[model] || "stable-turbo"
   console.log("Model key:", { modelKey, model });
-  const API_BASE = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://a68c2c8c4b6b.ngrok-free.app'
+  const API_BASE = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://251c4e43edf3.ngrok-free.app'
 
   // Always use the /generate endpoint for backend models
   const endpoint = `${API_BASE}/${modelKey}/generate`;
