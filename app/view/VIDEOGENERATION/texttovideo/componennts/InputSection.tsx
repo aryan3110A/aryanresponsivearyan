@@ -506,41 +506,16 @@ export default function InputSection({
                     </div>
 
                     <div
-                      className={`absolute inset-0 bg-black/10 transition-all duration-300 ${
-                        hoveredImageIndex === index ? "opacity-100" : "opacity-0 pointer-events-none"
+                      className={`absolute inset-0 bg-black/10 transition-all duration-300 pointer-events-none ${
+                        hoveredImageIndex === index ? "opacity-100" : "opacity-0"
                       }`}
                     >
                       <button
                         onClick={() => handleInfo(image, index)}
-                        className="text-black font-semibold absolute top-3 right-3 px-[.5vw] bg-gradient-to-b from-[#00F0FF] to-[#009099] backdrop-blur-sm rounded-full hover:bg-white/30 transition-all duration-200"
+                        className="pointer-events-auto text-black font-semibold absolute top-3 right-3 px-[.5vw] bg-gradient-to-b from-[#00F0FF] to-[#009099] backdrop-blur-sm rounded-full hover:bg-white/30 transition-all duration-200"
                       >
                         !
                       </button>
-
-                      <div className="absolute bottom-3 left-3 flex items-center gap-2">
-                        <button
-                          onClick={() => handleDownload(image, index)}
-                          className="p-2 bg-gradient-to-b from-[#00F0FF] to-[#009099] backdrop-blur-sm rounded-lg hover:bg-[#5AD7FF]/30 transition-all duration-200 group/btn"
-                        >
-                          <Download className="w-4 h-4 text-[#000] group-hover/btn:scale-110 transition-transform" />
-                        </button>
-
-                        <button onClick={() => handleBookmark(index)}>
-                          <Bookmark
-                            className={`w-6 h-6 transition-colors duration-200 ${
-                              bookmarkedImages.has(index) ? "fill-[#a4c48c] text-[#a4c48c]" : "text-[#fff]"
-                            }`}
-                          />
-                        </button>
-
-                        <button onClick={() => handleLike(index)}>
-                          <Heart
-                            className={`w-6 h-6 transition-colors duration-200 ${
-                              likedImages.has(index) ? "fill-red-500 text-red-500" : "text-[#fff]"
-                            }`}
-                          />
-                        </button>
-                      </div>
                     </div>
                   </div>
                   )
@@ -650,17 +625,17 @@ export default function InputSection({
                         </div>
 
                         {/* Mobile Action Buttons - Responsive Sizing */}
-                        <div className="absolute inset-0 bg-black/5">
+                        <div className="absolute inset-0 bg-black/5 pointer-events-none">
                           {/* Info Button - Top Right */}
                           <button
                             onClick={() => handleInfo(image, index)}
-                            className="text-black font-semibold absolute top-2 xs:top-3 right-2 xs:right-3 w-6 h-6 xs:w-8 xs:h-8 bg-gradient-to-b from-[#00F0FF] to-[#009099] backdrop-blur-sm rounded-full hover:bg-white/30 transition-all duration-200 flex items-center justify-center text-xs xs:text-sm"
+                            className="pointer-events-auto text-black font-semibold absolute top-2 xs:top-3 right-2 xs:right-3 w-6 h-6 xs:w-8 xs:h-8 bg-gradient-to-b from-[#00F0FF] to-[#009099] backdrop-blur-sm rounded-full hover:bg-white/30 transition-all duration-200 flex items-center justify-center text-xs xs:text-sm"
                           >
                             !
                           </button>
 
                           {/* Action Buttons - Bottom Left */}
-                          <div className="absolute bottom-2 xs:bottom-3 left-2 xs:left-3 flex items-center gap-1.5 xs:gap-2">
+                          <div className="absolute bottom-2 xs:bottom-3 left-2 xs:left-3 flex items-center gap-1.5 xs:gap-2 pointer-events-auto">
                             <button
                               onClick={() => handleDownload(image, index)}
                               className="p-1.5 xs:p-2 bg-gradient-to-b from-[#00F0FF] to-[#009099] backdrop-blur-sm rounded-lg hover:bg-[#5AD7FF]/30 transition-all duration-200"
@@ -668,7 +643,7 @@ export default function InputSection({
                               <Download className="w-3 h-3 xs:w-4 xs:h-4 text-[#000]" />
                             </button>
 
-                            <button onClick={() => handleBookmark(index)}>
+                            <button onClick={() => handleBookmark(index)} className="pointer-events-auto">
                               <Bookmark
                                 className={`w-4 h-4 xs:w-5 xs:h-5 transition-colors duration-200 ${
                                   bookmarkedImages.has(index) ? "fill-[#a4c48c] text-[#a4c48c]" : "text-[#fff]"
@@ -676,7 +651,7 @@ export default function InputSection({
                               />
                             </button>
 
-                            <button onClick={() => handleLike(index)}>
+                            <button onClick={() => handleLike(index)} className="pointer-events-auto">
                               <Heart
                                 className={`w-4 h-4 xs:w-5 xs:h-5 transition-colors duration-200 ${
                                   likedImages.has(index) ? "fill-red-500 text-red-500" : "text-[#fff]"

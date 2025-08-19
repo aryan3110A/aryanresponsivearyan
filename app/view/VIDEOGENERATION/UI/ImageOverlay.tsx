@@ -47,6 +47,12 @@ export default function ImageOverlay({
 
   if (!isOpen) return null
 
+  const isVideo = (url: string) => {
+    if (!url) return false
+    const lower = url.toLowerCase()
+    return lower.includes('.mp4') || lower.includes('.webm') || lower.includes('.mov') || lower.includes('/static/videos/') || lower.includes('video')
+  }
+
   const handleRemix = () => {
     console.log("Remix clicked")
     if (onRemix) onRemix()
@@ -71,10 +77,10 @@ export default function ImageOverlay({
     try {
       console.log("Starting download...")
 
-      // Fetch the image
+      // Fetch the media
       const response = await fetch(imageUrl)
       if (!response.ok) {
-        throw new Error("Failed to fetch image")
+        throw new Error("Failed to fetch media")
       }
 
       // Convert to blob
@@ -91,7 +97,8 @@ export default function ImageOverlay({
         .toLowerCase()
         .replace(/[^a-z0-9]/g, "-")
         .slice(0, 30)
-      const filename = `${promptSlug}-${timestamp}.png`
+      const extension = isVideo(imageUrl) ? 'mp4' : 'png'
+      const filename = `${promptSlug}-${timestamp}.${extension}`
       link.download = filename
 
       // Trigger download
@@ -102,11 +109,11 @@ export default function ImageOverlay({
       document.body.removeChild(link)
       window.URL.revokeObjectURL(url)
 
-      console.log(`Image downloaded successfully as ${filename}`)
+      console.log(`Media downloaded successfully as ${filename}`)
     } catch (error) {
       console.error("Download failed:", error)
       // You could show a toast notification here
-      alert("Failed to download image. Please try again.")
+      alert("Failed to download media. Please try again.")
     }
   }
 
@@ -127,16 +134,29 @@ export default function ImageOverlay({
           >
             <X className="w-6 h-6" />
           </button>
-          {/* Left Side - Image */}
+          {/* Left Side - Media (Image or Video) */}
           <div className="flex-1 flex items-center justify-center">
             <div className="relative w-full h-full md:max-w-2xl lg:max-w-3xl max-h-full">
-              <Image
-                src={imageUrl || "/placeholder.svg"}
-                alt="Generated image"
-                width={1080}
-                height={1080}
-                className="w-full h-full object-contain rounded-3xl"
-              />
+              {isVideo(imageUrl) ? (
+                <video
+                  src={imageUrl}
+                  className="w-full h-full object-contain rounded-3xl bg-black"
+                  controls
+                  playsInline
+                  preload="auto"
+                  crossOrigin="anonymous"
+                >
+                  <source src={imageUrl} type="video/mp4" />
+                </video>
+              ) : (
+                <Image
+                  src={imageUrl || "/placeholder.svg"}
+                  alt="Generated image"
+                  width={1080}
+                  height={1080}
+                  className="w-full h-full object-contain rounded-3xl"
+                />
+              )}
             </div>
           </div>
 
@@ -212,13 +232,13 @@ export default function ImageOverlay({
               </div>
             </div>
 
-            {/* Original Image Section */}
+            {/* Original Media Section */}
             <div className="px-8 lg:mb-12 md:mb-28">
               <button
                 onClick={() => setIsOriginalImageOpen(!isOriginalImageOpen)}
                 className="w-full flex items-center justify-between text-white text-sm mb-4 hover:text-gray-300 transition-colors"
               >
-                <span>Original Image</span>
+                <span>Original {isVideo(imageUrl) ? 'Video' : 'Image'}</span>
                 <ChevronDown
                   className={`w-4 h-4 transition-transform duration-200 ${isOriginalImageOpen ? "rotate-180" : ""}`}
                 />
@@ -226,13 +246,26 @@ export default function ImageOverlay({
 
               {isOriginalImageOpen && (
                 <div className="w-full aspect-square bg-trasnparent rounded-lg overflow-hidden border border-white/10">
-                  <Image
-                    src={imageUrl || "/placeholder.svg"}
-                    alt="Original image"
-                    width={200}
-                    height={200}
-                    className="w-full h-full object-contain"
-                  />
+                  {isVideo(imageUrl) ? (
+                    <video
+                      src={imageUrl}
+                      className="w-full h-full object-contain bg-black"
+                      controls
+                      playsInline
+                      preload="auto"
+                      crossOrigin="anonymous"
+                    >
+                      <source src={imageUrl} type="video/mp4" />
+                    </video>
+                  ) : (
+                    <Image
+                      src={imageUrl || "/placeholder.svg"}
+                      alt="Original image"
+                      width={200}
+                      height={200}
+                      className="w-full h-full object-contain"
+                    />
+                  )}
                 </div>
               )}
             </div>
@@ -252,16 +285,29 @@ export default function ImageOverlay({
 
         {/* Scrollable Content Container */}
         <div className="h-full overflow-y-auto bg-white/10 rounded-xl ">
-          {/* Image Section - Top */}
+          {/* Media Section - Top */}
           <div className="flex items-center justify-center px-4  min-h-[50vh] ">
             <div className="relative w-full max-w-sm">
-              <Image
-                src={imageUrl || "/placeholder.svg"}
-                alt="Generated image"
-                width={400}
-                height={400}
-                className="w-full h-auto object-contain rounded-2xl "
-              />
+              {isVideo(imageUrl) ? (
+                <video
+                  src={imageUrl}
+                  className="w-full h-auto object-contain rounded-2xl bg-black"
+                  controls
+                  playsInline
+                  preload="auto"
+                  crossOrigin="anonymous"
+                >
+                  <source src={imageUrl} type="video/mp4" />
+                </video>
+              ) : (
+                <Image
+                  src={imageUrl || "/placeholder.svg"}
+                  alt="Generated image"
+                  width={400}
+                  height={400}
+                  className="w-full h-auto object-contain rounded-2xl "
+                />
+              )}
             </div>
           </div>
 
@@ -342,13 +388,13 @@ export default function ImageOverlay({
               </div>
             </div>
 
-            {/* Original Image Section */}
+            {/* Original Media Section */}
             <div className="px-4 pb-4">
               <button
                 onClick={() => setIsOriginalImageOpen(!isOriginalImageOpen)}
                 className="w-full flex items-center justify-between text-white text-sm mb-3 hover:text-gray-300 transition-colors"
               >
-                <span>Original Image</span>
+                <span>Original {isVideo(imageUrl) ? 'Video' : 'Image'}</span>
                 <ChevronDown
                   className={`w-4 h-4 transition-transform duration-200 ${isOriginalImageOpen ? "rotate-180" : ""}`}
                 />
@@ -356,13 +402,26 @@ export default function ImageOverlay({
 
               {isOriginalImageOpen && (
                 <div className="w-full max-w-48 mx-auto aspect-square bg-trasnparent rounded-lg overflow-hidden border border-white/10">
-                  <Image
-                    src={imageUrl || "/placeholder.svg"}
-                    alt="Original image"
-                    width={200}
-                    height={200}
-                    className="w-full h-full object-contain"
-                  />
+                  {isVideo(imageUrl) ? (
+                    <video
+                      src={imageUrl}
+                      className="w-full h-full object-contain bg-black"
+                      controls
+                      playsInline
+                      preload="auto"
+                      crossOrigin="anonymous"
+                    >
+                      <source src={imageUrl} type="video/mp4" />
+                    </video>
+                  ) : (
+                    <Image
+                      src={imageUrl || "/placeholder.svg"}
+                      alt="Original image"
+                      width={200}
+                      height={200}
+                      className="w-full h-full object-contain"
+                    />
+                  )}
                 </div>
               )}
             </div>
