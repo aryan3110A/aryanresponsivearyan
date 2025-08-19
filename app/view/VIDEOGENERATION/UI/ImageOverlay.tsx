@@ -130,7 +130,7 @@ export default function ImageOverlay({
         <div className="relative w-full md:max-w-6xl lg:max-w-7xl h-full max-h-[90vh] bg-white/10 backdrop-blur-3xl shadow-3xl rounded-2xl overflow-hidden flex md:p-10 lg:p-10">
           <button
             onClick={onClose}
-            className="absolute top-6 right-6 p-2 text-white hover:bg-white/10 rounded-lg transition-colors z-10"
+            className="absolute top-0  right-0 p-2 text-white hover:bg-white/10 rounded-lg transition-colors z-10"
           >
             <X className="w-6 h-6" />
           </button>
@@ -161,7 +161,7 @@ export default function ImageOverlay({
           </div>
 
           {/* Right Side - Info Panel */}
-          <div className="w-80 md:w-80 lg:w-96 bg-white/15 flex flex-col md:mr-6 lg:mr-10 rounded-xl">
+          <div className="w-80 md:w-80 lg:w-96 bg-white/15 flex flex-col md:mr-0 lg:mr-0 rounded-xl">
             {/* Header with Remix and Action Buttons */}
             <div className="px-6 lg:pt-6 md:pt-4 ">
               <div className="flex items-center justify-between mb-4 md:mb-2">
@@ -245,7 +245,7 @@ export default function ImageOverlay({
               </button>
 
               {isOriginalImageOpen && (
-                <div className="w-full aspect-square bg-trasnparent rounded-lg overflow-hidden border border-white/10">
+                <div className="w-full aspect-square bg-trasnparent rounded-lg overflow-hidden border border-white/5">
                   {isVideo(imageUrl) ? (
                     <video
                       src={imageUrl}
