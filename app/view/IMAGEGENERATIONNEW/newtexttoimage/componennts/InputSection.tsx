@@ -175,15 +175,15 @@ export default function InputSection({
         {generatedImages && generatedImages.length > 0 && (
           <div className="w-full flex flex-col items-center gap-6">
             {/* Outputs Header */}
-            <div className="w-full text-left ml-14">
-              <h2 className="font-poppin text-xl font-semibold bg-gradient-to-r from-[#5AD7FF] to-[#656BF5] text-transparent bg-clip-text">
+            <div className="w-full text-left ml-10">
+              <h2 className="font-poppin text-xl font-semibold bg-gradient-to-r from-[#006aff] to-[#006aff] text-transparent bg-clip-text">
                 Output :
               </h2>
               
             </div>
             
             {/* Images Grid */}
-            <div className="w-auto flex flex-row gap-6 flex-wrap justify-left">
+            <div className="w-auto flex flex-row gap-6 flex-wrap justify-left ml-6">
               {generatedImages.map((image, index) => (
                 <div 
                   onClick={() => handleInfo(image, index)}
