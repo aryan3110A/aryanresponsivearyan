@@ -96,12 +96,11 @@ export default function SettingsPanel(props: SettingsPanelProps) {
     <>
       <div className="w-full md:w-[400px] lg:w-[480px] h-full bg-transparent backdrop-blur-lg shadow-3xl border-r border-[#222]">
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-[#222]">
-          <h2 className="text-white text-sm font-normal ml-6">Settings</h2>
-        </div>
+        
+        <h2 className="text-white text-lg font-normal ml-10">Settings</h2>
 
         {/* Content */}
-        <div className="flex-1 px-4 space-y-6 py-6">
+        <div className="flex-1 px-4 space-y-6 py-2">
           {/* Number of Logo Section */}
           <div className="mb-6">
             <NumberSelector
