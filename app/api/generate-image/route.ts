@@ -156,8 +156,9 @@ async function generateSingleImage(endpoint: string, modelName: string, prompt: 
       requestBody.input_image = input_image
     }
     
-    // Call the Flux API endpoint directly - use relative URL for internal API calls
-    const apiUrl = endpoint
+    // Build absolute URL for server-side fetch
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000')
+    const apiUrl = `${baseUrl}${endpoint}`
     
     console.log(`📡 Calling Flux API: ${apiUrl}`)
     

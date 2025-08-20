@@ -10,8 +10,9 @@ export async function POST(request: Request) {
       hasInputImage: !!body.input_image 
     })
     
-    // Simply forward the request to the regular generate-image endpoint
-    const response = await fetch('/api/generate-image', {
+    // Simply forward the request to the regular generate-image endpoint (absolute URL for server-side fetch)
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000')
+    const response = await fetch(`${baseUrl}/api/generate-image`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
