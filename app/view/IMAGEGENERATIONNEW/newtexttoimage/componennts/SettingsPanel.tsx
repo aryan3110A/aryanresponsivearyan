@@ -2,8 +2,7 @@
 
 import { useState, useRef } from "react"
 import { ChevronDown } from "lucide-react"
-import { ModelsPresetPanel, promptEnhancer as PromptEnhancer,  AspectRatio, Quality, NumberSelector, OptionSelector, SelectColor, effects as Effects, lightning as Lightning, cameraAngles as CameraAngle, AdvanceSettingPanel, AddToCollection, PrivateMode, VisualIntensity, SocialMedia
-, ResetToDefaults} from "../../UI"
+import { ModelsPresetPanel, AspectRatio, Quality, NumberSelector, OptionSelector, SelectColor, effects as Effects, lightning as Lightning, cameraAngles as CameraAngle, ResetToDefaults} from "../../UI"
 
 interface SettingsData {
   model: string;
@@ -113,14 +112,15 @@ export default function SettingsPanel({
   // Add popup state
 
   // Remove duplicate state declarations - use props instead
-  const [photoReal, setPhotoReal] = useState(false);
-  const [negativePrompt, setNegativePrompt] = useState(false);
-  const [transparency, setTransparency] = useState(false);
-  const [tiling, setTiling] = useState(false);
-  const [fixedSeed, setFixedSeed] = useState(false);
-  const [collections, setCollections] = useState<string[]>([]);
-  const [isCollectionOpen, setIsCollectionOpen] = useState(false);
-  const [privateMode, setPrivateMode] = useState(false);
+  // Commented out unused state variables
+  // const [photoReal, setPhotoReal] = useState(false);
+  // const [negativePrompt, setNegativePrompt] = useState(false);
+  // const [transparency, setTransparency] = useState(false);
+  // const [tiling, setTiling] = useState(false);
+  // const [fixedSeed, setFixedSeed] = useState(false);
+  // const [collections, setCollections] = useState<string[]>([]);
+  // const [isCollectionOpen, setIsCollectionOpen] = useState(false);
+  // const [privateMode, setPrivateMode] = useState(false);
   // Remove these duplicate states - use props instead
   // const [selectedContentType, setSelectedContentType] = useState<string | null>(null);
   //   const [promptEnhance, setPromptEnhance] = useState("Auto");
@@ -169,14 +169,14 @@ export default function SettingsPanel({
     setSelectedLightning(null);
     setCustomLightning("");
     setSelectedCameraAngle(null);
-    setPhotoReal(false);
-    setNegativePrompt(false);
-    setTransparency(false);
-    setTiling(false);
-    setFixedSeed(false);
-    setCollections([]);
-    setIsCollectionOpen(false);
-    setPrivateMode(false);
+    // setPhotoReal(false);
+    // setNegativePrompt(false);
+    // setTransparency(false);
+    // setTiling(false);
+    // setFixedSeed(false);
+    // setCollections([]);
+    // setIsCollectionOpen(false);
+    // setPrivateMode(false);
     setVisualIntensity(1.0);
     setVisualIntensityEnabled(false);
     setSelectedSocialPlatform(null);
@@ -307,21 +307,21 @@ export default function SettingsPanel({
               )}
             </div>
 
-            {/* Visual Intensity Section */}
-            <VisualIntensity
+            {/* Visual Intensity Section - COMMENTED OUT */}
+            {/* <VisualIntensity
               visualIntensity={visualIntensity}
               setVisualIntensity={setVisualIntensity}
               isEnabled={visualIntensityEnabled}
               setIsEnabled={setVisualIntensityEnabled}
-            />
+            /> */}
 
-            {/* Social Media Frame Section */}
-            <SocialMedia
+            {/* Social Media Frame Section - COMMENTED OUT */}
+            {/* <SocialMedia
               selectedPlatform={selectedSocialPlatform}
               selectedFormat={selectedSocialFormat}
               onPlatformSelect={setSelectedSocialPlatform}
               onFormatSelect={setSelectedSocialFormat}
-            />
+            /> */}
 
             {/* Style Palettes Section */}
             <div className="mb-6">
@@ -410,21 +410,24 @@ export default function SettingsPanel({
                 showBorderTop={true}
               />
             </div>
-            <div className="mb-6">
+            {/* Add to Collection Section - COMMENTED OUT */}
+            {/* <div className="mb-6">
               <AddToCollection
                 collections={collections}
                 setCollections={setCollections}
                 isCollectionOpen={isCollectionOpen}
                 setIsCollectionOpen={setIsCollectionOpen}
               />
-            </div>   
-            <div className="mb-6">
+            </div>    */}
+            {/* Private Mode Section - COMMENTED OUT */}
+            {/* <div className="mb-6">
               <PrivateMode
                 privateMode={privateMode}
                 setPrivateMode={setPrivateMode}
               />
-            </div>
-            <div className="mb-6">
+            </div> */}
+            {/* Advanced Settings Section - COMMENTED OUT */}
+            {/* <div className="mb-6">
               <AdvanceSettingPanel 
                 photoReal={photoReal}
                 setPhotoReal={setPhotoReal}
@@ -437,24 +440,26 @@ export default function SettingsPanel({
                 fixedSeed={fixedSeed}
                 setFixedSeed={setFixedSeed}
               />  
-            </div>
+            </div> */}
 
             <div className="mb-6">
               <ResetToDefaults onReset={handleReset} />
             </div>
 
-            <div className="mb-6">
+            {/* Prompt Enhancer Section - COMMENTED OUT */}
+            {/* <div className="mb-6">
               <PromptEnhancer
                 promptEnhance={promptEnhance}
                 setPromptEnhance={setPromptEnhance}
               />
-            </div>
+            </div> */}
 
             {/* Settings Summary */}
             <div className="bg-white/10 backdrop-blur-3xl hover:bg-white/20 rounded-lg p-4 space-y-2 text-sm text-gray-300 mb-6">
               <div className="text-white font-normal mb-3">Settings Summary</div>
               <div>Model Selection : <span className="text-[#5AD7FF]">{selectedModel}</span></div>
-              <div>Visual Intensity : <span className="text-[#5AD7FF]">{visualIntensityEnabled ? visualIntensity.toFixed(1) : "Disabled"}</span></div>
+              {/* Visual Intensity - COMMENTED OUT */}
+              {/* <div>Visual Intensity : <span className="text-[#5AD7FF]">{visualIntensityEnabled ? visualIntensity.toFixed(1) : "Disabled"}</span></div> */}
               <div>Style Palettes : <span className="text-[#5AD7FF]">{selectedStyle || "None"}</span></div>
               <div>Effects : <span className="text-[#5AD7FF]">{selectedEffect || customEffect || "None"}</span></div>
               <div>Color Selection : <span className="text-[#5AD7FF]">{selectedColor || customColor || "None"}</span></div>

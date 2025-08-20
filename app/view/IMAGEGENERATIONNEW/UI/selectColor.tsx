@@ -34,18 +34,18 @@ export default function SelectColor({
     if (setCustomColor) {
       setCustomColor("")
     }
+    // Close dropdown after selection
+    setIsOpen(false)
   }
 
   return (
 <div><div className="mx-2 md:mx-6 border-t border-white/15 mb-6 "></div>
-<div className="flex items-center justify-between mb-4 px-2 md:px-6">
+      <div 
+        className="flex items-center justify-between mb-4 px-2 md:px-6 cursor-pointer rounded-lg p-2 transition-colors"
+        onClick={() => setIsOpen(!isOpen)}
+      >
         <h3 className="text-white text-sm md:text-sm font-normal">Select Color</h3>
-        <button
-          onClick={() => setIsOpen(!isOpen)}
-          className="p-1"
-        >
-          <ChevronDown className={`text-white h-5 w-5 transition-transform ${isOpen ? "rotate-180" : ""}`} />
-        </button>
+        <ChevronDown className={`text-white h-5 w-5 transition-transform ${isOpen ? "rotate-180" : ""}`} />
       </div>
       {isOpen && (
         <div className="space-y-2 mb-4 px-2 md:px-6">

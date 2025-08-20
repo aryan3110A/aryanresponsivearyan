@@ -3,10 +3,7 @@
 import { useState, useRef } from "react"
 import { ChevronDown } from "lucide-react"
 import ModelsPresetPanel from "./ModelsPresetPanel"
-import { reduceNoise as ReduceNoise, upScale as UpScale, promptEnhancer as PromptEnhancer,  AspectRatio, Quality, NumberSelector, OptionSelector, SelectColor, effects as Effects, lightning as Lightning, cameraAngles as CameraAngle, AdvanceSettingPanel, AddToCollection, PrivateMode, VisualIntensity, SocialMedia
-, ResetToDefaults,
-SaveFile,
-FontSelect} from "../../UI"
+import { promptEnhancer as PromptEnhancer, AspectRatio, Quality, NumberSelector, OptionSelector, SelectColor, effects as Effects, lightning as Lightning, cameraAngles as CameraAngle, AdvanceSettingPanel, AddToCollection, PrivateMode, ResetToDefaults} from "../../UI"
 
 interface SettingsPanelProps {
   onClose: () => void
@@ -57,15 +54,16 @@ export default function SettingsPanel({
   const [collections, setCollections] = useState<string[]>([]);
   const [isCollectionOpen, setIsCollectionOpen] = useState(false);
   const [privateMode, setPrivateMode] = useState(false);
-  const [visualIntensity, setVisualIntensity] = useState<number>(1.0);
-  const [visualIntensityEnabled, setVisualIntensityEnabled] = useState<boolean>(false);
-  const [selectedSocialPlatform, setSelectedSocialPlatform] = useState<string | null>(null);
-  const [selectedSocialFormat, setSelectedSocialFormat] = useState<string | null>(null);
-  const [selectedContentType, setSelectedContentType] = useState<string | null>(null);
-  const [reduceNoise, setReduceNoise] = useState(false);
-  const [upScale, setUpScale] = useState(false);
-  const [saveFileType, setSaveFileType] = useState<string>("PNG");
-  const [selectedFont, setSelectedFont] = useState<string>("");
+  // Commented out unused state variables
+  // const [visualIntensity, setVisualIntensity] = useState<number>(1.0);
+  // const [visualIntensityEnabled, setVisualIntensityEnabled] = useState<boolean>(false);
+  // const [selectedSocialPlatform, setSelectedSocialPlatform] = useState<string | null>(null);
+  // const [selectedSocialFormat, setSelectedSocialFormat] = useState<string | null>(null);
+  // const [selectedContentType, setSelectedContentType] = useState<string | null>(null);
+  // const [reduceNoise, setReduceNoise] = useState(false);
+  // const [upScale, setUpScale] = useState(false);
+  // const [saveFileType, setSaveFileType] = useState<string>("PNG");
+  // const [selectedFont, setSelectedFont] = useState<string>("");
 
   const [promptEnhance, setPromptEnhance] = useState("Auto");
 
@@ -121,11 +119,11 @@ export default function SettingsPanel({
     setCollections([]);
     setIsCollectionOpen(false);
     setPrivateMode(false);
-    setVisualIntensity(1.0);
-    setVisualIntensityEnabled(false);
-    setSelectedSocialPlatform(null);
-    setSelectedSocialFormat(null);
-    setSelectedContentType(null);
+    // setVisualIntensity(1.0);
+    // setVisualIntensityEnabled(false);
+    // setSelectedSocialPlatform(null);
+    // setSelectedSocialFormat(null);
+    // setSelectedContentType(null);
     setSelectedStyle(null);
     setSelectedAspectRatio("");
     setSelectedQuality("");
@@ -157,11 +155,11 @@ export default function SettingsPanel({
       lightning: selectedLightning,
       customLightning: customLightning,
       cameraAngle: selectedCameraAngle,
-      visualIntensity: visualIntensity,
-      visualIntensityEnabled: visualIntensityEnabled,
-      socialPlatform: selectedSocialPlatform,
-      socialFormat: selectedSocialFormat,
-      contentType: selectedContentType,
+      // visualIntensity: visualIntensity,
+      // visualIntensityEnabled: visualIntensityEnabled,
+      // socialPlatform: selectedSocialPlatform,
+      // socialFormat: selectedSocialFormat,
+      // contentType: selectedContentType,
       promptEnhance: promptEnhance
     }
     
@@ -245,15 +243,16 @@ export default function SettingsPanel({
               </div>
             </div>
 
-            {/* Visual Intensity Section */}
-            <VisualIntensity
+            {/* Visual Intensity Section - COMMENTED OUT */}
+            {/* <VisualIntensity
               visualIntensity={visualIntensity}
               setVisualIntensity={setVisualIntensity}
               isEnabled={visualIntensityEnabled}
               setIsEnabled={setVisualIntensityEnabled}
-            />
+            /> */}
 
-            <div className="mb-6">
+            {/* Save File Type Section - COMMENTED OUT */}
+            {/* <div className="mb-6">
                <SaveFile
               onSaveFileTypeSelect={setSaveFileType}
                 selectedOption={saveFileType}
@@ -266,22 +265,24 @@ export default function SettingsPanel({
                 ]}
                 defaultOpen={false}
                 showBorderTop={true} />
-            </div>
+            </div> */}
 
-            {/* Social Media Frame Section */}
-            <SocialMedia
+            {/* Social Media Frame Section - COMMENTED OUT */}
+            {/* <SocialMedia
               selectedPlatform={selectedSocialPlatform}
               selectedFormat={selectedSocialFormat}
               onPlatformSelect={setSelectedSocialPlatform}
               onFormatSelect={setSelectedSocialFormat}
-            />
+            /> */}
 
-            <div className="mb-6">
+            {/* Reduce Noise Section - COMMENTED OUT */}
+            {/* <div className="mb-6">
               <ReduceNoise reduceNoise={reduceNoise} setReduceNoise={setReduceNoise} />
-            </div>
-            <div className="mb-6">
+            </div> */}
+            {/* Upscale Section - COMMENTED OUT */}
+            {/* <div className="mb-6">
               <UpScale upScale={upScale} setUpScale={setUpScale} />
-            </div>
+            </div> */}
 
             {/* Style Palettes Section */}
             <div className="mb-6">
@@ -320,9 +321,10 @@ export default function SettingsPanel({
                 setCustomEffect={setCustomEffect}
               />
             </div>
-            <div className="mb-6">
+            {/* Font Select Section - COMMENTED OUT */}
+            {/* <div className="mb-6">
               <FontSelect onFontSelect={setSelectedFont} selectedFont={selectedFont} />
-            </div>
+            </div> */}
 
             {/* select color */}
             <div className="mb-6">
@@ -416,10 +418,10 @@ export default function SettingsPanel({
             <div className="bg-white/10 backdrop-blur-3xl hover:bg-white/20 rounded-lg p-4 space-y-2 text-sm text-gray-300 mb-6">
               <div className="text-white font-normal mb-3 text-sm">Settings Summary</div>
               <div>Model Selection : <span className="text-[#5AD7FF]">{selectedModel}</span></div>
-              <div>Visual Intensity : <span className="text-[#5AD7FF]">{visualIntensityEnabled ? visualIntensity.toFixed(1) : "Disabled"}</span></div>
-              <div>Social Platform : <span className="text-[#5AD7FF]">{selectedSocialPlatform || "None"}</span></div>
-              <div>Social Format : <span className="text-[#5AD7FF]">{selectedSocialFormat || "None"}</span></div>
-              <div>Content Type : <span className="text-[#5AD7FF]">{selectedContentType || "None"}</span></div>
+              {/* <div>Visual Intensity : <span className="text-[#5AD7FF]">{visualIntensityEnabled ? visualIntensity.toFixed(1) : "Disabled"}</span></div> */}
+              {/* <div>Social Platform : <span className="text-[#5AD7FF]">{selectedSocialPlatform || "None"}</span></div> */}
+              {/* <div>Social Format : <span className="text-[#5AD7FF]">{selectedSocialFormat || "None"}</span></div> */}
+              {/* <div>Content Type : <span className="text-[#5AD7FF]">{selectedContentType || "None"}</span></div> */}
               <div>Art Style Conversions : <span className="text-[#5AD7FF]">{selectedStyle || "Bokeh"}</span></div>
               <div>Selected Color : <span className="text-[#5AD7FF]">{selectedColor || customColor || "None"}</span></div>
               <div>Selected Effect : <span className="text-[#5AD7FF]">{selectedEffect || customEffect || "None"}</span></div>

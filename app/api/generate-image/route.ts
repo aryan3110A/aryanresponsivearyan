@@ -1,4 +1,4 @@
-import {  NextResponse, NextRequest } from 'next/server'
+import {  NextResponse } from 'next/server'
 
 // Helper function to handle regular model generation
 async function handleRegularModel(prompt: string, model: string, width: number, height: number, num_images: number) {
@@ -134,9 +134,8 @@ async function callFluxAPI(endpoint: string, modelName: string, prompt: string, 
 async function generateSingleImage(endpoint: string, modelName: string, prompt: string, width: number, height: number, imageNumber: number, totalImages: number, input_image?: string, aspect_ratio?: string): Promise<string> {
   console.log(`🔄 Generating image ${imageNumber}/${totalImages}`)
   
-  // Call Flux API directly by importing the route handlers
-  if (endpoint === '/api/flux-kontext-max') {
-    const { POST: fluxMaxHandler } = await import('../flux-kontext-max/route')
+  try {
+    // Prepare request body
     const requestBody: any = {
       prompt,
       output_format: 'png',
@@ -156,12 +155,26 @@ async function generateSingleImage(endpoint: string, modelName: string, prompt: 
       requestBody.input_image = input_image
     }
     
-    const request = new NextRequest('http://localhost/api/flux-kontext-max', {
+    // Call the Flux API endpoint directly
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
+    const apiUrl = `${baseUrl}${endpoint}`
+    
+    console.log(`📡 Calling Flux API: ${apiUrl}`)
+    
+    const response = await fetch(apiUrl, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(requestBody)
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestBody),
     })
-    const response = await fluxMaxHandler(request)
+    
+    if (!response.ok) {
+      const errorText = await response.text()
+      console.error(`❌ Flux API error for ${modelName}:`, response.status, errorText)
+      throw new Error(`Flux API error: ${response.status}`)
+    }
+    
     const data = await response.json()
     
     if (data.imageUrl) {
@@ -170,42 +183,8 @@ async function generateSingleImage(endpoint: string, modelName: string, prompt: 
     } else {
       throw new Error(`No image URL received for image ${imageNumber}`)
     }
-  } else if (endpoint === '/api/flux-kontext-pro') {
-    const { POST: fluxProHandler } = await import('../flux-kontext-pro/route')
-    const requestBody: any = {
-      prompt,
-      output_format: 'png',
-      prompt_upsampling: false,
-      safety_tolerance: 2,
-      seed: Math.floor(Math.random() * 1000000)
-    }
-    
-    // Use aspect_ratio if provided, otherwise calculate from width/height
-    if (aspect_ratio) {
-      requestBody.aspect_ratio = aspect_ratio
-    } else {
-      requestBody.aspect_ratio = `${width}:${height}`
-    }
-    
-    if (input_image) {
-      requestBody.input_image = input_image
-    }
-    
-    const request = new NextRequest('http://localhost/api/flux-kontext-pro', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(requestBody)
-    })
-    const response = await fluxProHandler(request)
-    const data = await response.json()
-    
-    if (data.imageUrl) {
-      console.log(`✅ Image ${imageNumber}/${totalImages} completed`)
-      return data.imageUrl
-    } else {
-      throw new Error(`No image URL received for image ${imageNumber}`)
-    }
-  } else {
-    throw new Error(`Unknown Flux endpoint: ${endpoint}`)
+  } catch (error) {
+    console.error(`❌ Error generating image ${imageNumber}/${totalImages}:`, error)
+    throw error
   }
 }

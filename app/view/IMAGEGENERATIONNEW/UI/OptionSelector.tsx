@@ -39,14 +39,12 @@ export default function OptionSelector({
 
       {showBorderTop && <div className=""></div>}
       
-      <div className="flex items-center justify-between mb-4 px-2 md:px-6">
+      <div 
+        className="flex items-center justify-between mb-4 px-2 md:px-6 cursor-pointer rounded-lg p-2 transition-colors"
+        onClick={() => setIsOpen(!isOpen)}
+      >
         <h3 className="text-white text-sm md:text-sm font-normal">{title}</h3>
-        <button
-          onClick={() => setIsOpen(!isOpen)}
-          className="p-1"
-        >
-          <ChevronDown className={`text-white h-5 w-5 md:h-6 md:w-6 transition-transform ${isOpen ? "rotate-180" : ""}`} />
-        </button>
+        <ChevronDown className={`text-white h-5 w-5 md:h-6 md:w-6 transition-transform ${isOpen ? "rotate-180" : ""}`} />
       </div>
       
       {isOpen && (
