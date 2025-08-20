@@ -11,7 +11,7 @@ export async function POST(request: Request) {
     })
     
     // Simply forward the request to the regular generate-image endpoint
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/generate-image`, {
+    const response = await fetch('/api/generate-image', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
