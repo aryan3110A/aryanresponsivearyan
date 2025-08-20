@@ -136,56 +136,101 @@ async function generateSingleImage(endpoint: string, modelName: string, prompt: 
   console.log(`🔄 Generating image ${imageNumber}/${totalImages}`)
   
   try {
-    // Prepare request body
-    const requestBody: any = {
-      prompt,
-      output_format: 'png',
-      prompt_upsampling: false,
-      safety_tolerance: 2,
-      seed: Math.floor(Math.random() * 1000000)
+    // If calling Flux models, hit BFL API directly to avoid Vercel protection on internal routes
+    const isFluxMax = endpoint.includes('flux-kontext-max')
+    const isFluxPro = endpoint.includes('flux-kontext-pro')
+
+    if (isFluxMax || isFluxPro) {
+      if (!process.env.FLUX_API_KEY) {
+        throw new Error('FLUX_API_KEY not configured')
+      }
+
+      const bflEndpoint = isFluxMax
+        ? 'https://api.bfl.ai/v1/flux-kontext-max'
+        : 'https://api.bfl.ai/v1/flux-kontext-pro'
+
+      const requestBody: any = {
+        prompt,
+        output_format: 'png',
+        prompt_upsampling: false,
+        safety_tolerance: 2,
+      }
+
+      if (typeof aspect_ratio === 'string' && aspect_ratio.trim().length > 0) {
+        requestBody.aspect_ratio = aspect_ratio
+      } else if (width && height) {
+        requestBody.aspect_ratio = `${width}:${height}`
+      }
+      if (input_image) {
+        requestBody.input_image = input_image
+      }
+
+      console.log('🌐 Calling BFL API:', bflEndpoint)
+      const start = Date.now()
+      const bflResponse = await fetch(bflEndpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-key': process.env.FLUX_API_KEY as string,
+        },
+        body: JSON.stringify(requestBody),
+      })
+
+      if (!bflResponse.ok) {
+        const errorData = await bflResponse.text()
+        console.error('BFL API Error:', bflResponse.status, errorData)
+        throw new Error(`BFL API error: ${bflResponse.status}`)
+      }
+
+      const initData: { polling_url?: string } = await bflResponse.json()
+      if (!initData.polling_url) {
+        throw new Error('No polling URL received from BFL API')
+      }
+
+      // Poll for result
+      const imageUrl = await pollBflForResult(initData.polling_url)
+      console.log(`✅ Image ${imageNumber}/${totalImages} completed in ${Date.now() - start}ms`)
+      return imageUrl
     }
-    
-    // Use aspect_ratio if provided, otherwise calculate from width/height
-    if (aspect_ratio) {
-      requestBody.aspect_ratio = aspect_ratio
-    } else {
-      requestBody.aspect_ratio = `${width}:${height}`
-    }
-    
-    if (input_image) {
-      requestBody.input_image = input_image
-    }
-    
-    // Build absolute URL for server-side fetch
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000')
-    const apiUrl = `${baseUrl}${endpoint}`
-    
-    console.log(`📡 Calling Flux API: ${apiUrl}`)
-    
-    const response = await fetch(apiUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(requestBody),
-    })
-    
-    if (!response.ok) {
-      const errorText = await response.text()
-      console.error(`❌ Flux API error for ${modelName}:`, response.status, errorText)
-      throw new Error(`Flux API error: ${response.status}`)
-    }
-    
-    const data = await response.json()
-    
-    if (data.imageUrl) {
-      console.log(`✅ Image ${imageNumber}/${totalImages} completed`)
-      return data.imageUrl
-    } else {
-      throw new Error(`No image URL received for image ${imageNumber}`)
-    }
+
+    // Non-Flux endpoints (should not happen currently)
+    throw new Error('Unsupported endpoint for generateSingleImage')
   } catch (error) {
     console.error(`❌ Error generating image ${imageNumber}/${totalImages}:`, error)
     throw error
   }
+}
+
+// Poll BFL API until the result is ready
+async function pollBflForResult(pollingUrl: string, maxAttempts = 30, intervalMs = 2000): Promise<string> {
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      const response = await fetch(pollingUrl, {
+        headers: {
+          'x-key': process.env.FLUX_API_KEY as string,
+        },
+      })
+
+      if (!response.ok) {
+        console.warn(`⚠️ Polling error (attempt ${attempt}):`, response.status)
+      } else {
+        const data: { status?: string; result?: { sample?: string } } = await response.json()
+        if (data.status === 'Ready' && data.result?.sample) {
+          return data.result.sample
+        }
+        if (data.status === 'Error' || data.status === 'Request Moderated') {
+          throw new Error(`Generation failed: ${data.status}`)
+        }
+      }
+    } catch (err) {
+      console.warn(`⚠️ Polling attempt ${attempt} failed:`, err)
+      if (attempt === maxAttempts) {
+        throw err
+      }
+    }
+
+    await new Promise(res => setTimeout(res, intervalMs))
+  }
+
+  throw new Error('Generation timed out')
 }
