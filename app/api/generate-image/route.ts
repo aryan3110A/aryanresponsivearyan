@@ -61,6 +61,7 @@ export async function POST(request: Request) {
     // Check if it's a Flux model first
     if (modelId === 6 || modelId === 7) {
       // Validate Flux API key
+      console.log('🔍 Checking FLUX_API_KEY:', process.env.FLUX_API_KEY ? '✅ Set' : '❌ Not set');
       if (!process.env.FLUX_API_KEY) {
         console.error('❌ FLUX_API_KEY not configured')
         return NextResponse.json({ 
@@ -155,9 +156,8 @@ async function generateSingleImage(endpoint: string, modelName: string, prompt: 
       requestBody.input_image = input_image
     }
     
-    // Call the Flux API endpoint directly
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
-    const apiUrl = `${baseUrl}${endpoint}`
+    // Call the Flux API endpoint directly - use relative URL for internal API calls
+    const apiUrl = endpoint
     
     console.log(`📡 Calling Flux API: ${apiUrl}`)
     
