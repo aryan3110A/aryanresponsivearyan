@@ -390,51 +390,49 @@ export default function InputSection({
                     {/* Image Container - Responsive */}
                     <div className="relative bg-transparent backdrop-blur-sm border border-gray-700/30 rounded-xl p-3 xs:p-4 overflow-hidden w-full">
                       <div className="relative w-full aspect-square bg-gray-900/50 rounded-xl overflow-hidden">
-                        <div className="w-full aspect-square bg-transparent rounded-lg overflow-hidden border border-white/10">
-                          <Image
-                            src={image || "/placeholder.svg"}
-                            alt={`Generated image ${index + 1}`}
-                            width={400}
-                            height={400}
-                            className="w-full h-full object-contain"
-                          />
-                        </div>
+                        <Image
+                          src={image || "/placeholder.svg"}
+                          alt={`Generated image ${index + 1}`}
+                          width={400}
+                          height={400}
+                          className="w-full h-full object-contain"
+                        />
+                      </div>
 
-                        {/* Mobile Action Buttons - Responsive Sizing */}
-                        <div className="absolute inset-0 bg-black/5">
-                          {/* Info Button - Top Right */}
+                      {/* Mobile Action Buttons - Responsive Sizing */}
+                      <div className="absolute inset-0 bg-black/5">
+                        {/* Info Button - Top Right */}
+                        <button
+                          onClick={() => handleInfo(image, index)}
+                          className="text-black font-semibold absolute top-2 xs:top-3 right-2 xs:right-3 w-6 h-6 xs:w-8 xs:h-8 bg-gradient-to-b from-[#00F0FF] to-[#009099] backdrop-blur-sm rounded-full hover:bg-white/30 transition-all duration-200 flex items-center justify-center text-xs xs:text-sm"
+                        >
+                          !
+                        </button>
+
+                        {/* Action Buttons - Bottom Left */}
+                        <div className="absolute bottom-2 xs:bottom-3 left-2 xs:left-3 flex items-center gap-1.5 xs:gap-2">
                           <button
-                            onClick={() => handleInfo(image, index)}
-                            className="text-black font-semibold absolute top-2 xs:top-3 right-2 xs:right-3 w-6 h-6 xs:w-8 xs:h-8 bg-gradient-to-b from-[#00F0FF] to-[#009099] backdrop-blur-sm rounded-full hover:bg-white/30 transition-all duration-200 flex items-center justify-center text-xs xs:text-sm"
+                            onClick={() => handleDownload(image, index)}
+                            className="p-1.5 xs:p-2 bg-gradient-to-b from-[#00F0FF] to-[#009099] backdrop-blur-sm rounded-lg hover:bg-[#5AD7FF]/30 transition-all duration-200"
                           >
-                            !
+                            <Download className="w-3 h-3 xs:w-4 xs:h-4 text-[#000]" />
                           </button>
 
-                          {/* Action Buttons - Bottom Left */}
-                          <div className="absolute bottom-2 xs:bottom-3 left-2 xs:left-3 flex items-center gap-1.5 xs:gap-2">
-                            <button
-                              onClick={() => handleDownload(image, index)}
-                              className="p-1.5 xs:p-2 bg-gradient-to-b from-[#00F0FF] to-[#009099] backdrop-blur-sm rounded-lg hover:bg-[#5AD7FF]/30 transition-all duration-200"
-                            >
-                              <Download className="w-3 h-3 xs:w-4 xs:h-4 text-[#000]" />
-                            </button>
+                          <button onClick={() => handleBookmark(index)}>
+                            <Bookmark
+                              className={`w-4 h-4 xs:w-5 xs:h-5 transition-colors duration-200 ${
+                                bookmarkedImages.has(index) ? "fill-[#a4c48c] text-[#a4c48c]" : "text-[#fff]"
+                              }`}
+                            />
+                          </button>
 
-                            <button onClick={() => handleBookmark(index)}>
-                              <Bookmark
-                                className={`w-4 h-4 xs:w-5 xs:h-5 transition-colors duration-200 ${
-                                  bookmarkedImages.has(index) ? "fill-[#a4c48c] text-[#a4c48c]" : "text-[#fff]"
-                                }`}
-                              />
-                            </button>
-
-                            <button onClick={() => handleLike(index)}>
-                              <Heart
-                                className={`w-4 h-4 xs:w-5 xs:h-5 transition-colors duration-200 ${
-                                  likedImages.has(index) ? "fill-red-500 text-red-500" : "text-[#fff]"
-                                }`}
-                              />
-                            </button>
-                          </div>
+                          <button onClick={() => handleLike(index)}>
+                            <Heart
+                              className={`w-4 h-4 xs:w-5 xs:h-5 transition-colors duration-200 ${
+                                likedImages.has(index) ? "fill-red-500 text-red-500" : "text-[#fff]"
+                              }`}
+                            />
+                          </button>
                         </div>
                       </div>
                     </div>

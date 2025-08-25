@@ -95,12 +95,13 @@ export default function ProductWithModelPosePage() {
       const formData = new FormData();
       formData.append("model_image", modelImage);
       formData.append("product_image", productImage);
-      formData.append("scene_desc", prompt); // User's custom prompt only
+      formData.append("scene_desc", prompt); // User's custom prompt 
+      
       formData.append("numberOfImages", numberOfImages.toString());
       formData.append("width", width.toString());
       formData.append("height", height.toString());
 
-      const API_BASE = process.env.NEXT_PUBLIC_BACKEND_KONTEXT || 'https://bc5361767552.ngrok-free.app';
+      const API_BASE = process.env.NEXT_PUBLIC_BACKEND_KONTEXT || 'https://5be68d59f2c1.ngrok-free.app';
       const response = await fetch(`${API_BASE}/generate`, {
         method: "POST",
         body: formData,
