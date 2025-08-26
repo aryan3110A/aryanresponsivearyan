@@ -11,7 +11,7 @@ interface FeatureItem {
 const videoFeatures: FeatureItem[] = [
   { title: "Text to Video",  href: VIDEOGENERATION.VIDEO_GENERATION, icon: "🎬" },
   { title: "Image to Video", href: VIDEOGENERATION.VIDEO_GENERATION, icon: "🎞️" },
-  { title: "VFX AI", href: VIDEOGENERATION.VIDEO_GENERATION, icon: "✨" },
+  { coming: true, title: "VFX AI", href: VIDEOGENERATION.VIDEO_GENERATION, icon: "✨" },
   { coming: true, title: "Face Swap", href: VIDEOGENERATION.VIDEO_GENERATION, icon: "🔄" },
   { coming: true, title: "Character Swap", href: VIDEOGENERATION.VIDEO_GENERATION, icon: "👥" },
   { coming: true, title: "Video Enhancement", href: VIDEOGENERATION.VIDEO_GENERATION, icon: "⚡" },

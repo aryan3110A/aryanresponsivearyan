@@ -11,7 +11,7 @@ interface FeatureItem {
 const imageGenerationFeatures: FeatureItem[] = [
   { title: "Text to Image", href: IMAGEGENERATION.IMAGE_GENERATION, },
   { title: "Image to Image", href: IMAGEGENERATION.IMAGE2IMAGEGENERATION,},
-  { coming: true, title: "AI Sticker Generation", href: IMAGEGENERATION.STICKER_GENERATION,  },
+  {title: "AI Sticker Generation", href: IMAGEGENERATION.STICKER_GENERATION,  },
   { coming: true, title: "Live Portrait", href: IMAGEGENERATION.LIVEPORTRAIT, }, 
   { coming: true, title: "Inpaint", href: IMAGEGENERATION.INPAINTFLUXAPI, }, 
 ]
