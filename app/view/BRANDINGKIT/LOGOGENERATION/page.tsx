@@ -70,7 +70,7 @@ export default function LogoGeneration() {
       if (!prompt.trim()) {
         alert('Please enter a prompt for logo generation.');
         setIsGenerating(false);
-        return;
+        return; 
       }
 
       // Updated endpoint to use the unified /generate endpoint

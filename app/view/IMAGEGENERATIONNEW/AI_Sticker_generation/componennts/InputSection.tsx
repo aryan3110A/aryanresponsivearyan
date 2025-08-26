@@ -16,6 +16,9 @@ export interface InputSectionProps {
   setStickerType: (type: string | null) => void
   numberOfStickers: number
   setNumberOfStickers: (number: number) => void
+  saveFileType: string | null
+  onOverlayOpen?: () => void
+  onOverlayClose?: () => void
 }
 
 export default function InputSection({
@@ -25,10 +28,11 @@ export default function InputSection({
   isGenerating,
   generatedImages,
   stickerType,
-
   numberOfStickers,
-
-}: any) {
+  saveFileType,
+  onOverlayOpen,
+  onOverlayClose,
+}: InputSectionProps) {
 
   const [hoveredImageIndex, setHoveredImageIndex] = useState<number | null>(null)
   const [likedImages, setLikedImages] = useState<Set<number>>(new Set())
@@ -77,13 +81,17 @@ export default function InputSection({
   }
   const handleInfo = (imageUrl: string, index: number) => {
     setSelectedImageForOverlay({ url: imageUrl, index })
+    onOverlayOpen?.()
   }
-  const closeImageOverlay = () => setSelectedImageForOverlay(null)
+  const closeImageOverlay = () => {
+    setSelectedImageForOverlay(null)
+    onOverlayClose?.()
+  }
 
   return (
-    <div className="flex flex-col items-center w-full space-y-6 lg:space-y-12">
+    <div className="w-full flex flex-col items-center gap-8 min-h-[300px]">
       {/* Desktop Layout - Input with buttons inline */}
-      <div className="hidden xl:flex items-center gap-4 w-full md:max-w-3xl lg:max-w-4xl px-4">
+      <div className="hidden xl:flex items-center gap-4 w-full md:max-w-4xl lg:max-w-5xl px-4">
         <div className="flex-1 relative max-w-full">
           <div className="p-2 flex items-center bg-[#ffffff]/5 hover:bg-[#ffffff]/20 backdrop-blur-sm border border-[#8E8E8E] rounded-full transition-all duration-300 ease-in-out w-[1100px] max-w-full">
             <input
@@ -163,6 +171,8 @@ export default function InputSection({
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 lg:gap-6">
                 {generatedImages.map((image: string, index: number) => (
                   <div
+                  onClick={() => handleInfo(image, index)}
+
                     key={index}
                     className="relative bg-gray-900/50 rounded-xl overflow-hidden group cursor-pointer"
                     onMouseEnter={() => setHoveredImageIndex(index)}
@@ -301,8 +311,11 @@ export default function InputSection({
           isOpen={!!selectedImageForOverlay}
           onClose={closeImageOverlay}
           imageUrl={selectedImageForOverlay.url}
-          prompt={prompt}
-          stickerType={stickerType || ""}
+          prompt={stickerType ? `${prompt}, ${stickerType} type` : prompt}
+          modelSelection="Flux Krea"
+          stylePalette={stickerType || "Realistic"}
+          imageQuality={saveFileType || "HD"}
+          frameSize="1:1"
           numberOfItems={numberOfStickers}
           itemLabel="Stickers"
         />

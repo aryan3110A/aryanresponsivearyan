@@ -106,9 +106,9 @@ export default function InputSection({
   }
 
   return (
-    <div className="flex flex-col items-center w-full space-y-6 mb:space-y-4 lg:space-y-12">
+    <div className="flex flex-col items-center w-full space-y-6 mb:space-y-4 lg:space-y-10">
       {/* Desktop Layout - Input with buttons inline */}
-      <div className="hidden xl:flex items-center gap-4 w-full md:max-w-3xl lg:max-w-4xl px-4">
+      <div className="hidden xl:flex items-center gap-4 w-full md:max-w-4xl lg:max-w-5xl px-4">
         <div className="flex-1 relative max-w-full">
           <div className="p-2 flex items-center bg-[#ffffff]/5 hover:bg-[#ffffff]/20 backdrop-blur-sm border border-[#8E8E8E] rounded-full transition-all duration-300 ease-in-out w-[1100px] max-w-full">
             <input
@@ -192,6 +192,8 @@ export default function InputSection({
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 lg:gap-6">
                 {generatedImages.map((image, index) => (
                   <div
+                  onClick={() => handleInfo(image, index)}
+
                     key={index}
                     className="relative aspect-square bg-gray-900/50 rounded-xl overflow-hidden group cursor-pointer"
                     onMouseEnter={() => setHoveredImageIndex(index)}

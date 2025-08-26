@@ -102,7 +102,7 @@ export default function ProductWithModelPosePage() {
       formData.append("height", height.toString());
 
       const API_BASE = process.env.NEXT_PUBLIC_BACKEND_KONTEXT || 'https://5be68d59f2c1.ngrok-free.app';
-      const response = await fetch(`${API_BASE}/generate`, {
+      const response = await fetch(`${API_BASE}/generate-product-pose`, {
         method: "POST",
         body: formData,
       });
