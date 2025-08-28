@@ -119,6 +119,109 @@ export default function NewText2Image() {
     console.log('🆔 Model ID:', modelId);
     console.log('⚙️ Using settings:', currentSettings);
 
+    // Special handling: Flux Krea and Playground V2.5 go to dedicated endpoints via ngrok
+    if (modelName === 'Flux Krea' || modelName === 'Playground V2.5') {
+      const aspectRatio = currentSettings?.aspectRatio || '1:1';
+      const quality = currentSettings?.quality || 'HD';
+      let width = 768,
+        height = 768;
+      // Expanded mapping to respect more aspect ratios for special models
+      switch (aspectRatio) {
+        case '1:1':
+          width = quality === '4K' ? 1536 : 768; // square
+          height = width;
+          break;
+        case '16:9':
+          width = quality === '4K' ? 1920 : 1024;
+          height = quality === '4K' ? 1080 : 576;
+          break;
+        case '9:16':
+          width = quality === '4K' ? 1080 : 576;
+          height = quality === '4K' ? 1920 : 1024;
+          break;
+        case '4:3':
+          width = quality === '4K' ? 1600 : 1024;
+          height = quality === '4K' ? 1200 : 768;
+          break;
+        case '3:4':
+          width = quality === '4K' ? 1200 : 768;
+          height = quality === '4K' ? 1600 : 1024;
+          break;
+        case '21:9':
+          width = quality === '4K' ? 1920 : 1280;
+          height = quality === '4K' ? 823 : 549; // keep integers
+          break;
+        case '9:21':
+          width = quality === '4K' ? 823 : 549;
+          height = quality === '4K' ? 1920 : 1280;
+          break;
+        default:
+          // fallback keeps 768x768
+          break;
+      }
+
+      try {
+        const ngrokBase = 'https://860e32a7d903.ngrok-free.app';
+        const specialPath = modelName === 'Flux Krea' ? '/generate/kreaimage' : '/generate/playground';
+        const specialResponse = await fetch(`${ngrokBase}${specialPath}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            prompt: finalPrompt,
+            width,
+            height,
+            num_images: currentSettings?.numberOfImages || 1,
+          }),
+        });
+
+        if (!specialResponse.ok) {
+          const errorText = await specialResponse.text();
+          console.error('❌ Special model API error:', errorText);
+          throw new Error(`Special model API error: ${specialResponse.status}`);
+        }
+
+        const specialData = await specialResponse.json();
+        console.log('✅ Special model generation successful:', specialData);
+
+        // Normalize possible URL fields from response
+        let urls: string[] = [];
+        if (Array.isArray(specialData.image_urls) && specialData.image_urls.length > 0) {
+          urls = specialData.image_urls;
+        } else if (specialData.imageUrl) {
+          urls = [specialData.imageUrl];
+        } else if (specialData.success && specialData.result?.sample) {
+          urls = [specialData.result.sample];
+        }
+
+        if (urls.length > 0) {
+          // Normalize to absolute URLs if endpoint returned relative paths like "/download/..."
+          const absoluteUrls = urls.map((u: string) => {
+            if (typeof u === 'string' && (u.startsWith('http://') || u.startsWith('https://'))) {
+              return u
+            }
+            // Ensure leading slash and prefix with ngrok host
+            const path = typeof u === 'string' ? (u.startsWith('/') ? u : `/${u}`) : ''
+            return `${ngrokBase}${path}`
+          })
+
+          // Proxy through our image proxy to add required headers and bypass ngrok warning
+          const proxied = absoluteUrls.map((u: string) => `/api/image-proxy?url=${encodeURIComponent(u)}`)
+          setGeneratedImages(proxied);
+          setGeneratedPrompts(Array(proxied.length).fill(prompt));
+        } else {
+          console.error('❌ No image URL in special model response. Full response:', specialData);
+          setGeneratedImages(['/placeholder.svg']);
+          setGeneratedPrompts(['']);
+        }
+      } catch (err) {
+        console.error('❌ Special model API failed:', err);
+        setGeneratedImages(['/placeholder.svg']);
+      } finally {
+        setIsGenerating(false);
+      }
+      return;
+    }
+
     // Check if it's a Flux model (ID 6 for Max, ID 7 for Pro)
     if (modelId === 6 || modelId === 7) {
       console.log(`🎯 Using Flux Kontext ${modelId === 6 ? 'Max' : 'Pro'} (ID: ${modelId})`);

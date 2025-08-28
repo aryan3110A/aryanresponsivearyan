@@ -75,7 +75,7 @@ export default function LogoGeneration() {
 
       // Updated endpoint to use the unified /generate endpoint
       const API_BASE =
-        process.env.NEXT_PUBLIC_BACKEND_KONTEXT || 'https://5be68d59f2c1.ngrok-free.app';
+        process.env.NEXT_PUBLIC_BACKEND_KONTEXT || 'https://860e32a7d903.ngrok-free.app';
       const response = await fetch(`${API_BASE}/generate`, {
         method: 'POST',
         headers: {

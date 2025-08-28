@@ -88,6 +88,24 @@ const models = [
       "Flux.1 KONTEXT PRO, a powerful 12B parameter flow transformer model from the FLUX series. This model delivers high-quality image generation with exceptional detail and efficiency.",
     tokenCost: 20,
   },  
+  {
+    id: "8",
+    title: "Flux Krea",
+    shortName: "FK",
+    image: "/imagegenerationnew/models/model5.png",
+    description:
+      "Flux Krea model routed via dedicated Krea endpoint for image generation.",
+    tokenCost: 20,
+  },
+  {
+    id: "9",
+    title: "Playground V2.5",
+    shortName: "PG",
+    image: "/imagegenerationnew/models/model5.png",
+    description:
+      "Playground V2.5 image generation via dedicated Playground endpoint.",
+    tokenCost: 20,
+  },
 
 
 ]

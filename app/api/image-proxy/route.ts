@@ -29,13 +29,18 @@ export async function GET(request: NextRequest) {
     
     console.log('🔄 Proxying image:', imageUrl.substring(0, 100) + '...')
     
+    // Build headers depending on target host
+    const targetUrl = new URL(imageUrl)
+    const isNgrok = targetUrl.hostname.includes('ngrok-free.app')
+    const referer = isNgrok ? `${targetUrl.protocol}//${targetUrl.hostname}/` : 'https://api.bfl.ai/'
+
     // Fetch the image with appropriate headers
     const response = await fetch(imageUrl, {
       headers: {
         'User-Agent': 'WildMind-ImageProxy/1.0',
-        'Accept': 'image/*',
-        'Referer': 'https://api.bfl.ai/',
-        'ngrok-skip-browser-warning': 'true' // Bypass ngrok warning page
+        'Accept': '*/*',
+        'Referer': referer,
+        'ngrok-skip-browser-warning': 'true'
       }
     })
     

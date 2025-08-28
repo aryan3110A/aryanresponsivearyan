@@ -193,13 +193,38 @@ export default function InputSection({
                   onMouseEnter={() => setHoveredImageIndex(index)}
                   onMouseLeave={() => setHoveredImageIndex(null)}
                 >
-                  <Image
-                    src={image || "/placeholder.svg"}
-                    alt={`Generated image ${index + 1}`}
-                    width={320}
-                    height={320}
-                    className="object-cover w-full h-full"
-                  />
+                  {(() => {
+                    const isSpecial = selectedModel === 'Flux Krea' || selectedModel === 'Playground V2.5'
+                    // Build absolute URL if special model provided relative path like "/download/..."
+                    const absoluteUrl = (() => {
+                      if (!isSpecial) return image
+                      // If it's already proxied, just return as-is
+                      if (typeof image === 'string' && image.startsWith('/api/image-proxy')) {
+                        return image
+                      }
+                      if (typeof image === 'string' && (image.startsWith('http://') || image.startsWith('https://'))) {
+                        return image
+                      }
+                      const path = typeof image === 'string' ? (image.startsWith('/') ? image : `/${image}`) : ''
+                      return `https://860e32a7d903.ngrok-free.app${path}`
+                    })()
+                    // Proxy special model images through our proxy (unless already proxied)
+                    const displaySrc = isSpecial
+                      ? (typeof absoluteUrl === 'string' && absoluteUrl.startsWith('/api/image-proxy')
+                          ? absoluteUrl
+                          : `/api/image-proxy?url=${encodeURIComponent(absoluteUrl as string)}`)
+                      : image
+                    return (
+                      <Image
+                        src={displaySrc || "/placeholder.svg"}
+                        alt={`Generated image ${index + 1}`}
+                        width={320}
+                        height={320}
+                        className="object-cover w-full h-full"
+                        unoptimized={isSpecial}
+                      />
+                    )
+                  })()}
                   
                   {/* Interactive Buttons Overlay */}
                   <div
