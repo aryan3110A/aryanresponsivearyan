@@ -91,7 +91,7 @@ export default function AISTICKERGEN() {
 
       // Updated endpoint to use the unified /generate endpoint like logo generation
       const API_BASE =
-        process.env.NEXT_PUBLIC_BACKEND_KONTEXT || 'https://860e32a7d903.ngrok-free.app';
+        process.env.NEXT_PUBLIC_BACKEND_KONTEXT || 'https://9547e0f83000.ngrok-free.app';
       // Route to sticker-specific backend endpoint 
       const response = await fetch(`${API_BASE}/generate-sticker`, {
         method: 'POST',

@@ -161,7 +161,7 @@ export default function NewText2Image() {
       }
 
       try {
-        const ngrokBase = 'https://860e32a7d903.ngrok-free.app';
+        const ngrokBase = 'https://9547e0f83000.ngrok-free.app';
         const specialPath = modelName === 'Flux Krea' ? '/generate/kreaimage' : '/generate/playground';
         const specialResponse = await fetch(`${ngrokBase}${specialPath}`, {
           method: 'POST',

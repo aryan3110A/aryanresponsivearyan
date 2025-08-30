@@ -106,7 +106,7 @@ export default function InputSection({
       {/* Desktop Layout - Input with buttons inline */}
       <div className="hidden xl:flex items-center gap-4 w-full md:max-w-4xl lg:max-w-5xl px-4">
         <div className="flex-1 relative max-w-full">
-          <div className="p-2 flex items-center bg-[#ffffff]/5 hover:bg-[#ffffff]/20 backdrop-blur-sm border border-[#8E8E8E] rounded-full transition-all duration-300 ease-in-out w-[1100px] max-w-full">
+          <div className="p-2 flex items-center bg-[#ffffff]/10  hover:border hover:border-[#8E8E8E]/30  rounded-full transition-all duration-1000 ease-out w-[1100px] max-w-full">
             <input
               type="text"
               placeholder="Type a prompt..."
@@ -135,7 +135,7 @@ export default function InputSection({
       <div className="xl:hidden w-full max-w-full px-0 ">
         {/* Input Field Only - Full Width Responsive */}
         <div className="w-full max-w-full mb-2">
-          <div className="flex items-center bg-[#ffffff]/5 hover:bg-[#ffffff]/20 backdrop-blur-sm border border-[#8E8E8E] rounded-full p-3 xs:p-4 sm:p-5 transition-all duration-300 ease-in-out w-full max-w-full">
+          <div className="flex items-center bg-[#ffffff]/5 hover:bg-[#ffffff]/20 backdrop-blur-sm rounded-full p-3 xs:p-4 sm:p-5 transition-all duration-300 ease-in-out w-full max-w-full">
             <input
               type="text"
               placeholder="Type a prompt..."

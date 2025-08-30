@@ -41,7 +41,7 @@ export default function ProductWithModelPosePage() {
       formData.append("business_tagline", businessTagline);
 
       // Updated endpoint to use the unified /generate endpoint
-        const API_BASE = process.env.NEXT_PUBLIC_BACKEND_KONTEXT || 'https://860e32a7d903.ngrok-free.app';
+        const API_BASE = process.env.NEXT_PUBLIC_BACKEND_KONTEXT || 'https://9547e0f83000.ngrok-free.app';
       const response = await fetch(`${API_BASE}/generate-mockup`, {
         method: "POST",
         body: formData,

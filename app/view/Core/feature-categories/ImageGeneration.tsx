@@ -12,6 +12,7 @@ const imageGenerationFeatures: FeatureItem[] = [
   { title: "Text to Image", href: IMAGEGENERATION.IMAGE_GENERATION, },
   { title: "Image to Image", href: IMAGEGENERATION.IMAGE2IMAGEGENERATION,},
   {title: "AI Sticker Generation", href: IMAGEGENERATION.STICKER_GENERATION,  },
+  { title: "Image Upscale", href: IMAGEGENERATION.IMAGE_UPSCALE, },
   { coming: true, title: "Live Portrait", href: IMAGEGENERATION.LIVEPORTRAIT, }, 
   { coming: true, title: "Inpaint", href: IMAGEGENERATION.INPAINTFLUXAPI, }, 
 ]

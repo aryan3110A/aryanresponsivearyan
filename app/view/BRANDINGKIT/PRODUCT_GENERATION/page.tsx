@@ -32,7 +32,7 @@ export default function ProductGeneration() {
       // Map resolution is no longer needed for backend route, but keep for potential UI sizing if required
       // Call the backend API
       const API_BASE =
-        process.env.NEXT_PUBLIC_BACKEND_KONTEXT || 'https://860e32a7d903.ngrok-free.app';
+        process.env.NEXT_PUBLIC_BACKEND_KONTEXT || 'https://9547e0f83000.ngrok-free.app';
 
       const response = await fetch(`${API_BASE}/generate-product`, {
         method: 'POST',
